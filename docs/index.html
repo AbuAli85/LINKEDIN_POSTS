@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LinkedIn Auto-Poster &middot; Dashboard</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}
+a{color:inherit;text-decoration:none}
+
+.topbar{background:#1e293b;border-bottom:1px solid #334155;padding:18px 24px;display:flex;align-items:center;gap:10px}
+.topbar h1{font-size:1.15rem;font-weight:700;color:#f1f5f9}
+.topbar h1 em{color:#0ea5e9;font-style:normal}
+.topbar .updated{margin-left:auto;font-size:.7rem;color:#64748b}
+
+.statsbar{background:#1e293b;border-bottom:1px solid #334155;padding:14px 24px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.stat{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:10px 18px;text-align:center}
+.stat .n{font-size:1.5rem;font-weight:700;color:#f1f5f9;line-height:1.1}
+.stat .l{font-size:.63rem;color:#64748b;text-transform:uppercase;letter-spacing:.06em;margin-top:3px}
+.sep{width:1px;height:36px;background:#334155}
+.pillar-pill{border:1px solid;border-radius:20px;padding:4px 12px;font-size:.77rem}
+.pillar-pill b{color:#f1f5f9;margin-left:4px}
+
+.schedbar{background:#1e293b;border-bottom:1px solid #334155;padding:10px 24px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;font-size:.82rem}
+.schedbar .lbl{color:#64748b;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em}
+.run-item{color:#94a3b8}.run-item b{color:#f1f5f9}
+
+.content{max-width:800px;margin:0 auto;padding:24px}
+.section-lbl{font-size:.68rem;color:#64748b;text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px}
+
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:18px 20px;margin-bottom:14px;transition:border-color .15s}
+.card:hover{border-color:#475569}
+
+.card-header{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-bottom:9px}
+.pillar-tag{font-size:.66rem;font-weight:700;padding:3px 9px;border-radius:5px;border:1px solid;text-transform:uppercase;letter-spacing:.07em}
+.badge{font-size:.7rem;padding:3px 9px;border-radius:4px;font-weight:500}
+.badge.published{background:#052e16;color:#4ade80}
+.badge.dry-run{background:#1c1917;color:#a8a29e}
+.badge.draft{background:#1c1917;color:#64748b}
+.badge.failed{background:#450a0a;color:#f87171}
+.li-link{font-size:.7rem;color:#0ea5e9;border:1px solid #0c4a6e;border-radius:4px;padding:2px 8px}
+.li-link:hover{background:#082f49}
+.meta-right{margin-left:auto;display:flex;gap:8px;align-items:center}
+.model-tag{font-size:.67rem;background:#1a1a2e;color:#818cf8;border:1px solid #3730a3;padding:2px 8px;border-radius:4px}
+.date{font-size:.7rem;color:#64748b}
+
+.topic{font-size:.8rem;color:#94a3b8;font-style:italic;margin-bottom:10px}
+.alert{border-radius:6px;padding:8px 12px;font-size:.77rem;margin-bottom:10px}
+.alert.warn{background:#451a03;border:1px solid #92400e;color:#fbbf24}
+.alert.error{background:#450a0a;border:1px solid #7f1d1d;color:#f87171}
+
+.post-text{font-size:.87rem;line-height:1.78;color:#cbd5e1;white-space:pre-wrap;word-break:break-word}
+.post-text.collapsed{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.expand-btn{background:none;border:none;color:#0ea5e9;font-size:.76rem;cursor:pointer;padding:5px 0;display:block;margin-top:5px}
+.expand-btn:hover{color:#38bdf8}
+
+.card-footer{display:flex;align-items:center;gap:10px;margin-top:14px}
+.bar-track{flex:1;height:3px;background:#334155;border-radius:2px;overflow:hidden}
+.bar-fill{height:100%;border-radius:2px}
+.bar-fill.ok{background:#22c55e}.bar-fill.warn{background:#f59e0b}
+.chars{font-size:.7rem}.chars.ok{color:#4ade80}.chars.warn{color:#fbbf24}
+.retries{font-size:.7rem;color:#f59e0b}
+
+.empty{text-align:center;padding:60px 20px;color:#475569;font-size:1rem;line-height:2.2}
+
+@media(max-width:600px){
+  .topbar,.statsbar,.schedbar{padding-left:16px;padding-right:16px}
+  .content{padding:16px}
+  .meta-right{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>LinkedIn <em>Auto-Poster</em> &mdash; Dashboard</h1>
+  <span class="updated">Updated 2026-04-29 08:21 UTC</span>
+</div>
+
+<div class="statsbar">
+  <div class="stat"><div class="n">0</div><div class="l">Total</div></div>
+  <div class="stat"><div class="n">0</div><div class="l">Published</div></div>
+  <div class="stat"><div class="n">0</div><div class="l">Dry runs</div></div>
+  <div class="stat"><div class="n">0</div><div class="l">Failed</div></div>
+  <div class="sep"></div>
+  
+</div>
+
+<div class="schedbar">
+  <span class="lbl">Next scheduled &rarr;</span>
+  <span class="run-item"><b>Fri May 1</b> &middot; 9:00 AM Muscat</span><span class="run-item"><b>Mon May 4</b> &middot; 9:00 AM Muscat</span><span class="run-item"><b>Wed May 6</b> &middot; 9:00 AM Muscat</span>
+</div>
+
+<div class="content">
+  <div class="section-lbl">Post history (0)</div>
+  <div class="empty">&#128219;<br>No posts yet &mdash; trigger the workflow to generate your first post.</div>
+</div>
+
+<script>
+function toggle(i){
+  var t=document.getElementById('pt-'+i),b=document.querySelector('#post-'+i+' .expand-btn');
+  if(t.classList.contains('collapsed')){t.classList.remove('collapsed');b.innerHTML='Show less &#9650;';}
+  else{t.classList.add('collapsed');b.innerHTML='Show more &#9660;';}
+}
+</script>
+</body>
+</html>

@@ -7,8 +7,11 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 HISTORY_DIR = Path(__file__).parent / "posts_history"
-DOCS_DIR = Path(__file__).parent / "docs"
+DOCS_DIR    = Path(__file__).parent / "docs"
 DOCS_DIR.mkdir(exist_ok=True)
+
+REPO        = "AbuAli85/LINKEDIN_POSTS"
+ACTIONS_URL = f"https://github.com/{REPO}/actions/workflows/auto-post.yml"
 
 PILLAR_COLOR = {
     "leadership": "#818cf8",
@@ -16,8 +19,14 @@ PILLAR_COLOR = {
     "marketing":  "#fbbf24",
 }
 
-CRON_WEEKDAYS = {0, 2, 4}   # Mon, Wed, Fri
-CRON_HOUR_UTC = 5
+CRON_WEEKDAYS  = {0, 2, 4}
+CRON_HOUR_UTC  = 5
+MUSCAT_OFFSET  = 4   # UTC+4, no DST
+
+
+def _to_muscat(dt: datetime) -> str:
+    m = dt + timedelta(hours=MUSCAT_OFFSET)
+    return m.strftime("%b %d, %Y · %I:%M %p GST").replace(" 0", " ").replace("AM", "am").replace("PM", "pm")
 
 
 def load_posts() -> list[dict]:
@@ -33,7 +42,7 @@ def load_posts() -> list[dict]:
 
 def next_runs(n: int = 3) -> list[datetime]:
     now = datetime.now(timezone.utc)
-    dt = now.replace(hour=CRON_HOUR_UTC, minute=0, second=0, microsecond=0)
+    dt  = now.replace(hour=CRON_HOUR_UTC, minute=0, second=0, microsecond=0)
     if dt <= now:
         dt += timedelta(days=1)
     result = []
@@ -44,6 +53,27 @@ def next_runs(n: int = 3) -> list[datetime]:
             break
         dt += timedelta(days=1)
     return result
+
+
+def _token_health(posts: list[dict]) -> tuple[str, str]:
+    """Return (message, level) where level is ok | warn | error | ''."""
+    published = [p for p in posts if p.get("published") and p.get("published_at")]
+    if not published:
+        return ("LinkedIn tokens expire after 60 days. Set a calendar reminder to renew yours.", "info")
+    oldest = min(published, key=lambda p: p.get("published_at", ""))
+    try:
+        created  = datetime.fromisoformat(oldest["published_at"].replace("Z", "+00:00"))
+        expires  = created + timedelta(days=60)
+        days_left = (expires - datetime.now(timezone.utc)).days
+        if days_left <= 0:
+            return ("LinkedIn token has likely expired — renew immediately (see LINKEDIN_SETUP.md)", "error")
+        if days_left <= 10:
+            return (f"LinkedIn token expires in ~{days_left} days — renew now (see LINKEDIN_SETUP.md)", "error")
+        if days_left <= 20:
+            return (f"LinkedIn token expires in ~{days_left} days — plan renewal soon", "warn")
+        return (f"LinkedIn token valid for ~{days_left} more days", "ok")
+    except Exception:
+        return ("", "")
 
 
 def _badge(text: str, cls: str) -> str:
@@ -65,19 +95,20 @@ def _card(post: dict, idx: int) -> str:
 
     raw_date = post.get("published_at") or post.get("generated_at", "")
     try:
-        dt = datetime.fromisoformat(raw_date.replace("Z", "+00:00"))
-        date_str = dt.strftime("%b %d, %Y · %H:%M UTC").replace(" 0", " ")
+        dt       = datetime.fromisoformat(raw_date.replace("Z", "+00:00"))
+        date_str = _to_muscat(dt)
     except Exception:
         date_str = raw_date[:10]
 
-    model_short = post.get("model", "unknown").replace("claude-", "").split(":")[0]
-    attempts    = post.get("attempts", 1)
-    char_count  = post.get("char_count", 0)
-    char_pct    = min(100, (char_count / 1500) * 100)
-    char_ok     = 800 <= char_count <= 1500
-    char_cls    = "ok" if char_ok else "warn"
-    topic       = html.escape(post.get("topic", ""))
-    post_text   = html.escape(post.get("post", ""))
+    model_short  = post.get("model", "unknown").replace("claude-", "").split(":")[0]
+    attempts     = post.get("attempts", 1)
+    char_count   = post.get("char_count", 0)
+    char_pct     = min(100, (char_count / 1500) * 100)
+    char_ok      = 800 <= char_count <= 1500
+    char_cls     = "ok" if char_ok else "warn"
+    topic        = html.escape(post.get("topic", ""))
+    fmt          = html.escape(post.get("format", ""))
+    post_text    = html.escape(post.get("post", ""))
 
     alerts = ""
     if w := post.get("validation_warning"):
@@ -88,11 +119,11 @@ def _card(post: dict, idx: int) -> str:
     li_link = ""
     if post_id := post.get("post_id", ""):
         li_link = (
-            f'<a class="li-link" '
-            f'href="https://www.linkedin.com/feed/update/{post_id}/" '
+            f'<a class="li-link" href="https://www.linkedin.com/feed/update/{post_id}/" '
             f'target="_blank" rel="noopener">View on LinkedIn &#8599;</a>'
         )
 
+    fmt_html     = f'<span class="fmt-tag" title="{fmt}">&#9999; {fmt[:38]}{"…" if len(fmt)>38 else ""}</span>' if fmt else ""
     attempts_html = f'<span class="retries">&#8635; {attempts} retries</span>' if attempts > 1 else ""
 
     return f"""
@@ -107,6 +138,7 @@ def _card(post: dict, idx: int) -> str:
     </span>
   </div>
   {f'<div class="topic">{topic}</div>' if topic else ''}
+  {f'<div class="fmt-row">{fmt_html}</div>' if fmt else ''}
   {alerts}
   <div class="post-wrap">
     <div class="post-text collapsed" id="pt-{idx}">{post_text}</div>
@@ -116,6 +148,7 @@ def _card(post: dict, idx: int) -> str:
     <div class="bar-track"><div class="bar-fill {char_cls}" style="width:{char_pct:.1f}%"></div></div>
     <span class="chars {char_cls}">{char_count} chars</span>
     {attempts_html}
+    <button class="copy-btn" id="copy-{idx}" onclick="copyPost({idx})">&#128203; Copy</button>
   </div>
 </div>"""
 
@@ -125,6 +158,7 @@ def generate(posts: list[dict]) -> str:
     n_published = sum(1 for p in posts if p.get("published"))
     n_dry       = sum(1 for p in posts if p.get("dry_run") and not p.get("published"))
     n_failed    = sum(1 for p in posts if p.get("publish_error"))
+    success_pct = round((n_published / total * 100) if total else 0)
 
     counts = Counter(p.get("pillar", "?") for p in posts)
     pillar_pills = "".join(
@@ -134,17 +168,25 @@ def generate(posts: list[dict]) -> str:
     )
 
     runs_html = "".join(
-        f'<span class="run-item"><b>{r.strftime("%a %b %d").replace(" 0"," ")}</b>'
-        f' &middot; 9:00 AM Muscat</span>'
+        f'<span class="run-item">'
+        f'<b>{(r + timedelta(hours=MUSCAT_OFFSET)).strftime("%a %b %d").replace(" 0"," ")}</b>'
+        f' &middot; 9:00 am Muscat</span>'
         for r in next_runs(3)
     )
 
+    token_msg, token_level = _token_health(posts)
+    token_banner = ""
+    if token_msg and token_level != "ok":
+        icons = {"warn": "&#9888;", "error": "&#128308;", "info": "&#8505;"}
+        icon  = icons.get(token_level, "&#8505;")
+        token_banner = f'<div class="token-banner {token_level}">{icon} {html.escape(token_msg)}</div>'
+
     cards = "".join(_card(p, i) for i, p in enumerate(posts)) if posts else (
-        '<div class="empty">&#128219;<br>'
-        'No posts yet &mdash; trigger the workflow to generate your first post.</div>'
+        '<div class="empty">&#128219;<br>No posts yet &mdash; '
+        '<a href="' + ACTIONS_URL + '" target="_blank">trigger the workflow</a> to generate your first post.</div>'
     )
 
-    now_str = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    now_muscat = _to_muscat(datetime.now(timezone.utc))
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -157,65 +199,82 @@ def generate(posts: list[dict]) -> str:
 body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}}
 a{{color:inherit;text-decoration:none}}
 
-.topbar{{background:#1e293b;border-bottom:1px solid #334155;padding:18px 24px;display:flex;align-items:center;gap:10px}}
-.topbar h1{{font-size:1.15rem;font-weight:700;color:#f1f5f9}}
+/* TOP BAR */
+.topbar{{background:#1e293b;border-bottom:1px solid #334155;padding:14px 24px;display:flex;flex-wrap:wrap;align-items:center;gap:10px}}
+.topbar h1{{font-size:1.1rem;font-weight:700;color:#f1f5f9}}
 .topbar h1 em{{color:#0ea5e9;font-style:normal}}
-.topbar .updated{{margin-left:auto;font-size:.7rem;color:#64748b}}
+.topbar .updated{{font-size:.68rem;color:#64748b;margin-left:auto}}
+.actions{{display:flex;gap:8px;margin-left:12px}}
+.btn{{font-size:.75rem;padding:5px 12px;border-radius:6px;border:none;cursor:pointer;font-weight:500;text-decoration:none;display:inline-flex;align-items:center;gap:4px}}
+.btn-primary{{background:#0ea5e9;color:#fff}}.btn-primary:hover{{background:#0284c7}}
+.btn-ghost{{background:#1e293b;color:#94a3b8;border:1px solid #334155}}.btn-ghost:hover{{color:#f1f5f9;border-color:#475569}}
 
-.statsbar{{background:#1e293b;border-bottom:1px solid #334155;padding:14px 24px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}}
-.stat{{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:10px 18px;text-align:center}}
-.stat .n{{font-size:1.5rem;font-weight:700;color:#f1f5f9;line-height:1.1}}
-.stat .l{{font-size:.63rem;color:#64748b;text-transform:uppercase;letter-spacing:.06em;margin-top:3px}}
-.sep{{width:1px;height:36px;background:#334155}}
-.pillar-pill{{border:1px solid;border-radius:20px;padding:4px 12px;font-size:.77rem}}
+/* TOKEN BANNER */
+.token-banner{{padding:10px 24px;font-size:.8rem;display:flex;align-items:center;gap:8px}}
+.token-banner.warn{{background:#451a03;color:#fbbf24;border-bottom:1px solid #92400e}}
+.token-banner.error{{background:#450a0a;color:#f87171;border-bottom:1px solid #7f1d1d}}
+.token-banner.info{{background:#082f49;color:#7dd3fc;border-bottom:1px solid #0c4a6e}}
+
+/* STATS */
+.statsbar{{background:#1e293b;border-bottom:1px solid #334155;padding:12px 24px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}}
+.stat{{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:9px 16px;text-align:center;min-width:68px}}
+.stat .n{{font-size:1.4rem;font-weight:700;color:#f1f5f9;line-height:1.1}}
+.stat .l{{font-size:.6rem;color:#64748b;text-transform:uppercase;letter-spacing:.06em;margin-top:3px}}
+.stat.success .n{{color:#4ade80}}
+.sep{{width:1px;height:32px;background:#334155}}
+.pillar-pill{{border:1px solid;border-radius:20px;padding:3px 11px;font-size:.75rem}}
 .pillar-pill b{{color:#f1f5f9;margin-left:4px}}
 
-.schedbar{{background:#1e293b;border-bottom:1px solid #334155;padding:10px 24px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;font-size:.82rem}}
-.schedbar .lbl{{color:#64748b;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em}}
+/* SCHEDULE */
+.schedbar{{background:#1e293b;border-bottom:1px solid #334155;padding:9px 24px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;font-size:.8rem}}
+.schedbar .lbl{{color:#64748b;font-size:.66rem;text-transform:uppercase;letter-spacing:.08em}}
 .run-item{{color:#94a3b8}}.run-item b{{color:#f1f5f9}}
 
-.content{{max-width:800px;margin:0 auto;padding:24px}}
-.section-lbl{{font-size:.68rem;color:#64748b;text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px}}
+/* CONTENT */
+.content{{max-width:820px;margin:0 auto;padding:22px 24px}}
+.section-lbl{{font-size:.66rem;color:#64748b;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px}}
 
-.card{{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:18px 20px;margin-bottom:14px;transition:border-color .15s}}
+/* CARD */
+.card{{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:17px 19px;margin-bottom:13px;transition:border-color .15s}}
 .card:hover{{border-color:#475569}}
-
-.card-header{{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-bottom:9px}}
-.pillar-tag{{font-size:.66rem;font-weight:700;padding:3px 9px;border-radius:5px;border:1px solid;text-transform:uppercase;letter-spacing:.07em}}
-.badge{{font-size:.7rem;padding:3px 9px;border-radius:4px;font-weight:500}}
+.card-header{{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-bottom:8px}}
+.pillar-tag{{font-size:.64rem;font-weight:700;padding:3px 8px;border-radius:5px;border:1px solid;text-transform:uppercase;letter-spacing:.07em}}
+.badge{{font-size:.68rem;padding:3px 8px;border-radius:4px;font-weight:500}}
 .badge.published{{background:#052e16;color:#4ade80}}
 .badge.dry-run{{background:#1c1917;color:#a8a29e}}
 .badge.draft{{background:#1c1917;color:#64748b}}
 .badge.failed{{background:#450a0a;color:#f87171}}
-.li-link{{font-size:.7rem;color:#0ea5e9;border:1px solid #0c4a6e;border-radius:4px;padding:2px 8px}}
+.li-link{{font-size:.68rem;color:#0ea5e9;border:1px solid #0c4a6e;border-radius:4px;padding:2px 7px}}
 .li-link:hover{{background:#082f49}}
-.meta-right{{margin-left:auto;display:flex;gap:8px;align-items:center}}
-.model-tag{{font-size:.67rem;background:#1a1a2e;color:#818cf8;border:1px solid #3730a3;padding:2px 8px;border-radius:4px}}
-.date{{font-size:.7rem;color:#64748b}}
-
-.topic{{font-size:.8rem;color:#94a3b8;font-style:italic;margin-bottom:10px}}
-.alert{{border-radius:6px;padding:8px 12px;font-size:.77rem;margin-bottom:10px}}
+.meta-right{{margin-left:auto;display:flex;gap:7px;align-items:center}}
+.model-tag{{font-size:.65rem;background:#1a1a2e;color:#818cf8;border:1px solid #3730a3;padding:2px 7px;border-radius:4px}}
+.date{{font-size:.68rem;color:#64748b}}
+.topic{{font-size:.8rem;color:#94a3b8;font-style:italic;margin-bottom:6px}}
+.fmt-row{{margin-bottom:9px}}
+.fmt-tag{{font-size:.72rem;color:#64748b;background:#0f172a;border:1px solid #1e293b;border-radius:4px;padding:2px 7px}}
+.alert{{border-radius:6px;padding:7px 11px;font-size:.76rem;margin-bottom:9px}}
 .alert.warn{{background:#451a03;border:1px solid #92400e;color:#fbbf24}}
 .alert.error{{background:#450a0a;border:1px solid #7f1d1d;color:#f87171}}
-
 .post-text{{font-size:.87rem;line-height:1.78;color:#cbd5e1;white-space:pre-wrap;word-break:break-word}}
 .post-text.collapsed{{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}}
-.expand-btn{{background:none;border:none;color:#0ea5e9;font-size:.76rem;cursor:pointer;padding:5px 0;display:block;margin-top:5px}}
+.expand-btn{{background:none;border:none;color:#0ea5e9;font-size:.74rem;cursor:pointer;padding:5px 0;display:block;margin-top:4px}}
 .expand-btn:hover{{color:#38bdf8}}
-
-.card-footer{{display:flex;align-items:center;gap:10px;margin-top:14px}}
+.card-footer{{display:flex;align-items:center;gap:9px;margin-top:13px}}
 .bar-track{{flex:1;height:3px;background:#334155;border-radius:2px;overflow:hidden}}
 .bar-fill{{height:100%;border-radius:2px}}
 .bar-fill.ok{{background:#22c55e}}.bar-fill.warn{{background:#f59e0b}}
-.chars{{font-size:.7rem}}.chars.ok{{color:#4ade80}}.chars.warn{{color:#fbbf24}}
-.retries{{font-size:.7rem;color:#f59e0b}}
-
-.empty{{text-align:center;padding:60px 20px;color:#475569;font-size:1rem;line-height:2.2}}
+.chars{{font-size:.68rem}}.chars.ok{{color:#4ade80}}.chars.warn{{color:#fbbf24}}
+.retries{{font-size:.68rem;color:#f59e0b}}
+.copy-btn{{background:#1e293b;border:1px solid #334155;color:#94a3b8;font-size:.68rem;padding:3px 9px;border-radius:5px;cursor:pointer;margin-left:auto;transition:all .15s}}
+.copy-btn:hover{{border-color:#475569;color:#f1f5f9}}
+.copy-btn.copied{{border-color:#22c55e;color:#4ade80}}
+.empty{{text-align:center;padding:60px 20px;color:#475569;font-size:.95rem;line-height:2.4}}
+.empty a{{color:#0ea5e9;border-bottom:1px solid #0ea5e9}}
 
 @media(max-width:600px){{
-  .topbar,.statsbar,.schedbar{{padding-left:16px;padding-right:16px}}
-  .content{{padding:16px}}
-  .meta-right{{display:none}}
+  .topbar,.statsbar,.schedbar,.content{{padding-left:14px;padding-right:14px}}
+  .meta-right,.actions{{display:none}}
+  .stat{{padding:8px 12px}}
 }}
 </style>
 </head>
@@ -223,14 +282,22 @@ a{{color:inherit;text-decoration:none}}
 
 <div class="topbar">
   <h1>LinkedIn <em>Auto-Poster</em> &mdash; Dashboard</h1>
-  <span class="updated">Updated {now_str}</span>
+  <span class="updated">Updated {now_muscat}</span>
+  <div class="actions">
+    <a class="btn btn-primary" href="{ACTIONS_URL}" target="_blank">&#9654; Run workflow</a>
+    <a class="btn btn-ghost" href="https://github.com/{REPO}/actions" target="_blank">&#128200; All runs</a>
+    <a class="btn btn-ghost" href="https://www.linkedin.com/in/" target="_blank">&#128279; LinkedIn</a>
+  </div>
 </div>
+
+{token_banner}
 
 <div class="statsbar">
   <div class="stat"><div class="n">{total}</div><div class="l">Total</div></div>
   <div class="stat"><div class="n">{n_published}</div><div class="l">Published</div></div>
   <div class="stat"><div class="n">{n_dry}</div><div class="l">Dry runs</div></div>
   <div class="stat"><div class="n">{n_failed}</div><div class="l">Failed</div></div>
+  <div class="stat success"><div class="n">{success_pct}%</div><div class="l">Success</div></div>
   <div class="sep"></div>
   {pillar_pills}
 </div>
@@ -251,6 +318,18 @@ function toggle(i){{
   if(t.classList.contains('collapsed')){{t.classList.remove('collapsed');b.innerHTML='Show less &#9650;';}}
   else{{t.classList.add('collapsed');b.innerHTML='Show more &#9660;';}}
 }}
+function copyPost(i){{
+  var el=document.getElementById('pt-'+i);
+  var collapsed=el.classList.contains('collapsed');
+  if(collapsed) el.classList.remove('collapsed');
+  var text=el.innerText;
+  if(collapsed) el.classList.add('collapsed');
+  navigator.clipboard.writeText(text).then(function(){{
+    var btn=document.getElementById('copy-'+i);
+    btn.textContent='&#10003; Copied';btn.classList.add('copied');
+    setTimeout(function(){{btn.innerHTML='&#128203; Copy';btn.classList.remove('copied');}},2000);
+  }});
+}}
 </script>
 </body>
 </html>"""
@@ -258,6 +337,6 @@ function toggle(i){{
 
 if __name__ == "__main__":
     posts = load_posts()
-    out = DOCS_DIR / "index.html"
+    out   = DOCS_DIR / "index.html"
     out.write_text(generate(posts))
     print(f"Dashboard generated → {out}  ({len(posts)} posts)")

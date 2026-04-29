@@ -6,6 +6,14 @@ PILLARS = {
         "weekday": 0,
         "tone": "thoughtful, story-driven, reflective",
         "audience": "managers, founders, ambitious professionals",
+        "formats": [
+            "Open with a specific mistake you made as a leader and exactly what it cost you",
+            "State a hot take that most managers or executives would strongly disagree with",
+            "Write a numbered list of 3-5 items — put the most counterintuitive or surprising one last",
+            "Tell a specific story: set the scene, describe the exact turning point, end with the insight",
+            "Before/after: describe precisely how your thinking on this topic changed and what forced the change",
+            "Open with a counterintuitive observation about how most leaders handle this — then show a better way",
+        ],
         "topics": [
             "What separates good managers from great ones",
             "The hardest leadership lesson I learned the hard way",
@@ -22,6 +30,16 @@ PILLARS = {
             "The leader's job is to absorb pressure, not pass it down",
             "Why psychological safety is your competitive moat",
             "Career growth: managing up without being political",
+            "The biggest management mistake in fast-growing companies",
+            "Why performance reviews fail everyone and what to do instead",
+            "When to trust your gut over the data",
+            "The art of deciding with incomplete information",
+            "Why most onboarding programs are broken",
+            "What moving fast actually costs your team long-term",
+            "How to build a culture of accountability without fear",
+            "Managing a team member who is smarter than you",
+            "The real reason high performers stop performing",
+            "How to have the salary conversation before your best person asks",
         ],
     },
     "ai": {
@@ -29,6 +47,14 @@ PILLARS = {
         "weekday": 2,
         "tone": "sharp, practical, slightly contrarian",
         "audience": "engineers, product leaders, AI-curious professionals",
+        "formats": [
+            "Open with a sharp observation about what everyone in AI gets wrong about this topic",
+            "State a contrarian take: argue the opposite of what most AI practitioners believe",
+            "Write a numbered list of 3-5 items — make each one concrete and actionable",
+            "Build a case study: describe a specific failure or win, what caused it, what it proved",
+            "Before/after: how this AI concept or practice has fundamentally changed in the past year",
+            "Open with a surprising real-world data point or outcome — then explain why it happened",
+        ],
         "topics": [
             "What AI agents actually do well in 2026 (and what they still can't)",
             "The most underrated AI use case in business right now",
@@ -45,6 +71,16 @@ PILLARS = {
             "How small teams can outcompete giants with AI leverage",
             "The agent era: what changes for software architecture",
             "Why Claude, GPT, and Gemini are not interchangeable",
+            "Why context windows are the new database queries",
+            "What AI-first actually means for product teams in 2026",
+            "The difference between an AI feature and an AI product",
+            "Why human-in-the-loop AI often outperforms full automation",
+            "The hidden cost of AI hallucinations in production",
+            "Why AI adoption is a change management problem, not a technical one",
+            "The three AI use cases that actually generate ROI",
+            "Why your AI demo worked but your product failed",
+            "Multi-agent systems: what they are good for and what they are not",
+            "What every non-technical founder needs to understand about LLMs",
         ],
     },
     "marketing": {
@@ -52,6 +88,14 @@ PILLARS = {
         "weekday": 4,
         "tone": "punchy, data-informed, tactical",
         "audience": "marketers, founders, growth practitioners",
+        "formats": [
+            "Open with a specific campaign, launch, or test that failed — and exactly what it revealed",
+            "State a hot take that most marketers would push back on",
+            "Write a numbered list of 3-5 tactics — make each one immediately actionable",
+            "Before/after: how your approach to this changed after a costly mistake or surprising win",
+            "Build a mini case study: specific company or campaign, what they did, what the numbers showed",
+            "Open with a counterintuitive marketing truth most people learn too late",
+        ],
         "topics": [
             "The one marketing metric most teams measure wrong",
             "Why your content isn't converting (it's not the copy)",
@@ -60,7 +104,7 @@ PILLARS = {
             "Why LinkedIn outperforms paid ads for B2B in 2026",
             "How to write a hook that stops the scroll",
             "The 3-post framework that grew my following 10x",
-            "Why 'thought leadership' fails — and what works instead",
+            "Why thought leadership fails and what works instead",
             "Lead generation tactics that still work this year",
             "How to turn one piece of content into ten",
             "Why your CTA is killing your conversion rate",
@@ -68,6 +112,16 @@ PILLARS = {
             "How to position a product no one is searching for",
             "B2B marketing: why ICP beats persona every time",
             "The newsletter strategy quietly outperforming paid ads",
+            "Why most brand storytelling is just bragging in disguise",
+            "The content types that build trust vs. the ones that just get clicks",
+            "Why your email list is worth more than your social following",
+            "How to get your first 1,000 real followers — principles not tactics",
+            "The difference between marketing that works now and marketing that compounds",
+            "Why most product launches underperform and how to fix that",
+            "How to write copy that makes people feel understood",
+            "Why your best salespeople are actually marketers",
+            "Community-led growth: what it is and whether it fits your business",
+            "The pricing page mistake that is quietly killing your conversions",
         ],
     },
 }
@@ -80,6 +134,5 @@ def pick_pillar(weekday: int, force: str | None = None) -> tuple[str, dict]:
     for name, config in PILLARS.items():
         if config["weekday"] == weekday:
             return name, config
-    # Fallback: pick the next upcoming pillar
     name = min(PILLARS.items(), key=lambda x: (x[1]["weekday"] - weekday) % 7)[0]
     return name, PILLARS[name]

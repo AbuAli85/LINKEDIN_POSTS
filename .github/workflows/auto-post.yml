@@ -14,6 +14,10 @@ on:
         description: "Generate only, do not publish"
         required: false
         default: "false"
+      model:
+        description: "Override the Claude model (e.g. claude-sonnet-4-6, claude-haiku-4-5-20251001). Leave blank for default."
+        required: false
+        default: ""
 
 jobs:
   post:
@@ -37,6 +41,7 @@ jobs:
           LINKEDIN_AUTHOR_URN: ${{ secrets.LINKEDIN_AUTHOR_URN }}
           FORCE_PILLAR: ${{ inputs.pillar }}
           DRY_RUN: ${{ inputs.dry_run || 'false' }}
+          ANTHROPIC_MODEL: ${{ inputs.model }}
         run: python main.py
 
       - name: Commit post history

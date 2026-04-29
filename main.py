@@ -2,7 +2,7 @@
 
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 
 from dotenv import load_dotenv
 
@@ -14,12 +14,12 @@ load_dotenv()
 
 
 def main() -> int:
-    weekday = datetime.utcnow().weekday()
+    now = datetime.now(timezone.utc)
     force = os.environ.get("FORCE_PILLAR") or None
     dry_run = os.environ.get("DRY_RUN", "false").lower() == "true"
 
-    pillar, config = pick_pillar(weekday, force)
-    print(f"[{datetime.utcnow().isoformat()}] Pillar: {pillar} ({config['day']})")
+    pillar, config = pick_pillar(now.weekday(), force)
+    print(f"[{now.isoformat()}] Pillar: {pillar} ({config['day']})")
 
     print("Generating post with Claude...")
     post = generate_post(pillar, config)
@@ -27,7 +27,10 @@ def main() -> int:
     print(f"Saved draft -> {path}")
     print("\n" + "=" * 60)
     print(post["post"])
-    print("=" * 60 + f"\n({post['char_count']} chars)\n")
+    print(
+        "=" * 60
+        + f"\n({post['char_count']} chars, model={post['model']}, attempts={post.get('attempts', 1)})\n"
+    )
 
     if dry_run:
         print("DRY_RUN=true — skipping LinkedIn publish.")

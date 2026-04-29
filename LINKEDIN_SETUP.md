@@ -38,7 +38,15 @@ After authorizing, LinkedIn redirects back with a `code=...` in the URL. Copy th
 
 ## Step 4: Exchange the code for an access token
 
-Run this in your terminal (replace placeholders):
+Easiest: use the bundled helper (handles the form encoding so you don't get `invalid_client` from a malformed curl):
+
+```bash
+LINKEDIN_CLIENT_ID=YOUR_CLIENT_ID \
+LINKEDIN_CLIENT_SECRET=YOUR_CLIENT_SECRET \
+  python oauth_helper.py PASTE_CODE_HERE
+```
+
+Or run curl directly:
 
 ```bash
 curl -X POST https://www.linkedin.com/oauth/v2/accessToken \
@@ -56,6 +64,16 @@ Response:
 ```
 
 Save the `access_token` — this is your `LINKEDIN_ACCESS_TOKEN`. **It's valid for 60 days**, then you'll need to repeat steps 3-4.
+
+### Troubleshooting `invalid_client` / "Client authentication failed"
+
+If the token endpoint returns `401 {"error":"invalid_client"}`:
+
+- Re-copy `Client ID` and `Client Secret` from the **Auth** tab — make sure there's no trailing whitespace, newline, or surrounding quotes.
+- Regenerate the secret in the LinkedIn app dashboard if you're not 100% sure it's current.
+- Confirm the **Share on LinkedIn** product is approved (Products tab) — the app can't authenticate against APIs it doesn't have access to.
+- The `code` from Step 3 is single-use and expires in ~30s. If you reused it, get a fresh one.
+- Make sure the `redirect_uri` exactly matches what's registered in the Auth tab.
 
 ## Step 5: Get your Author URN
 

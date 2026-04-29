@@ -16,7 +16,7 @@ load_dotenv()
 
 def main() -> int:
     now = datetime.now(timezone.utc)
-    force   = os.environ.get("FORCE_PILLAR") or None
+    force   = os.environ.get("FORCE_PILLAR") or None  # converts empty string "" to None
     dry_run = os.environ.get("DRY_RUN", "false").lower() == "true"
 
     pillar, config = pick_pillar(now.weekday(), force)
@@ -57,9 +57,9 @@ def main() -> int:
 
 
 def _update_json(path, updates: dict) -> None:
-    data = json.loads(path.read_text())
+    data = json.loads(path.read_text(encoding="utf-8"))
     data.update(updates)
-    path.write_text(json.dumps(data, indent=2))
+    path.write_text(json.dumps(data, indent=2), encoding="utf-8")
 
 
 if __name__ == "__main__":

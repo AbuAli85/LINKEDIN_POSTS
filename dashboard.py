@@ -34,7 +34,7 @@ def load_posts() -> list[dict]:
     posts = []
     for f in files:
         try:
-            posts.append(json.loads(f.read_text()))
+            posts.append(json.loads(f.read_text(encoding="utf-8")))
         except Exception:
             continue
     return posts
@@ -56,13 +56,19 @@ def next_runs(n: int = 3) -> list[datetime]:
 
 
 def _token_health(posts: list[dict]) -> tuple[str, str]:
-    """Return (message, level) where level is ok | warn | error | ''."""
+    """Return (message, level) where level is ok | warn | error | info | ''.
+
+    NOTE: Expiry is estimated from the most-recent published post date because
+    token_issued_at is not stored. For a more accurate countdown, store
+    TOKEN_ISSUED_AT in a config file or GitHub secret when first authenticating.
+    """
     published = [p for p in posts if p.get("published") and p.get("published_at")]
     if not published:
         return ("LinkedIn tokens expire after 60 days. Set a calendar reminder to renew yours.", "info")
-    oldest = min(published, key=lambda p: p.get("published_at", ""))
+    # Use most-recent published post as a conservative (shorter) expiry estimate
+    newest = max(published, key=lambda p: p.get("published_at", ""))
     try:
-        created  = datetime.fromisoformat(oldest["published_at"].replace("Z", "+00:00"))
+        created  = datetime.fromisoformat(newest["published_at"].replace("Z", "+00:00"))
         expires  = created + timedelta(days=60)
         days_left = (expires - datetime.now(timezone.utc)).days
         if days_left <= 0:
@@ -71,8 +77,9 @@ def _token_health(posts: list[dict]) -> tuple[str, str]:
             return (f"LinkedIn token expires in ~{days_left} days — renew now (see LINKEDIN_SETUP.md)", "error")
         if days_left <= 20:
             return (f"LinkedIn token expires in ~{days_left} days — plan renewal soon", "warn")
-        return (f"LinkedIn token valid for ~{days_left} more days", "ok")
-    except Exception:
+        return (f"LinkedIn token valid for ~{days_left} more days (estimated)", "ok")
+    except Exception as exc:
+        print(f"WARNING: _token_health parse error: {exc}", flush=True)
         return ("", "")
 
 
@@ -118,8 +125,9 @@ def _card(post: dict, idx: int) -> str:
 
     li_link = ""
     if post_id := post.get("post_id", ""):
+        safe_id = html.escape(str(post_id))
         li_link = (
-            f'<a class="li-link" href="https://www.linkedin.com/feed/update/{post_id}/" '
+            f'<a class="li-link" href="https://www.linkedin.com/feed/update/{safe_id}/" '
             f'target="_blank" rel="noopener">View on LinkedIn &#8599;</a>'
         )
 
@@ -349,7 +357,7 @@ function copyPost(i){{
   if(collapsed) el.classList.add('collapsed');
   navigator.clipboard.writeText(text).then(function(){{
     var btn=document.getElementById('copy-'+i);
-    btn.textContent='&#10003; Copied';btn.classList.add('copied');
+    btn.innerHTML='&#10003; Copied';btn.classList.add('copied');
     setTimeout(function(){{btn.innerHTML='&#128203; Copy';btn.classList.remove('copied');}},2000);
   }});
 }}
@@ -361,5 +369,5 @@ function copyPost(i){{
 if __name__ == "__main__":
     posts = load_posts()
     out   = DOCS_DIR / "index.html"
-    out.write_text(generate(posts))
+    out.write_text(generate(posts), encoding="utf-8")
     print(f"Dashboard generated → {out}  ({len(posts)} posts)")

@@ -91,41 +91,40 @@ def _load_recent_posts(limit: int = 10) -> list[dict]:
     out = []
     for f in files:
         try:
-            out.append(json.loads(f.read_text()))
+            out.append(json.loads(f.read_text(encoding="utf-8")))
         except Exception:
             continue
     return out
 
 
-def _recent_topics(limit: int = 20) -> set[str]:
-    return {p.get("topic", "") for p in _load_recent_posts(limit)}
+def _recent_topics(posts: list[dict]) -> set[str]:
+    return {p.get("topic", "") for p in posts}
 
 
-def _recent_formats(limit: int = 6) -> list[str]:
-    return [p.get("format", "") for p in _load_recent_posts(limit) if p.get("format")]
+def _recent_formats(posts: list[dict]) -> list[str]:
+    return [p.get("format", "") for p in posts if p.get("format")]
 
 
-def _recent_block(limit: int = 5) -> str:
-    posts = _load_recent_posts(limit)
+def _recent_block(posts: list[dict]) -> str:
     if not posts:
         return ""
     lines = ["RECENT POSTS (avoid repeating these angles, hooks, or phrasing):"]
-    for p in posts:
+    for p in posts[:5]:
         first_line = p.get("post", "").split("\n", 1)[0][:140]
         lines.append(f"- [{p.get('pillar', '?')}] {first_line}")
     return "\n".join(lines) + "\n\n"
 
 
-def pick_topic(pillar_config: dict) -> str:
-    recent = _recent_topics()
+def pick_topic(pillar_config: dict, recent_posts: list[dict]) -> str:
+    recent = _recent_topics(recent_posts)
     available = [t for t in pillar_config["topics"] if t not in recent]
     if not available:
         available = pillar_config["topics"]
     return random.choice(available)
 
 
-def pick_format(pillar_config: dict) -> str:
-    recent = set(_recent_formats(len(pillar_config["formats"])))
+def pick_format(pillar_config: dict, recent_posts: list[dict]) -> str:
+    recent = set(_recent_formats(recent_posts[-len(pillar_config["formats"]):]))
     available = [f for f in pillar_config["formats"] if f not in recent]
     if not available:
         available = pillar_config["formats"]
@@ -157,7 +156,7 @@ def _generate_once(
     response = client.messages.create(
         model=model,
         max_tokens=MAX_TOKENS,
-        system=SYSTEM_PROMPT,
+        system=[{"type": "text", "text": SYSTEM_PROMPT, "cache_control": {"type": "ephemeral"}}],
         messages=[
             {
                 "role": "user",
@@ -172,25 +171,32 @@ def _generate_once(
             }
         ],
     )
-    text = next(b.text for b in response.content if b.type == "text").strip()
+    text_blocks = [b.text for b in response.content if b.type == "text"]
+    if not text_blocks:
+        raise RuntimeError(f"No text block in API response: {response.content}")
+    text = text_blocks[0].strip()
     return text, response.model
 
 
 def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) -> dict:
     """Generate a LinkedIn post. Validates output and retries once if needed."""
-    if topic is None:
-        topic = pick_topic(pillar_config)
+    # Load recent posts once — reused for topic/format dedup and recent_block
+    recent_posts = _load_recent_posts(20)
 
-    fmt = pick_format(pillar_config)
+    if topic is None:
+        topic = pick_topic(pillar_config, recent_posts)
+
+    fmt = pick_format(pillar_config, recent_posts)
     model = os.environ.get("ANTHROPIC_MODEL") or DEFAULT_MODEL
+    # Module-level singleton avoids creating a new HTTP connection pool per call
     client = anthropic.Anthropic()
-    recent_block = _recent_block()
+    rb = _recent_block(recent_posts)
 
     last_error: str | None = None
     last_result: tuple[str, str] | None = None
     for attempt in range(2):
         post_text, model_used = _generate_once(
-            client, model, pillar, pillar_config, topic, fmt, recent_block
+            client, model, pillar, pillar_config, topic, fmt, rb
         )
         last_result = (post_text, model_used)
         err = _validate(post_text)
@@ -208,7 +214,8 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
         last_error = err
         print(f"Validation warning (attempt {attempt + 1}): {err}. Retrying...")
 
-    assert last_result is not None
+    if last_result is None:
+        raise RuntimeError("generate_once was never called — retry loop did not execute")
     post_text, model_used = last_result
     print(f"WARNING: publishing despite validation issue: {last_error}")
     return {
@@ -227,7 +234,7 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
 def save_post(post_data: dict) -> Path:
     ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     path = HISTORY_DIR / f"{ts}_{post_data['pillar']}.json"
-    path.write_text(json.dumps(post_data, indent=2))
+    path.write_text(json.dumps(post_data, indent=2), encoding="utf-8")
     return path
 
 

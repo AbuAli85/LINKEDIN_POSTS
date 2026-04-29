@@ -1,5 +1,7 @@
 name: Auto-post to LinkedIn
 
+# Generates a LinkedIn post via Anthropic API and publishes it on a schedule.
+
 on:
   schedule:
     # 9:00 AM UTC every Mon, Wed, Fri (good engagement window globally)

@@ -81,6 +81,12 @@ a{color:inherit;text-decoration:none}
 .empty{text-align:center;padding:60px 20px;color:#475569;font-size:.95rem;line-height:2.4}
 .empty a{color:#0ea5e9;border-bottom:1px solid #0ea5e9}
 
+.run-pillar{text-transform:uppercase;font-size:.72rem;letter-spacing:.06em;font-weight:600}
+
+footer{max-width:820px;margin:24px auto 0;padding:18px 24px 30px;border-top:1px solid #1e293b;color:#475569;font-size:.74rem;line-height:1.7}
+footer a{color:#64748b;border-bottom:1px dotted #475569}
+footer a:hover{color:#94a3b8}
+
 @media(max-width:600px){
   .topbar,.statsbar,.schedbar,.content{padding-left:14px;padding-right:14px}
   .meta-right,.actions{display:none}
@@ -92,7 +98,7 @@ a{color:inherit;text-decoration:none}
 
 <div class="topbar">
   <h1>LinkedIn <em>Auto-Poster</em> &mdash; Dashboard</h1>
-  <span class="updated">Updated Apr 29, 2026 · 12:46 pm GST</span>
+  <span class="updated">Updated Apr 29, 2026 · 1:14 pm Muscat</span>
   <div class="actions">
     <a class="btn btn-primary" href="https://github.com/AbuAli85/LINKEDIN_POSTS/actions/workflows/auto-post.yml" target="_blank">&#9654; Run workflow</a>
     <a class="btn btn-ghost" href="https://github.com/AbuAli85/LINKEDIN_POSTS/actions" target="_blank">&#128200; All runs</a>
@@ -114,13 +120,20 @@ a{color:inherit;text-decoration:none}
 
 <div class="schedbar">
   <span class="lbl">Next scheduled &rarr;</span>
-  <span class="run-item"><b>Fri May 1</b> &middot; 9:00 am Muscat</span><span class="run-item"><b>Mon May 4</b> &middot; 9:00 am Muscat</span><span class="run-item"><b>Wed May 6</b> &middot; 9:00 am Muscat</span>
+  <span class="run-item"><b>Fri May 1</b> &middot; 9:00 am Muscat &middot; <span class="run-pillar" style="color:#fbbf24">marketing</span></span><span class="run-item"><b>Mon May 4</b> &middot; 9:00 am Muscat &middot; <span class="run-pillar" style="color:#818cf8">leadership</span></span><span class="run-item"><b>Wed May 6</b> &middot; 9:00 am Muscat &middot; <span class="run-pillar" style="color:#22d3ee">ai</span></span>
 </div>
 
 <div class="content">
   <div class="section-lbl">Post history (0)</div>
-  <div class="empty">&#128219;<br>No posts yet &mdash; <a href="https://github.com/AbuAli85/LINKEDIN_POSTS/actions/workflows/auto-post.yml" target="_blank">trigger the workflow</a> to generate your first post.</div>
+  <div class="empty">&#128221;<br>No posts yet &mdash; <a href="https://github.com/AbuAli85/LINKEDIN_POSTS/actions/workflows/auto-post.yml" target="_blank">trigger the workflow</a> to generate your first post.</div>
 </div>
+
+<footer>
+  Auto-posts <b>Mon &middot; Wed &middot; Fri</b> at <b>9:00 am Muscat</b> &nbsp;&middot;&nbsp;
+  <a href="https://github.com/AbuAli85/LINKEDIN_POSTS" target="_blank">Source</a> &middot;
+  <a href="https://github.com/AbuAli85/LINKEDIN_POSTS/blob/main/LINKEDIN_SETUP.md" target="_blank">Renew LinkedIn token</a> &middot;
+  <a href="https://github.com/AbuAli85/LINKEDIN_POSTS/actions/workflows/auto-post.yml" target="_blank">Run workflow</a>
+</footer>
 
 <script>
 function toggle(i){

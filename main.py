@@ -1,5 +1,6 @@
 """Orchestrator: pick pillar, generate post, publish to LinkedIn."""
 
+import json
 import os
 import sys
 from datetime import datetime, timezone
@@ -15,7 +16,7 @@ load_dotenv()
 
 def main() -> int:
     now = datetime.now(timezone.utc)
-    force = os.environ.get("FORCE_PILLAR") or None
+    force   = os.environ.get("FORCE_PILLAR") or None
     dry_run = os.environ.get("DRY_RUN", "false").lower() == "true"
 
     pillar, config = pick_pillar(now.weekday(), force)
@@ -23,13 +24,16 @@ def main() -> int:
 
     print("Generating post with Claude...")
     post = generate_post(pillar, config)
+    post["dry_run"] = dry_run
     path = save_post(post)
+
     print(f"Saved draft -> {path}")
     print("\n" + "=" * 60)
     print(post["post"])
     print(
         "=" * 60
-        + f"\n({post['char_count']} chars, model={post['model']}, attempts={post.get('attempts', 1)})\n"
+        + f"\n({post['char_count']} chars  model={post['model']}"
+        + f"  attempts={post.get('attempts', 1)})\n"
     )
 
     if dry_run:
@@ -40,10 +44,22 @@ def main() -> int:
     try:
         result = publish_post(post["post"])
         print(f"Published! Post ID: {result['post_id']}")
+        _update_json(path, {
+            "published":    True,
+            "post_id":      result["post_id"],
+            "published_at": datetime.now(timezone.utc).isoformat(),
+        })
         return 0
     except LinkedInError as e:
         print(f"ERROR: {e}", file=sys.stderr)
+        _update_json(path, {"published": False, "publish_error": str(e)})
         return 1
+
+
+def _update_json(path, updates: dict) -> None:
+    data = json.loads(path.read_text())
+    data.update(updates)
+    path.write_text(json.dumps(data, indent=2))
 
 
 if __name__ == "__main__":

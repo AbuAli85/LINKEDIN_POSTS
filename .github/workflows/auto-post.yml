@@ -1,0 +1,49 @@
+name: Auto-post to LinkedIn
+
+on:
+  schedule:
+    # 9:00 AM UTC every Mon, Wed, Fri (good engagement window globally)
+    - cron: "0 9 * * 1,3,5"
+  workflow_dispatch:
+    inputs:
+      pillar:
+        description: "Force a specific pillar (leadership/ai/marketing). Leave blank to auto-pick."
+        required: false
+        default: ""
+      dry_run:
+        description: "Generate only, do not publish"
+        required: false
+        default: "false"
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate and publish post
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+          LINKEDIN_AUTHOR_URN: ${{ secrets.LINKEDIN_AUTHOR_URN }}
+          FORCE_PILLAR: ${{ inputs.pillar }}
+          DRY_RUN: ${{ inputs.dry_run || 'false' }}
+        run: python main.py
+
+      - name: Commit post history
+        if: success()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add posts_history/
+          git diff --cached --quiet || git commit -m "log: archive published post"
+          git push || true

@@ -30,28 +30,36 @@ BANNED_PHRASES = [
     "at the end of the day",
     "in a world where",
     "we live in an era",
+    "here's what i've learned:",
+    "here's the truth:",
+    "let that sink in",
+    "unpopular opinion:",
+    "hot take:",
 ]
 
 SYSTEM_PROMPT = """You are an elite LinkedIn ghostwriter behind several 100K+ follower accounts in tech and business.
 
 VOICE & STRUCTURE
-- The first line must stop the scroll. Specific, surprising, or contrarian.
-- Short paragraphs (1-3 lines). White space is your friend.
+- The first line must stop the scroll. Specific, surprising, or contrarian — never generic.
+- Short paragraphs (1-3 lines). White space is your friend. Never a wall of text.
 - Tell a specific story, share a sharp insight, or take a clear position.
-- End with a takeaway or a question that invites real comments.
-- Sound like a thoughtful operator talking, not a brand.
+- End with one crisp takeaway or a question that invites real comments.
+- Sound like a thoughtful operator talking, not a brand or a content creator.
 
 EXAMPLES OF STRONG HOOKS
 - "I fired my best engineer last quarter. It was the right call."
 - "Most AI pilots fail for the same boring reason."
 - "Three years ago, I made a $40K marketing mistake. Here's what it taught me."
 - "The cheapest way to keep great people: pay them before they have to ask."
+- "We hit 10K users. Then we deleted the feature that got us there."
 
-BANNED — never use these:
-- AI clichés: "in today's fast-paced world", "delve", "tapestry", "unlock the power", "game-changer", "embark on", "ever-evolving", "in the realm of"
-- Setup-payoff: "It's not just X — it's Y"
+BANNED — never use:
+- AI clichés: "in today's fast-paced world", "delve", "tapestry", "unlock the power",
+  "game-changer", "embark on", "ever-evolving", "in the realm of"
+- Lazy setup phrases: "Here's what I've learned:", "Here's the truth:", "Let that sink in",
+  "Unpopular opinion:", "Hot take:" (just state the take directly)
 - Empty openers: "In a world where...", "We live in an era..."
-- Corporate jargon: "synergy", "circle back", "thought leadership"
+- Corporate jargon: "synergy", "circle back", "thought leadership", "move the needle"
 
 FORMAT
 - 800-1500 characters total (spaces and line breaks count).
@@ -64,20 +72,21 @@ USER_TEMPLATE = """Write a LinkedIn post for the {pillar} pillar.
 TOPIC: {topic}
 TONE: {tone}
 AUDIENCE: {audience}
+OPENING STYLE: {fmt}
 
-PROCESS (do this in your head, output only the final post):
-1. Draft 3 candidate opening hooks. Make them specific, surprising, or contrarian.
-2. Pick the strongest hook — the one a busy professional would stop scrolling for.
-3. Write the post around it. Short paragraphs. Concrete details. One clear takeaway.
-4. End with a question or call to action that invites genuine comments.
-5. Add 3-5 relevant hashtags on their own lines at the bottom.
+PROCESS (do this in your head — output only the final post):
+1. Draft 3 opening lines that follow the OPENING STYLE above. Make them specific and concrete.
+2. Pick the one that would stop a busy professional mid-scroll.
+3. Build the post around it. Short paragraphs. One concrete detail or data point. One clear takeaway.
+4. End with a question or statement that makes someone want to comment.
+5. Add 3-5 relevant hashtags on their own lines.
 
-CHARACTER LIMIT: 800-1500 (strict).
+HARD LIMIT: 800-1500 characters.
 
-{recent_block}Write the final post now. Output only the post — no explanation, no preamble."""
+{recent_block}Output only the final post. No explanation, no preamble, no label."""
 
 
-def _load_recent_posts(limit: int = 5) -> list[dict]:
+def _load_recent_posts(limit: int = 10) -> list[dict]:
     files = sorted(HISTORY_DIR.glob("*.json"), reverse=True)[:limit]
     out = []
     for f in files:
@@ -90,6 +99,10 @@ def _load_recent_posts(limit: int = 5) -> list[dict]:
 
 def _recent_topics(limit: int = 20) -> set[str]:
     return {p.get("topic", "") for p in _load_recent_posts(limit)}
+
+
+def _recent_formats(limit: int = 6) -> list[str]:
+    return [p.get("format", "") for p in _load_recent_posts(limit) if p.get("format")]
 
 
 def _recent_block(limit: int = 5) -> str:
@@ -108,6 +121,14 @@ def pick_topic(pillar_config: dict) -> str:
     available = [t for t in pillar_config["topics"] if t not in recent]
     if not available:
         available = pillar_config["topics"]
+    return random.choice(available)
+
+
+def pick_format(pillar_config: dict) -> str:
+    recent = set(_recent_formats(len(pillar_config["formats"])))
+    available = [f for f in pillar_config["formats"] if f not in recent]
+    if not available:
+        available = pillar_config["formats"]
     return random.choice(available)
 
 
@@ -130,6 +151,7 @@ def _generate_once(
     pillar: str,
     pillar_config: dict,
     topic: str,
+    fmt: str,
     recent_block: str,
 ) -> tuple[str, str]:
     response = client.messages.create(
@@ -144,6 +166,7 @@ def _generate_once(
                     topic=topic,
                     tone=pillar_config["tone"],
                     audience=pillar_config["audience"],
+                    fmt=fmt,
                     recent_block=recent_block,
                 ),
             }
@@ -158,6 +181,7 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
     if topic is None:
         topic = pick_topic(pillar_config)
 
+    fmt = pick_format(pillar_config)
     model = os.environ.get("ANTHROPIC_MODEL") or DEFAULT_MODEL
     client = anthropic.Anthropic()
     recent_block = _recent_block()
@@ -166,7 +190,7 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
     last_result: tuple[str, str] | None = None
     for attempt in range(2):
         post_text, model_used = _generate_once(
-            client, model, pillar, pillar_config, topic, recent_block
+            client, model, pillar, pillar_config, topic, fmt, recent_block
         )
         last_result = (post_text, model_used)
         err = _validate(post_text)
@@ -174,6 +198,7 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
             return {
                 "pillar": pillar,
                 "topic": topic,
+                "format": fmt,
                 "post": post_text,
                 "char_count": len(post_text),
                 "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -183,14 +208,13 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
         last_error = err
         print(f"Validation warning (attempt {attempt + 1}): {err}. Retrying...")
 
-    # Both attempts failed validation — publish the last draft anyway with a logged warning,
-    # so we never miss a scheduled post over a borderline-strict check.
     assert last_result is not None
     post_text, model_used = last_result
     print(f"WARNING: publishing despite validation issue: {last_error}")
     return {
         "pillar": pillar,
         "topic": topic,
+        "format": fmt,
         "post": post_text,
         "char_count": len(post_text),
         "generated_at": datetime.now(timezone.utc).isoformat(),

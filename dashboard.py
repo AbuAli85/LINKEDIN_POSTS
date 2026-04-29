@@ -26,7 +26,7 @@ MUSCAT_OFFSET  = 4   # UTC+4, no DST
 
 def _to_muscat(dt: datetime) -> str:
     m = dt + timedelta(hours=MUSCAT_OFFSET)
-    return m.strftime("%b %d, %Y · %I:%M %p GST").replace(" 0", " ").replace("AM", "am").replace("PM", "pm")
+    return m.strftime("%b %d, %Y · %I:%M %p Muscat").replace(" 0", " ").replace("AM", "am").replace("PM", "pm")
 
 
 def load_posts() -> list[dict]:
@@ -167,12 +167,22 @@ def generate(posts: list[dict]) -> str:
         for p, c in sorted(counts.items(), key=lambda x: -x[1])
     )
 
-    runs_html = "".join(
-        f'<span class="run-item">'
-        f'<b>{(r + timedelta(hours=MUSCAT_OFFSET)).strftime("%a %b %d").replace(" 0"," ")}</b>'
-        f' &middot; 9:00 am Muscat</span>'
-        for r in next_runs(3)
-    )
+    from content_strategy import PILLARS
+    weekday_to_pillar = {c["weekday"]: name for name, c in PILLARS.items()}
+
+    def _run_html(r: datetime) -> str:
+        pillar = weekday_to_pillar.get(r.weekday(), "?")
+        color  = PILLAR_COLOR.get(pillar, "#94a3b8")
+        date_s = (r + timedelta(hours=MUSCAT_OFFSET)).strftime("%a %b %d").replace(" 0", " ")
+        return (
+            f'<span class="run-item">'
+            f'<b>{date_s}</b>'
+            f' &middot; 9:00 am Muscat'
+            f' &middot; <span class="run-pillar" style="color:{color}">{pillar}</span>'
+            f'</span>'
+        )
+
+    runs_html = "".join(_run_html(r) for r in next_runs(3))
 
     token_msg, token_level = _token_health(posts)
     token_banner = ""
@@ -182,7 +192,7 @@ def generate(posts: list[dict]) -> str:
         token_banner = f'<div class="token-banner {token_level}">{icon} {html.escape(token_msg)}</div>'
 
     cards = "".join(_card(p, i) for i, p in enumerate(posts)) if posts else (
-        '<div class="empty">&#128219;<br>No posts yet &mdash; '
+        '<div class="empty">&#128221;<br>No posts yet &mdash; '
         '<a href="' + ACTIONS_URL + '" target="_blank">trigger the workflow</a> to generate your first post.</div>'
     )
 
@@ -271,6 +281,12 @@ a{{color:inherit;text-decoration:none}}
 .empty{{text-align:center;padding:60px 20px;color:#475569;font-size:.95rem;line-height:2.4}}
 .empty a{{color:#0ea5e9;border-bottom:1px solid #0ea5e9}}
 
+.run-pillar{{text-transform:uppercase;font-size:.72rem;letter-spacing:.06em;font-weight:600}}
+
+footer{{max-width:820px;margin:24px auto 0;padding:18px 24px 30px;border-top:1px solid #1e293b;color:#475569;font-size:.74rem;line-height:1.7}}
+footer a{{color:#64748b;border-bottom:1px dotted #475569}}
+footer a:hover{{color:#94a3b8}}
+
 @media(max-width:600px){{
   .topbar,.statsbar,.schedbar,.content{{padding-left:14px;padding-right:14px}}
   .meta-right,.actions{{display:none}}
@@ -311,6 +327,13 @@ a{{color:inherit;text-decoration:none}}
   <div class="section-lbl">Post history ({total})</div>
   {cards}
 </div>
+
+<footer>
+  Auto-posts <b>Mon &middot; Wed &middot; Fri</b> at <b>9:00 am Muscat</b> &nbsp;&middot;&nbsp;
+  <a href="https://github.com/{REPO}" target="_blank">Source</a> &middot;
+  <a href="https://github.com/{REPO}/blob/main/LINKEDIN_SETUP.md" target="_blank">Renew LinkedIn token</a> &middot;
+  <a href="{ACTIONS_URL}" target="_blank">Run workflow</a>
+</footer>
 
 <script>
 function toggle(i){{

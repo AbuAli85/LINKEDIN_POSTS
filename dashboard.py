@@ -2,16 +2,29 @@
 
 import html
 import json
+import subprocess
 from collections import Counter
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-HISTORY_DIR = Path(__file__).parent / "posts_history"
-DOCS_DIR    = Path(__file__).parent / "docs"
+HISTORY_DIR   = Path(__file__).parent / "posts_history"
+DOCS_DIR      = Path(__file__).parent / "docs"
 DOCS_DIR.mkdir(exist_ok=True)
 
-REPO        = "AbuAli85/LINKEDIN_POSTS"
-ACTIONS_URL = f"https://github.com/{REPO}/actions/workflows/auto-post.yml"
+REPO          = "AbuAli85/LINKEDIN_POSTS"
+WORKFLOW_FILE = "auto-post.yml"
+ACTIONS_URL   = f"https://github.com/{REPO}/actions/workflows/{WORKFLOW_FILE}"
+
+
+def _current_branch() -> str:
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+            capture_output=True, text=True, timeout=5,
+        )
+        return result.stdout.strip() or "main"
+    except Exception:
+        return "main"
 
 PILLAR_COLOR = {
     "leadership": "#818cf8",
@@ -34,7 +47,9 @@ def load_posts() -> list[dict]:
     posts = []
     for f in files:
         try:
-            posts.append(json.loads(f.read_text(encoding="utf-8")))
+            p = json.loads(f.read_text(encoding="utf-8"))
+            p["_filename"] = f.name
+            posts.append(p)
         except Exception:
             continue
     return posts
@@ -153,8 +168,23 @@ def _card(post: dict, idx: int) -> str:
             f'target="_blank" rel="noopener">View on LinkedIn &#8599;</a>'
         )
 
-    fmt_html     = f'<span class="fmt-tag" title="{fmt}">&#9999; {fmt[:38]}{"…" if len(fmt)>38 else ""}</span>' if fmt else ""
+    fmt_html      = f'<span class="fmt-tag" title="{fmt}">&#9999; {fmt[:38]}{"…" if len(fmt)>38 else ""}</span>' if fmt else ""
     attempts_html = f'<span class="retries">&#8635; {attempts} retries</span>' if attempts > 1 else ""
+
+    needs_review = (
+        (post.get("status") == "draft" or post.get("approval_required"))
+        and not post.get("published")
+    )
+    filename  = post.get("_filename", "")
+    draft_path_val = html.escape(f"posts_history/{filename}") if filename else ""
+    preview_val    = html.escape(post.get("post", "")[:300].replace("\n", " "))
+    approve_btn = ""
+    if needs_review and draft_path_val:
+        approve_btn = (
+            f'<button class="approve-publish-btn" '
+            f'data-path="{draft_path_val}" data-preview="{preview_val}" '
+            f'onclick="showApproveModal(this)">&#9654; Approve &amp; Publish</button>'
+        )
 
     return f"""
 <div class="card" id="post-{idx}">
@@ -179,6 +209,7 @@ def _card(post: dict, idx: int) -> str:
     <div class="bar-track"><div class="bar-fill {char_cls}" style="width:{char_pct:.1f}%"></div></div>
     <span class="chars {char_cls}">{char_count} chars</span>
     {attempts_html}
+    {approve_btn}
     <button class="copy-btn" id="copy-{idx}" onclick="copyPost({idx})">&#128203; Copy</button>
   </div>
 </div>"""
@@ -333,6 +364,7 @@ def generate(posts: list[dict]) -> str:
 
     now_muscat      = _to_muscat(datetime.now(timezone.utc))
     engagement_html = _engagement_sections()
+    branch          = _current_branch()
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -415,8 +447,27 @@ a{{color:inherit;text-decoration:none}}
 .copy-btn{{background:#1e293b;border:1px solid #334155;color:#94a3b8;font-size:.68rem;padding:3px 9px;border-radius:5px;cursor:pointer;margin-left:auto;transition:all .15s}}
 .copy-btn:hover{{border-color:#475569;color:#f1f5f9}}
 .copy-btn.copied{{border-color:#22c55e;color:#4ade80}}
+.approve-publish-btn{{background:#0ea5e9;border:none;color:#fff;font-size:.72rem;font-weight:600;padding:4px 12px;border-radius:5px;cursor:pointer;transition:background .15s}}
+.approve-publish-btn:hover{{background:#0284c7}}
 .empty{{text-align:center;padding:60px 20px;color:#475569;font-size:.95rem;line-height:2.4}}
 .empty a{{color:#0ea5e9;border-bottom:1px solid #0ea5e9}}
+.modal-overlay{{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;align-items:center;justify-content:center}}
+.modal-overlay.open{{display:flex}}
+.modal-box{{background:#1e293b;border:1px solid #334155;border-radius:14px;padding:28px 30px;max-width:560px;width:90%;max-height:88vh;overflow-y:auto}}
+.modal-box h3{{color:#f1f5f9;font-size:1rem;margin-bottom:18px}}
+.modal-field{{margin-bottom:14px}}
+.modal-label{{font-size:.68rem;color:#64748b;margin-bottom:4px;display:block}}
+.modal-preview{{font-size:.78rem;color:#cbd5e1;background:#0f172a;border-radius:6px;padding:9px 12px;line-height:1.65;max-height:110px;overflow-y:auto;white-space:pre-wrap;word-break:break-word}}
+.modal-path{{font-size:.75rem;color:#94a3b8;font-family:monospace;background:#0f172a;padding:5px 9px;border-radius:5px;display:block}}
+.modal-pat{{width:100%;padding:8px 10px;background:#0f172a;border:1px solid #334155;border-radius:6px;color:#e2e8f0;font-size:.82rem;outline:none}}
+.modal-pat:focus{{border-color:#0ea5e9}}
+.modal-hint{{font-size:.63rem;color:#475569;margin-top:5px;line-height:1.4}}
+.modal-status{{font-size:.78rem;min-height:20px;margin-bottom:12px}}
+.modal-actions{{display:flex;gap:10px}}
+.modal-confirm{{background:#0ea5e9;color:#fff;border:none;padding:8px 18px;border-radius:6px;cursor:pointer;font-size:.82rem;font-weight:600}}
+.modal-confirm:disabled{{background:#334155;color:#475569;cursor:default}}
+.modal-cancel{{background:#1e293b;color:#94a3b8;border:1px solid #334155;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:.82rem}}
+.modal-cancel:hover{{color:#f1f5f9;border-color:#475569}}
 .metrics-row{{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:9px}}
 .metric-item{{font-size:.72rem;color:#94a3b8;background:#0f172a;border:1px solid #334155;border-radius:4px;padding:2px 8px}}
 .quality-score{{font-size:.72rem;color:#fbbf24;background:#2f1f05;border:1px solid #92400e;border-radius:4px;padding:2px 8px;font-weight:600}}
@@ -498,7 +549,40 @@ footer a:hover{{color:#94a3b8}}
   <a href="{ACTIONS_URL}" target="_blank">Run workflow</a>
 </footer>
 
+<!-- Approve & Publish modal -->
+<div class="modal-overlay" id="approve-modal">
+  <div class="modal-box">
+    <h3>Approve &amp; Publish Draft</h3>
+    <input type="hidden" id="modal-draft-path">
+    <div class="modal-field">
+      <span class="modal-label">Draft path</span>
+      <code class="modal-path" id="modal-path-display"></code>
+    </div>
+    <div class="modal-field">
+      <span class="modal-label">Post preview</span>
+      <div class="modal-preview" id="modal-preview"></div>
+    </div>
+    <div class="modal-field">
+      <label class="modal-label" for="modal-pat">GitHub Personal Access Token <em>(workflow scope)</em></label>
+      <input class="modal-pat" id="modal-pat" type="password" placeholder="ghp_..." autocomplete="off">
+      <div class="modal-hint">
+        Stored in sessionStorage only &mdash; never sent anywhere except GitHub's API.<br>
+        Create at <b>GitHub &rarr; Settings &rarr; Developer settings &rarr; Personal access tokens &rarr; Tokens (classic)</b> with <b>workflow</b> scope.
+      </div>
+    </div>
+    <div class="modal-status" id="modal-status"></div>
+    <div class="modal-actions">
+      <button class="modal-confirm" id="modal-confirm-btn" onclick="confirmApprove()">&#9654; Approve &amp; Publish</button>
+      <button class="modal-cancel" onclick="closeApproveModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <script>
+var _REPO = '{REPO}';
+var _WORKFLOW = '{WORKFLOW_FILE}';
+var _BRANCH = '{branch}';
+
 function toggle(i){{
   var t=document.getElementById('pt-'+i),b=document.querySelector('#post-'+i+' .expand-btn');
   if(t.classList.contains('collapsed')){{t.classList.remove('collapsed');b.innerHTML='Show less &#9650;';}}
@@ -515,6 +599,62 @@ function copyPost(i){{
     btn.innerHTML='&#10003; Copied';btn.classList.add('copied');
     setTimeout(function(){{btn.innerHTML='&#128203; Copy';btn.classList.remove('copied');}},2000);
   }});
+}}
+
+function showApproveModal(btn){{
+  var path=btn.getAttribute('data-path');
+  var preview=btn.getAttribute('data-preview');
+  document.getElementById('modal-draft-path').value=path;
+  document.getElementById('modal-path-display').textContent=path;
+  document.getElementById('modal-preview').textContent=preview;
+  document.getElementById('modal-status').textContent='';
+  document.getElementById('modal-status').style.color='';
+  var cb=document.getElementById('modal-confirm-btn');
+  cb.textContent='▶ Approve & Publish';cb.disabled=false;
+  var saved=sessionStorage.getItem('gh_pat')||'';
+  document.getElementById('modal-pat').value=saved;
+  document.getElementById('approve-modal').classList.add('open');
+}}
+
+function closeApproveModal(){{
+  document.getElementById('approve-modal').classList.remove('open');
+}}
+
+document.getElementById('approve-modal').addEventListener('click',function(e){{
+  if(e.target===this) closeApproveModal();
+}});
+
+async function confirmApprove(){{
+  var pat=document.getElementById('modal-pat').value.trim();
+  var draftPath=document.getElementById('modal-draft-path').value;
+  var st=document.getElementById('modal-status');
+  var cb=document.getElementById('modal-confirm-btn');
+  if(!pat){{st.textContent='Enter your GitHub PAT to continue.';st.style.color='#f87171';return;}}
+  sessionStorage.setItem('gh_pat',pat);
+  cb.textContent='Triggering…';cb.disabled=true;st.textContent='';
+  try{{
+    var resp=await fetch(
+      'https://api.github.com/repos/'+_REPO+'/actions/workflows/'+_WORKFLOW+'/dispatches',
+      {{method:'POST',
+        headers:{{'Authorization':'Bearer '+pat,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'}},
+        body:JSON.stringify({{ref:_BRANCH,inputs:{{action:'publish_draft',draft_file:draftPath}}}})
+      }}
+    );
+    if(resp.status===204){{
+      st.textContent='✓ Workflow triggered! Open GitHub Actions to track progress.';
+      st.style.color='#4ade80';
+      cb.textContent='Triggered';
+    }}else{{
+      var err=await resp.json().catch(function(){{return{{}}}});
+      st.textContent='GitHub API error '+resp.status+': '+(err.message||'check your PAT and try again');
+      st.style.color='#f87171';
+      cb.textContent='▶ Approve & Publish';cb.disabled=false;
+    }}
+  }}catch(e){{
+    st.textContent='Network error: '+e.message;
+    st.style.color='#f87171';
+    cb.textContent='▶ Approve & Publish';cb.disabled=false;
+  }}
 }}
 </script>
 </body>

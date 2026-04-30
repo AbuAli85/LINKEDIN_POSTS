@@ -79,8 +79,27 @@ a{color:inherit;text-decoration:none}
 .copy-btn{background:#1e293b;border:1px solid #334155;color:#94a3b8;font-size:.68rem;padding:3px 9px;border-radius:5px;cursor:pointer;margin-left:auto;transition:all .15s}
 .copy-btn:hover{border-color:#475569;color:#f1f5f9}
 .copy-btn.copied{border-color:#22c55e;color:#4ade80}
+.approve-publish-btn{background:#0ea5e9;border:none;color:#fff;font-size:.72rem;font-weight:600;padding:4px 12px;border-radius:5px;cursor:pointer;transition:background .15s}
+.approve-publish-btn:hover{background:#0284c7}
 .empty{text-align:center;padding:60px 20px;color:#475569;font-size:.95rem;line-height:2.4}
 .empty a{color:#0ea5e9;border-bottom:1px solid #0ea5e9}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal-box{background:#1e293b;border:1px solid #334155;border-radius:14px;padding:28px 30px;max-width:560px;width:90%;max-height:88vh;overflow-y:auto}
+.modal-box h3{color:#f1f5f9;font-size:1rem;margin-bottom:18px}
+.modal-field{margin-bottom:14px}
+.modal-label{font-size:.68rem;color:#64748b;margin-bottom:4px;display:block}
+.modal-preview{font-size:.78rem;color:#cbd5e1;background:#0f172a;border-radius:6px;padding:9px 12px;line-height:1.65;max-height:110px;overflow-y:auto;white-space:pre-wrap;word-break:break-word}
+.modal-path{font-size:.75rem;color:#94a3b8;font-family:monospace;background:#0f172a;padding:5px 9px;border-radius:5px;display:block}
+.modal-pat{width:100%;padding:8px 10px;background:#0f172a;border:1px solid #334155;border-radius:6px;color:#e2e8f0;font-size:.82rem;outline:none}
+.modal-pat:focus{border-color:#0ea5e9}
+.modal-hint{font-size:.63rem;color:#475569;margin-top:5px;line-height:1.4}
+.modal-status{font-size:.78rem;min-height:20px;margin-bottom:12px}
+.modal-actions{display:flex;gap:10px}
+.modal-confirm{background:#0ea5e9;color:#fff;border:none;padding:8px 18px;border-radius:6px;cursor:pointer;font-size:.82rem;font-weight:600}
+.modal-confirm:disabled{background:#334155;color:#475569;cursor:default}
+.modal-cancel{background:#1e293b;color:#94a3b8;border:1px solid #334155;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:.82rem}
+.modal-cancel:hover{color:#f1f5f9;border-color:#475569}
 .metrics-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:9px}
 .metric-item{font-size:.72rem;color:#94a3b8;background:#0f172a;border:1px solid #334155;border-radius:4px;padding:2px 8px}
 .quality-score{font-size:.72rem;color:#fbbf24;background:#2f1f05;border:1px solid #92400e;border-radius:4px;padding:2px 8px;font-weight:600}
@@ -121,7 +140,7 @@ footer a:hover{color:#94a3b8}
 
 <div class="topbar">
   <h1>LinkedIn <em>Auto-Poster</em> &mdash; Dashboard</h1>
-  <span class="updated">Updated Apr 30, 2026 · 5:15 pm Muscat</span>
+  <span class="updated">Updated Apr 30, 2026 · 5:23 pm Muscat</span>
   <div class="actions">
     <a class="btn btn-primary" href="https://github.com/AbuAli85/LINKEDIN_POSTS/actions/workflows/auto-post.yml" target="_blank">&#9654; Run workflow</a>
     <a class="btn btn-ghost" href="https://github.com/AbuAli85/LINKEDIN_POSTS/actions" target="_blank">&#128200; All runs</a>
@@ -132,15 +151,15 @@ footer a:hover{color:#94a3b8}
 <div class="token-banner info">&#8505; LinkedIn tokens expire after 60 days. Set a calendar reminder to renew yours.</div>
 
 <div class="statsbar">
-  <div class="stat"><div class="n">1</div><div class="l">Total</div></div>
+  <div class="stat"><div class="n">0</div><div class="l">Total</div></div>
   <div class="stat"><div class="n">0</div><div class="l">Published</div></div>
-  <div class="stat"><div class="n">1</div><div class="l">Needs review</div></div>
+  <div class="stat"><div class="n">0</div><div class="l">Needs review</div></div>
   <div class="stat"><div class="n">0</div><div class="l">Approved</div></div>
   <div class="stat"><div class="n">0</div><div class="l">Failed</div></div>
   
   <div class="stat success"><div class="n">0%</div><div class="l">Success</div></div>
   <div class="sep"></div>
-  <span class="pillar-pill" style="border-color:#fbbf2455;color:#fbbf24">marketing <b>1</b></span>
+  
 </div>
 
 <div class="schedbar">
@@ -149,72 +168,11 @@ footer a:hover{color:#94a3b8}
 </div>
 
 <div class="content">
-  <div class="section-lbl">Post history (1)</div>
-  
-<div class="card" id="post-0">
-  <div class="card-header">
-    <span class="pillar-tag" style="color:#fbbf24;border-color:#fbbf2455">marketing</span>
-    <span class="badge draft">Needs review</span>
-    
-    <span class="meta-right">
-      <span class="model-tag">sonnet-4-6</span>
-      <span class="date">Apr 30, 2026 · 5:15 pm Muscat</span>
-    </span>
-  </div>
-  <div class="topic">How to write a hook that stops the scroll</div>
-  <div class="fmt-row"><span class="fmt-tag" title="Before/after: how your approach to this changed after a costly mistake or surprising win">&#9999; Before/after: how your approach to thi…</span></div>
-  
-  
-  <div class="post-wrap">
-    <div class="post-text collapsed" id="pt-0">I spent $12K on a LinkedIn campaign. 87 impressions. Zero clicks.
-
-The creative was solid. The targeting was tight. The hook was garbage.
-
-&quot;Introducing our new approach to customer engagement.&quot;
-
-No one cared. I wouldn&#x27;t have clicked it either.
-
-That failure sent me down a rabbit hole on what actually stops people mid-scroll. Here&#x27;s what changed how I write every single headline now:
-
-Your reader is not reading. They&#x27;re scanning for a reason to stop.
-
-That means your first line has one job — create a gap between what they know and what they want to know. Curiosity or contradiction. Nothing else works as reliably.
-
-The formula I use now:
-
-State something specific and slightly wrong-feeling. &quot;We cut our email list by 40% and revenue went up.&quot; That tension forces the brain to pause.
-
-Then make the next line earn the click — give just enough to prove the payoff is real.
-
-Test ruthlessly. I run 3 hooks per post minimum. The one I think will win usually doesn&#x27;t.
-
-The best copywriters aren&#x27;t more creative. They&#x27;re more willing to be wrong fast.
-
-What&#x27;s the worst-performing hook you&#x27;ve ever written? Drop it below — let&#x27;s diagnose it.
-
-#Marketing
-#Copywriting
-#GrowthMarketing
-#ContentStrategy
-#LinkedInGrowth</div>
-    <button class="expand-btn" onclick="toggle(0)">Show more &#9660;</button>
-  </div>
-  <div class="card-footer">
-    <div class="bar-track"><div class="bar-fill ok" style="width:81.1%"></div></div>
-    <span class="chars ok">1217 chars</span>
-    
-    <button class="copy-btn" id="copy-0" onclick="copyPost(0)">&#128203; Copy</button>
-  </div>
-</div>
+  <div class="section-lbl">Post history (0)</div>
+  <div class="empty">&#128221;<br>No posts yet &mdash; <a href="https://github.com/AbuAli85/LINKEDIN_POSTS/actions/workflows/auto-post.yml" target="_blank">trigger the workflow</a> to generate your first post.</div>
 </div>
 
 
-<div class="content" style="margin-top:0">
-  <div class="section-lbl">Pending replies (0)</div>
-  <div class="empty" style="padding:30px 20px">No pending replies</div>
-  
-  
-</div>
 
 <footer>
   Drafts are generated <b>Mon &middot; Wed &middot; Fri</b> at <b>9:00 am Muscat</b>; publishing requires manual approval &nbsp;&middot;&nbsp;
@@ -223,7 +181,40 @@ What&#x27;s the worst-performing hook you&#x27;ve ever written? Drop it below �
   <a href="https://github.com/AbuAli85/LINKEDIN_POSTS/actions/workflows/auto-post.yml" target="_blank">Run workflow</a>
 </footer>
 
+<!-- Approve & Publish modal -->
+<div class="modal-overlay" id="approve-modal">
+  <div class="modal-box">
+    <h3>Approve &amp; Publish Draft</h3>
+    <input type="hidden" id="modal-draft-path">
+    <div class="modal-field">
+      <span class="modal-label">Draft path</span>
+      <code class="modal-path" id="modal-path-display"></code>
+    </div>
+    <div class="modal-field">
+      <span class="modal-label">Post preview</span>
+      <div class="modal-preview" id="modal-preview"></div>
+    </div>
+    <div class="modal-field">
+      <label class="modal-label" for="modal-pat">GitHub Personal Access Token <em>(workflow scope)</em></label>
+      <input class="modal-pat" id="modal-pat" type="password" placeholder="ghp_..." autocomplete="off">
+      <div class="modal-hint">
+        Stored in sessionStorage only &mdash; never sent anywhere except GitHub's API.<br>
+        Create at <b>GitHub &rarr; Settings &rarr; Developer settings &rarr; Personal access tokens &rarr; Tokens (classic)</b> with <b>workflow</b> scope.
+      </div>
+    </div>
+    <div class="modal-status" id="modal-status"></div>
+    <div class="modal-actions">
+      <button class="modal-confirm" id="modal-confirm-btn" onclick="confirmApprove()">&#9654; Approve &amp; Publish</button>
+      <button class="modal-cancel" onclick="closeApproveModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <script>
+var _REPO = 'AbuAli85/LINKEDIN_POSTS';
+var _WORKFLOW = 'auto-post.yml';
+var _BRANCH = 'claude/linkedin-post-automation-lQiJZ';
+
 function toggle(i){
   var t=document.getElementById('pt-'+i),b=document.querySelector('#post-'+i+' .expand-btn');
   if(t.classList.contains('collapsed')){t.classList.remove('collapsed');b.innerHTML='Show less &#9650;';}
@@ -240,6 +231,62 @@ function copyPost(i){
     btn.innerHTML='&#10003; Copied';btn.classList.add('copied');
     setTimeout(function(){btn.innerHTML='&#128203; Copy';btn.classList.remove('copied');},2000);
   });
+}
+
+function showApproveModal(btn){
+  var path=btn.getAttribute('data-path');
+  var preview=btn.getAttribute('data-preview');
+  document.getElementById('modal-draft-path').value=path;
+  document.getElementById('modal-path-display').textContent=path;
+  document.getElementById('modal-preview').textContent=preview;
+  document.getElementById('modal-status').textContent='';
+  document.getElementById('modal-status').style.color='';
+  var cb=document.getElementById('modal-confirm-btn');
+  cb.textContent='▶ Approve & Publish';cb.disabled=false;
+  var saved=sessionStorage.getItem('gh_pat')||'';
+  document.getElementById('modal-pat').value=saved;
+  document.getElementById('approve-modal').classList.add('open');
+}
+
+function closeApproveModal(){
+  document.getElementById('approve-modal').classList.remove('open');
+}
+
+document.getElementById('approve-modal').addEventListener('click',function(e){
+  if(e.target===this) closeApproveModal();
+});
+
+async function confirmApprove(){
+  var pat=document.getElementById('modal-pat').value.trim();
+  var draftPath=document.getElementById('modal-draft-path').value;
+  var st=document.getElementById('modal-status');
+  var cb=document.getElementById('modal-confirm-btn');
+  if(!pat){st.textContent='Enter your GitHub PAT to continue.';st.style.color='#f87171';return;}
+  sessionStorage.setItem('gh_pat',pat);
+  cb.textContent='Triggering…';cb.disabled=true;st.textContent='';
+  try{
+    var resp=await fetch(
+      'https://api.github.com/repos/'+_REPO+'/actions/workflows/'+_WORKFLOW+'/dispatches',
+      {method:'POST',
+        headers:{'Authorization':'Bearer '+pat,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
+        body:JSON.stringify({ref:_BRANCH,inputs:{action:'publish_draft',draft_file:draftPath}})
+      }
+    );
+    if(resp.status===204){
+      st.textContent='✓ Workflow triggered! Open GitHub Actions to track progress.';
+      st.style.color='#4ade80';
+      cb.textContent='Triggered';
+    }else{
+      var err=await resp.json().catch(function(){return{}});
+      st.textContent='GitHub API error '+resp.status+': '+(err.message||'check your PAT and try again');
+      st.style.color='#f87171';
+      cb.textContent='▶ Approve & Publish';cb.disabled=false;
+    }
+  }catch(e){
+    st.textContent='Network error: '+e.message;
+    st.style.color='#f87171';
+    cb.textContent='▶ Approve & Publish';cb.disabled=false;
+  }
 }
 </script>
 </body>

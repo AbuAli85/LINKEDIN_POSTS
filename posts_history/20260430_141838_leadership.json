@@ -7,9 +7,12 @@
   "generated_at": "2026-04-30T14:18:38.511172+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 1,
-  "status": "draft",
-  "published": false,
-  "approved": false,
-  "approval_required": true,
-  "dry_run": true
+  "status": "published",
+  "published": true,
+  "approved": true,
+  "approval_required": false,
+  "dry_run": false,
+  "approved_at": "2026-04-30T14:20:24.979151+00:00",
+  "post_id": "urn:li:share:7455622091032215552",
+  "published_at": "2026-04-30T14:20:25.472485+00:00"
 }

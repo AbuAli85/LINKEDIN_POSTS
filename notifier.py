@@ -43,20 +43,27 @@ def send_draft_ready(
 
     context = _notification_context(draft_path, post_preview, pillar, dashboard_url)
 
-    if os.environ.get("RESEND_API_KEY") and os.environ.get("NOTIFY_EMAIL"):
+    if _env_value("RESEND_API_KEY") and _env_value("NOTIFY_EMAIL"):
         _send_email(context)
     else:
         print("Draft email notification skipped: RESEND_API_KEY or NOTIFY_EMAIL not configured.")
 
-    if os.environ.get("NOTIFY_WEBHOOK_URL"):
+    if _env_value("NOTIFY_WEBHOOK_URL"):
         _send_webhook(context)
     else:
         print("Draft webhook notification skipped: NOTIFY_WEBHOOK_URL not configured.")
 
 
+def _env_value(name: str, default: str | None = None) -> str | None:
+    value = os.environ.get(name)
+    if value is None or not value.strip():
+        return default
+    return value.strip()
+
+
 def _enabled() -> bool:
-    raw = os.environ.get("NOTIFY_ON_DRAFT", "true").strip().lower()
-    return raw not in {"0", "false", "no", "off"}
+    raw = _env_value("NOTIFY_ON_DRAFT", "true") or "true"
+    return raw.lower() not in {"0", "false", "no", "off"}
 
 
 def _notification_context(
@@ -108,11 +115,12 @@ def _send_email(context: dict[str, Any]) -> None:
     try:
         import resend
 
-        resend.api_key = os.environ["RESEND_API_KEY"]
+        sender = _env_value("NOTIFY_FROM", DEFAULT_FROM_EMAIL) or DEFAULT_FROM_EMAIL
+        resend.api_key = _env_value("RESEND_API_KEY") or ""
         response = resend.Emails.send(
             {
-                "from": os.environ.get("NOTIFY_FROM", DEFAULT_FROM_EMAIL),
-                "to": [os.environ["NOTIFY_EMAIL"]],
+                "from": sender,
+                "to": [_env_value("NOTIFY_EMAIL") or ""],
                 "subject": f"LinkedIn draft ready for review: {context['pillar']}",
                 "html": _email_html(context),
                 "text": _email_text(context),
@@ -130,7 +138,7 @@ def _send_email(context: dict[str, Any]) -> None:
 def _send_webhook(context: dict[str, Any]) -> None:
     try:
         response = requests.post(
-            os.environ["NOTIFY_WEBHOOK_URL"],
+            _env_value("NOTIFY_WEBHOOK_URL") or "",
             json=context,
             timeout=10,
             headers={"User-Agent": "linkedin-draft-notifier/1.0"},

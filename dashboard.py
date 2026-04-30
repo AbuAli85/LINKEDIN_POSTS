@@ -32,7 +32,7 @@ PILLAR_COLOR = {
     "marketing":  "#fbbf24",
 }
 
-CRON_WEEKDAYS  = {0, 2, 4}
+CRON_WEEKDAYS  = {6, 0, 2}  # Sat/Mon/Wed — generate 2 days before Mon/Wed/Fri publish
 CRON_HOUR_UTC  = 5
 MUSCAT_OFFSET  = 4   # UTC+4, no DST
 
@@ -348,17 +348,21 @@ def generate(posts: list[dict]) -> str:
     )
 
     from content_strategy import PILLARS
-    weekday_to_pillar = {c["weekday"]: name for name, c in PILLARS.items()}
+    gen_weekday_to_pillar = {c["generate_weekday"]: name for name, c in PILLARS.items()}
 
     def _run_html(r: datetime) -> str:
-        pillar = weekday_to_pillar.get(r.weekday(), "?")
-        color  = PILLAR_COLOR.get(pillar, "#94a3b8")
-        date_s = (r + timedelta(hours=MUSCAT_OFFSET)).strftime("%a %b %d").replace(" 0", " ")
+        pillar     = gen_weekday_to_pillar.get(r.weekday(), "?")
+        config     = PILLARS.get(pillar, {})
+        color      = PILLAR_COLOR.get(pillar, "#94a3b8")
+        gen_date   = (r + timedelta(hours=MUSCAT_OFFSET)).strftime("%a %b %d").replace(" 0", " ")
+        pub_day    = config.get("publish_day", "")
+        pub_suffix = f" <span style='color:#64748b'>→ publishes {pub_day}</span>" if pub_day else ""
         return (
             f'<span class="run-item">'
-            f'<b>{date_s}</b>'
+            f'<b>{gen_date}</b>'
             f' &middot; 9:00 am Muscat'
             f' &middot; <span class="run-pillar" style="color:{color}">{pillar}</span>'
+            f'{pub_suffix}'
             f'</span>'
         )
 
@@ -551,7 +555,7 @@ footer a:hover{{color:#94a3b8}}
 </div>
 
 <div class="schedbar">
-  <span class="lbl">Next scheduled &rarr;</span>
+  <span class="lbl">Next draft generation &rarr;</span>
   {runs_html}
 </div>
 
@@ -563,7 +567,7 @@ footer a:hover{{color:#94a3b8}}
 {engagement_html}
 
 <footer>
-  Drafts are generated <b>Mon &middot; Wed &middot; Fri</b> at <b>9:00 am Muscat</b>; publishing requires manual approval &nbsp;&middot;&nbsp;
+  Drafts generated <b>Sat &middot; Mon &middot; Wed</b> at <b>9:00 am Muscat</b> &rarr; publishes <b>Mon &middot; Wed &middot; Fri</b> after manual approval &nbsp;&middot;&nbsp;
   <a href="https://github.com/{REPO}" target="_blank">Source</a> &middot;
   <a href="https://github.com/{REPO}/blob/main/LINKEDIN_SETUP.md" target="_blank">Renew LinkedIn token</a> &middot;
   <a href="{ACTIONS_URL}" target="_blank">Run workflow</a>

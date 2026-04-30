@@ -4,6 +4,9 @@ PILLARS = {
     "leadership": {
         "day": "Monday",
         "weekday": 0,
+        "generate_weekday": 5,  # Saturday — 2 days before Monday publish
+        "publish_day": "Monday",
+        "generate_day": "Saturday",
         "tone": "thoughtful, story-driven, reflective",
         "audience": "managers, founders, ambitious professionals",
         "formats": [
@@ -45,6 +48,9 @@ PILLARS = {
     "ai": {
         "day": "Wednesday",
         "weekday": 2,
+        "generate_weekday": 0,  # Monday — 2 days before Wednesday publish
+        "publish_day": "Wednesday",
+        "generate_day": "Monday",
         "tone": "sharp, practical, slightly contrarian",
         "audience": "engineers, product leaders, AI-curious professionals",
         "formats": [
@@ -86,6 +92,9 @@ PILLARS = {
     "marketing": {
         "day": "Friday",
         "weekday": 4,
+        "generate_weekday": 2,  # Wednesday — 2 days before Friday publish
+        "publish_day": "Friday",
+        "generate_day": "Wednesday",
         "tone": "punchy, data-informed, tactical",
         "audience": "marketers, founders, growth practitioners",
         "formats": [
@@ -128,11 +137,16 @@ PILLARS = {
 
 
 def pick_pillar(weekday: int, force: str | None = None) -> tuple[str, dict]:
-    """Pick the pillar for the given weekday, or use forced override."""
+    """Pick the pillar for the given weekday, or use forced override.
+
+    Scheduled runs fire on generate_weekday (Sat/Mon/Wed), which is 2 days before
+    the corresponding publish day (Mon/Wed/Fri). The weekday field is kept for the
+    publish-day label and backwards compatibility.
+    """
     if force and force in PILLARS:
         return force, PILLARS[force]
     for name, config in PILLARS.items():
-        if config["weekday"] == weekday:
+        if config["generate_weekday"] == weekday:
             return name, config
-    name = min(PILLARS.items(), key=lambda x: (x[1]["weekday"] - weekday) % 7)[0]
+    name = min(PILLARS.items(), key=lambda x: (x[1]["generate_weekday"] - weekday) % 7)[0]
     return name, PILLARS[name]

@@ -17,6 +17,7 @@ on:
           - generate_draft
           - publish_draft
           - publish_now
+          - fetch_metrics
       draft_file:
         description: "Draft JSON path to publish, e.g. posts_history/20260430_090000_ai.json. Required for publish_draft."
         required: false

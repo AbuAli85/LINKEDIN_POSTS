@@ -20,6 +20,7 @@ VALID_MODES = {
     "publish_draft",
     "publish",
     "publish_now",
+    "fetch_metrics",
 }
 
 
@@ -47,6 +48,10 @@ def main() -> int:
         return publish_saved_draft()
     if mode == "publish_now":
         return generate_and_publish_now()
+    if mode == "fetch_metrics":
+        from metrics import fetch_all_published
+        fetch_all_published()
+        return 0
     return generate_draft()
 
 

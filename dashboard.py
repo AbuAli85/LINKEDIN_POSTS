@@ -128,6 +128,23 @@ def _card(post: dict, idx: int) -> str:
     if e := post.get("publish_error"):
         alerts += f'<div class="alert error">&#10007; {html.escape(str(e)[:220])}</div>'
 
+    metrics     = post.get("metrics") or {}
+    metrics_html = ""
+    if metrics:
+        parts = []
+        if (r := metrics.get("reactions")) is not None:
+            parts.append(f'<span class="metric-item" title="Reactions">&#128077; {r}</span>')
+        if (c := metrics.get("comments")) is not None:
+            parts.append(f'<span class="metric-item" title="Comments">&#128172; {c}</span>')
+        if (s := metrics.get("shares")) is not None:
+            parts.append(f'<span class="metric-item" title="Shares">&#8635; {s}</span>')
+        if (q := metrics.get("manual_quality_score")) is not None:
+            parts.append(f'<span class="quality-score" title="Manual quality score">&#9733; {q}/10</span>')
+        if hs := metrics.get("hook_style"):
+            parts.append(f'<span class="hook-tag">{html.escape(hs)}</span>')
+        if parts:
+            metrics_html = '<div class="metrics-row">' + "".join(parts) + "</div>"
+
     li_link = ""
     if post_id := post.get("post_id", ""):
         safe_id = html.escape(str(post_id))
@@ -153,6 +170,7 @@ def _card(post: dict, idx: int) -> str:
   {f'<div class="topic">{topic}</div>' if topic else ''}
   {f'<div class="fmt-row">{fmt_html}</div>' if fmt else ''}
   {alerts}
+  {metrics_html}
   <div class="post-wrap">
     <div class="post-text collapsed" id="pt-{idx}">{post_text}</div>
     <button class="expand-btn" onclick="toggle({idx})">Show more &#9660;</button>
@@ -173,6 +191,12 @@ def generate(posts: list[dict]) -> str:
     n_approved  = sum(1 for p in posts if (p.get("approved") or p.get("status") == "approved") and not p.get("published"))
     n_failed    = sum(1 for p in posts if p.get("publish_error") or p.get("status") == "failed")
     success_pct = round((n_published / total * 100) if total else 0)
+
+    scored_posts = [p for p in posts if (p.get("metrics") or {}).get("manual_quality_score") is not None]
+    avg_score_html = ""
+    if scored_posts:
+        avg = round(sum(p["metrics"]["manual_quality_score"] for p in scored_posts) / len(scored_posts), 1)
+        avg_score_html = f'<div class="stat"><div class="n">{avg}</div><div class="l">Avg score</div></div>'
 
     counts = Counter(p.get("pillar", "?") for p in posts)
     pillar_pills = "".join(
@@ -295,6 +319,10 @@ a{{color:inherit;text-decoration:none}}
 .copy-btn.copied{{border-color:#22c55e;color:#4ade80}}
 .empty{{text-align:center;padding:60px 20px;color:#475569;font-size:.95rem;line-height:2.4}}
 .empty a{{color:#0ea5e9;border-bottom:1px solid #0ea5e9}}
+.metrics-row{{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:9px}}
+.metric-item{{font-size:.72rem;color:#94a3b8;background:#0f172a;border:1px solid #334155;border-radius:4px;padding:2px 8px}}
+.quality-score{{font-size:.72rem;color:#fbbf24;background:#2f1f05;border:1px solid #92400e;border-radius:4px;padding:2px 8px;font-weight:600}}
+.hook-tag{{font-size:.68rem;color:#818cf8;background:#1a1a2e;border:1px solid #3730a3;border-radius:4px;padding:2px 8px}}
 
 .run-pillar{{text-transform:uppercase;font-size:.72rem;letter-spacing:.06em;font-weight:600}}
 
@@ -329,6 +357,7 @@ footer a:hover{{color:#94a3b8}}
   <div class="stat"><div class="n">{n_drafts}</div><div class="l">Needs review</div></div>
   <div class="stat"><div class="n">{n_approved}</div><div class="l">Approved</div></div>
   <div class="stat"><div class="n">{n_failed}</div><div class="l">Failed</div></div>
+  {avg_score_html}
   <div class="stat success"><div class="n">{success_pct}%</div><div class="l">Success</div></div>
   <div class="sep"></div>
   {pillar_pills}

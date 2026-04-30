@@ -83,7 +83,7 @@ PROCESS (do this in your head — output only the final post):
 
 HARD LIMIT: 800-1500 characters.
 
-{recent_block}Output only the final post. No explanation, no preamble, no label."""
+{performance_block}{recent_block}Output only the final post. No explanation, no preamble, no label."""
 
 
 def _load_recent_posts(limit: int = 10) -> list[dict]:
@@ -112,6 +112,31 @@ def _recent_block(posts: list[dict]) -> str:
     for p in posts[:5]:
         first_line = p.get("post", "").split("\n", 1)[0][:140]
         lines.append(f"- [{p.get('pillar', '?')}] {first_line}")
+    return "\n".join(lines) + "\n\n"
+
+
+def _performance_block() -> str:
+    """Return a performance insights section if enough scored posts exist, else ''."""
+    try:
+        from metrics import get_performance_summary
+        summary = get_performance_summary()
+    except Exception:
+        return ""
+    if not summary:
+        return ""
+    lines = ["PERFORMANCE INSIGHTS (your real audience data — weight toward what works):"]
+    if bp := summary.get("best_pillar"):
+        score = summary["pillar_avg_score"].get(bp, "?")
+        lines.append(f"- Highest-scoring pillar: {bp} (avg {score}/10) — lean into this.")
+    if bh := summary.get("best_hook_style"):
+        score = summary["hook_avg_score"].get(bh, "?")
+        lines.append(f"- Best-performing hook style: {bh} (avg {score}/10) — prefer this opening format.")
+    if tp := summary.get("top_topics"):
+        lines.append(f"- Top-rated topics so far: {', '.join(tp[:2])}")
+    if preview := summary.get("top_posts_preview"):
+        lines.append("- Opening lines from your highest-scoring posts (match this energy):")
+        for line in preview:
+            lines.append(f"  • {line}")
     return "\n".join(lines) + "\n\n"
 
 
@@ -152,6 +177,7 @@ def _generate_once(
     topic: str,
     fmt: str,
     recent_block: str,
+    performance_block: str = "",
 ) -> tuple[str, str]:
     response = client.messages.create(
         model=model,
@@ -166,6 +192,7 @@ def _generate_once(
                     tone=pillar_config["tone"],
                     audience=pillar_config["audience"],
                     fmt=fmt,
+                    performance_block=performance_block,
                     recent_block=recent_block,
                 ),
             }
@@ -188,15 +215,15 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
 
     fmt = pick_format(pillar_config, recent_posts)
     model = os.environ.get("ANTHROPIC_MODEL") or DEFAULT_MODEL
-    # Module-level singleton avoids creating a new HTTP connection pool per call
     client = anthropic.Anthropic()
     rb = _recent_block(recent_posts)
+    pb = _performance_block()
 
     last_error: str | None = None
     last_result: tuple[str, str] | None = None
     for attempt in range(2):
         post_text, model_used = _generate_once(
-            client, model, pillar, pillar_config, topic, fmt, rb
+            client, model, pillar, pillar_config, topic, fmt, rb, pb
         )
         last_result = (post_text, model_used)
         err = _validate(post_text)

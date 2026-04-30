@@ -16,6 +16,7 @@ on:
         options:
           - generate_draft
           - publish_draft
+          - revise_draft
           - publish_now
           - fetch_metrics
           - fetch_comments
@@ -26,6 +27,10 @@ on:
         default: ""
       engagement_file:
         description: "Engagement JSON path for post_reply, e.g. engagement_history/20260430_120000_abc123.json."
+        required: false
+        default: ""
+      revision_notes:
+        description: "Feedback for revise_draft: what to change, improve, or fix in the draft."
         required: false
         default: ""
       pillar:
@@ -75,6 +80,7 @@ jobs:
           POST_MODE: ${{ github.event_name == 'schedule' && 'generate_draft' || inputs.action }}
           PUBLISH_DRAFT_PATH: ${{ inputs.draft_file }}
           ENGAGEMENT_PATH: ${{ inputs.engagement_file }}
+          REVISION_NOTES: ${{ inputs.revision_notes }}
           FORCE_PILLAR: ${{ inputs.pillar }}
           DRY_RUN: ${{ inputs.dry_run || 'false' }}
           CONFIRM_PUBLISH_NOW: ${{ inputs.confirm_publish_now || 'false' }}

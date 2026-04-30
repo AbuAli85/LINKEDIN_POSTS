@@ -258,6 +258,60 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
     }
 
 
+_REVISE_TEMPLATE = """Revise this LinkedIn post based on the owner's feedback.
+
+ORIGINAL POST:
+{original_post}
+
+OWNER FEEDBACK:
+{revision_notes}
+
+Apply the feedback precisely. Keep every element that works. Fix only what was flagged.
+Maintain the same pillar ({pillar}), tone, and character range (800-1500 chars).
+Output only the revised post text. No explanation, no preamble, no label."""
+
+
+def revise_post(original: dict, revision_notes: str) -> dict:
+    """Rewrite an existing draft based on owner feedback. Returns updated post dict."""
+    client = anthropic.Anthropic()
+    model  = os.environ.get("ANTHROPIC_MODEL") or DEFAULT_MODEL
+
+    response = client.messages.create(
+        model=model,
+        max_tokens=MAX_TOKENS,
+        system=[{"type": "text", "text": SYSTEM_PROMPT, "cache_control": {"type": "ephemeral"}}],
+        messages=[{
+            "role": "user",
+            "content": _REVISE_TEMPLATE.format(
+                original_post=original["post"],
+                revision_notes=revision_notes,
+                pillar=original.get("pillar", ""),
+            ),
+        }],
+    )
+    text_blocks = [b.text for b in response.content if b.type == "text"]
+    if not text_blocks:
+        raise RuntimeError("No text in revision response.")
+    text = text_blocks[0].strip()
+
+    err = _validate(text)
+    revised = original.copy()
+    revised.update({
+        "post":            text,
+        "char_count":      len(text),
+        "model":           response.model,
+        "status":          "draft",
+        "approved":        False,
+        "approval_required": True,
+        "revision_notes":  revision_notes,
+        "revised_at":      datetime.now(timezone.utc).isoformat(),
+    })
+    revised.pop("validation_warning", None)
+    if err:
+        revised["validation_warning"] = err
+    return revised
+
+
 def save_post(post_data: dict) -> Path:
     ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     path = HISTORY_DIR / f"{ts}_{post_data['pillar']}.json"

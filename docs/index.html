@@ -79,6 +79,12 @@ a{color:inherit;text-decoration:none}
 .copy-btn{background:#1e293b;border:1px solid #334155;color:#94a3b8;font-size:.68rem;padding:3px 9px;border-radius:5px;cursor:pointer;margin-left:auto;transition:all .15s}
 .copy-btn:hover{border-color:#475569;color:#f1f5f9}
 .copy-btn.copied{border-color:#22c55e;color:#4ade80}
+.review-actions{display:flex;flex-wrap:wrap;align-items:center;gap:7px;padding:9px 0 4px;border-top:1px solid #1e293b;margin-top:6px}
+.review-label{font-size:.62rem;color:#475569;text-transform:uppercase;letter-spacing:.08em;margin-right:2px}
+.rev-btn{border:none;font-size:.71rem;font-weight:500;padding:4px 11px;border-radius:5px;cursor:pointer;transition:all .15s}
+.rev-changes{background:#2f1f05;color:#fbbf24;border:1px solid #92400e}.rev-changes:hover{background:#451a03}
+.rev-edit{background:#1a1a2e;color:#818cf8;border:1px solid #3730a3}.rev-edit:hover{background:#1e1b4b}
+.rev-recreate{background:#0f172a;color:#64748b;border:1px solid #334155}.rev-recreate:hover{color:#94a3b8;border-color:#475569}
 .approve-publish-btn{background:#0ea5e9;border:none;color:#fff;font-size:.72rem;font-weight:600;padding:4px 12px;border-radius:5px;cursor:pointer;transition:background .15s}
 .approve-publish-btn:hover{background:#0284c7}
 .empty{text-align:center;padding:60px 20px;color:#475569;font-size:.95rem;line-height:2.4}
@@ -140,7 +146,7 @@ footer a:hover{color:#94a3b8}
 
 <div class="topbar">
   <h1>LinkedIn <em>Auto-Poster</em> &mdash; Dashboard</h1>
-  <span class="updated">Updated Apr 30, 2026 · 5:44 pm Muscat</span>
+  <span class="updated">Updated Apr 30, 2026 · 5:52 pm Muscat</span>
   <div class="actions">
     <a class="btn btn-primary" href="https://github.com/AbuAli85/LINKEDIN_POSTS/actions/workflows/auto-post.yml" target="_blank">&#9654; Run workflow</a>
     <a class="btn btn-ghost" href="https://github.com/AbuAli85/LINKEDIN_POSTS/actions" target="_blank">&#128200; All runs</a>
@@ -221,6 +227,7 @@ What&#x27;s the longest you&#x27;ve ever stretched a single piece of content —
 #B2BMarketing</div>
     <button class="expand-btn" onclick="toggle(0)">Show more &#9660;</button>
   </div>
+  
   <div class="card-footer">
     <div class="bar-track"><div class="bar-fill ok" style="width:78.5%"></div></div>
     <span class="chars ok">1178 chars</span>
@@ -232,12 +239,6 @@ What&#x27;s the longest you&#x27;ve ever stretched a single piece of content —
 </div>
 
 
-<div class="content" style="margin-top:0">
-  <div class="section-lbl">Pending replies (0)</div>
-  <div class="empty" style="padding:30px 20px">No pending replies</div>
-  
-  
-</div>
 
 <footer>
   Drafts are generated <b>Mon &middot; Wed &middot; Fri</b> at <b>9:00 am Muscat</b>; publishing requires manual approval &nbsp;&middot;&nbsp;
@@ -245,6 +246,54 @@ What&#x27;s the longest you&#x27;ve ever stretched a single piece of content —
   <a href="https://github.com/AbuAli85/LINKEDIN_POSTS/blob/main/LINKEDIN_SETUP.md" target="_blank">Renew LinkedIn token</a> &middot;
   <a href="https://github.com/AbuAli85/LINKEDIN_POSTS/actions/workflows/auto-post.yml" target="_blank">Run workflow</a>
 </footer>
+
+<!-- Request Changes modal -->
+<div class="modal-overlay" id="revise-modal">
+  <div class="modal-box">
+    <h3>&#9998; Request Changes</h3>
+    <input type="hidden" id="revise-draft-path">
+    <div class="modal-field">
+      <span class="modal-label">Draft path</span>
+      <code class="modal-path" id="revise-path-display"></code>
+    </div>
+    <div class="modal-field">
+      <label class="modal-label" for="revise-notes">What should Claude change? Be specific.</label>
+      <textarea id="revise-notes" rows="4" placeholder="e.g. The opening is too generic. Make it start with a concrete dollar number or business outcome. Keep the list format but tighten each point to one sentence." style="width:100%;padding:8px 10px;background:#0f172a;border:1px solid #334155;border-radius:6px;color:#e2e8f0;font-size:.82rem;outline:none;resize:vertical;line-height:1.55"></textarea>
+    </div>
+    <div class="modal-field">
+      <label class="modal-label" for="revise-pat">GitHub Personal Access Token (workflow scope)</label>
+      <input class="modal-pat" id="revise-pat" type="password" placeholder="ghp_..." autocomplete="off">
+    </div>
+    <div class="modal-status" id="revise-status"></div>
+    <div class="modal-actions">
+      <button class="modal-confirm" id="revise-confirm-btn" onclick="confirmRevise()">&#9998; Request Changes</button>
+      <button class="modal-cancel" onclick="closeReviseModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit modal -->
+<div class="modal-overlay" id="edit-modal">
+  <div class="modal-box" style="max-width:680px">
+    <h3>&#128393; Edit Draft</h3>
+    <input type="hidden" id="edit-draft-path">
+    <div class="modal-field">
+      <label class="modal-label" for="edit-content">Edit the post text directly</label>
+      <textarea id="edit-content" rows="12" style="width:100%;padding:9px 11px;background:#0f172a;border:1px solid #334155;border-radius:6px;color:#e2e8f0;font-size:.82rem;outline:none;resize:vertical;line-height:1.65;font-family:inherit;white-space:pre-wrap"></textarea>
+      <div style="font-size:.64rem;color:#475569;margin-top:4px" id="edit-charcount">0 chars</div>
+    </div>
+    <div class="modal-field">
+      <label class="modal-label" for="edit-pat">GitHub Personal Access Token (repo scope)</label>
+      <input class="modal-pat" id="edit-pat" type="password" placeholder="ghp_..." autocomplete="off">
+      <div class="modal-hint">Saves the edit directly to the repo as a commit.</div>
+    </div>
+    <div class="modal-status" id="edit-status"></div>
+    <div class="modal-actions">
+      <button class="modal-confirm" id="edit-confirm-btn" onclick="confirmEdit()">&#128190; Save Edit</button>
+      <button class="modal-cancel" onclick="closeEditModal()">Cancel</button>
+    </div>
+  </div>
+</div>
 
 <!-- Approve & Publish modal -->
 <div class="modal-overlay" id="approve-modal">
@@ -298,6 +347,114 @@ function copyPost(i){
   });
 }
 
+function _getPat(){ return sessionStorage.getItem('gh_pat')||''; }
+function _setPat(v){ if(v) sessionStorage.setItem('gh_pat',v); }
+
+function showReviseModal(btn){
+  var path=btn.getAttribute('data-path');
+  document.getElementById('revise-draft-path').value=path;
+  document.getElementById('revise-path-display').textContent=path;
+  document.getElementById('revise-notes').value='';
+  document.getElementById('revise-status').textContent='';
+  document.getElementById('revise-pat').value=_getPat();
+  var cb=document.getElementById('revise-confirm-btn');
+  cb.textContent='&#9998; Request Changes';cb.disabled=false;
+  document.getElementById('revise-modal').classList.add('open');
+}
+function closeReviseModal(){ document.getElementById('revise-modal').classList.remove('open'); }
+document.getElementById('revise-modal').addEventListener('click',function(e){ if(e.target===this) closeReviseModal(); });
+
+async function confirmRevise(){
+  var pat=document.getElementById('revise-pat').value.trim();
+  var notes=document.getElementById('revise-notes').value.trim();
+  var path=document.getElementById('revise-draft-path').value;
+  var st=document.getElementById('revise-status');
+  var cb=document.getElementById('revise-confirm-btn');
+  if(!pat){st.textContent='Enter your GitHub PAT.';st.style.color='#f87171';return;}
+  if(!notes){st.textContent='Describe what needs to change.';st.style.color='#f87171';return;}
+  _setPat(pat);
+  cb.textContent='Triggering…';cb.disabled=true;st.textContent='';
+  try{
+    var resp=await fetch('https://api.github.com/repos/'+_REPO+'/actions/workflows/'+_WORKFLOW+'/dispatches',
+      {method:'POST',headers:{'Authorization':'Bearer '+pat,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
+        body:JSON.stringify({ref:_BRANCH,inputs:{action:'revise_draft',draft_file:path,revision_notes:notes}})
+      });
+    if(resp.status===204){st.textContent='✓ Revision requested! Claude is rewriting the draft.';st.style.color='#4ade80';cb.textContent='Requested';}
+    else{var e=await resp.json().catch(function(){return{}});st.textContent='Error '+resp.status+': '+(e.message||'check your PAT');st.style.color='#f87171';cb.textContent='&#9998; Request Changes';cb.disabled=false;}
+  }catch(e){st.textContent='Network error: '+e.message;st.style.color='#f87171';cb.textContent='&#9998; Request Changes';cb.disabled=false;}
+}
+
+function showEditModal(btn){
+  var path=btn.getAttribute('data-path');
+  var preview=btn.getAttribute('data-preview');
+  document.getElementById('edit-draft-path').value=path;
+  var ta=document.getElementById('edit-content');
+  ta.value=preview;
+  document.getElementById('edit-charcount').textContent=preview.length+' chars';
+  ta.oninput=function(){ document.getElementById('edit-charcount').textContent=ta.value.length+' chars'; };
+  document.getElementById('edit-status').textContent='';
+  document.getElementById('edit-pat').value=_getPat();
+  var cb=document.getElementById('edit-confirm-btn');
+  cb.textContent='&#128190; Save Edit';cb.disabled=false;
+  document.getElementById('edit-modal').classList.add('open');
+}
+function closeEditModal(){ document.getElementById('edit-modal').classList.remove('open'); }
+document.getElementById('edit-modal').addEventListener('click',function(e){ if(e.target===this) closeEditModal(); });
+
+async function confirmEdit(){
+  var pat=document.getElementById('edit-pat').value.trim();
+  var path=document.getElementById('edit-draft-path').value;
+  var content=document.getElementById('edit-content').value;
+  var st=document.getElementById('edit-status');
+  var cb=document.getElementById('edit-confirm-btn');
+  if(!pat){st.textContent='Enter your GitHub PAT.';st.style.color='#f87171';return;}
+  if(!content.trim()){st.textContent='Post text cannot be empty.';st.style.color='#f87171';return;}
+  _setPat(pat);
+  cb.textContent='Saving…';cb.disabled=true;st.textContent='';
+  try{
+    // Get current file SHA
+    var metaResp=await fetch('https://api.github.com/repos/'+_REPO+'/contents/'+path,
+      {headers:{'Authorization':'Bearer '+pat,'Accept':'application/vnd.github.v3+json'}});
+    if(!metaResp.ok){var e=await metaResp.json().catch(function(){return{}});throw new Error('Could not read file: '+( e.message||metaResp.status));}
+    var meta=await metaResp.json();
+    var sha=meta.sha;
+    // Decode current JSON, update post field, re-encode
+    var currentJson=JSON.parse(atob(meta.content.replace(/\n/g,'')));
+    currentJson.post=content;
+    currentJson.char_count=content.length;
+    currentJson.manually_edited=true;
+    currentJson.edited_at=new Date().toISOString();
+    var newContent=btoa(unescape(encodeURIComponent(JSON.stringify(currentJson,null,2))));
+    var putResp=await fetch('https://api.github.com/repos/'+_REPO+'/contents/'+path,
+      {method:'PUT',headers:{'Authorization':'Bearer '+pat,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
+        body:JSON.stringify({message:'edit: manual draft revision via dashboard',content:newContent,sha:sha,branch:_BRANCH})
+      });
+    if(putResp.status===200||putResp.status===201){
+      st.textContent='✓ Edit saved to repo. Refresh the dashboard in ~30 seconds.';st.style.color='#4ade80';
+      cb.textContent='Saved';
+    }else{
+      var e2=await putResp.json().catch(function(){return{}});
+      st.textContent='Error '+putResp.status+': '+(e2.message||'check your PAT scope (needs repo)');
+      st.style.color='#f87171';cb.textContent='&#128190; Save Edit';cb.disabled=false;
+    }
+  }catch(e){st.textContent='Error: '+e.message;st.style.color='#f87171';cb.textContent='&#128190; Save Edit';cb.disabled=false;}
+}
+
+function confirmRecreate(btn){
+  var pillar=btn.getAttribute('data-pillar')||'same pillar';
+  if(!confirm('Regenerate a new draft for the '+pillar+' pillar?\nThe current draft will remain in posts_history but will be replaced in the dashboard.'))return;
+  var pat=_getPat();
+  if(!pat){pat=prompt('Enter your GitHub PAT (workflow scope):');if(!pat)return;_setPat(pat);}
+  fetch('https://api.github.com/repos/'+_REPO+'/actions/workflows/'+_WORKFLOW+'/dispatches',
+    {method:'POST',headers:{'Authorization':'Bearer '+pat,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
+      body:JSON.stringify({ref:_BRANCH,inputs:{action:'generate_draft',pillar:pillar}})
+    }
+  ).then(function(r){
+    if(r.status===204){alert('✓ New draft is being generated for the '+pillar+' pillar. Refresh in ~60 seconds.');}
+    else{r.json().then(function(e){alert('Error '+r.status+': '+(e.message||'check your PAT'));}).catch(function(){alert('Error '+r.status);});}
+  }).catch(function(e){alert('Network error: '+e.message);});
+}
+
 function showApproveModal(btn){
   var path=btn.getAttribute('data-path');
   var preview=btn.getAttribute('data-preview');
@@ -308,8 +465,7 @@ function showApproveModal(btn){
   document.getElementById('modal-status').style.color='';
   var cb=document.getElementById('modal-confirm-btn');
   cb.textContent='▶ Approve & Publish';cb.disabled=false;
-  var saved=sessionStorage.getItem('gh_pat')||'';
-  document.getElementById('modal-pat').value=saved;
+  document.getElementById('modal-pat').value=_getPat();
   document.getElementById('approve-modal').classList.add('open');
 }
 
@@ -327,7 +483,7 @@ async function confirmApprove(){
   var st=document.getElementById('modal-status');
   var cb=document.getElementById('modal-confirm-btn');
   if(!pat){st.textContent='Enter your GitHub PAT to continue.';st.style.color='#f87171';return;}
-  sessionStorage.setItem('gh_pat',pat);
+  _setPat(pat);
   cb.textContent='Triggering…';cb.disabled=true;st.textContent='';
   try{
     var resp=await fetch(

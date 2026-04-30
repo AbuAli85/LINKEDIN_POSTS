@@ -20,6 +20,7 @@ VALID_MODES = {
     "publish_draft",
     "publish",
     "publish_now",
+    "revise_draft",
     "fetch_metrics",
     "fetch_comments",
     "post_reply",
@@ -50,6 +51,8 @@ def main() -> int:
         return publish_saved_draft()
     if mode == "publish_now":
         return generate_and_publish_now()
+    if mode == "revise_draft":
+        return revise_saved_draft()
     if mode == "fetch_metrics":
         from metrics import fetch_all_published
         fetch_all_published()
@@ -177,6 +180,33 @@ def _publish_post_file(path: Path) -> int:
         print(f"ERROR: {e}", file=sys.stderr)
         _update_json(path, {"status": "failed", "published": False, "publish_error": str(e)})
         return 1
+
+
+def revise_saved_draft() -> int:
+    """Rewrite an existing draft based on owner feedback (REVISION_NOTES env var)."""
+    raw_path = (os.environ.get("PUBLISH_DRAFT_PATH") or "").strip()
+    notes    = (os.environ.get("REVISION_NOTES") or "").strip()
+    if not raw_path:
+        raise SystemExit("PUBLISH_DRAFT_PATH is required for revise_draft mode.")
+    if not notes:
+        raise SystemExit("REVISION_NOTES is required for revise_draft mode.")
+
+    path = Path(raw_path)
+    if not path.is_absolute():
+        path = Path(__file__).parent / path
+    if not path.exists():
+        raise SystemExit(f"Draft not found: {path}")
+
+    original = json.loads(path.read_text(encoding="utf-8"))
+    print(f"Revising draft: {path.name}")
+    print(f"Feedback: {notes}")
+
+    from generator import revise_post
+    revised = revise_post(original, notes)
+    path.write_text(json.dumps(revised, indent=2), encoding="utf-8")
+    print(f"Draft revised → {path}")
+    _print_post(revised)
+    return 0
 
 
 def _notify_draft_ready(path: Path, post: dict, pillar: str) -> None:

@@ -634,8 +634,9 @@ footer a:hover{{color:#94a3b8}}
       <label class="modal-label" for="modal-pat">GitHub Personal Access Token <em>(workflow scope)</em></label>
       <input class="modal-pat" id="modal-pat" type="password" placeholder="ghp_..." autocomplete="off">
       <div class="modal-hint">
-        Stored in sessionStorage only &mdash; never sent anywhere except GitHub's API.<br>
-        Create at <b>GitHub &rarr; Settings &rarr; Developer settings &rarr; Personal access tokens &rarr; Tokens (classic)</b> with <b>workflow</b> scope.
+        Saved in browser localStorage &mdash; never sent anywhere except GitHub's API. &nbsp;
+        <a href="#" onclick="clearPat();return false;" style="color:#475569;text-decoration:underline">Clear saved token</a><br>
+        Create at <b>GitHub &rarr; Settings &rarr; Developer settings &rarr; Personal access tokens &rarr; Tokens (classic)</b> with <b>repo</b> + <b>workflow</b> scope.
       </div>
     </div>
     <div class="modal-status" id="modal-status"></div>
@@ -669,8 +670,9 @@ function copyPost(i){{
   }});
 }}
 
-function _getPat(){{ return sessionStorage.getItem('gh_pat')||''; }}
-function _setPat(v){{ if(v) sessionStorage.setItem('gh_pat',v); }}
+function _getPat(){{ return localStorage.getItem('gh_pat')||''; }}
+function _setPat(v){{ if(v) localStorage.setItem('gh_pat',v); }}
+function clearPat(){{ localStorage.removeItem('gh_pat');alert('GitHub token cleared.'); }}
 
 function showReviseModal(btn){{
   var path=btn.getAttribute('data-path');

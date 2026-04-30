@@ -21,6 +21,8 @@ VALID_MODES = {
     "publish",
     "publish_now",
     "fetch_metrics",
+    "fetch_comments",
+    "post_reply",
 }
 
 
@@ -51,6 +53,17 @@ def main() -> int:
     if mode == "fetch_metrics":
         from metrics import fetch_all_published
         fetch_all_published()
+        return 0
+    if mode == "fetch_comments":
+        from engagement import fetch_all_comments
+        fetch_all_comments()
+        return 0
+    if mode == "post_reply":
+        from engagement import post_reply_cmd
+        raw = (os.environ.get("ENGAGEMENT_PATH") or "").strip()
+        if not raw:
+            raise SystemExit("ENGAGEMENT_PATH is required for POST_MODE=post_reply.")
+        post_reply_cmd(Path(raw))
         return 0
     return generate_draft()
 

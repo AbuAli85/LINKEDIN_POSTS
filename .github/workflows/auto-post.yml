@@ -18,8 +18,14 @@ on:
           - publish_draft
           - publish_now
           - fetch_metrics
+          - fetch_comments
+          - post_reply
       draft_file:
         description: "Draft JSON path to publish, e.g. posts_history/20260430_090000_ai.json. Required for publish_draft."
+        required: false
+        default: ""
+      engagement_file:
+        description: "Engagement JSON path for post_reply, e.g. engagement_history/20260430_120000_abc123.json."
         required: false
         default: ""
       pillar:
@@ -62,6 +68,7 @@ jobs:
           LINKEDIN_AUTHOR_URN: ${{ secrets.LINKEDIN_AUTHOR_URN }}
           POST_MODE: ${{ github.event_name == 'schedule' && 'generate_draft' || inputs.action }}
           PUBLISH_DRAFT_PATH: ${{ inputs.draft_file }}
+          ENGAGEMENT_PATH: ${{ inputs.engagement_file }}
           FORCE_PILLAR: ${{ inputs.pillar }}
           DRY_RUN: ${{ inputs.dry_run || 'false' }}
           CONFIRM_PUBLISH_NOW: ${{ inputs.confirm_publish_now || 'false' }}
@@ -77,6 +84,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add posts_history/ docs/
+          git add posts_history/ engagement_history/ docs/
           git diff --cached --quiet || git commit -m "dashboard: update $(date -u '+%Y-%m-%d %H:%M UTC')"
           git push origin HEAD:${GITHUB_REF_NAME}

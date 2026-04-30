@@ -184,6 +184,103 @@ def _card(post: dict, idx: int) -> str:
 </div>"""
 
 
+def _engagement_sections() -> str:
+    """Build HTML for pending replies and outreach leads sections."""
+    try:
+        from engagement import get_repeat_engagers, load_all_engagement
+        items   = load_all_engagement()
+        engagers = get_repeat_engagers()
+    except Exception:
+        return ""
+
+    RISK_COLOR = {"safe": "#4ade80", "review": "#fbbf24", "block": "#f87171"}
+    STATUS_COLOR = {"pending": "#fbbf24", "approved": "#818cf8", "posted": "#4ade80",
+                    "blocked": "#f87171"}
+
+    pending = [d for d in items if d.get("status") in ("pending", "approved")]
+    recent_posted = [d for d in items if d.get("status") == "posted"][:5]
+
+    # ---- pending replies section ----
+    if not pending:
+        pending_html = '<div class="empty" style="padding:30px 20px">No pending replies</div>'
+    else:
+        cards = []
+        for d in pending:
+            risk   = d.get("risk_level", "review")
+            status = d.get("status", "pending")
+            rc     = RISK_COLOR.get(risk, "#94a3b8")
+            sc     = STATUS_COLOR.get(status, "#94a3b8")
+            rec    = d.get("recommended_reply", 0)
+            comment_esc = html.escape(d.get("comment_text", "")[:200])
+            topic_esc   = html.escape(d.get("post_topic", ""))
+            fname       = html.escape(Path(d.get("post_file", "engagement_history/?.json")).name)
+
+            reply_rows = ""
+            for i, r in enumerate(d.get("reply_drafts", [])):
+                star   = "&#9733; " if i == rec else ""
+                r_esc  = html.escape(r)
+                reply_rows += (
+                    f'<div class="reply-opt{"rec" if i == rec else ""}">'
+                    f'<span class="reply-idx">{star}[{i}]</span> {r_esc}</div>'
+                )
+
+            risk_cats = ", ".join(d.get("risk_categories", [])) or "none"
+            risk_note = html.escape(d.get("risk_reason", ""))
+
+            cards.append(f"""
+<div class="eng-card">
+  <div class="eng-header">
+    <span class="eng-badge" style="background:#0f172a;color:{sc};border:1px solid {sc}55">{status.upper()}</span>
+    <span class="eng-badge" style="background:#0f172a;color:{rc};border:1px solid {rc}55">risk: {risk}</span>
+    <span class="eng-meta">post: {topic_esc[:60]}</span>
+  </div>
+  <div class="eng-comment">&#128172; {comment_esc}</div>
+  {f'<div class="eng-risk-note">&#9888; {html.escape(risk_cats)} &mdash; {risk_note}</div>' if risk == "review" else ""}
+  <div class="eng-replies">{reply_rows if reply_rows else "<em>No reply drafts — blocked or fetch failed.</em>"}</div>
+  <div class="eng-cmd"><code>python engagement.py approve {fname} --reply {rec}</code></div>
+</div>""")
+        pending_html = "".join(cards)
+
+    # ---- recently posted ----
+    if recent_posted:
+        rp_rows = ""
+        for d in recent_posted:
+            posted_text = html.escape(d.get("posted_reply", "")[:100])
+            rp_rows += f'<div class="rp-item">&#10003; {posted_text}</div>'
+        recent_html = f'<div class="section-lbl" style="margin-top:22px">Recently posted replies ({len(recent_posted)})</div>{rp_rows}'
+    else:
+        recent_html = ""
+
+    # ---- outreach leads ----
+    if engagers:
+        lead_rows = ""
+        for lead in engagers[:10]:
+            name  = html.escape(lead.get("commenter_name", "unknown"))
+            urn   = html.escape(lead.get("commenter_urn", ""))
+            count = lead.get("post_count", 0)
+            latest_comment = html.escape((lead.get("comments") or [{}])[-1].get("comment_text", "")[:80])
+            lead_rows += (
+                f'<div class="lead-row">'
+                f'<span class="lead-name">{name}</span>'
+                f'<span class="lead-count">{count} posts engaged</span>'
+                f'<span class="lead-comment">{latest_comment}</span>'
+                f'</div>'
+            )
+        outreach_html = f"""
+<div class="section-lbl" style="margin-top:28px">Outreach leads — repeat engagers ({len(engagers)})</div>
+<div class="leads-table">{lead_rows}</div>"""
+    else:
+        outreach_html = ""
+
+    return f"""
+<div class="content" style="margin-top:0">
+  <div class="section-lbl">Pending replies ({len(pending)})</div>
+  {pending_html}
+  {recent_html}
+  {outreach_html}
+</div>"""
+
+
 def generate(posts: list[dict]) -> str:
     total       = len(posts)
     n_published = sum(1 for p in posts if p.get("published") or p.get("status") == "published")
@@ -234,7 +331,8 @@ def generate(posts: list[dict]) -> str:
         '<a href="' + ACTIONS_URL + '" target="_blank">trigger the workflow</a> to generate your first post.</div>'
     )
 
-    now_muscat = _to_muscat(datetime.now(timezone.utc))
+    now_muscat      = _to_muscat(datetime.now(timezone.utc))
+    engagement_html = _engagement_sections()
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -323,6 +421,24 @@ a{{color:inherit;text-decoration:none}}
 .metric-item{{font-size:.72rem;color:#94a3b8;background:#0f172a;border:1px solid #334155;border-radius:4px;padding:2px 8px}}
 .quality-score{{font-size:.72rem;color:#fbbf24;background:#2f1f05;border:1px solid #92400e;border-radius:4px;padding:2px 8px;font-weight:600}}
 .hook-tag{{font-size:.68rem;color:#818cf8;background:#1a1a2e;border:1px solid #3730a3;border-radius:4px;padding:2px 8px}}
+.eng-card{{background:#1e293b;border:1px solid #334155;border-radius:10px;padding:14px 16px;margin-bottom:10px}}
+.eng-header{{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-bottom:8px}}
+.eng-badge{{font-size:.65rem;font-weight:600;padding:2px 8px;border-radius:4px}}
+.eng-meta{{font-size:.68rem;color:#64748b;margin-left:auto}}
+.eng-comment{{font-size:.82rem;color:#cbd5e1;background:#0f172a;border-radius:6px;padding:8px 11px;margin-bottom:8px;line-height:1.6}}
+.eng-risk-note{{font-size:.72rem;color:#fbbf24;background:#451a03;border-radius:5px;padding:5px 10px;margin-bottom:8px}}
+.eng-replies{{display:flex;flex-direction:column;gap:5px;margin-bottom:9px}}
+.reply-opt{{font-size:.78rem;color:#94a3b8;background:#0f172a;border:1px solid #1e293b;border-radius:5px;padding:6px 10px;line-height:1.6}}
+.reply-optrec{{border-color:#818cf855;color:#c7d2fe}}
+.reply-idx{{font-size:.68rem;color:#475569;font-weight:600;margin-right:4px}}
+.eng-cmd{{font-size:.68rem;color:#64748b}}
+.eng-cmd code{{background:#0f172a;border:1px solid #334155;border-radius:4px;padding:2px 7px;color:#94a3b8;font-family:monospace}}
+.rp-item{{font-size:.78rem;color:#4ade80;background:#052e16;border-radius:5px;padding:5px 10px;margin-bottom:5px}}
+.leads-table{{display:flex;flex-direction:column;gap:5px}}
+.lead-row{{display:flex;flex-wrap:wrap;align-items:center;gap:10px;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:8px 12px}}
+.lead-name{{font-size:.8rem;color:#f1f5f9;font-weight:600;min-width:100px}}
+.lead-count{{font-size:.68rem;color:#818cf8;background:#1a1a2e;border:1px solid #3730a3;border-radius:4px;padding:2px 8px}}
+.lead-comment{{font-size:.74rem;color:#64748b;flex:1}}
 
 .run-pillar{{text-transform:uppercase;font-size:.72rem;letter-spacing:.06em;font-weight:600}}
 
@@ -372,6 +488,8 @@ footer a:hover{{color:#94a3b8}}
   <div class="section-lbl">Post history ({total})</div>
   {cards}
 </div>
+
+{engagement_html}
 
 <footer>
   Drafts are generated <b>Mon &middot; Wed &middot; Fri</b> at <b>9:00 am Muscat</b>; publishing requires manual approval &nbsp;&middot;&nbsp;

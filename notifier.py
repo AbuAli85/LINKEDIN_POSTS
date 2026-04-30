@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import os
 from html import escape
+from pathlib import Path
 from typing import Any
 
 import requests
@@ -78,12 +79,13 @@ def _notification_context(
     run_url = f"{server_url}/{repo}/actions/runs/{run_id}" if run_id else None
 
     workflow_url = f"{server_url}/{repo}/actions/workflows/{WORKFLOW_FILE}"
-    dashboard = dashboard_url or os.environ.get("DASHBOARD_URL") or _default_dashboard_url(repo)
+    dashboard = _clean_url(dashboard_url) or _env_value("DASHBOARD_URL") or _default_dashboard_url(repo)
     preview = _clean_preview(post_preview)
+    display_path = _display_draft_path(draft_path)
 
     return {
         "event": "draft_ready",
-        "draft_path": draft_path,
+        "draft_path": display_path,
         "pillar": pillar,
         "post_preview": preview,
         "dashboard_url": dashboard,
@@ -102,6 +104,25 @@ def _default_dashboard_url(repo: str) -> str:
     if owner and name:
         return f"https://{owner}.github.io/{name}/"
     return ""
+
+
+def _clean_url(value: str | None) -> str:
+    return "" if value is None else value.strip()
+
+
+def _display_draft_path(draft_path: str) -> str:
+    clean_path = draft_path.strip()
+    marker = "posts_history/"
+    if marker in clean_path:
+        return marker + clean_path.split(marker, 1)[1]
+
+    try:
+        path = Path(clean_path)
+        if not path.is_absolute():
+            return clean_path
+        return path.name
+    except Exception:  # noqa: BLE001 - display cleanup must not block notifications
+        return clean_path
 
 
 def _clean_preview(text: str) -> str:

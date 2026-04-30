@@ -85,6 +85,7 @@ def generate_draft() -> int:
         "dry_run": True,
     })
     path = save_post(post)
+    _notify_draft_ready(path, post, pillar)
 
     print(f"Saved draft -> {path}")
     _print_post(post)
@@ -176,6 +177,21 @@ def _publish_post_file(path: Path) -> int:
         print(f"ERROR: {e}", file=sys.stderr)
         _update_json(path, {"status": "failed", "published": False, "publish_error": str(e)})
         return 1
+
+
+def _notify_draft_ready(path: Path, post: dict, pillar: str) -> None:
+    """Send optional draft-ready alerts without blocking draft creation."""
+    try:
+        from notifier import send_draft_ready
+
+        send_draft_ready(
+            draft_path=str(path),
+            post_preview=post.get("post", "")[:200],
+            pillar=pillar,
+            dashboard_url=os.environ.get("DASHBOARD_URL"),
+        )
+    except Exception as exc:  # noqa: BLE001 - notifications must never abort drafting
+        print(f"WARNING: draft notification failed unexpectedly: {exc}")
 
 
 def _print_post(post: dict) -> None:

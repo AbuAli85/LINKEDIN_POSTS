@@ -28,6 +28,9 @@ generator.py asks Claude to write a draft
 posts_history/ archives the draft with status=draft
         |
         v
+notifier.py optionally sends email/webhook alert that a draft needs review
+        |
+        v
 dashboard.py updates docs/index.html — draft shows as "Needs review"
         |
         v
@@ -57,6 +60,7 @@ By default, scheduled runs are **draft-first**. This protects your LinkedIn repu
    - `LINKEDIN_ACCESS_TOKEN` — from the OAuth setup
    - `LINKEDIN_AUTHOR_URN` — your LinkedIn URN (`urn:li:person:xxx`)
 4. **Enable GitHub Actions** for the repo (Actions tab → enable).
+5. **Optional: enable draft-ready notifications** so you do not need to manually check the dashboard. Add `RESEND_API_KEY` and `NOTIFY_EMAIL` for email, `NOTIFY_WEBHOOK_URL` for webhook alerts, or both.
 
 That's it. The cron will automatically generate drafts Mon/Wed/Fri. Publishing requires a manual `publish_draft` workflow run.
 
@@ -92,6 +96,33 @@ POST_MODE=publish_now CONFIRM_PUBLISH_NOW=true python main.py
 # Pull LinkedIn engagement stats for all published posts
 POST_MODE=fetch_metrics python main.py
 ```
+
+## Draft-ready notifications
+
+The workflow can alert you when a new draft is ready for review. Notifications are **optional** and **best-effort**: if secrets are missing or a delivery provider is temporarily unavailable, draft generation still succeeds and publishing remains manual.
+
+| Channel | GitHub configuration | What happens |
+|---|---|---|
+| Resend email | Add repository secrets `RESEND_API_KEY` and `NOTIFY_EMAIL` | Sends a review email with the draft path, pillar, preview, dashboard link, and publish workflow link |
+| Webhook | Add repository secret `NOTIFY_WEBHOOK_URL` | Sends a JSON payload to Slack, Make, Zapier, Discord, or a custom endpoint |
+| Disable alerts | Add repository variable `NOTIFY_ON_DRAFT=false` | Skips all notification channels while keeping draft generation active |
+
+For Resend, you may also set repository variable `NOTIFY_FROM` to a verified sender such as `LinkedIn Draft Bot <drafts@yourdomain.com>`. If it is blank, the notifier uses Resend's onboarding sender. You may set repository variable `DASHBOARD_URL` if your dashboard is not served from the default GitHub Pages URL.
+
+A webhook receiver will receive a JSON payload like this:
+
+```json
+{
+  "event": "draft_ready",
+  "draft_path": "posts_history/20260430_090000_ai.json",
+  "pillar": "ai",
+  "post_preview": "First 200 characters of the post...",
+  "dashboard_url": "https://AbuAli85.github.io/LINKEDIN_POSTS/",
+  "publish_workflow_url": "https://github.com/AbuAli85/LINKEDIN_POSTS/actions/workflows/auto-post.yml"
+}
+```
+
+The alert is intentionally informational. It never approves, publishes, or triggers LinkedIn posting. The operating model remains: **Chatbase advises, GitHub Actions executes, owner decides**.
 
 ## Performance tracking
 
@@ -157,6 +188,7 @@ LinkedIn tokens expire every 60 days. When publishing fails with a 401, repeat s
 | `content_strategy.py` | Pillar definitions, topic library, day mapping |
 | `generator.py` | Claude API call, deduplication, performance-aware prompt injection |
 | `publisher.py` | LinkedIn UGC API client |
+| `notifier.py` | Optional draft-ready notifications via Resend email and webhook POST |
 | `metrics.py` | Performance tracking: fetch LinkedIn stats, score posts, summarise for generator |
 | `dashboard.py` | Generates docs/index.html with status, metrics, and next scheduled runs |
 | `.github/workflows/auto-post.yml` | GitHub Actions draft schedule and manual publish/metrics controls |

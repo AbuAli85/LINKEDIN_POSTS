@@ -91,12 +91,17 @@ def _card(post: dict, idx: int) -> str:
     pillar = post.get("pillar", "unknown")
     color  = PILLAR_COLOR.get(pillar, "#94a3b8")
 
-    if post.get("published"):
+    status_value = post.get("status") or ""
+    if post.get("published") or status_value == "published":
         status = _badge("&#10003; Published", "published")
+    elif post.get("publish_error") or status_value == "failed":
+        status = _badge("&#10007; Failed", "failed")
+    elif post.get("approved") or status_value == "approved":
+        status = _badge("Approved", "approved")
+    elif post.get("approval_required") or status_value == "draft":
+        status = _badge("Needs review", "draft")
     elif post.get("dry_run"):
         status = _badge("Dry run", "dry-run")
-    elif post.get("publish_error"):
-        status = _badge("&#10007; Failed", "failed")
     else:
         status = _badge("Draft", "draft")
 
@@ -163,9 +168,10 @@ def _card(post: dict, idx: int) -> str:
 
 def generate(posts: list[dict]) -> str:
     total       = len(posts)
-    n_published = sum(1 for p in posts if p.get("published"))
-    n_dry       = sum(1 for p in posts if p.get("dry_run") and not p.get("published"))
-    n_failed    = sum(1 for p in posts if p.get("publish_error"))
+    n_published = sum(1 for p in posts if p.get("published") or p.get("status") == "published")
+    n_drafts    = sum(1 for p in posts if (p.get("status") == "draft" or p.get("approval_required")) and not p.get("published"))
+    n_approved  = sum(1 for p in posts if (p.get("approved") or p.get("status") == "approved") and not p.get("published"))
+    n_failed    = sum(1 for p in posts if p.get("publish_error") or p.get("status") == "failed")
     success_pct = round((n_published / total * 100) if total else 0)
 
     counts = Counter(p.get("pillar", "?") for p in posts)
@@ -259,8 +265,9 @@ a{{color:inherit;text-decoration:none}}
 .pillar-tag{{font-size:.64rem;font-weight:700;padding:3px 8px;border-radius:5px;border:1px solid;text-transform:uppercase;letter-spacing:.07em}}
 .badge{{font-size:.68rem;padding:3px 8px;border-radius:4px;font-weight:500}}
 .badge.published{{background:#052e16;color:#4ade80}}
+.badge.approved{{background:#2f1f05;color:#fbbf24}}
 .badge.dry-run{{background:#1c1917;color:#a8a29e}}
-.badge.draft{{background:#1c1917;color:#64748b}}
+.badge.draft{{background:#1c1917;color:#fbbf24}}
 .badge.failed{{background:#450a0a;color:#f87171}}
 .li-link{{font-size:.68rem;color:#0ea5e9;border:1px solid #0c4a6e;border-radius:4px;padding:2px 7px}}
 .li-link:hover{{background:#082f49}}
@@ -319,7 +326,8 @@ footer a:hover{{color:#94a3b8}}
 <div class="statsbar">
   <div class="stat"><div class="n">{total}</div><div class="l">Total</div></div>
   <div class="stat"><div class="n">{n_published}</div><div class="l">Published</div></div>
-  <div class="stat"><div class="n">{n_dry}</div><div class="l">Dry runs</div></div>
+  <div class="stat"><div class="n">{n_drafts}</div><div class="l">Needs review</div></div>
+  <div class="stat"><div class="n">{n_approved}</div><div class="l">Approved</div></div>
   <div class="stat"><div class="n">{n_failed}</div><div class="l">Failed</div></div>
   <div class="stat success"><div class="n">{success_pct}%</div><div class="l">Success</div></div>
   <div class="sep"></div>
@@ -337,7 +345,7 @@ footer a:hover{{color:#94a3b8}}
 </div>
 
 <footer>
-  Auto-posts <b>Mon &middot; Wed &middot; Fri</b> at <b>9:00 am Muscat</b> &nbsp;&middot;&nbsp;
+  Drafts are generated <b>Mon &middot; Wed &middot; Fri</b> at <b>9:00 am Muscat</b>; publishing requires manual approval &nbsp;&middot;&nbsp;
   <a href="https://github.com/{REPO}" target="_blank">Source</a> &middot;
   <a href="https://github.com/{REPO}/blob/main/LINKEDIN_SETUP.md" target="_blank">Renew LinkedIn token</a> &middot;
   <a href="{ACTIONS_URL}" target="_blank">Run workflow</a>

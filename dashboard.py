@@ -667,6 +667,7 @@ footer a:hover{{color:#94a3b8}}
 var _REPO = '{REPO}';
 var _WORKFLOW = '{WORKFLOW_FILE}';
 var _BRANCH = '{branch}';
+var _approveSourceBtn = null;
 
 function toggle(i){{
   var t=document.getElementById('pt-'+i),b=document.querySelector('#post-'+i+' .expand-btn');
@@ -698,7 +699,7 @@ function showReviseModal(btn){{
   document.getElementById('revise-status').textContent='';
   document.getElementById('revise-pat').value=_getPat();
   var cb=document.getElementById('revise-confirm-btn');
-  cb.textContent='&#9998; Request Changes';cb.disabled=false;
+  cb.innerHTML='&#9998; Request Changes';cb.disabled=false;
   document.getElementById('revise-modal').classList.add('open');
 }}
 function closeReviseModal(){{ document.getElementById('revise-modal').classList.remove('open'); }}
@@ -720,8 +721,8 @@ async function confirmRevise(){{
         body:JSON.stringify({{ref:_BRANCH,inputs:{{action:'revise_draft',draft_file:path,revision_notes:notes}}}})
       }});
     if(resp.status===204){{st.textContent='✓ Revision requested! Claude is rewriting the draft.';st.style.color='#4ade80';cb.textContent='Requested';}}
-    else{{var e=await resp.json().catch(function(){{return{{}}}});st.textContent='Error '+resp.status+': '+(e.message||'check your PAT');st.style.color='#f87171';cb.textContent='&#9998; Request Changes';cb.disabled=false;}}
-  }}catch(e){{st.textContent='Network error: '+e.message;st.style.color='#f87171';cb.textContent='&#9998; Request Changes';cb.disabled=false;}}
+    else{{var e=await resp.json().catch(function(){{return{{}}}});st.textContent='Error '+resp.status+': '+(e.message||'check your PAT');st.style.color='#f87171';cb.innerHTML='&#9998; Request Changes';cb.disabled=false;}}
+  }}catch(e){{st.textContent='Network error: '+e.message;st.style.color='#f87171';cb.innerHTML='&#9998; Request Changes';cb.disabled=false;}}
 }}
 
 function showEditModal(btn){{
@@ -735,7 +736,7 @@ function showEditModal(btn){{
   document.getElementById('edit-status').textContent='';
   document.getElementById('edit-pat').value=_getPat();
   var cb=document.getElementById('edit-confirm-btn');
-  cb.textContent='&#128190; Save Edit';cb.disabled=false;
+  cb.innerHTML='&#128190; Save Edit';cb.disabled=false;
   document.getElementById('edit-modal').classList.add('open');
 }}
 function closeEditModal(){{ document.getElementById('edit-modal').classList.remove('open'); }}
@@ -775,9 +776,9 @@ async function confirmEdit(){{
     }}else{{
       var e2=await putResp.json().catch(function(){{return{{}}}});
       st.textContent='Error '+putResp.status+': '+(e2.message||'check your PAT scope (needs repo)');
-      st.style.color='#f87171';cb.textContent='&#128190; Save Edit';cb.disabled=false;
+      st.style.color='#f87171';cb.innerHTML='&#128190; Save Edit';cb.disabled=false;
     }}
-  }}catch(e){{st.textContent='Error: '+e.message;st.style.color='#f87171';cb.textContent='&#128190; Save Edit';cb.disabled=false;}}
+  }}catch(e){{st.textContent='Error: '+e.message;st.style.color='#f87171';cb.innerHTML='&#128190; Save Edit';cb.disabled=false;}}
 }}
 
 function confirmRecreate(btn){{
@@ -796,6 +797,7 @@ function confirmRecreate(btn){{
 }}
 
 function showApproveModal(btn){{
+  _approveSourceBtn=btn;
   var path=btn.getAttribute('data-path');
   var preview=btn.getAttribute('data-preview');
   var day=btn.getAttribute('data-publish-day')||'the scheduled day';
@@ -861,7 +863,24 @@ async function confirmApprove(){{
       st.innerHTML='&#10003; Approved! The cron will publish automatically on the scheduled day.<br>'
         +'<span style="color:#64748b;font-size:.72rem">You can also trigger it manually via Actions → publish_approved.</span>';
       st.style.color='#4ade80';
-      cb.textContent='&#10003; Approved';
+      cb.innerHTML='&#10003; Approved';
+      if(_approveSourceBtn){{
+        var card=_approveSourceBtn.closest('.card');
+        if(card){{
+          var badge=card.querySelector('.badge.draft');
+          if(badge){{badge.className='badge approved';badge.textContent='Approved';}}
+          var ra=card.querySelector('.review-actions');
+          if(ra) ra.style.display='none';
+          _approveSourceBtn.style.display='none';
+        }}
+        var statLabels=document.querySelectorAll('.stat .l');
+        statLabels.forEach(function(el){{
+          var n=el.previousElementSibling;
+          if(!n) return;
+          if(el.textContent.trim()==='Needs review') n.textContent=Math.max(0,parseInt(n.textContent||'0')-1);
+          if(el.textContent.trim()==='Approved') n.textContent=parseInt(n.textContent||'0')+1;
+        }});
+      }}
     }}else{{
       var pe=await putResp.json().catch(function(){{return{{}}}});
       st.textContent='GitHub API error '+putResp.status+': '+(pe.message||'check your PAT has repo contents write scope');

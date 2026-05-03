@@ -145,9 +145,10 @@ def publish_approved_for_today() -> int:
     now     = datetime.now(timezone.utc)
     weekday = now.weekday()  # 0=Mon … 6=Sun
 
-    # Identify which pillar publishes today (keyed on the publish weekday, not generate_weekday)
+    # Identify which scheduled pillar publishes today (exclude conversion — manual only)
     todays_pillar = next(
-        (name for name, cfg in PILLARS.items() if cfg["weekday"] == weekday),
+        (name for name, cfg in PILLARS.items()
+         if cfg["weekday"] == weekday and cfg.get("generate_weekday", -1) >= 0),
         None,
     )
     if todays_pillar is None:

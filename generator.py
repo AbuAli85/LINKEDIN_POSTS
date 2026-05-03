@@ -73,7 +73,7 @@ TOPIC: {topic}
 TONE: {tone}
 AUDIENCE: {audience}
 OPENING STYLE: {fmt}
-
+{brand_context}
 PROCESS (do this in your head — output only the final post):
 1. Draft 3 opening lines that follow the OPENING STYLE above. Make them specific and concrete.
 2. Pick the one that would stop a busy professional mid-scroll.
@@ -192,6 +192,7 @@ def _generate_once(
                     tone=pillar_config["tone"],
                     audience=pillar_config["audience"],
                     fmt=fmt,
+                    brand_context=pillar_config.get("brand_context", ""),
                     performance_block=performance_block,
                     recent_block=recent_block,
                 ),

@@ -27,12 +27,17 @@ def _current_branch() -> str:
         return "main"
 
 PILLAR_COLOR = {
+    "pain":       "#f87171",   # red   — urgency, problem
+    "proof":      "#4ade80",   # green — results, success
+    "vision":     "#818cf8",   # indigo — strategic, future
+    "conversion": "#fbbf24",   # amber — CTA, offer
+    # legacy pillar names kept so old published posts still render with a colour
     "leadership": "#818cf8",
     "ai":         "#22d3ee",
     "marketing":  "#fbbf24",
 }
 
-CRON_WEEKDAYS  = {6, 0, 2}  # Sat/Mon/Wed — generate 2 days before Mon/Wed/Fri publish
+CRON_WEEKDAYS  = {5, 0, 2}  # Python weekday: Sat=5, Mon=0, Wed=2 — draft generation days
 CRON_HOUR_UTC  = 5
 MUSCAT_OFFSET  = 4   # UTC+4, no DST
 

@@ -17,6 +17,7 @@ load_dotenv()
 VALID_MODES = {
     "draft",
     "generate_draft",
+    "publish_approved",
     "publish_draft",
     "publish",
     "publish_now",
@@ -47,6 +48,8 @@ def _mode() -> str:
 
 def main() -> int:
     mode = _mode()
+    if mode == "publish_approved":
+        return publish_approved_for_today()
     if mode == "publish_draft":
         return publish_saved_draft()
     if mode == "publish_now":
@@ -128,6 +131,52 @@ def generate_and_publish_now() -> int:
         print("DRY_RUN=true — skipping LinkedIn publish.")
         return 0
 
+    return _publish_post_file(path)
+
+
+def publish_approved_for_today() -> int:
+    """Cron phase-2: find the most recent approved draft for today's publish pillar and publish it.
+
+    Runs Mon/Wed/Fri at 6am UTC. If no approved draft exists, exits cleanly — the owner
+    simply hasn't approved yet and the post will be skipped for this cycle.
+    """
+    from content_strategy import PILLARS
+
+    now     = datetime.now(timezone.utc)
+    weekday = now.weekday()  # 0=Mon … 6=Sun
+
+    # Identify which pillar publishes today (keyed on the publish weekday, not generate_weekday)
+    todays_pillar = next(
+        (name for name, cfg in PILLARS.items() if cfg["weekday"] == weekday),
+        None,
+    )
+    if todays_pillar is None:
+        print(f"No pillar scheduled to publish today (weekday={weekday}). Nothing to do.")
+        return 0
+
+    history = Path(__file__).parent / "posts_history"
+    candidates: list[tuple[Path, dict]] = []
+    for f in sorted(history.glob("*.json"), reverse=True):
+        try:
+            post = json.loads(f.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if (
+            post.get("pillar") == todays_pillar
+            and (post.get("approved") or post.get("status") == "approved")
+            and not post.get("published")
+        ):
+            candidates.append((f, post))
+
+    if not candidates:
+        print(
+            f"No approved draft found for pillar={todays_pillar!r} (weekday={weekday}). "
+            "Owner has not approved a draft yet — skipping this publish cycle."
+        )
+        return 0
+
+    path, _ = candidates[0]  # most recently generated approved draft
+    print(f"Auto-publishing approved {todays_pillar} draft: {path.name}")
     return _publish_post_file(path)
 
 

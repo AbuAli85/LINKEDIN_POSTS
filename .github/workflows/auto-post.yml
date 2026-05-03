@@ -1,21 +1,27 @@
 name: Auto-post to LinkedIn
 
-# Generates LinkedIn drafts on a schedule. Publishing requires an explicit manual action.
+# Two-phase automation:
+#   Phase 1 — generate draft (Sat/Mon/Wed 5am UTC): creates a draft needing owner approval.
+#   Phase 2 — publish approved (Mon/Wed/Fri 6am UTC): publishes the approved draft for today's pillar.
+# Owner approves via the dashboard (marks JSON as approved); publishing is fully automatic.
 
 on:
   schedule:
-    # 5:00 AM UTC = 9:00 AM Muscat (UTC+4)
-    # Generates drafts 2 days before publish: Sat→Leadership(Mon), Mon→AI(Wed), Wed→Marketing(Fri)
+    # Phase 1: generate drafts — 2 days before publish day
+    # Sat→Leadership(Mon)  Mon→AI(Wed)  Wed→Marketing(Fri)
     - cron: "0 5 * * 6,1,3"
+    # Phase 2: publish approved drafts on publish day
+    - cron: "0 6 * * 1,3,5"
   workflow_dispatch:
     inputs:
       action:
-        description: "Choose generate_draft for safe drafting or publish_draft for an approved draft."
+        description: "Action to run."
         required: true
         default: "generate_draft"
         type: choice
         options:
           - generate_draft
+          - publish_approved
           - publish_draft
           - revise_draft
           - publish_now
@@ -67,6 +73,18 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Detect run mode
+        id: mode
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            # 5am UTC cron = generate draft; 6am UTC cron = publish approved
+            HOUR=$(date -u +%H)
+            [ "$HOUR" = "06" ] && echo "mode=publish_approved" >> "$GITHUB_OUTPUT" \
+                                || echo "mode=generate_draft"   >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=${{ inputs.action }}" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Generate draft or publish approved draft
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -78,7 +96,7 @@ jobs:
           NOTIFY_FROM: ${{ vars.NOTIFY_FROM }}
           NOTIFY_ON_DRAFT: ${{ vars.NOTIFY_ON_DRAFT }}
           DASHBOARD_URL: ${{ vars.DASHBOARD_URL }}
-          POST_MODE: ${{ github.event_name == 'schedule' && 'generate_draft' || inputs.action }}
+          POST_MODE: ${{ steps.mode.outputs.mode }}
           PUBLISH_DRAFT_PATH: ${{ inputs.draft_file }}
           ENGAGEMENT_PATH: ${{ inputs.engagement_file }}
           REVISION_NOTES: ${{ inputs.revision_notes }}

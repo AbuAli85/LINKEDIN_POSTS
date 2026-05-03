@@ -180,6 +180,9 @@ def _card(post: dict, idx: int) -> str:
     preview_val    = html.escape(post.get("post", "")[:300].replace("\n", " "))
     pillar_val     = html.escape(pillar)
 
+    from content_strategy import PILLARS as _PILLARS
+    publish_day    = html.escape(_PILLARS.get(pillar, {}).get("publish_day", "next scheduled day"))
+
     review_actions = ""
     approve_btn    = ""
     if needs_review and draft_path_val:
@@ -196,7 +199,8 @@ def _card(post: dict, idx: int) -> str:
         approve_btn = (
             f'<button class="approve-publish-btn" '
             f'data-path="{draft_path_val}" data-preview="{preview_val}" '
-            f'onclick="showApproveModal(this)">&#10003; Approve &amp; Publish</button>'
+            f'data-publish-day="{publish_day}" '
+            f'onclick="showApproveModal(this)">&#10003; Approve for {publish_day}</button>'
         )
 
     return f"""
@@ -621,10 +625,10 @@ footer a:hover{{color:#94a3b8}}
   </div>
 </div>
 
-<!-- Approve & Publish modal -->
+<!-- Approve modal — marks draft as approved; publish cron fires automatically on the scheduled day -->
 <div class="modal-overlay" id="approve-modal">
   <div class="modal-box">
-    <h3>Approve &amp; Publish Draft</h3>
+    <h3 id="approve-modal-title">&#10003; Approve Draft</h3>
     <input type="hidden" id="modal-draft-path">
     <div class="modal-field">
       <span class="modal-label">Draft path</span>
@@ -635,17 +639,20 @@ footer a:hover{{color:#94a3b8}}
       <div class="modal-preview" id="modal-preview"></div>
     </div>
     <div class="modal-field">
-      <label class="modal-label" for="modal-pat">GitHub Personal Access Token <em>(workflow scope)</em></label>
+      <label class="modal-label" for="modal-pat">GitHub Personal Access Token <em>(repo scope)</em></label>
       <input class="modal-pat" id="modal-pat" type="password" placeholder="ghp_..." autocomplete="off">
       <div class="modal-hint">
-        Saved in browser localStorage &mdash; never sent anywhere except GitHub's API. &nbsp;
+        Marks the draft as approved — <b>does not publish immediately</b>. The cron will
+        publish automatically on the scheduled day. &nbsp;
         <a href="#" onclick="clearPat();return false;" style="color:#475569;text-decoration:underline">Clear saved token</a><br>
-        Create at <b>GitHub &rarr; Settings &rarr; Developer settings &rarr; Personal access tokens &rarr; Tokens (classic)</b> with <b>repo</b> + <b>workflow</b> scope.
+        Token is saved in browser localStorage and never sent anywhere except GitHub's API.<br>
+        Create at <b>GitHub &rarr; Settings &rarr; Developer settings &rarr; Personal access tokens &rarr; Tokens (classic)</b>
+        with <b>repo</b> scope (contents read/write).
       </div>
     </div>
     <div class="modal-status" id="modal-status"></div>
     <div class="modal-actions">
-      <button class="modal-confirm" id="modal-confirm-btn" onclick="confirmApprove()">&#9654; Approve &amp; Publish</button>
+      <button class="modal-confirm" id="modal-confirm-btn" onclick="confirmApprove()">&#10003; Approve</button>
       <button class="modal-cancel" onclick="closeApproveModal()">Cancel</button>
     </div>
   </div>
@@ -786,13 +793,15 @@ function confirmRecreate(btn){{
 function showApproveModal(btn){{
   var path=btn.getAttribute('data-path');
   var preview=btn.getAttribute('data-preview');
+  var day=btn.getAttribute('data-publish-day')||'the scheduled day';
   document.getElementById('modal-draft-path').value=path;
   document.getElementById('modal-path-display').textContent=path;
   document.getElementById('modal-preview').textContent=preview;
   document.getElementById('modal-status').textContent='';
   document.getElementById('modal-status').style.color='';
+  document.getElementById('approve-modal-title').textContent='Approve Draft → publishes '+day;
   var cb=document.getElementById('modal-confirm-btn');
-  cb.textContent='▶ Approve & Publish';cb.disabled=false;
+  cb.innerHTML='&#10003; Approve for '+day;cb.disabled=false;
   document.getElementById('modal-pat').value=_getPat();
   document.getElementById('approve-modal').classList.add('open');
 }}
@@ -808,33 +817,56 @@ document.getElementById('approve-modal').addEventListener('click',function(e){{
 async function confirmApprove(){{
   var pat=document.getElementById('modal-pat').value.trim();
   var draftPath=document.getElementById('modal-draft-path').value;
+  var day=document.getElementById('modal-confirm-btn').getAttribute('data-day')||'';
   var st=document.getElementById('modal-status');
   var cb=document.getElementById('modal-confirm-btn');
   if(!pat){{st.textContent='Enter your GitHub PAT to continue.';st.style.color='#f87171';return;}}
   _setPat(pat);
-  cb.textContent='Triggering…';cb.disabled=true;st.textContent='';
+  cb.textContent='Reading draft…';cb.disabled=true;st.textContent='';
   try{{
-    var resp=await fetch(
-      'https://api.github.com/repos/'+_REPO+'/actions/workflows/'+_WORKFLOW+'/dispatches',
-      {{method:'POST',
+    // 1. Fetch current file content + SHA
+    var getResp=await fetch('https://api.github.com/repos/'+_REPO+'/contents/'+draftPath,
+      {{headers:{{'Authorization':'Bearer '+pat,'Accept':'application/vnd.github.v3+json'}}}});
+    if(!getResp.ok){{
+      var ge=await getResp.json().catch(function(){{return{{}}}});
+      throw new Error('Could not read draft ('+getResp.status+'): '+(ge.message||'check PAT repo scope'));
+    }}
+    var fileData=await getResp.json();
+    // 2. Decode JSON, stamp approval fields
+    var postJson=JSON.parse(atob(fileData.content.replace(/\\n/g,'')));
+    postJson.approved=true;
+    postJson.status='approved';
+    postJson.approval_required=false;
+    postJson.approved_at=new Date().toISOString();
+    postJson.dry_run=false;
+    var encoded=btoa(unescape(encodeURIComponent(JSON.stringify(postJson,null,2))));
+    // 3. Commit the approval back to the repo — no workflow run triggered
+    cb.textContent='Saving approval…';
+    var putResp=await fetch('https://api.github.com/repos/'+_REPO+'/contents/'+draftPath,
+      {{method:'PUT',
         headers:{{'Authorization':'Bearer '+pat,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'}},
-        body:JSON.stringify({{ref:_BRANCH,inputs:{{action:'publish_draft',draft_file:draftPath}}}})
-      }}
-    );
-    if(resp.status===204){{
-      st.textContent='✓ Workflow triggered! Open GitHub Actions to track progress.';
+        body:JSON.stringify({{
+          message:'approve: '+draftPath.split('/').pop(),
+          content:encoded,
+          sha:fileData.sha,
+          branch:_BRANCH
+        }})
+      }});
+    if(putResp.status===200||putResp.status===201){{
+      st.innerHTML='&#10003; Approved! The cron will publish automatically on the scheduled day.<br>'
+        +'<span style="color:#64748b;font-size:.72rem">You can also trigger it manually via Actions → publish_approved.</span>';
       st.style.color='#4ade80';
-      cb.textContent='Triggered';
+      cb.textContent='&#10003; Approved';
     }}else{{
-      var err=await resp.json().catch(function(){{return{{}}}});
-      st.textContent='GitHub API error '+resp.status+': '+(err.message||'check your PAT and try again');
+      var pe=await putResp.json().catch(function(){{return{{}}}});
+      st.textContent='GitHub API error '+putResp.status+': '+(pe.message||'check your PAT has repo contents write scope');
       st.style.color='#f87171';
-      cb.textContent='▶ Approve & Publish';cb.disabled=false;
+      cb.innerHTML='&#10003; Approve';cb.disabled=false;
     }}
   }}catch(e){{
-    st.textContent='Network error: '+e.message;
+    st.textContent='Error: '+e.message;
     st.style.color='#f87171';
-    cb.textContent='▶ Approve & Publish';cb.disabled=false;
+    cb.innerHTML='&#10003; Approve';cb.disabled=false;
   }}
 }}
 </script>

@@ -156,12 +156,26 @@ def pick_format(pillar_config: dict, recent_posts: list[dict]) -> str:
     return random.choice(available)
 
 
+_MOJIBAKE_MARKERS = ("ÃÂ", "Ã¢", "â€", "â€™", "â€œ")
+
+
+def _sanitize(text: str) -> str:
+    """Attempt to fix doubly-encoded UTF-8 (mojibake). Returns text unchanged if fix fails."""
+    try:
+        return text.encode("latin-1").decode("utf-8")
+    except (UnicodeEncodeError, UnicodeDecodeError):
+        return text
+
+
 def _validate(post: str) -> str | None:
     n = len(post)
     if n < MIN_CHARS:
         return f"too short ({n} chars, need >= {MIN_CHARS})"
     if n > MAX_CHARS:
         return f"too long ({n} chars, need <= {MAX_CHARS})"
+    for marker in _MOJIBAKE_MARKERS:
+        if marker in post:
+            return f"encoding corruption detected ({marker!r}) — will retry"
     lower = post.lower()
     for phrase in BANNED_PHRASES:
         if phrase in lower:
@@ -202,7 +216,7 @@ def _generate_once(
     text_blocks = [b.text for b in response.content if b.type == "text"]
     if not text_blocks:
         raise RuntimeError(f"No text block in API response: {response.content}")
-    text = text_blocks[0].strip()
+    text = _sanitize(text_blocks[0].strip())
     return text, response.model
 
 

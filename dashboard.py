@@ -796,6 +796,53 @@ function confirmRecreate(btn){{
   }}).catch(function(e){{alert('Network error: '+e.message);}});
 }}
 
+function _hideReviewUI(card){{
+  var ra=card.querySelector('.review-actions');
+  if(ra) ra.style.display='none';
+  var ab=card.querySelector('.approve-publish-btn');
+  if(ab) ab.style.display='none';
+}}
+
+function _updateStats(needsReviewDelta,approvedDelta){{
+  document.querySelectorAll('.stat .l').forEach(function(el){{
+    var n=el.previousElementSibling;
+    if(!n) return;
+    var t=el.textContent.trim();
+    if(t==='Needs review') n.textContent=Math.max(0,parseInt(n.textContent||'0')+needsReviewDelta);
+    if(t==='Approved') n.textContent=Math.max(0,parseInt(n.textContent||'0')+approvedDelta);
+  }});
+}}
+
+async function refreshDraftCards(){{
+  var cards=document.querySelectorAll('.card');
+  var count=0;
+  for(var i=0;i<cards.length;i++){{
+    var card=cards[i];
+    if(!card.querySelector('.badge.draft')) continue;
+    var ab=card.querySelector('.approve-publish-btn');
+    if(!ab) continue;
+    var draftPath=ab.getAttribute('data-path');
+    if(!draftPath) continue;
+    try{{
+      var url='https://raw.githubusercontent.com/'+_REPO+'/'+_BRANCH+'/'+draftPath+'?t='+Date.now();
+      var r=await fetch(url,{{cache:'no-store'}});
+      if(!r.ok) continue;
+      var data=await r.json();
+      var badge=card.querySelector('.badge.draft');
+      if(!badge) continue;
+      if(data.published||data.status==='published'){{
+        badge.className='badge published';badge.innerHTML='&#10003; Published';
+        _hideReviewUI(card);count++;
+      }}else if(data.approved||data.status==='approved'){{
+        badge.className='badge approved';badge.textContent='Approved';
+        _hideReviewUI(card);count++;
+      }}
+    }}catch(e){{}}
+  }}
+  if(count>0) _updateStats(-count,count);
+}}
+window.addEventListener('load',refreshDraftCards);
+
 function showApproveModal(btn){{
   _approveSourceBtn=btn;
   var path=btn.getAttribute('data-path');
@@ -869,18 +916,11 @@ async function confirmApprove(){{
         if(card){{
           var badge=card.querySelector('.badge.draft');
           if(badge){{badge.className='badge approved';badge.textContent='Approved';}}
-          var ra=card.querySelector('.review-actions');
-          if(ra) ra.style.display='none';
-          _approveSourceBtn.style.display='none';
+          _hideReviewUI(card);
         }}
-        var statLabels=document.querySelectorAll('.stat .l');
-        statLabels.forEach(function(el){{
-          var n=el.previousElementSibling;
-          if(!n) return;
-          if(el.textContent.trim()==='Needs review') n.textContent=Math.max(0,parseInt(n.textContent||'0')-1);
-          if(el.textContent.trim()==='Approved') n.textContent=parseInt(n.textContent||'0')+1;
-        }});
+        _updateStats(-1,1);
       }}
+      setTimeout(closeApproveModal,2500);
     }}else{{
       var pe=await putResp.json().catch(function(){{return{{}}}});
       st.textContent='GitHub API error '+putResp.status+': '+(pe.message||'check your PAT has repo contents write scope');

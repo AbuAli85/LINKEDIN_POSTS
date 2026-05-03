@@ -1,7 +1,7 @@
 """Content strategy: SmartPro — HR, Payroll & Operations platform for Oman businesses."""
 
 # Update these when you have live contact details
-DEMO_CTA  = "DM me 'DEMO' on LinkedIn or WhatsApp and I will set it up."
+DEMO_CTA  = "DM me on LinkedIn or WhatsApp +96879665522 to book a free 20-minute demo."
 BRAND_URL = "thesmartpro.io"
 
 _BRAND_CONTEXT = (

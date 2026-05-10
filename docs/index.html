@@ -41,7 +41,6 @@ a{color:inherit;text-decoration:none}
 .stat .n{font-size:1.4rem;font-weight:700;color:#f1f5f9;line-height:1.1}
 .stat .l{font-size:.6rem;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-top:3px}
 .stat.success .n{color:#4ade80}
-.sep{width:1px;height:32px;background:#334155}
 .pillar-pill{border:1px solid;border-radius:20px;padding:3px 11px;font-size:.75rem}
 .pillar-pill b{color:#f1f5f9;margin-left:4px}
 
@@ -57,16 +56,8 @@ a{color:inherit;text-decoration:none}
 /* CARD */
 .card{background:#1e293b;border:1px solid #334155;border-left:3px solid #334155;border-radius:12px;padding:17px 19px;margin-bottom:13px;transition:border-color .15s}
 .card:hover{border-color:#64748b}
-.card[data-pillar="pain"]{border-left-color:#f87171}
-.card[data-pillar="proof"]{border-left-color:#4ade80}
-.card[data-pillar="leadership"]{border-left-color:#818cf8}
-.card[data-pillar="marketing"]{border-left-color:#fbbf24}
 .card-header{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-bottom:8px}
 .pillar-tag{font-size:.64rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em}
-.pillar-tag.pain{color:#f87171}
-.pillar-tag.proof{color:#4ade80}
-.pillar-tag.leadership{color:#818cf8}
-.pillar-tag.marketing{color:#fbbf24}
 .badge{font-size:.68rem;padding:3px 8px;border-radius:4px;font-weight:500}
 .badge.published{background:#052e16;color:#4ade80}
 .badge.approved{background:#082f49;color:#7dd3fc}
@@ -179,6 +170,21 @@ footer a:hover{color:#f1f5f9}
   .toast{transition:opacity .01s linear;transform:none}
   .toast.out{transform:none}
 }
+
+.pillar-tag.pain{color:#f87171}
+.card[data-pillar="pain"]{border-left-color:#f87171}
+.pillar-tag.proof{color:#4ade80}
+.card[data-pillar="proof"]{border-left-color:#4ade80}
+.pillar-tag.vision{color:#818cf8}
+.card[data-pillar="vision"]{border-left-color:#818cf8}
+.pillar-tag.conversion{color:#fbbf24}
+.card[data-pillar="conversion"]{border-left-color:#fbbf24}
+.pillar-tag.leadership{color:#818cf8}
+.card[data-pillar="leadership"]{border-left-color:#818cf8}
+.pillar-tag.ai{color:#22d3ee}
+.card[data-pillar="ai"]{border-left-color:#22d3ee}
+.pillar-tag.marketing{color:#fbbf24}
+.card[data-pillar="marketing"]{border-left-color:#fbbf24}
 </style>
 </head>
 <body>
@@ -187,7 +193,7 @@ footer a:hover{color:#f1f5f9}
 
 <div class="topbar">
   <h1>LinkedIn <em>Auto-Poster</em> &mdash; Dashboard</h1>
-  <span class="updated">Updated May 10, 2026 · 5:28 pm Muscat</span>
+  <span class="updated">Updated May 10, 2026 · 9:17 pm Muscat</span>
   <nav class="actions" aria-label="Site actions">
     <a class="btn btn-primary" href="https://github.com/AbuAli85/LINKEDIN_POSTS/actions/workflows/auto-post.yml" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">&#9654;</span> Run workflow<span class="sr-only"> (opens in new tab)</span></a>
     <a class="btn btn-ghost" href="https://github.com/AbuAli85/LINKEDIN_POSTS/actions" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">&#128200;</span> All runs<span class="sr-only"> (opens in new tab)</span></a>
@@ -200,8 +206,8 @@ footer a:hover{color:#f1f5f9}
 <div class="statsbar">
   <div class="stat"><div class="n">9</div><div class="l">Total</div></div>
   <div class="stat"><div class="n">6</div><div class="l">Published</div></div>
-  <div class="stat"><div class="n">2</div><div class="l">Needs review</div></div>
-  <div class="stat"><div class="n">1</div><div class="l">Approved</div></div>
+  <div class="stat"><div class="n">0</div><div class="l">Needs review</div></div>
+  <div class="stat"><div class="n">3</div><div class="l">Approved</div></div>
   <div class="stat"><div class="n">0</div><div class="l">Failed</div></div>
   
   <div class="stat success"><div class="n">67%</div><div class="l">Success</div></div>
@@ -210,7 +216,7 @@ footer a:hover{color:#f1f5f9}
 
 <div class="schedbar">
   <span class="lbl">Next draft generation &rarr;</span>
-  <span class="run-item"><b>Mon May 11</b> &middot; 9:00 am Muscat &middot; <span class="run-pillar" style="color:#4ade80">proof</span> <span style='color:#94a3b8'>→ publishes Wednesday</span></span><span class="run-item"><b>Wed May 13</b> &middot; 9:00 am Muscat &middot; <span class="run-pillar" style="color:#818cf8">vision</span> <span style='color:#94a3b8'>→ publishes Friday</span></span><span class="run-item"><b>Sat May 16</b> &middot; 9:00 am Muscat &middot; <span class="run-pillar" style="color:#f87171">pain</span> <span style='color:#94a3b8'>→ publishes Monday</span></span>
+  <span class="run-item"><b>Mon May 11</b> &middot; 9:00 am Muscat &middot; <span class="run-pillar" style="color:#4ade80">proof</span> <span style='color:#94a3b8'>&rarr; publishes Wednesday</span></span><span class="run-item"><b>Wed May 13</b> &middot; 9:00 am Muscat &middot; <span class="run-pillar" style="color:#818cf8">vision</span> <span style='color:#94a3b8'>&rarr; publishes Friday</span></span><span class="run-item"><b>Sat May 16</b> &middot; 9:00 am Muscat &middot; <span class="run-pillar" style="color:#f87171">pain</span> <span style='color:#94a3b8'>&rarr; publishes Monday</span></span>
 </div>
 
 <main id="main-content">
@@ -220,8 +226,7 @@ footer a:hover{color:#f1f5f9}
 <div class="card" id="post-0" data-pillar="pain">
   <div class="card-header">
     <span class="pillar-tag pain">pain</span>
-    <span class="badge draft">Needs review</span>
-    
+    <span class="badge approved">Approved</span>
     <span class="meta-right">
       <span class="model-tag">sonnet-4-6</span>
       <span class="date">May 10, 2026 · 5:28 pm Muscat</span>
@@ -262,28 +267,19 @@ DM me or WhatsApp +96879665522 to book a free 20-minute demo. thesmartpro.io
     <button class="expand-btn" aria-expanded="false" aria-controls="pt-0" onclick="toggle(0)">Show more <span aria-hidden="true">&#9660;</span></button>
   </div>
   
-  <div class="review-actions">
-    <span class="review-label">Review:</span>
-    <button class="rev-btn rev-changes" data-path="posts_history/20260510_132827_pain.json" data-pillar="pain"
-      onclick="showReviseModal(this)"><span aria-hidden="true">&#9998;</span> Request Changes</button>
-    <button class="rev-btn rev-edit" data-path="posts_history/20260510_132827_pain.json" data-preview="You recognise at least 3 of these. Be honest.  1. Your leave balances live in a spreadsheet only one person knows how to open. 2. Payroll takes 2+ days because someone is still manually cross-referencing attendance. 3. An employee asked about their end-of-service — and you had to say &quot;let me check.&quot;"
-      onclick="showEditModal(this)"><span aria-hidden="true">&#128393;</span> Edit</button>
-    <button class="rev-btn rev-recreate" data-path="posts_history/20260510_132827_pain.json" data-pillar="pain"
-      onclick="confirmRecreate(this)"><span aria-hidden="true">&#8635;</span> Recreate</button>
-  </div>
   <div class="card-footer">
     <div class="bar-track"><div class="bar-fill ok" style="width:81.3%"></div></div>
     <span class="chars ok">1219 chars</span>
     
-    <button class="approve-publish-btn" data-path="posts_history/20260510_132827_pain.json" data-preview="You recognise at least 3 of these. Be honest.  1. Your leave balances live in a spreadsheet only one person knows how to open. 2. Payroll takes 2+ days because someone is still manually cross-referencing attendance. 3. An employee asked about their end-of-service — and you had to say &quot;let me check.&quot;" data-publish-day="Monday" onclick="showApproveModal(this)"><span aria-hidden="true">&#10003;</span> Approve for Monday</button>
+    
+    
     <button class="copy-btn" id="copy-0" onclick="copyPost(0)"><span aria-hidden="true">&#128203;</span> Copy</button>
   </div>
 </div>
 <div class="card" id="post-1" data-pillar="pain">
   <div class="card-header">
     <span class="pillar-tag pain">pain</span>
-    <span class="badge draft">Needs review</span>
-    
+    <span class="badge approved">Approved</span>
     <span class="meta-right">
       <span class="model-tag">sonnet-4-6</span>
       <span class="date">May 9, 2026 · 9:55 am Muscat</span>
@@ -320,20 +316,12 @@ Build for the audit before the auditor shows up.
     <button class="expand-btn" aria-expanded="false" aria-controls="pt-1" onclick="toggle(1)">Show more <span aria-hidden="true">&#9660;</span></button>
   </div>
   
-  <div class="review-actions">
-    <span class="review-label">Review:</span>
-    <button class="rev-btn rev-changes" data-path="posts_history/20260509_055543_pain.json" data-pillar="pain"
-      onclick="showReviseModal(this)"><span aria-hidden="true">&#9998;</span> Request Changes</button>
-    <button class="rev-btn rev-edit" data-path="posts_history/20260509_055543_pain.json" data-preview="The Ministry of Labour inspector arrives at 9am unannounced.  Your HR manager is already sweating — not because anything is wrong, but because proving it&#x27;s right will take the rest of the day.  She pulls out three binders. Starts cross-referencing handwritten leave records with a spreadsheet that ha"
-      onclick="showEditModal(this)"><span aria-hidden="true">&#128393;</span> Edit</button>
-    <button class="rev-btn rev-recreate" data-path="posts_history/20260509_055543_pain.json" data-pillar="pain"
-      onclick="confirmRecreate(this)"><span aria-hidden="true">&#8635;</span> Recreate</button>
-  </div>
   <div class="card-footer">
     <div class="bar-track"><div class="bar-fill ok" style="width:74.3%"></div></div>
     <span class="chars ok">1115 chars</span>
     
-    <button class="approve-publish-btn" data-path="posts_history/20260509_055543_pain.json" data-preview="The Ministry of Labour inspector arrives at 9am unannounced.  Your HR manager is already sweating — not because anything is wrong, but because proving it&#x27;s right will take the rest of the day.  She pulls out three binders. Starts cross-referencing handwritten leave records with a spreadsheet that ha" data-publish-day="Monday" onclick="showApproveModal(this)"><span aria-hidden="true">&#10003;</span> Approve for Monday</button>
+    
+    
     <button class="copy-btn" id="copy-1" onclick="copyPost(1)"><span aria-hidden="true">&#128203;</span> Copy</button>
   </div>
 </div>
@@ -341,7 +329,6 @@ Build for the audit before the auditor shows up.
   <div class="card-header">
     <span class="pillar-tag proof">proof</span>
     <span class="badge approved">Approved</span>
-    
     <span class="meta-right">
       <span class="model-tag">sonnet-4-6</span>
       <span class="date">May 4, 2026 · 11:03 am Muscat</span>
@@ -386,6 +373,7 @@ thesmartpro.io
   <div class="card-footer">
     <div class="bar-track"><div class="bar-fill ok" style="width:86.3%"></div></div>
     <span class="chars ok">1294 chars</span>
+    
     
     
     <button class="copy-btn" id="copy-2" onclick="copyPost(2)"><span aria-hidden="true">&#128203;</span> Copy</button>
@@ -439,6 +427,8 @@ thesmartpro.io
   <div class="card-footer">
     <div class="bar-track"><div class="bar-fill ok" style="width:84.7%"></div></div>
     <span class="chars ok">1271 chars</span>
+    
+    
     <a class="li-link" href="https://www.linkedin.com/feed/update/urn:li:share:7457670702654050305/" target="_blank" rel="noopener noreferrer">View on LinkedIn &#8599;<span class="sr-only"> (opens in new tab)</span></a>
     <button class="copy-btn" id="copy-3" onclick="copyPost(3)"><span aria-hidden="true">&#128203;</span> Copy</button>
   </div>
@@ -490,6 +480,8 @@ DM me or WhatsApp +96879665522 to book a free 20-minute demo. thesmartpro.io
   <div class="card-footer">
     <div class="bar-track"><div class="bar-fill ok" style="width:94.1%"></div></div>
     <span class="chars ok">1412 chars</span>
+    
+    
     <a class="li-link" href="https://www.linkedin.com/feed/update/urn:li:share:7456946169810837504/" target="_blank" rel="noopener noreferrer">View on LinkedIn &#8599;<span class="sr-only"> (opens in new tab)</span></a>
     <button class="copy-btn" id="copy-4" onclick="copyPost(4)"><span aria-hidden="true">&#128203;</span> Copy</button>
   </div>
@@ -542,6 +534,8 @@ thesmartpro.io
   <div class="card-footer">
     <div class="bar-track"><div class="bar-fill ok" style="width:83.0%"></div></div>
     <span class="chars ok">1245 chars</span>
+    
+    
     <a class="li-link" href="https://www.linkedin.com/feed/update/urn:li:share:7457684843695493120/" target="_blank" rel="noopener noreferrer">View on LinkedIn &#8599;<span class="sr-only"> (opens in new tab)</span></a>
     <button class="copy-btn" id="copy-5" onclick="copyPost(5)"><span aria-hidden="true">&#128203;</span> Copy</button>
   </div>
@@ -595,6 +589,8 @@ What made the difference in your team — clarity, consistency, or something els
   <div class="card-footer">
     <div class="bar-track"><div class="bar-fill ok" style="width:95.2%"></div></div>
     <span class="chars ok">1428 chars</span>
+    
+    
     <a class="li-link" href="https://www.linkedin.com/feed/update/urn:li:share:7456714387991543808/" target="_blank" rel="noopener noreferrer">View on LinkedIn &#8599;<span class="sr-only"> (opens in new tab)</span></a>
     <button class="copy-btn" id="copy-6" onclick="copyPost(6)"><span aria-hidden="true">&#128203;</span> Copy</button>
   </div>
@@ -653,6 +649,8 @@ When did you last check — really check — if your team is paid fairly?
   <div class="card-footer">
     <div class="bar-track"><div class="bar-fill ok" style="width:85.6%"></div></div>
     <span class="chars ok">1284 chars</span>
+    
+    
     <a class="li-link" href="https://www.linkedin.com/feed/update/urn:li:share:7455622091032215552/" target="_blank" rel="noopener noreferrer">View on LinkedIn &#8599;<span class="sr-only"> (opens in new tab)</span></a>
     <button class="copy-btn" id="copy-7" onclick="copyPost(7)"><span aria-hidden="true">&#128203;</span> Copy</button>
   </div>
@@ -711,6 +709,8 @@ What&#x27;s the longest you&#x27;ve ever stretched a single piece of content —
   <div class="card-footer">
     <div class="bar-track"><div class="bar-fill ok" style="width:78.5%"></div></div>
     <span class="chars ok">1178 chars</span>
+    
+    
     <a class="li-link" href="https://www.linkedin.com/feed/update/urn:li:share:7455612883721228289/" target="_blank" rel="noopener noreferrer">View on LinkedIn &#8599;<span class="sr-only"> (opens in new tab)</span></a>
     <button class="copy-btn" id="copy-8" onclick="copyPost(8)"><span aria-hidden="true">&#128203;</span> Copy</button>
   </div>
@@ -721,8 +721,8 @@ What&#x27;s the longest you&#x27;ve ever stretched a single piece of content —
 <div class="content" style="margin-top:0">
   <h2 class="section-lbl">Pending replies (0)</h2>
   <div class="empty" style="padding:30px 20px">No pending replies</div>
-
-
+  
+  
 </div>
 
 </main>
@@ -783,7 +783,7 @@ What&#x27;s the longest you&#x27;ve ever stretched a single piece of content —
   </div>
 </div>
 
-<!-- Approve modal — marks draft as approved; publish cron fires automatically on the scheduled day -->
+<!-- Approve modal -->
 <div class="modal-overlay" id="approve-modal" role="dialog" aria-modal="true" aria-labelledby="approve-modal-title">
   <div class="modal-box">
     <h3 id="approve-modal-title"><span aria-hidden="true">&#10003;</span> Approve Draft</h3>
@@ -800,7 +800,7 @@ What&#x27;s the longest you&#x27;ve ever stretched a single piece of content —
       <label class="modal-label" for="modal-pat">GitHub Personal Access Token <em>(repo scope)</em></label>
       <input class="modal-pat" id="modal-pat" type="password" placeholder="ghp_..." autocomplete="off" aria-describedby="modal-pat-hint">
       <div class="modal-hint" id="modal-pat-hint">
-        Marks the draft as approved — <b>does not publish immediately</b>. The cron will
+        Marks the draft as approved &mdash; <b>does not publish immediately</b>. The cron will
         publish automatically on the scheduled day. &nbsp;
         <a href="#" onclick="clearPat();return false;">Clear saved token</a><br>
         Token is saved in browser localStorage and never sent anywhere except GitHub's API.<br>
@@ -822,6 +822,7 @@ What&#x27;s the longest you&#x27;ve ever stretched a single piece of content —
 var _REPO = 'AbuAli85/LINKEDIN_POSTS';
 var _WORKFLOW = 'auto-post.yml';
 var _BRANCH = 'claude/linkedin-post-automation-lQiJZ';
+
 var _approveSourceBtn = null;
 var _reviseSourceBtn = null;
 var _editSourceBtn = null;
@@ -1210,6 +1211,7 @@ function toast(message, opts) {
   }
   return dismiss;
 }
+
 </script>
 </body>
 </html>

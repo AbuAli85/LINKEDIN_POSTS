@@ -151,6 +151,26 @@ footer a:hover{color:#f1f5f9}
   .meta-right,.actions{display:none}
   .stat{padding:8px 12px}
 }
+
+/* TOAST */
+#toast-container{position:fixed;bottom:24px;right:24px;z-index:250;display:flex;flex-direction:column;gap:8px;pointer-events:none;max-width:min(420px,calc(100vw - 48px))}
+.toast{pointer-events:auto;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;box-shadow:0 4px 12px rgba(0,0,0,.4);font-size:.82rem;line-height:1.5;opacity:0;transform:translateY(8px);transition:opacity .2s cubic-bezier(.16,1,.3,1),transform .2s cubic-bezier(.16,1,.3,1)}
+.toast.in{opacity:1;transform:translateY(0)}
+.toast.out{opacity:0;transform:translateX(12px);transition-duration:.18s;transition-timing-function:ease-in}
+.toast.success{background:#052e16;border-color:#14532d;color:#4ade80}
+.toast.error{background:#450a0a;border-color:#7f1d1d;color:#f87171}
+.toast.warning{background:#2f1f05;border-color:#92400e;color:#fbbf24}
+.toast.info{background:#082f49;border-color:#0c4a6e;color:#7dd3fc}
+.toast-icon{font-size:1rem;flex-shrink:0;line-height:1.5}
+.toast-body{flex:1;color:inherit}
+.toast-action{background:transparent;border:1px solid currentColor;color:inherit;font-size:.74rem;font-weight:500;padding:4px 10px;border-radius:5px;cursor:pointer;margin-top:6px;min-height:32px}
+.toast-action:hover{background:rgba(255,255,255,.08)}
+.toast-close{background:transparent;border:none;color:inherit;opacity:.6;cursor:pointer;padding:0 2px;font-size:1.1rem;line-height:1;min-height:24px;min-width:24px}
+.toast-close:hover,.toast-close:focus-visible{opacity:1}
+@media(prefers-reduced-motion:reduce){
+  .toast{transition:opacity .01s linear;transform:none}
+  .toast.out{transform:none}
+}
 </style>
 </head>
 <body>
@@ -801,6 +821,8 @@ What&#x27;s the longest you&#x27;ve ever stretched a single piece of content —
   </div>
 </div>
 
+<div id="toast-container" aria-label="Notifications"></div>
+
 <script>
 var _REPO = 'AbuAli85/LINKEDIN_POSTS';
 var _WORKFLOW = 'auto-post.yml';
@@ -808,6 +830,7 @@ var _BRANCH = 'claude/linkedin-post-automation-lQiJZ';
 var _approveSourceBtn = null;
 var _reviseSourceBtn = null;
 var _editSourceBtn = null;
+var _toastSeq = 0;
 
 // Focus trap: cycle Tab/Shift+Tab within each modal box
 document.querySelectorAll('.modal-box').forEach(function(box) {
@@ -822,14 +845,19 @@ document.querySelectorAll('.modal-box').forEach(function(box) {
   });
 });
 
-// Escape closes any open modal
+// Escape closes the open modal, or the newest toast when no modal is open
 document.addEventListener('keydown', function(e) {
   if (e.key !== 'Escape') return;
   var open = document.querySelector('.modal-overlay.open');
-  if (!open) return;
-  if (open.id === 'revise-modal') closeReviseModal();
-  else if (open.id === 'edit-modal') closeEditModal();
-  else if (open.id === 'approve-modal') closeApproveModal();
+  if (open) {
+    if (open.id === 'revise-modal') closeReviseModal();
+    else if (open.id === 'edit-modal') closeEditModal();
+    else if (open.id === 'approve-modal') closeApproveModal();
+  } else {
+    var c = document.getElementById('toast-container');
+    var last = c && c.lastElementChild;
+    if (last) last.querySelector('.toast-close').click();
+  }
 });
 
 function toggle(i) {
@@ -859,12 +887,13 @@ function copyPost(i) {
       btn.innerHTML = '<span aria-hidden="true">&#128203;</span> Copy';
       btn.classList.remove('copied');
     }, 2000);
+    toast('Post copied to clipboard.', { variant: 'success' });
   });
 }
 
 function _getPat() { return localStorage.getItem('gh_pat') || ''; }
 function _setPat(v) { if (v) localStorage.setItem('gh_pat', v); }
-function clearPat() { localStorage.removeItem('gh_pat'); alert('GitHub token cleared.'); }
+function clearPat() { localStorage.removeItem('gh_pat'); toast('GitHub token cleared.', { variant: 'info' }); }
 
 function showReviseModal(btn) {
   _reviseSourceBtn = btn;
@@ -900,8 +929,14 @@ async function confirmRevise() {
     var resp = await fetch('https://api.github.com/repos/' + _REPO + '/actions/workflows/' + _WORKFLOW + '/dispatches',
       { method: 'POST', headers: { 'Authorization': 'Bearer ' + pat, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
         body: JSON.stringify({ ref: _BRANCH, inputs: { action: 'revise_draft', draft_file: path, revision_notes: notes } }) });
-    if (resp.status === 204) { st.textContent = '✓ Revision requested! Claude is rewriting the draft.'; st.style.color = '#4ade80'; cb.textContent = 'Requested'; }
-    else { var e = await resp.json().catch(function() { return {}; }); st.textContent = 'Error ' + resp.status + ': ' + (e.message || 'check your PAT'); st.style.color = '#f87171'; cb.innerHTML = '<span aria-hidden="true">&#9998;</span> Request Changes'; cb.disabled = false; }
+    if (resp.status === 204) {
+      closeReviseModal();
+      toast('Revision requested — Claude is rewriting the draft.', { variant: 'success' });
+    } else {
+      var e = await resp.json().catch(function() { return {}; });
+      st.textContent = 'Error ' + resp.status + ': ' + (e.message || 'check your PAT');
+      st.style.color = '#f87171'; cb.innerHTML = '<span aria-hidden="true">&#9998;</span> Request Changes'; cb.disabled = false;
+    }
   } catch(e) { st.textContent = 'Network error: ' + e.message; st.style.color = '#f87171'; cb.innerHTML = '<span aria-hidden="true">&#9998;</span> Request Changes'; cb.disabled = false; }
 }
 
@@ -954,8 +989,8 @@ async function confirmEdit() {
       { method: 'PUT', headers: { 'Authorization': 'Bearer ' + pat, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: 'edit: manual draft revision via dashboard', content: newContent, sha: sha, branch: _BRANCH }) });
     if (putResp.status === 200 || putResp.status === 201) {
-      st.textContent = '✓ Edit saved to repo. Refresh the dashboard in ~30 seconds.';
-      st.style.color = '#4ade80'; cb.textContent = 'Saved';
+      closeEditModal();
+      toast('Edit saved to repo. Refresh in ~30 seconds.', { variant: 'success' });
     } else {
       var e2 = await putResp.json().catch(function() { return {}; });
       st.textContent = 'Error ' + putResp.status + ': ' + (e2.message || 'check your PAT scope (needs repo)');
@@ -974,9 +1009,14 @@ function confirmRecreate(btn){
       body:JSON.stringify({ref:_BRANCH,inputs:{action:'generate_draft',pillar:pillar}})
     }
   ).then(function(r){
-    if(r.status===204){alert('✓ New draft is being generated for the '+pillar+' pillar. Refresh in ~60 seconds.');}
-    else{r.json().then(function(e){alert('Error '+r.status+': '+(e.message||'check your PAT'));}).catch(function(){alert('Error '+r.status);});}
-  }).catch(function(e){alert('Network error: '+e.message);});
+    if(r.status===204){
+      toast('New ' + pillar + ' draft generating — refresh in ~60 s.', { variant: 'success' });
+    } else {
+      r.json().then(function(e){
+        toast('Error ' + r.status + ': ' + (e.message || 'check your PAT'), { variant: 'error' });
+      }).catch(function(){ toast('Error ' + r.status, { variant: 'error' }); });
+    }
+  }).catch(function(e){ toast('Network error: ' + e.message, { variant: 'error' }); });
 }
 
 function _hideReviewUI(card){
@@ -1015,6 +1055,8 @@ async function refreshDraftCards(){
       if(!badge) continue;
       if(data.published||data.status==='published'){
         badge.className='badge published';badge.innerHTML='&#10003; Published';
+        var topicEl = card.querySelector('.topic');
+        if (topicEl) toast('“' + topicEl.textContent.trim() + '” published on LinkedIn.', { variant: 'info' });
         _hideReviewUI(card);count++;
       }else if(data.approved||data.status==='approved'){
         badge.className='badge approved';badge.textContent='Approved';
@@ -1083,10 +1125,7 @@ async function confirmApprove() {
         headers: { 'Authorization': 'Bearer ' + pat, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: 'approve: ' + draftPath.split('/').pop(), content: encoded, sha: fileData.sha, branch: _BRANCH }) });
     if (putResp.status === 200 || putResp.status === 201) {
-      st.innerHTML = '&#10003; Approved! The cron will publish automatically on the scheduled day.<br>'
-        + '<span style="color:#94a3b8;font-size:.72rem">You can also trigger it manually via Actions → publish_approved.</span>';
-      st.style.color = '#4ade80';
-      cb.innerHTML = '<span aria-hidden="true">&#10003;</span> Approved';
+      var day = (_approveSourceBtn && _approveSourceBtn.getAttribute('data-publish-day')) || 'the scheduled day';
       if (_approveSourceBtn) {
         var card = _approveSourceBtn.closest('.card');
         if (card) {
@@ -1096,7 +1135,8 @@ async function confirmApprove() {
         }
         _updateStats(-1, 1);
       }
-      setTimeout(closeApproveModal, 2500);
+      closeApproveModal();
+      toast('Approved — publishes ' + day + '.', { variant: 'success' });
     } else {
       var pe = await putResp.json().catch(function() { return {}; });
       st.textContent = 'Error ' + putResp.status + ': ' + (pe.message || 'check your PAT has repo contents write scope');
@@ -1108,6 +1148,72 @@ async function confirmApprove() {
     st.style.color = '#f87171';
     cb.innerHTML = '<span aria-hidden="true">&#10003;</span> Approve'; cb.disabled = false;
   }
+}
+
+function toast(message, opts) {
+  opts = opts || {};
+  var variant = opts.variant || 'info';
+  var sticky = opts.duration === 0 || variant === 'error';
+  var duration = opts.duration != null ? opts.duration : (variant === 'warning' ? 8000 : 5000);
+  var id = opts.id || ('t' + (++_toastSeq));
+  var container = document.getElementById('toast-container');
+
+  while (container.children.length >= 3) container.firstElementChild.remove();
+
+  var el = document.createElement('div');
+  el.className = 'toast ' + variant;
+  el.id = id;
+  el.setAttribute('role', variant === 'error' ? 'alert' : 'status');
+  el.setAttribute('aria-live', variant === 'error' ? 'assertive' : 'polite');
+  el.setAttribute('aria-atomic', 'true');
+
+  var icons = { success: '✓', error: '⚠', warning: '⚠', info: 'ⓘ' };
+  var icon = document.createElement('span');
+  icon.className = 'toast-icon';
+  icon.setAttribute('aria-hidden', 'true');
+  icon.textContent = icons[variant];
+
+  var body = document.createElement('div');
+  body.className = 'toast-body';
+  body.textContent = message;
+
+  if (opts.action) {
+    var actionBtn = document.createElement('button');
+    actionBtn.type = 'button';
+    actionBtn.className = 'toast-action';
+    actionBtn.textContent = opts.action.label;
+    actionBtn.onclick = function() { try { opts.action.onClick(); } finally { dismiss(); } };
+    body.appendChild(document.createElement('br'));
+    body.appendChild(actionBtn);
+  }
+
+  var close = document.createElement('button');
+  close.type = 'button';
+  close.className = 'toast-close';
+  close.setAttribute('aria-label', 'Dismiss notification');
+  close.innerHTML = '&times;';
+  close.onclick = dismiss;
+
+  el.appendChild(icon);
+  el.appendChild(body);
+  el.appendChild(close);
+  container.appendChild(el);
+
+  requestAnimationFrame(function() { el.classList.add('in'); });
+
+  var timer = sticky ? null : setTimeout(dismiss, duration);
+  el.addEventListener('mouseenter', function() { if (timer) { clearTimeout(timer); timer = null; } });
+  el.addEventListener('mouseleave', function() { if (!sticky && !timer) timer = setTimeout(dismiss, 2000); });
+  el.addEventListener('focusin',    function() { if (timer) { clearTimeout(timer); timer = null; } });
+  el.addEventListener('focusout',   function() { if (!sticky && !timer) timer = setTimeout(dismiss, 2000); });
+
+  function dismiss() {
+    if (timer) clearTimeout(timer);
+    el.classList.remove('in');
+    el.classList.add('out');
+    setTimeout(function() { if (el.parentNode) el.remove(); }, 200);
+  }
+  return dismiss;
 }
 </script>
 </body>

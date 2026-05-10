@@ -217,8 +217,8 @@ def _publish_post_file(path: Path) -> int:
 
     print(f"Publishing approved draft -> {path}")
     try:
-        result = publish_post(post["post"])
-        print(f"Published! Post ID: {result['post_id']}")
+        result = publish_post(post["post"], pillar=post.get("pillar", ""))
+        print(f"Published! Post ID: {result['post_id']}  image={result.get('image_path','')}")
         _update_json(path, {
             "status": "published",
             "published": True,

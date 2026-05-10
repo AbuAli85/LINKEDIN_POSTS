@@ -12,6 +12,8 @@ on:
     - cron: "0 5 * * 6,1,3"
     # Phase 2: publish approved drafts on publish day
     - cron: "0 6 * * 1,3,5"
+    # Phase 3: outreach pipeline — daily at 6:00 AM UTC (10:00 AM Muscat)
+    - cron: "0 6 * * *"
   workflow_dispatch:
     inputs:
       action:
@@ -29,6 +31,7 @@ on:
           - fetch_metrics
           - fetch_comments
           - post_reply
+          - run_outreach
       draft_file:
         description: "Draft JSON path to publish, e.g. posts_history/20260430_090000_ai.json. Required for publish_draft."
         required: false
@@ -63,6 +66,10 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    # Skip this job when triggered by the outreach-only cron or the run_outreach dispatch action
+    if: >
+      (github.event_name == 'schedule' && github.event.schedule != '0 6 * * *') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.action != 'run_outreach')
     steps:
       - uses: actions/checkout@v4
 
@@ -126,5 +133,63 @@ jobs:
             MSG="dashboard: update $(date -u '+%Y-%m-%d %H:%M UTC')"
           fi
           git diff --cached --quiet || git commit -m "$MSG"
+          git pull --rebase origin ${GITHUB_REF_NAME}
+          git push origin HEAD:${GITHUB_REF_NAME}
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # Outreach Pipeline — runs daily at 06:00 UTC (10:00 Muscat)
+  # Fetches new comments → Claude qualification → reply drafts → leads.csv
+  # ──────────────────────────────────────────────────────────────────────────
+  outreach:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    if: >
+      (github.event_name == 'schedule' && github.event.schedule == '0 6 * * *') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'run_outreach')
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Fetch new comments
+        env:
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+        run: python outreach.py fetch || echo "fetch completed (errors logged above)"
+
+      - name: Qualify leads with Claude
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+        run: python outreach.py qualify || echo "qualify completed"
+
+      - name: Draft replies for qualified leads
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python outreach.py draft-replies || echo "draft-replies completed"
+
+      - name: Export leads.csv
+        run: python outreach.py export || echo "export completed"
+
+      - name: Regenerate dashboard
+        if: always()
+        run: python dashboard.py
+
+      - name: Commit outreach data and dashboard
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add outreach_history/ leads.csv docs/index.html
+          DATE=$(date -u '+%Y-%m-%d')
+          NLEADS=$(python -c "import csv; r=list(csv.DictReader(open('leads.csv'))); print(len([x for x in r if x.get('intent') in ('high','medium')]))" 2>/dev/null || echo 0)
+          NREPLIES=$(python -c "import csv; r=list(csv.DictReader(open('leads.csv'))); print(len([x for x in r if x.get('reply_status') in ('drafted','replied')]))" 2>/dev/null || echo 0)
+          git diff --cached --quiet || git commit -m "outreach: ${DATE} — ${NLEADS} leads, ${NREPLIES} replies drafted"
           git pull --rebase origin ${GITHUB_REF_NAME}
           git push origin HEAD:${GITHUB_REF_NAME}

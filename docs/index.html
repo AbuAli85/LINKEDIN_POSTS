@@ -252,6 +252,66 @@ a{color:inherit;text-decoration:none}
             font-family:'DM Mono',monospace}
 .lead-comment{font-size:12px;color:rgba(255,255,255,.35);flex:1}
 
+/* ── OUTREACH PIPELINE ── */
+.outreach-statsbar{background:#111113;border-bottom:1px solid rgba(255,255,255,.07);
+                   padding:16px 28px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.outreach-lbl{font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;
+              letter-spacing:.08em;font-weight:600;margin-right:4px;align-self:center}
+
+/* Lead table */
+.lead-tbl{display:flex;flex-direction:column;gap:5px}
+.lead-tbl-row{background:#111113;border:1px solid rgba(255,255,255,.07);border-radius:10px;overflow:hidden}
+.lead-tbl-header{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:10px 14px;
+                 cursor:pointer;transition:background .15s;user-select:none}
+.lead-tbl-header:hover{background:rgba(255,255,255,.03)}
+.lead-intent{font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;
+             font-family:'DM Mono',monospace;text-transform:uppercase;flex-shrink:0}
+.lead-intent.high  {background:rgba(232,55,42,.12); color:#e8372a;border:1px solid rgba(232,55,42,.25)}
+.lead-intent.medium{background:rgba(212,132,10,.12);color:#d4840a;border:1px solid rgba(212,132,10,.25)}
+.lead-intent.low   {background:rgba(255,255,255,.05);color:rgba(255,255,255,.35);border:1px solid rgba(255,255,255,.1)}
+.lead-chevron{color:rgba(255,255,255,.3);font-size:11px;margin-left:auto;flex-shrink:0;
+              transition:transform .2s ease}
+.lead-chevron.open{transform:rotate(180deg)}
+.lead-body{padding:12px 14px;border-top:1px solid rgba(255,255,255,.06);display:none}
+.lead-body.open{display:block}
+.lead-comment-full{font-size:13px;color:rgba(255,255,255,.55);background:rgba(255,255,255,.04);
+                   border-radius:6px;padding:9px 12px;margin-bottom:10px;line-height:1.6;
+                   white-space:pre-wrap;word-break:break-word}
+.dm-seq{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.dm-msg{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
+        border-radius:6px;padding:8px 12px;font-size:12px;color:rgba(255,255,255,.5);line-height:1.6}
+.dm-msg-day{font-size:10px;font-family:'DM Mono',monospace;color:rgba(255,255,255,.3);
+            margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em}
+
+/* Pending replies */
+.pending-card{background:#111113;border:1px solid rgba(255,255,255,.07);
+              border-left:3px solid #d4840a;border-radius:10px;
+              padding:14px 16px;margin-bottom:8px;transition:opacity .3s}
+.pending-card.done{opacity:.4;pointer-events:none}
+.pending-header{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:8px}
+.pending-name{font-size:13px;font-weight:600;color:#ede9e3}
+.pending-post{font-size:11px;color:rgba(255,255,255,.35);font-family:'DM Mono',monospace;
+              flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pending-comment{font-size:13px;color:rgba(255,255,255,.55);background:rgba(255,255,255,.04);
+                 border-radius:6px;padding:9px 12px;margin-bottom:10px;
+                 line-height:1.6;white-space:pre-wrap;word-break:break-word}
+.pending-replies{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}
+.pending-reply{font-size:12px;padding:8px 11px;border-radius:6px;line-height:1.6;
+               background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+               color:rgba(255,255,255,.4)}
+.pending-reply.rec{border-color:rgba(129,140,248,.35);color:#c7d2fe;background:rgba(129,140,248,.07)}
+.reply-rec-label{font-size:10px;opacity:.6;font-family:'DM Mono',monospace;margin-bottom:3px}
+.pending-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
+.copy-reply-btn{background:#e8372a;color:#fff;border:none;font-size:11px;font-weight:600;
+                padding:6px 14px;border-radius:6px;cursor:pointer;transition:background .15s;
+                min-height:32px;font-family:inherit}
+.copy-reply-btn:hover{background:#c9301f}
+.mark-replied-btn{background:rgba(42,154,92,.1);color:#2a9a5c;border:1px solid rgba(42,154,92,.25);
+                  font-size:11px;padding:6px 14px;border-radius:6px;cursor:pointer;
+                  transition:all .15s;min-height:32px;font-family:inherit}
+.mark-replied-btn:hover:not(:disabled){background:rgba(42,154,92,.18)}
+.mark-replied-btn:disabled{opacity:.4;cursor:default}
+
 /* ── FOOTER ── */
 footer{max-width:840px;margin:20px auto 0;padding:18px 28px 32px;
        border-top:1px solid rgba(255,255,255,.06);
@@ -334,7 +394,7 @@ footer a:hover{color:#ede9e3}
     Dashboard
   </div>
   <div class="topbar-right">
-    <span class="updated">Updated May 11, 2026 · 1:35 am Muscat</span>
+    <span class="updated">Updated May 11, 2026 · 2:28 am Muscat</span>
     <div class="live-dot" title="Live" aria-hidden="true"></div>
     <nav class="actions" aria-label="Site actions">
       <a class="tb-btn primary" href="https://github.com/AbuAli85/LINKEDIN_POSTS/actions/workflows/auto-post.yml" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">&#9654;</span> Run workflow<span class="sr-only"> (opens in new tab)</span></a>
@@ -855,6 +915,8 @@ What&#x27;s the longest you&#x27;ve ever stretched a single piece of content —
 
 
 
+
+
 </main>
 
 <footer>
@@ -1247,6 +1309,78 @@ function toast(message, opts) {
     setTimeout(function() { if (el.parentNode) el.remove(); }, 200);
   }
   return dismiss;
+}
+
+/* ── OUTREACH: Copy reply text to clipboard ── */
+function copyReply(text, btn) {
+  navigator.clipboard.writeText(text).then(function() {
+    var orig = btn.innerHTML;
+    btn.innerHTML = '&#10003; Copied!';
+    toast('Reply copied to clipboard.', { variant: 'success' });
+    setTimeout(function() { btn.innerHTML = orig; }, 2200);
+  }).catch(function(e) { toast('Copy failed: ' + e.message, { variant: 'error' }); });
+}
+
+/* ── OUTREACH: Mark comment replied via GitHub Contents API ── */
+async function markReplied(filePath, commentId, btn) {
+  var pat = _getPat();
+  if (!pat) {
+    pat = prompt('GitHub PAT (repo scope) to update the outreach file:');
+    if (!pat) return;
+    _setPat(pat);
+  }
+  btn.disabled = true;
+  btn.textContent = 'Updating…';
+  try {
+    var metaResp = await fetch(
+      'https://api.github.com/repos/' + _REPO + '/contents/' + filePath,
+      { headers: { 'Authorization': 'Bearer ' + pat, 'Accept': 'application/vnd.github.v3+json' } }
+    );
+    if (!metaResp.ok) throw new Error('Read failed: HTTP ' + metaResp.status);
+    var meta = await metaResp.json();
+    var data = JSON.parse(atob(meta.content.replace(/\n/g, '')));
+    var found = false;
+    (data.comments || []).forEach(function(c) {
+      if (c.comment_id === commentId) {
+        c.replied    = true;
+        c.replied_at = new Date().toISOString();
+        found = true;
+      }
+    });
+    if (!found) throw new Error('Comment ID not found in file');
+    var newContent = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
+    var putResp = await fetch(
+      'https://api.github.com/repos/' + _REPO + '/contents/' + filePath,
+      { method: 'PUT',
+        headers: { 'Authorization': 'Bearer ' + pat, 'Accept': 'application/vnd.github.v3+json',
+                   'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: 'outreach: mark replied ' + commentId.slice(-8),
+                               content: newContent, sha: meta.sha, branch: _BRANCH }) }
+    );
+    if (putResp.status === 200 || putResp.status === 201) {
+      btn.textContent = '✓ Marked';
+      var card = btn.closest('.pending-card');
+      if (card) card.classList.add('done');
+      toast('Marked as replied.', { variant: 'success' });
+    } else {
+      var e2 = await putResp.json().catch(function() { return {}; });
+      throw new Error('Error ' + putResp.status + ': ' + (e2.message || 'check PAT scope'));
+    }
+  } catch(e) {
+    btn.textContent = 'Mark as replied';
+    btn.disabled = false;
+    toast('Error: ' + e.message, { variant: 'error' });
+  }
+}
+
+/* ── OUTREACH: Toggle lead expand / collapse ── */
+function toggleLead(idx) {
+  var body    = document.getElementById('lead-body-' + idx);
+  var chevron = document.querySelector('#lead-row-' + idx + ' .lead-chevron');
+  if (!body) return;
+  var isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  if (chevron) chevron.classList.toggle('open', !isOpen);
 }
 
 /* ── FILTER CHIPS ── */

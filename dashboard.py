@@ -362,6 +362,66 @@ a{color:inherit;text-decoration:none}
             font-family:'DM Mono',monospace}
 .lead-comment{font-size:12px;color:rgba(255,255,255,.35);flex:1}
 
+/* ── OUTREACH PIPELINE ── */
+.outreach-statsbar{background:#111113;border-bottom:1px solid rgba(255,255,255,.07);
+                   padding:16px 28px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.outreach-lbl{font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;
+              letter-spacing:.08em;font-weight:600;margin-right:4px;align-self:center}
+
+/* Lead table */
+.lead-tbl{display:flex;flex-direction:column;gap:5px}
+.lead-tbl-row{background:#111113;border:1px solid rgba(255,255,255,.07);border-radius:10px;overflow:hidden}
+.lead-tbl-header{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:10px 14px;
+                 cursor:pointer;transition:background .15s;user-select:none}
+.lead-tbl-header:hover{background:rgba(255,255,255,.03)}
+.lead-intent{font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;
+             font-family:'DM Mono',monospace;text-transform:uppercase;flex-shrink:0}
+.lead-intent.high  {background:rgba(232,55,42,.12); color:#e8372a;border:1px solid rgba(232,55,42,.25)}
+.lead-intent.medium{background:rgba(212,132,10,.12);color:#d4840a;border:1px solid rgba(212,132,10,.25)}
+.lead-intent.low   {background:rgba(255,255,255,.05);color:rgba(255,255,255,.35);border:1px solid rgba(255,255,255,.1)}
+.lead-chevron{color:rgba(255,255,255,.3);font-size:11px;margin-left:auto;flex-shrink:0;
+              transition:transform .2s ease}
+.lead-chevron.open{transform:rotate(180deg)}
+.lead-body{padding:12px 14px;border-top:1px solid rgba(255,255,255,.06);display:none}
+.lead-body.open{display:block}
+.lead-comment-full{font-size:13px;color:rgba(255,255,255,.55);background:rgba(255,255,255,.04);
+                   border-radius:6px;padding:9px 12px;margin-bottom:10px;line-height:1.6;
+                   white-space:pre-wrap;word-break:break-word}
+.dm-seq{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.dm-msg{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
+        border-radius:6px;padding:8px 12px;font-size:12px;color:rgba(255,255,255,.5);line-height:1.6}
+.dm-msg-day{font-size:10px;font-family:'DM Mono',monospace;color:rgba(255,255,255,.3);
+            margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em}
+
+/* Pending replies */
+.pending-card{background:#111113;border:1px solid rgba(255,255,255,.07);
+              border-left:3px solid #d4840a;border-radius:10px;
+              padding:14px 16px;margin-bottom:8px;transition:opacity .3s}
+.pending-card.done{opacity:.4;pointer-events:none}
+.pending-header{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:8px}
+.pending-name{font-size:13px;font-weight:600;color:#ede9e3}
+.pending-post{font-size:11px;color:rgba(255,255,255,.35);font-family:'DM Mono',monospace;
+              flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pending-comment{font-size:13px;color:rgba(255,255,255,.55);background:rgba(255,255,255,.04);
+                 border-radius:6px;padding:9px 12px;margin-bottom:10px;
+                 line-height:1.6;white-space:pre-wrap;word-break:break-word}
+.pending-replies{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}
+.pending-reply{font-size:12px;padding:8px 11px;border-radius:6px;line-height:1.6;
+               background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+               color:rgba(255,255,255,.4)}
+.pending-reply.rec{border-color:rgba(129,140,248,.35);color:#c7d2fe;background:rgba(129,140,248,.07)}
+.reply-rec-label{font-size:10px;opacity:.6;font-family:'DM Mono',monospace;margin-bottom:3px}
+.pending-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
+.copy-reply-btn{background:#e8372a;color:#fff;border:none;font-size:11px;font-weight:600;
+                padding:6px 14px;border-radius:6px;cursor:pointer;transition:background .15s;
+                min-height:32px;font-family:inherit}
+.copy-reply-btn:hover{background:#c9301f}
+.mark-replied-btn{background:rgba(42,154,92,.1);color:#2a9a5c;border:1px solid rgba(42,154,92,.25);
+                  font-size:11px;padding:6px 14px;border-radius:6px;cursor:pointer;
+                  transition:all .15s;min-height:32px;font-family:inherit}
+.mark-replied-btn:hover:not(:disabled){background:rgba(42,154,92,.18)}
+.mark-replied-btn:disabled{opacity:.4;cursor:default}
+
 /* ── FOOTER ── */
 footer{max-width:840px;margin:20px auto 0;padding:18px 28px 32px;
        border-top:1px solid rgba(255,255,255,.06);
@@ -717,6 +777,78 @@ function toast(message, opts) {
   return dismiss;
 }
 
+/* ── OUTREACH: Copy reply text to clipboard ── */
+function copyReply(text, btn) {
+  navigator.clipboard.writeText(text).then(function() {
+    var orig = btn.innerHTML;
+    btn.innerHTML = '&#10003; Copied!';
+    toast('Reply copied to clipboard.', { variant: 'success' });
+    setTimeout(function() { btn.innerHTML = orig; }, 2200);
+  }).catch(function(e) { toast('Copy failed: ' + e.message, { variant: 'error' }); });
+}
+
+/* ── OUTREACH: Mark comment replied via GitHub Contents API ── */
+async function markReplied(filePath, commentId, btn) {
+  var pat = _getPat();
+  if (!pat) {
+    pat = prompt('GitHub PAT (repo scope) to update the outreach file:');
+    if (!pat) return;
+    _setPat(pat);
+  }
+  btn.disabled = true;
+  btn.textContent = 'Updating…';
+  try {
+    var metaResp = await fetch(
+      'https://api.github.com/repos/' + _REPO + '/contents/' + filePath,
+      { headers: { 'Authorization': 'Bearer ' + pat, 'Accept': 'application/vnd.github.v3+json' } }
+    );
+    if (!metaResp.ok) throw new Error('Read failed: HTTP ' + metaResp.status);
+    var meta = await metaResp.json();
+    var data = JSON.parse(atob(meta.content.replace(/\n/g, '')));
+    var found = false;
+    (data.comments || []).forEach(function(c) {
+      if (c.comment_id === commentId) {
+        c.replied    = true;
+        c.replied_at = new Date().toISOString();
+        found = true;
+      }
+    });
+    if (!found) throw new Error('Comment ID not found in file');
+    var newContent = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
+    var putResp = await fetch(
+      'https://api.github.com/repos/' + _REPO + '/contents/' + filePath,
+      { method: 'PUT',
+        headers: { 'Authorization': 'Bearer ' + pat, 'Accept': 'application/vnd.github.v3+json',
+                   'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: 'outreach: mark replied ' + commentId.slice(-8),
+                               content: newContent, sha: meta.sha, branch: _BRANCH }) }
+    );
+    if (putResp.status === 200 || putResp.status === 201) {
+      btn.textContent = '✓ Marked';
+      var card = btn.closest('.pending-card');
+      if (card) card.classList.add('done');
+      toast('Marked as replied.', { variant: 'success' });
+    } else {
+      var e2 = await putResp.json().catch(function() { return {}; });
+      throw new Error('Error ' + putResp.status + ': ' + (e2.message || 'check PAT scope'));
+    }
+  } catch(e) {
+    btn.textContent = 'Mark as replied';
+    btn.disabled = false;
+    toast('Error: ' + e.message, { variant: 'error' });
+  }
+}
+
+/* ── OUTREACH: Toggle lead expand / collapse ── */
+function toggleLead(idx) {
+  var body    = document.getElementById('lead-body-' + idx);
+  var chevron = document.querySelector('#lead-row-' + idx + ' .lead-chevron');
+  if (!body) return;
+  var isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  if (chevron) chevron.classList.toggle('open', !isOpen);
+}
+
 /* ── FILTER CHIPS ── */
 function filterCards(key) {
   document.querySelectorAll('.filter-chip').forEach(function(c) {
@@ -970,6 +1102,209 @@ def _engagement_sections() -> str:
 
 
 # ---------------------------------------------------------------------------
+# Outreach pipeline section
+# ---------------------------------------------------------------------------
+
+def _js_str(text: str) -> str:
+    """Escape text for embedding in a single-quoted JS string literal."""
+    return (text
+            .replace("\\", "\\\\")
+            .replace("'",  "\\'")
+            .replace("\n", "\\n")
+            .replace("\r", ""))
+
+
+def _outreach_pipeline_section() -> str:
+    """Generate the Outreach Pipeline HTML block from outreach_history/ and leads.csv."""
+    outreach_dir = Path(__file__).parent / "outreach_history"
+    if not outreach_dir.exists():
+        return ""
+
+    # ── Load all comment files ──────────────────────────────────────────────
+    all_comments: list[dict] = []
+    for f in sorted(outreach_dir.glob("*_comments.json"), reverse=True):
+        try:
+            data = json.loads(f.read_text(encoding="utf-8"))
+            for c in data.get("comments", []):
+                c["_file_path"]  = f"outreach_history/{f.name}"
+                c["_post_topic"] = data.get("post_topic", "")
+                c["_post_id"]    = data.get("post_id", "")
+                all_comments.append(c)
+        except Exception:
+            continue
+
+    # ── Stats ───────────────────────────────────────────────────────────────
+    qualified     = [c for c in all_comments
+                     if (c.get("qualification") or {}).get("intent") in ("high", "medium")]
+    replies_drafted = len([c for c in qualified if c.get("reply_drafts")])
+    dms_queued    = sum(1 for _ in outreach_dir.glob("*_dm_sequence.json"))
+    n_unscored    = len([c for c in all_comments if not c.get("qualification")])
+
+    stats_html = f"""
+<div class="outreach-statsbar">
+  <span class="outreach-lbl">Outreach</span>
+  <div class="stat"><div class="n">{len(all_comments)}</div><div class="l">Comments</div></div>
+  <div class="stat amber"><div class="n">{len(qualified)}</div><div class="l">Qualified</div></div>
+  <div class="stat blue"><div class="n">{replies_drafted}</div><div class="l">Replies drafted</div></div>
+  <div class="stat"><div class="n">{dms_queued}</div><div class="l">DMs queued</div></div>
+  <div class="stat green"><div class="n">{len(qualified) - n_unscored if n_unscored < len(qualified) else len(qualified)}</div><div class="l">In pipeline</div></div>
+</div>"""
+
+    if not all_comments:
+        body = '<div class="empty" style="padding:24px">No comments fetched yet — run <code>python outreach.py fetch</code> or wait for the daily outreach workflow.</div>'
+        return f"""{stats_html}
+<div class="content" style="margin-top:0;padding-top:18px">
+  <h2 class="section-lbl">Outreach Pipeline</h2>
+  {body}
+</div>"""
+
+    # ── Leads table ─────────────────────────────────────────────────────────
+    lead_rows_html = ""
+    for idx, c in enumerate(qualified):
+        qual    = c.get("qualification") or {}
+        intent  = qual.get("intent", "low")
+        name    = html.escape(c.get("commenter_name") or "Unknown")
+        company = html.escape(qual.get("company_guess") or "")
+        title   = html.escape(qual.get("title_guess")  or "")
+        topic   = html.escape((c.get("_post_topic") or "")[:55])
+        comment_preview  = html.escape((c.get("comment_text") or "")[:80])
+        comment_full_esc = html.escape(c.get("comment_text") or "")
+
+        reply_status = ("replied" if c.get("replied") else
+                        "drafted" if c.get("reply_drafts") else "pending")
+        rs_badge_cls = ("published" if c.get("replied") else
+                        "approved"  if c.get("reply_drafts") else "draft")
+
+        li_url  = c.get("commenter_linkedin_url") or ""
+        li_icon = (f' <a href="{html.escape(li_url)}" target="_blank" rel="noopener noreferrer"'
+                   f' style="color:#2e7de0">&#128279;</a>') if li_url else ""
+
+        # Reply options inside expanded body
+        reply_opts_html = ""
+        for ri, r in enumerate(c.get("reply_drafts", [])[:2]):
+            is_rec = ri == c.get("recommended_reply", 0)
+            label  = "&#9733; Recommended" if is_rec else f"Option {ri + 1}"
+            reply_opts_html += (
+                f'<div class="pending-reply{" rec" if is_rec else ""}" style="margin-bottom:5px">'
+                f'<div class="reply-rec-label">{label}</div>'
+                f'{html.escape(r)}</div>'
+            )
+
+        # DM sequence preview
+        dm_html = ""
+        safe_id = (c.get("commenter_id") or "").replace("urn:li:person:", "").replace(":", "_")[:20]
+        dm_file = outreach_dir / f"{safe_id}_dm_sequence.json"
+        if dm_file.exists():
+            try:
+                dm_data = json.loads(dm_file.read_text(encoding="utf-8"))
+                dm_items = ""
+                for msg in dm_data.get("dm_sequence", []):
+                    day_label = "Immediately" if msg.get("day", 0) == 0 else f"Day {msg['day']}"
+                    dm_items += (
+                        f'<div class="dm-msg"><div class="dm-msg-day">{day_label}</div>'
+                        f'{html.escape(msg.get("message", ""))}</div>'
+                    )
+                if dm_items:
+                    dm_html = (
+                        f'<div style="margin-top:12px">'
+                        f'<div class="section-lbl" style="margin-bottom:6px">DM Sequence</div>'
+                        f'<div class="dm-seq">{dm_items}</div></div>'
+                    )
+            except Exception:
+                pass
+
+        lead_rows_html += f"""
+        <div class="lead-tbl-row" id="lead-row-{idx}">
+          <div class="lead-tbl-header" onclick="toggleLead({idx})"
+               role="button" tabindex="0"
+               onkeydown="if(event.key==='Enter'||event.key===' ')toggleLead({idx})">
+            <span class="lead-intent {html.escape(intent)}">{html.escape(intent)}</span>
+            <span style="font-size:13px;font-weight:600;color:#ede9e3">{name}{li_icon}</span>
+            {f'<span style="font-size:11px;color:rgba(255,255,255,.4)">{company}</span>' if company else ''}
+            {f'<span style="font-size:11px;color:rgba(255,255,255,.3)">{title}</span>' if title else ''}
+            <span class="badge {rs_badge_cls}" style="margin-left:auto;flex-shrink:0">{reply_status}</span>
+            <span style="font-size:11px;color:rgba(255,255,255,.3);max-width:180px;overflow:hidden;
+                         text-overflow:ellipsis;white-space:nowrap">{comment_preview}</span>
+            <span class="lead-chevron">&#9660;</span>
+          </div>
+          <div class="lead-body" id="lead-body-{idx}">
+            <div style="font-size:10px;color:rgba(255,255,255,.3);margin-bottom:6px">Post: {topic}</div>
+            <div class="lead-comment-full">{comment_full_esc}</div>
+            {reply_opts_html}
+            {dm_html}
+          </div>
+        </div>"""
+
+    leads_section = (
+        f'<div class="lead-tbl">{lead_rows_html}</div>'
+        if lead_rows_html else
+        '<div class="empty" style="padding:20px">No qualified leads yet — run <code>python outreach.py qualify</code></div>'
+    )
+
+    # ── Pending replies ──────────────────────────────────────────────────────
+    pending = [
+        c for c in all_comments
+        if (c.get("qualification") or {}).get("intent") in ("high", "medium")
+        and not c.get("replied")
+        and c.get("reply_drafts")
+    ]
+
+    pending_cards_html = ""
+    for c in pending:
+        qual      = c.get("qualification") or {}
+        name      = html.escape(c.get("commenter_name") or "Unknown")
+        topic_esc = html.escape((c.get("_post_topic") or "")[:70])
+        comment   = html.escape(c.get("comment_text") or "")
+        file_esc  = html.escape(c.get("_file_path") or "")
+        cid_esc   = html.escape(c.get("comment_id")  or "")
+        rec_idx   = c.get("recommended_reply", 0)
+        drafts    = c.get("reply_drafts", [])
+
+        reply_opts_html = ""
+        for ri, r in enumerate(drafts[:2]):
+            is_rec = ri == rec_idx
+            label  = "&#9733; Recommended" if is_rec else f"Option {ri + 1}"
+            reply_opts_html += (
+                f'<div class="pending-reply{" rec" if is_rec else ""}">'
+                f'<div class="reply-rec-label">{label}</div>'
+                f'{html.escape(r)}</div>'
+            )
+
+        rec_text = drafts[rec_idx] if drafts and rec_idx < len(drafts) else (drafts[0] if drafts else "")
+        rec_js   = _js_str(rec_text)
+
+        pending_cards_html += f"""
+        <div class="pending-card">
+          <div class="pending-header">
+            <span class="pending-name">{name}</span>
+            <span class="pending-post">{topic_esc}</span>
+            <span class="lead-intent {html.escape(qual.get('intent','low'))}"
+                  style="flex-shrink:0">{html.escape(qual.get('intent','low'))}</span>
+          </div>
+          <div class="pending-comment">{comment}</div>
+          <div class="pending-replies">{reply_opts_html}</div>
+          <div class="pending-actions">
+            <button class="copy-reply-btn"
+                    onclick="copyReply('{rec_js}', this)">&#128203; Copy recommended reply</button>
+            <button class="mark-replied-btn"
+                    onclick="markReplied('{file_esc}', '{cid_esc}', this)">&#10003; Mark as replied</button>
+          </div>
+        </div>"""
+
+    if not pending_cards_html:
+        pending_cards_html = '<div class="empty" style="padding:20px">No pending replies — all qualified leads have been replied to or no replies drafted yet.</div>'
+
+    return f"""
+{stats_html}
+<div class="content" style="margin-top:0;padding-top:18px">
+  <h2 class="section-lbl">Outreach Pipeline &mdash; Qualified Leads ({len(qualified)})</h2>
+  {leads_section}
+  <h2 class="section-lbl" style="margin-top:28px">Pending Replies ({len(pending)})</h2>
+  {pending_cards_html}
+</div>"""
+
+
+# ---------------------------------------------------------------------------
 # Main generator
 # ---------------------------------------------------------------------------
 def generate(posts: list[dict]) -> str:
@@ -1051,10 +1386,11 @@ def generate(posts: list[dict]) -> str:
         ' to generate your first post.</div>'
     )
 
-    now_muscat       = _to_muscat(datetime.now(timezone.utc))
-    engagement_html  = _engagement_sections()
-    branch           = _current_branch()
-    pillar_class_css = _pillar_class_css()
+    now_muscat        = _to_muscat(datetime.now(timezone.utc))
+    engagement_html   = _engagement_sections()
+    outreach_html     = _outreach_pipeline_section()
+    branch            = _current_branch()
+    pillar_class_css  = _pillar_class_css()
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -1115,6 +1451,8 @@ def generate(posts: list[dict]) -> str:
 </div>
 
 {engagement_html}
+
+{outreach_html}
 
 </main>
 

@@ -4,13 +4,14 @@ Draft-first LinkedIn content system — generates posts with Claude, requires ow
 
 ## Content strategy
 
-| Day | Pillar | What it covers |
-|---|---|---|
-| **Monday** | Leadership | Management, hiring, team building, career growth |
-| **Wednesday** | AI & Tech | LLMs, agents, AI in business, practical insights |
-| **Friday** | Marketing & Growth | Content, branding, B2B, growth tactics |
+| Publish day | Pillar | What it covers | Generated |
+|---|---|---|---|
+| **Monday** | pain | Operational pain Oman businesses feel daily — no SmartPro mention | Saturday |
+| **Wednesday** | proof | Concrete results, before/after, specific numbers | Monday |
+| **Friday** | vision | Oman Vision 2040, where forward-looking founders are heading | Wednesday |
+| **Manual only** | conversion | Direct SmartPro offer with hard CTA — `FORCE_PILLAR=conversion` | On demand |
 
-Drafts are generated at **9:00 AM Muscat time** (5:00 AM UTC) Mon/Wed/Fri. Approved drafts are published only when you manually run the `publish_draft` workflow.
+Drafts are generated **2 days before their publish day** (Sat/Mon/Wed at 9:00 AM Muscat, 5:00 AM UTC). Approved drafts are published automatically at 10:00 AM Muscat (6:00 AM UTC) on Mon/Wed/Fri.
 
 ## How it works
 
@@ -62,7 +63,7 @@ By default, scheduled runs are **draft-first**. This protects your LinkedIn repu
 4. **Enable GitHub Actions** for the repo (Actions tab → enable).
 5. **Optional: enable draft-ready notifications** so you do not need to manually check the dashboard. Add `RESEND_API_KEY` and `NOTIFY_EMAIL` for email, `NOTIFY_WEBHOOK_URL` for webhook alerts, or both.
 
-That's it. The cron will automatically generate drafts Mon/Wed/Fri. Publishing requires a manual `publish_draft` workflow run.
+That's it. The cron generates drafts Sat/Mon/Wed and auto-publishes approved ones Mon/Wed/Fri. Publishing requires the draft to be manually approved first.
 
 ## Test it manually
 
@@ -72,7 +73,7 @@ From the **Actions** tab in GitHub:
 2. Click "Run workflow"
 3. Choose `generate_draft` to create a safe draft, or `publish_draft` to publish an approved draft
 4. For `publish_draft`, provide the draft JSON path, e.g. `posts_history/20260430_090000_ai.json`
-5. Optionally force a pillar (`leadership` / `ai` / `marketing`)
+5. Optionally force a pillar (`pain` / `proof` / `vision` / `conversion`)
 
 ## Run locally
 
@@ -85,7 +86,7 @@ cp .env.example .env
 python main.py
 
 # Force a specific pillar while drafting
-FORCE_PILLAR=ai python main.py
+FORCE_PILLAR=vision python main.py
 
 # Publish an approved saved draft
 POST_MODE=publish_draft PUBLISH_DRAFT_PATH=posts_history/20260430_090000_ai.json python main.py

@@ -19,6 +19,7 @@ VALID_MODES = {
     "generate_draft",
     "publish_approved",
     "publish_draft",
+    "approve_draft",
     "publish",
     "publish_now",
     "revise_draft",
@@ -52,6 +53,8 @@ def main() -> int:
         return publish_approved_for_today()
     if mode == "publish_draft":
         return publish_saved_draft()
+    if mode == "approve_draft":
+        return approve_draft_file()
     if mode == "publish_now":
         return generate_and_publish_now()
     if mode == "revise_draft":
@@ -179,6 +182,42 @@ def publish_approved_for_today() -> int:
     path, _ = candidates[0]  # most recently generated approved draft
     print(f"Auto-publishing approved {todays_pillar} draft: {path.name}")
     return _publish_post_file(path)
+
+
+def approve_draft_file() -> int:
+    """Flip a draft's status to approved without publishing.
+
+    Reads PUBLISH_DRAFT_PATH, sets approved=True, status='approved',
+    approval_required=False, approved_at=now.  The workflow's commit step
+    uses the approve: <basename> message for this action.
+    """
+    raw_path = (os.environ.get("PUBLISH_DRAFT_PATH") or "").strip()
+    if not raw_path:
+        raise SystemExit(
+            "PUBLISH_DRAFT_PATH is required for approve_draft mode. "
+            "Example: posts_history/20260430_090000_pain.json"
+        )
+
+    path = Path(raw_path)
+    if not path.is_absolute():
+        path = Path(__file__).parent / path
+    if not path.exists():
+        raise SystemExit(f"Draft not found: {path}")
+
+    post = json.loads(path.read_text(encoding="utf-8"))
+    if post.get("published"):
+        raise SystemExit(f"Post is already published — cannot re-approve: {path}")
+
+    post.update({
+        "status":           "approved",
+        "approved":         True,
+        "approval_required": False,
+        "approved_at":      datetime.now(timezone.utc).isoformat(),
+        "dry_run":          False,
+    })
+    path.write_text(json.dumps(post, indent=2), encoding="utf-8")
+    print(f"Approved: {path.name}  (will publish on next scheduled {post.get('pillar', '')} cron)")
+    return 0
 
 
 def publish_saved_draft() -> int:

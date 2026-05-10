@@ -23,6 +23,7 @@ on:
           - generate_draft
           - publish_approved
           - publish_draft
+          - approve_draft
           - revise_draft
           - publish_now
           - fetch_metrics
@@ -112,10 +113,18 @@ jobs:
 
       - name: Commit history and dashboard
         if: always()
+        env:
+          RUN_MODE:   ${{ steps.mode.outputs.mode }}
+          DRAFT_FILE: ${{ inputs.draft_file }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add posts_history/ engagement_history/ docs/
-          git diff --cached --quiet || git commit -m "dashboard: update $(date -u '+%Y-%m-%d %H:%M UTC')"
+          if [ "$RUN_MODE" = "approve_draft" ] && [ -n "$DRAFT_FILE" ]; then
+            MSG="approve: $(basename "$DRAFT_FILE")"
+          else
+            MSG="dashboard: update $(date -u '+%Y-%m-%d %H:%M UTC')"
+          fi
+          git diff --cached --quiet || git commit -m "$MSG"
           git pull --rebase origin ${GITHUB_REF_NAME}
           git push origin HEAD:${GITHUB_REF_NAME}

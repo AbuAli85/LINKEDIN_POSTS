@@ -17,10 +17,16 @@ You need a LinkedIn access token before the bot can post. This takes ~10 minutes
 
 In your app dashboard, go to the **Products** tab and request access to:
 
-- **Share on LinkedIn** (`w_member_social` scope)
-- **Sign In with LinkedIn using OpenID Connect** (`openid`, `profile`, `email`)
+- **Share on LinkedIn** (`w_member_social` scope) — needed to publish posts
+- **Sign In with LinkedIn using OpenID Connect** (`openid`, `profile`, `email`) — needed for auth
+- **Community Management API** (`r_member_social` scope) — **needed to read post comments**
 
-These are auto-approved within minutes.
+> **Why `r_member_social` matters:** without it, `python outreach.py fetch` silently returns 0
+> comments for every post (HTTP 403, logged but not fatal). Everything looks like it worked —
+> it didn't. Fetch this scope now even if you don't plan to use the outreach pipeline yet.
+
+Share on LinkedIn and Sign In are auto-approved within minutes. Community Management API
+may require a brief review — usually approved same day for personal developer accounts.
 
 ## Step 3: Get Your Author URN (your LinkedIn user ID)
 
@@ -31,8 +37,13 @@ These are auto-approved within minutes.
 Then visit (replace `CLIENT_ID`):
 
 ```
-https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=CLIENT_ID&redirect_uri=https%3A%2F%2Fwww.linkedin.com%2Fdevelopers%2Ftools%2Foauth%2Fredirect&scope=openid%20profile%20email%20w_member_social
+https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=CLIENT_ID&redirect_uri=https%3A%2F%2Fwww.linkedin.com%2Fdevelopers%2Ftools%2Foauth%2Fredirect&scope=openid%20profile%20email%20w_member_social%20r_member_social
 ```
+
+> **`r_member_social` is in the scope string above.** If you previously ran the authorization
+> URL without it, the resulting token cannot read comments. You must complete this OAuth
+> round-trip again — adding the scope in the app dashboard is not enough, you need a fresh
+> `code` and a new token exchange.
 
 After authorizing, LinkedIn redirects back with a `code=...` in the URL. Copy that code.
 
@@ -105,8 +116,13 @@ That's it. The cron will start posting Mon/Wed/Fri at 9 AM UTC.
 
 LinkedIn access tokens expire after 60 days. To renew:
 
-1. Repeat Step 3 (get a new `code` from the OAuth URL)
-2. Repeat Step 4 (exchange for a new token)
+1. Repeat Step 3 — use the full OAuth URL **with `r_member_social` in the scope string**
+   (the URL above already includes it; paste that exact URL, just replace `CLIENT_ID`)
+2. Repeat Step 4 (exchange the new `code` for a new token)
 3. Update the `LINKEDIN_ACCESS_TOKEN` secret in GitHub
+
+**Do not** just generate a new token without completing the OAuth round-trip — scopes are
+bound to the authorization grant, not the app settings. An incomplete renewal produces a
+token that can post but cannot read comments.
 
 You can request a refresh token too (LinkedIn supports it for some apps) — see https://learn.microsoft.com/en-us/linkedin/shared/authentication/programmatic-refresh-tokens

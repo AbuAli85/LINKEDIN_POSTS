@@ -1,5 +1,8 @@
 """Content strategy: SmartPro — HR, Payroll & Operations platform for Oman businesses."""
 
+import json
+from pathlib import Path
+
 # Update these when you have live contact details
 DEMO_CTA  = "DM me on LinkedIn or WhatsApp +96879665522 to book a free 20-minute demo."
 BRAND_URL = "thesmartpro.io"
@@ -19,6 +22,7 @@ PILLARS = {
     # Monday posts. Surface the operational pain Oman business owners feel daily.
     # Never mention SmartPro by name — just make the reader feel seen and understood.
     "pain": {
+        "weight":          2.0,  # strong lead generator; moderate B2B conversion rate
         "day":             "Monday",
         "weekday":         0,
         "generate_weekday": 5,   # Saturday — 2 days before Monday publish
@@ -68,6 +72,7 @@ PILLARS = {
     # Wednesday posts. Show concrete evidence that the problem is solvable.
     # Specific numbers, real outcomes, before/after. Build credibility without hype.
     "proof": {
+        "weight":          3.0,  # highest-converting pillar for B2B SaaS — social proof closes deals
         "day":             "Wednesday",
         "weekday":         2,
         "generate_weekday": 0,   # Monday — 2 days before Wednesday publish
@@ -117,6 +122,7 @@ PILLARS = {
     # Friday posts. Speak to where Oman business is heading.
     # Ambitious, forward-looking. Makes the reader want to be part of what is coming.
     "vision": {
+        "weight":          1.0,  # brand positioning; lowest direct conversion — generate least
         "day":             "Friday",
         "weekday":         4,
         "generate_weekday": 2,   # Wednesday — 2 days before Friday publish
@@ -167,6 +173,7 @@ PILLARS = {
     # Run every 2 weeks, alternating with the regular Mon pain post.
     # Direct offer. Name SmartPro. Clear CTA. No fluff.
     "conversion": {
+        "weight":          0.0,  # manual-only; excluded from automatic weighted scheduling
         "day":             "Monday",
         "weekday":         0,
         "generate_weekday": -1,  # -1 = not on automatic schedule; manual only
@@ -199,18 +206,104 @@ PILLARS = {
 }
 
 
-def pick_pillar(weekday: int, force: str | None = None) -> tuple[str, dict]:
-    """Return the pillar for the given weekday, or the forced override.
+def get_pillar_weights() -> dict[str, float]:
+    """Return pillar weights from content_analysis.json when available, else PILLARS defaults.
 
-    Scheduled crons fire on generate_weekday (Sat/Mon/Wed).
-    The conversion pillar (generate_weekday=-1) is excluded from scheduled matching
-    and must be triggered manually via FORCE_PILLAR=conversion.
+    Source priority:
+      1. content_analysis.json → frequency_multipliers  (written by content_feedback.py analyze)
+      2. PILLARS[*]["weight"]  (evidence-based priors — proof 3×, pain 2×, vision 1×)
+
+    Once real deal_value / engagement data has accumulated the priors are overridden
+    automatically without any manual change to this file.
+    """
+    defaults = {name: float(cfg.get("weight", 1.0)) for name, cfg in PILLARS.items()}
+    try:
+        analysis = Path(__file__).parent / "content_analysis.json"
+        if analysis.exists():
+            data        = json.loads(analysis.read_text(encoding="utf-8"))
+            multipliers = data.get("frequency_multipliers", {})
+            if multipliers:
+                return {k: float(multipliers.get(k, defaults.get(k, 1.0))) for k in defaults}
+    except Exception:
+        pass
+    return defaults
+
+
+def _recent_pillar_counts(days: int = 21) -> dict[str, int]:
+    """Count generated posts per schedulable pillar over the last `days` days."""
+    from datetime import datetime, timedelta, timezone
+    cutoff = datetime.now(timezone.utc) - timedelta(days=days)
+    counts: dict[str, int] = {k: 0 for k in PILLARS}
+    history = Path(__file__).parent / "posts_history"
+    if not history.exists():
+        return counts
+    for f in history.glob("*.json"):
+        try:
+            p      = json.loads(f.read_text(encoding="utf-8"))
+            pillar = p.get("pillar", "")
+            gen_at = p.get("generated_at", "")
+            if not pillar or not gen_at:
+                continue
+            dt = datetime.fromisoformat(gen_at.replace("Z", "+00:00"))
+            if dt >= cutoff:
+                counts[pillar] = counts.get(pillar, 0) + 1
+        except Exception:
+            continue
+    return counts
+
+
+def _pick_by_weight(
+    schedulable: dict[str, dict],
+    weights: dict[str, float],
+    recent: dict[str, int],
+) -> tuple[str, dict]:
+    """Pick the schedulable pillar most under-represented relative to its weight target."""
+    total_w = sum(weights.get(k, 1.0) for k in schedulable) or 1.0
+    total_r = sum(recent.get(k, 0) for k in schedulable) or 1
+    name = max(
+        schedulable,
+        key=lambda k: weights.get(k, 1.0) / total_w - recent.get(k, 0) / total_r,
+    )
+    return name, PILLARS[name]
+
+
+def pick_pillar(weekday: int, force: str | None = None) -> tuple[str, dict]:
+    """Return the pillar for the given weekday, weighted by conversion performance.
+
+    The scheduled pillar (from generate_weekday) is used by default. If the
+    highest-weight schedulable pillar is >30% under-represented relative to its
+    fair share of the last 21 days, it substitutes for the scheduled slot —
+    gradually shifting generation toward higher-converting content (proof 3×,
+    pain 2×, vision 1×) without breaking the fixed cron schedule.
+
+    Conversion pillar (weight=0.0, generate_weekday=-1) is always manual-only.
     """
     if force and force in PILLARS:
         return force, PILLARS[force]
-    for name, config in PILLARS.items():
-        if config["generate_weekday"] == weekday:
-            return name, config
-    schedulable = {k: v for k, v in PILLARS.items() if v["generate_weekday"] >= 0}
-    name = min(schedulable.items(), key=lambda x: (x[1]["generate_weekday"] - weekday) % 7)[0]
-    return name, PILLARS[name]
+
+    schedulable = {k: v for k, v in PILLARS.items() if v.get("generate_weekday", -1) >= 0}
+    weights     = get_pillar_weights()
+    recent      = _recent_pillar_counts(days=21)
+
+    # Pillar scheduled for today's weekday
+    scheduled = next(
+        (name for name, cfg in schedulable.items() if cfg["generate_weekday"] == weekday),
+        None,
+    )
+    if scheduled is None:
+        # Off-schedule trigger — pick most under-represented high-weight pillar
+        return _pick_by_weight(schedulable, weights, recent)
+
+    # Check whether the highest-weight pillar is substantially under-represented
+    total_weight = sum(weights.get(k, 1.0) for k in schedulable) or 1.0
+    total_recent = sum(recent.get(k, 0) for k in schedulable) or 1
+    best         = max(schedulable, key=lambda k: weights.get(k, 1.0))
+    best_weight  = weights.get(best, 1.0)
+    target_share = best_weight / total_weight          # e.g. proof → 3/6 = 0.50
+    actual_share = recent.get(best, 0) / total_recent  # e.g. proof → 2/9 = 0.22
+
+    if best != scheduled and actual_share < target_share * 0.70:
+        # Highest-weight pillar is >30% below its fair share — substitute this slot
+        return best, PILLARS[best]
+
+    return scheduled, PILLARS[scheduled]

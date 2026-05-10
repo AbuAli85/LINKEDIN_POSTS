@@ -117,4 +117,5 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add posts_history/ engagement_history/ docs/
           git diff --cached --quiet || git commit -m "dashboard: update $(date -u '+%Y-%m-%d %H:%M UTC')"
+          git pull --rebase origin ${GITHUB_REF_NAME}
           git push origin HEAD:${GITHUB_REF_NAME}

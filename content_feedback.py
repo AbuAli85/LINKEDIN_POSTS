@@ -8,6 +8,7 @@ Commands:
 """
 
 import argparse
+import csv
 import json
 import sys
 from collections import defaultdict
@@ -16,6 +17,7 @@ from pathlib import Path
 
 HISTORY_DIR   = Path(__file__).parent / "posts_history"
 ANALYSIS_FILE = Path(__file__).parent / "content_analysis.json"
+LEADS_CSV     = Path(__file__).parent / "leads.csv"
 
 
 # ---------------------------------------------------------------------------
@@ -39,6 +41,17 @@ def _is_aged(post: dict, days: int = 7) -> bool:
         return (datetime.now(timezone.utc) - dt).days >= days
     except Exception:
         return False
+
+
+def _load_leads() -> list[dict]:
+    """Read leads.csv; return [] if absent or unreadable."""
+    if not LEADS_CSV.exists():
+        return []
+    try:
+        with LEADS_CSV.open(encoding="utf-8", newline="") as fh:
+            return list(csv.DictReader(fh))
+    except Exception:
+        return []
 
 
 def _engagement_rate(metrics: dict) -> float:
@@ -154,6 +167,67 @@ def cmd_analyze() -> dict:
     ranked_pillars = sorted(pillar_summary, key=lambda p: pillar_summary[p]["avg_engagement_rate"],
                             reverse=True)
 
+    # ── Demo conversion correlation ─────────────────────────────────────────
+    # Reads leads.csv; correlates post_topic → post pillar → demo outcome.
+    # Only meaningful once demo_outcome / demo_requested columns are filled in.
+    demo_analysis: dict = {}
+    leads = _load_leads()
+    if leads:
+        # Map post_topic fragment → pillar via posts_history
+        topic_to_pillar: dict[str, str] = {}
+        for f in HISTORY_DIR.glob("*.json"):
+            try:
+                p = _load(f)
+                if t := p.get("topic"):
+                    topic_to_pillar[t.lower()[:60]] = p.get("pillar", "unknown")
+            except Exception:
+                continue
+
+        pillar_leads: dict[str, int]     = defaultdict(int)
+        pillar_demos: dict[str, int]     = defaultdict(int)
+        pillar_converted: dict[str, int] = defaultdict(int)
+        pillar_value: dict[str, float]   = defaultdict(float)
+        total_demos = total_converted = 0
+
+        for row in leads:
+            intent = row.get("intent", "")
+            if intent not in ("high", "medium"):
+                continue
+            topic_key = (row.get("post_topic") or "").lower()[:60]
+            pillar    = topic_to_pillar.get(topic_key, "unknown")
+            pillar_leads[pillar] += 1
+
+            if row.get("demo_requested") == "yes":
+                pillar_demos[pillar] += 1
+                total_demos += 1
+
+            outcome = row.get("demo_outcome", "")
+            if outcome == "converted":
+                pillar_converted[pillar] += 1
+                total_converted += 1
+                try:
+                    pillar_value[pillar] += float(row.get("deal_value") or 0)
+                except ValueError:
+                    pass
+
+        if pillar_leads:
+            demo_analysis = {
+                "total_qualified_leads": sum(pillar_leads.values()),
+                "total_demos":           total_demos,
+                "total_converted":       total_converted,
+                "per_pillar": {
+                    p: {
+                        "leads":       pillar_leads[p],
+                        "demos":       pillar_demos.get(p, 0),
+                        "converted":   pillar_converted.get(p, 0),
+                        "deal_value_omr": round(pillar_value.get(p, 0.0), 2),
+                        "demo_rate":   round(pillar_demos.get(p, 0) / pillar_leads[p], 3),
+                        "close_rate":  round(pillar_converted.get(p, 0) / max(pillar_demos.get(p, 1), 1), 3),
+                    }
+                    for p in pillar_leads
+                },
+            }
+
     analysis = {
         "generated_at":          datetime.now(timezone.utc).isoformat(),
         "total_posts_analyzed":   len(posts),
@@ -163,6 +237,7 @@ def cmd_analyze() -> dict:
         "best_pillar":            best_pillar,
         "best_hook_style":        best_hook,
         "recommended_emphasis":   ranked_pillars,
+        "demo_pipeline":          demo_analysis,
     }
 
     _save(ANALYSIS_FILE, analysis)
@@ -207,6 +282,23 @@ def cmd_report() -> None:
 
     if re := a.get("recommended_emphasis"):
         print(f"\n Recommended emphasis order: {' → '.join(re)}")
+
+    dp = a.get("demo_pipeline", {})
+    if dp and dp.get("total_qualified_leads", 0) > 0:
+        print(f"\n{'─'*55}")
+        print(f" Demo Pipeline  "
+              f"(leads={dp['total_qualified_leads']}  demos={dp['total_demos']}  "
+              f"converted={dp['total_converted']})")
+        pp2 = dp.get("per_pillar", {})
+        if pp2:
+            print(f"\n {'Pillar':<14} {'Leads':>6}  {'Demos':>5}  {'Demo%':>6}  {'Close%':>7}  {'OMR':>8}")
+            print(" " + "-" * 52)
+            for pillar, d in sorted(pp2.items(), key=lambda x: -x[1]["converted"]):
+                print(f"  {pillar:<13} {d['leads']:>6}  {d['demos']:>5}  "
+                      f"{d['demo_rate']*100:>5.1f}%  {d['close_rate']*100:>6.1f}%  "
+                      f"{d['deal_value_omr']:>8.0f}")
+        if dp["total_qualified_leads"] > 0 and dp["total_demos"] == 0:
+            print("\n  (No demo_requested=yes entries yet — fill in leads.csv to see conversion data)")
     print()
 
 

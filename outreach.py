@@ -507,12 +507,21 @@ def cmd_draft_dms() -> None:
 
 
 def cmd_export() -> None:
-    """Export/upsert leads.csv from all outreach_history data."""
+    """Export/upsert leads.csv from all outreach_history data.
+
+    Demo-tracking columns (demo_requested, demo_date, demo_outcome, deal_value)
+    are initialised empty for new leads and NEVER overwritten on upsert — fill
+    them manually in Excel/Sheets and they will survive every subsequent run.
+    """
     FIELDNAMES = [
         "name", "linkedin_url", "company", "title_guess", "intent",
         "post_topic", "comment_text", "reply_status", "dm_status",
-        "first_seen", "last_touchpoint", "notes",
+        "first_seen", "last_touchpoint",
+        # Demo-tracking — fill manually; never auto-overwritten
+        "demo_requested", "demo_date", "demo_outcome", "deal_value",
+        "notes",
     ]
+    DEMO_FIELDS = {"demo_requested", "demo_date", "demo_outcome", "deal_value", "notes"}
 
     # Load existing leads keyed by linkedin_url (or name fallback)
     existing: dict[str, dict] = {}
@@ -554,6 +563,7 @@ def cmd_export() -> None:
             last_touchpoint = (comment.get("replied_at") or first_seen)[:10]
 
             if key in existing:
+                # Update pipeline state; preserve all manually-filled demo/notes fields
                 existing[key]["last_touchpoint"] = last_touchpoint
                 existing[key]["reply_status"]    = reply_status
                 existing[key]["dm_status"]        = dm_status
@@ -570,6 +580,11 @@ def cmd_export() -> None:
                     "dm_status":       dm_status,
                     "first_seen":      first_seen,
                     "last_touchpoint": last_touchpoint,
+                    # Demo tracking — empty until you fill them in
+                    "demo_requested":  "",
+                    "demo_date":       "",
+                    "demo_outcome":    "",
+                    "deal_value":      "",
                     "notes":           "",
                 }
 

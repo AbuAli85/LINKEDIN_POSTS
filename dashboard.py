@@ -1419,7 +1419,7 @@ def generate(posts: list[dict]) -> str:
     <nav class="actions" aria-label="Site actions">
       <a class="tb-btn primary" href="{ACTIONS_URL}" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">&#9654;</span> Run workflow<span class="sr-only"> (opens in new tab)</span></a>
       <a class="tb-btn" href="https://github.com/{REPO}/actions" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">&#128200;</span> All runs<span class="sr-only"> (opens in new tab)</span></a>
-      <a class="tb-btn" href="https://www.linkedin.com/in/" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">&#128279;</span> LinkedIn<span class="sr-only"> (opens in new tab)</span></a>
+      <a class="tb-btn" href="https://www.linkedin.com/in/fahad-alamri-b9a809123/" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">&#128279;</span> LinkedIn<span class="sr-only"> (opens in new tab)</span></a>
     </nav>
   </div>
 </div>

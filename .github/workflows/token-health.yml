@@ -1,0 +1,82 @@
+name: LinkedIn token health check
+
+# Runs every Monday at 8am UTC (12pm Muscat).
+# Calls the LinkedIn /v2/userinfo endpoint — 200 = healthy, 401/403 = expired/revoked.
+# On failure: creates (or updates) a GitHub Issue tagged [urgent] with re-auth steps.
+
+on:
+  schedule:
+    - cron: "0 8 * * 1"   # Mon 08:00 UTC = 12:00 Muscat
+  workflow_dispatch: {}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Check LinkedIn token
+        env:
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "Authorization: Bearer $LINKEDIN_ACCESS_TOKEN" \
+            -H "X-Restli-Protocol-Version: 2.0.0" \
+            https://api.linkedin.com/v2/userinfo)
+
+          echo "LinkedIn /v2/userinfo → HTTP $STATUS"
+
+          if [ "$STATUS" = "200" ]; then
+            echo "Token healthy."
+            # Close any existing urgent token issue
+            ISSUE=$(gh issue list --repo "$REPO" --state open \
+              --label "linkedin-token" --json number --jq '.[0].number // empty')
+            if [ -n "$ISSUE" ]; then
+              gh issue close "$ISSUE" --repo "$REPO" \
+                --comment "Token health check passed (HTTP 200). Closing automatically."
+              echo "Closed stale issue #$ISSUE."
+            fi
+            exit 0
+          fi
+
+          echo "Token check FAILED (HTTP $STATUS). Creating/updating issue."
+
+          TITLE="[urgent] LinkedIn access token expired or revoked (HTTP $STATUS)"
+          BODY="## LinkedIn token health check failed
+
+          The weekly token health check received **HTTP $STATUS** from \`/v2/userinfo\`.
+
+          ### Re-auth checklist
+
+          1. Go to your LinkedIn Developer App → **Auth** tab.
+          2. Re-run the OAuth flow described in [LINKEDIN_SETUP.md](https://github.com/$REPO/blob/main/LINKEDIN_SETUP.md) (Steps 3–4).
+          3. Copy the new 60-day access token.
+          4. Update the \`LINKEDIN_ACCESS_TOKEN\` secret in [repo Settings → Secrets](https://github.com/$REPO/settings/secrets/actions).
+          5. Trigger this workflow manually to verify the new token.
+
+          > LinkedIn tokens expire after **60 days**. Set a calendar reminder ~50 days after renewal.
+
+          _Auto-created by the [token-health workflow](https://github.com/$REPO/actions/workflows/token-health.yml) on $(date -u '+%Y-%m-%d %H:%M UTC')._"
+
+          # Ensure the label exists (idempotent)
+          gh label create "linkedin-token" --repo "$REPO" \
+            --description "LinkedIn API token alerts" --color "d93f0b" 2>/dev/null || true
+
+          # Deduplicate: update body of existing open issue if one exists
+          EXISTING=$(gh issue list --repo "$REPO" --state open \
+            --label "linkedin-token" --json number --jq '.[0].number // empty')
+
+          if [ -n "$EXISTING" ]; then
+            gh issue edit "$EXISTING" --repo "$REPO" --body "$BODY"
+            echo "Updated existing issue #$EXISTING."
+          else
+            gh issue create --repo "$REPO" \
+              --title "$TITLE" \
+              --body "$BODY" \
+              --label "linkedin-token"
+            echo "Created new issue."
+          fi
+
+          exit 1

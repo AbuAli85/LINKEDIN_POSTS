@@ -334,7 +334,7 @@ footer a:hover{color:#ede9e3}
     Dashboard
   </div>
   <div class="topbar-right">
-    <span class="updated">Updated May 11, 2026 · 12:29 am Muscat</span>
+    <span class="updated">Updated May 11, 2026 · 1:35 am Muscat</span>
     <div class="live-dot" title="Live" aria-hidden="true"></div>
     <nav class="actions" aria-label="Site actions">
       <a class="tb-btn primary" href="https://github.com/AbuAli85/LINKEDIN_POSTS/actions/workflows/auto-post.yml" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">&#9654;</span> Run workflow<span class="sr-only"> (opens in new tab)</span></a>
@@ -929,21 +929,21 @@ What&#x27;s the longest you&#x27;ve ever stretched a single piece of content —
       <div class="modal-preview" id="modal-preview"></div>
     </div>
     <div class="modal-field">
-      <label class="modal-label" for="modal-pat">GitHub Personal Access Token <em>(repo scope)</em></label>
-      <input class="modal-input" id="modal-pat" type="password" placeholder="ghp_..." autocomplete="off" aria-describedby="modal-pat-hint">
-      <div class="modal-hint" id="modal-pat-hint">
-        Marks the draft as approved &mdash; <b>does not publish immediately</b>. The cron will
-        publish automatically on the scheduled day. &nbsp;
-        <a href="#" onclick="clearPat();return false;">Clear saved token</a><br>
-        Token is saved in browser localStorage and never sent anywhere except GitHub&#39;s API.<br>
-        Create at <b>GitHub &rarr; Settings &rarr; Developer settings &rarr; Personal access tokens &rarr; Tokens (classic)</b>
-        with <b>repo</b> scope (contents read/write).
+      <span class="modal-label">Copy path for workflow input</span>
+      <div style="margin-top:6px">
+        <button class="icon-btn" id="modal-copy-path-btn" onclick="copyApprovalPath()">&#128203; Copy path</button>
+      </div>
+      <div class="modal-hint" style="margin-top:8px">
+        Approve no longer requires a token. Click <b>Open Actions</b> below, choose <b>approve_draft</b>,
+        paste the path above into the <em>draft_file</em> field, and run.
+        The workflow commits the approval automatically &mdash; <b>post does not publish immediately</b>.
       </div>
     </div>
-    <div class="modal-status" id="modal-status" role="status" aria-live="polite"></div>
     <div class="modal-actions">
-      <button class="modal-confirm approve-green" id="modal-confirm-btn" onclick="confirmApprove()">&#10003; Approve</button>
-      <button class="modal-cancel" onclick="closeApproveModal()">Cancel</button>
+      <a class="modal-confirm approve-green" href="https://github.com/AbuAli85/LINKEDIN_POSTS/actions/workflows/auto-post.yml" target="_blank" rel="noopener noreferrer"
+         onclick="closeApproveModal()" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none">
+        Open Actions &#8599;<span class="sr-only"> (opens in new tab)</span></a>
+      <button class="modal-cancel" onclick="closeApproveModal()">Close</button>
     </div>
   </div>
 </div>
@@ -1154,19 +1154,28 @@ function showApproveModal(btn) {
   document.getElementById('modal-draft-path').value = path;
   document.getElementById('modal-path-display').textContent = path;
   document.getElementById('modal-preview').textContent = preview;
-  document.getElementById('modal-status').textContent = '';
-  document.getElementById('approve-modal-title').textContent = '✓ Approve → publishes ' + day;
-  var cb = document.getElementById('modal-confirm-btn');
-  cb.textContent = '✓ Approve for ' + day; cb.disabled = false;
-  document.getElementById('modal-pat').value = _getPat();
+  document.getElementById('approve-modal-title').textContent = '✓ Approve — publishes ' + day;
+  var copyBtn = document.getElementById('modal-copy-path-btn');
+  if (copyBtn) { copyBtn.innerHTML = '&#128203; Copy path'; copyBtn.classList.remove('copied'); }
   document.getElementById('approve-modal').classList.add('open');
-  setTimeout(function() { document.getElementById('modal-pat').focus(); }, 50);
+  setTimeout(function() { if (copyBtn) copyBtn.focus(); }, 50);
 }
 function closeApproveModal() {
   document.getElementById('approve-modal').classList.remove('open');
   if (_approveSourceBtn) _approveSourceBtn.focus();
 }
 document.getElementById('approve-modal').addEventListener('click', function(e) { if (e.target === this) closeApproveModal(); });
+
+function copyApprovalPath() {
+  var path = document.getElementById('modal-draft-path').value;
+  navigator.clipboard.writeText(path).then(function() {
+    var btn = document.getElementById('modal-copy-path-btn');
+    btn.innerHTML = '&#10003; Copied';
+    btn.classList.add('copied');
+    setTimeout(function() { btn.innerHTML = '&#128203; Copy path'; btn.classList.remove('copied'); }, 2200);
+    toast('Path copied — paste into the approve_draft workflow input.', { variant: 'success' });
+  });
+}
 
 function _hideReviewUI(card) {
   var ra = card.querySelector('.review-actions'); if (ra) ra.style.display = 'none';
@@ -1179,54 +1188,6 @@ function _updateStats(reviewDelta, approvedDelta) {
     if (t === 'Needs review') n.textContent = Math.max(0, parseInt(n.textContent||'0') + reviewDelta);
     if (t === 'Approved')     n.textContent = Math.max(0, parseInt(n.textContent||'0') + approvedDelta);
   });
-}
-
-async function confirmApprove() {
-  var pat  = document.getElementById('modal-pat').value.trim();
-  var path = document.getElementById('modal-draft-path').value;
-  var st   = document.getElementById('modal-status');
-  var cb   = document.getElementById('modal-confirm-btn');
-  if (!pat) { st.textContent = 'Enter your GitHub PAT.'; st.style.color = '#e8372a'; return; }
-  _setPat(pat);
-  cb.textContent = 'Reading draft…'; cb.disabled = true; st.textContent = '';
-  try {
-    var getResp = await fetch(
-      'https://api.github.com/repos/' + _REPO + '/contents/' + path,
-      { headers: { 'Authorization': 'Bearer ' + pat, 'Accept': 'application/vnd.github.v3+json' } }
-    );
-    if (!getResp.ok) { var ge = await getResp.json().catch(function(){ return {}; }); throw new Error('Could not read draft (' + getResp.status + '): ' + (ge.message || 'check PAT')); }
-    var fileData = await getResp.json();
-    var postJson = JSON.parse(atob(fileData.content.replace(/\n/g,'')));
-    postJson.approved = true; postJson.status = 'approved';
-    postJson.approval_required = false; postJson.approved_at = new Date().toISOString();
-    postJson.dry_run = false;
-    var encoded = btoa(unescape(encodeURIComponent(JSON.stringify(postJson, null, 2))));
-    cb.textContent = 'Saving…';
-    var putResp = await fetch(
-      'https://api.github.com/repos/' + _REPO + '/contents/' + path,
-      { method: 'PUT',
-        headers: { 'Authorization': 'Bearer ' + pat, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: 'approve: ' + path.split('/').pop(), content: encoded, sha: fileData.sha, branch: _BRANCH }) }
-    );
-    if (putResp.status === 200 || putResp.status === 201) {
-      var day = (_approveSourceBtn && _approveSourceBtn.getAttribute('data-publish-day')) || 'scheduled day';
-      if (_approveSourceBtn) {
-        var card = _approveSourceBtn.closest('.card');
-        if (card) {
-          var badge = card.querySelector('.badge.draft');
-          if (badge) { badge.className = 'badge approved'; badge.textContent = 'Approved'; }
-          _hideReviewUI(card);
-        }
-        _updateStats(-1, 1);
-      }
-      closeApproveModal();
-      toast('Approved — publishes ' + day + '.', { variant: 'success' });
-    } else {
-      var pe = await putResp.json().catch(function(){ return {}; });
-      st.textContent = 'Error ' + putResp.status + ': ' + (pe.message || 'check PAT scope');
-      st.style.color = '#e8372a'; cb.textContent = '✓ Approve'; cb.disabled = false;
-    }
-  } catch(e) { st.textContent = 'Error: ' + e.message; st.style.color = '#e8372a'; cb.textContent = '✓ Approve'; cb.disabled = false; }
 }
 
 /* Auto-refresh draft cards on page load */

@@ -391,12 +391,29 @@ footer a:hover{color:#ede9e3}
 .toast-close:hover{opacity:1}
 @media(prefers-reduced-motion:reduce){.toast{transition:opacity .01s;transform:none}.toast.out{transform:none}}
 
+/* ── FILTER BAR ── */
+.filter-bar{max-width:840px;margin:0 auto;padding:16px 28px 4px;display:flex;flex-wrap:wrap;gap:6px}
+.filter-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;
+             font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;
+             background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);
+             color:rgba(255,255,255,.45);min-height:30px;font-family:inherit}
+.filter-chip:hover{color:#ede9e3;border-color:rgba(255,255,255,.18)}
+.filter-chip.active{background:rgba(232,55,42,.1);border-color:rgba(232,55,42,.3);color:#e8372a}
+.filter-chip .count{font-size:10px;background:rgba(255,255,255,.07);padding:1px 6px;
+                    border-radius:10px;font-family:'DM Mono',monospace;margin-left:2px}
+.filter-chip.active .count{background:rgba(232,55,42,.15)}
+
 /* ── RESPONSIVE ── */
 @media(max-width:640px){
-  .topbar,.statsbar,.schedbar,.content{padding-left:16px;padding-right:16px}
-  .topbar-right .updated{display:none}
+  .topbar,.statsbar,.schedbar,.content,.filter-bar{padding-left:16px;padding-right:16px}
+  .topbar-right .updated,.topbar-right .tb-btn:not(.primary){display:none}
   .stat{padding:10px 14px}
   .modal-box{padding:20px 18px}
+  .filter-chip{font-size:11px;padding:4px 10px}
+  .card{padding:14px 14px}
+  .review-actions{gap:5px}
+  .card-footer{gap:5px}
+  .meta-right{flex-wrap:wrap;gap:4px}
 }
 """
 
@@ -738,6 +755,24 @@ function toast(message, opts) {
   }
   return dismiss;
 }
+
+/* ── FILTER CHIPS ── */
+function filterCards(key) {
+  document.querySelectorAll('.filter-chip').forEach(function(c) {
+    c.classList.toggle('active', c.getAttribute('data-filter') === key);
+  });
+  var cards = document.querySelectorAll('.card');
+  var shown = 0;
+  cards.forEach(function(card) {
+    var status = card.getAttribute('data-status') || '';
+    var pillar = card.getAttribute('data-pillar') || '';
+    var show = key === 'all' || key === status || key === pillar;
+    card.style.display = show ? '' : 'none';
+    if (show) shown++;
+  });
+  var lbl = document.querySelector('.section-lbl');
+  if (lbl) lbl.textContent = 'Post history (' + shown + ')';
+}
 """
 
 
@@ -762,14 +797,19 @@ def _card(post: dict, idx: int) -> str:
 
     if   post.get("published") or status_value == "published":
         status = _badge("&#10003; Published", "published")
+        status_key = "published"
     elif post.get("publish_error") or status_value == "failed":
         status = _badge("&#10007; Failed", "failed")
+        status_key = "failed"
     elif post.get("approved") or status_value == "approved":
         status = _badge("Approved", "approved")
+        status_key = "approved"
     elif post.get("dry_run"):
         status = _badge("Dry run", "dry-run")
+        status_key = "dry-run"
     else:
         status = _badge("Needs review", "draft")
+        status_key = "draft"
 
     raw_date = post.get("published_at") or post.get("generated_at", "")
     try:
@@ -855,7 +895,7 @@ def _card(post: dict, idx: int) -> str:
         )
 
     return f"""
-    <div class="card" id="post-{idx}" data-pillar="{pillar_val}">
+    <div class="card" id="post-{idx}" data-pillar="{pillar_val}" data-status="{status_key}">
       <div class="card-header">
         <span class="pillar-tag {pillar_val}">{pillar}</span>
         {status}
@@ -1012,6 +1052,27 @@ def generate(posts: list[dict]) -> str:
 
     runs_html = "".join(_run_html(r) for r in next_runs(3))
 
+    _chip_defs = [
+        ("All",          "all",       total),
+        ("Needs review", "draft",     n_drafts),
+        ("Published",    "published", n_published),
+        ("Approved",     "approved",  n_approved),
+    ]
+    if n_failed:
+        _chip_defs.append(("Failed", "failed", n_failed))
+    for _p, _c in sorted(counts.items(), key=lambda x: -x[1]):
+        _chip_defs.append((_p.capitalize(), _p, _c))
+    filter_bar_html = (
+        '<div class="filter-bar" role="group" aria-label="Filter posts">'
+        + "".join(
+            f'<button class="filter-chip{" active" if k == "all" else ""}" '
+            f'data-filter="{k}" onclick="filterCards(\'{k}\')">'
+            f'{n}<span class="count">{c}</span></button>'
+            for n, k, c in _chip_defs
+        )
+        + "</div>"
+    )
+
     token_msg, token_level = _token_health(posts)
     token_banner = ""
     if token_msg and token_level != "ok":
@@ -1083,6 +1144,8 @@ def generate(posts: list[dict]) -> str:
   <span class="lbl">Next draft generation &rarr;</span>
   {runs_html}
 </div>
+
+{filter_bar_html}
 
 <main id="main-content">
 <div class="content">

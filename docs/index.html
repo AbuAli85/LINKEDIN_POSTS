@@ -55,22 +55,30 @@ a{color:inherit;text-decoration:none}
 .section-lbl{font-size:.66rem;color:#94a3b8;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px}
 
 /* CARD */
-.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:17px 19px;margin-bottom:13px;transition:border-color .15s}
-.card:hover{border-color:#475569}
+.card{background:#1e293b;border:1px solid #334155;border-left:3px solid #334155;border-radius:12px;padding:17px 19px;margin-bottom:13px;transition:border-color .15s}
+.card:hover{border-color:#64748b}
+.card[data-pillar="pain"]{border-left-color:#f87171}
+.card[data-pillar="proof"]{border-left-color:#4ade80}
+.card[data-pillar="leadership"]{border-left-color:#818cf8}
+.card[data-pillar="marketing"]{border-left-color:#fbbf24}
 .card-header{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-bottom:8px}
-.pillar-tag{font-size:.64rem;font-weight:700;padding:3px 8px;border-radius:5px;border:1px solid;text-transform:uppercase;letter-spacing:.07em}
+.pillar-tag{font-size:.64rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em}
+.pillar-tag.pain{color:#f87171}
+.pillar-tag.proof{color:#4ade80}
+.pillar-tag.leadership{color:#818cf8}
+.pillar-tag.marketing{color:#fbbf24}
 .badge{font-size:.68rem;padding:3px 8px;border-radius:4px;font-weight:500}
 .badge.published{background:#052e16;color:#4ade80}
-.badge.approved{background:#2f1f05;color:#fbbf24}
+.badge.approved{background:#082f49;color:#7dd3fc}
 .badge.dry-run{background:#1c1917;color:#a8a29e}
 .badge.draft{background:#1c1917;color:#fbbf24}
 .badge.failed{background:#450a0a;color:#f87171}
-.li-link{font-size:.68rem;color:#0ea5e9;border:1px solid #0c4a6e;border-radius:4px;padding:2px 7px;min-height:32px;display:inline-flex;align-items:center}
-.li-link:hover{background:#082f49}
+.li-link{font-size:.68rem;background:#1e293b;color:#94a3b8;border:1px solid #334155;border-radius:5px;padding:5px 10px;min-height:40px;display:inline-flex;align-items:center;transition:all .15s;text-decoration:none}
+.li-link:hover{border-color:#475569;color:#f1f5f9}
 .meta-right{margin-left:auto;display:flex;gap:7px;align-items:center}
 .model-tag{font-size:.65rem;background:#1a1a2e;color:#818cf8;border:1px solid #3730a3;padding:2px 7px;border-radius:4px}
 .date{font-size:.68rem;color:#94a3b8}
-.topic{font-size:.8rem;color:#94a3b8;font-style:italic;margin-bottom:6px}
+.topic{font-size:.92rem;color:#e2e8f0;margin-bottom:6px}
 .fmt-row{margin-bottom:9px}
 .fmt-tag{font-size:.72rem;color:#94a3b8;background:#0f172a;border:1px solid #1e293b;border-radius:4px;padding:2px 7px}
 .alert{border-radius:6px;padding:7px 11px;font-size:.76rem;margin-bottom:9px}
@@ -78,7 +86,7 @@ a{color:inherit;text-decoration:none}
 .alert.error{background:#450a0a;border:1px solid #7f1d1d;color:#f87171}
 .post-text{font-size:.87rem;line-height:1.78;color:#cbd5e1;white-space:pre-wrap;word-break:break-word}
 .post-text.collapsed{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.expand-btn{background:none;border:none;color:#0ea5e9;font-size:.74rem;cursor:pointer;padding:8px 0;display:block;margin-top:4px;min-height:40px}
+.expand-btn{background:none;border:none;color:#0ea5e9;font-size:.74rem;cursor:pointer;padding:8px 0;display:block;margin-top:4px;min-height:32px}
 .expand-btn:hover{color:#38bdf8}
 .card-footer{display:flex;align-items:center;gap:9px;margin-top:13px}
 .bar-track{flex:1;height:3px;background:#334155;border-radius:2px;overflow:hidden}
@@ -197,7 +205,6 @@ footer a:hover{color:#f1f5f9}
   <div class="stat"><div class="n">0</div><div class="l">Failed</div></div>
   
   <div class="stat success"><div class="n">67%</div><div class="l">Success</div></div>
-  <div class="sep"></div>
   <span class="pillar-pill" style="border-color:#f8717155;color:#f87171">pain <b>3</b></span><span class="pillar-pill" style="border-color:#4ade8055;color:#4ade80">proof <b>3</b></span><span class="pillar-pill" style="border-color:#818cf855;color:#818cf8">leadership <b>2</b></span><span class="pillar-pill" style="border-color:#fbbf2455;color:#fbbf24">marketing <b>1</b></span>
 </div>
 
@@ -210,9 +217,9 @@ footer a:hover{color:#f1f5f9}
 <div class="content">
   <h2 class="section-lbl">Post history (9)</h2>
   
-<div class="card" id="post-0">
+<div class="card" id="post-0" data-pillar="pain">
   <div class="card-header">
-    <span class="pillar-tag" style="color:#f87171;border-color:#f8717155">pain</span>
+    <span class="pillar-tag pain">pain</span>
     <span class="badge draft">Needs review</span>
     
     <span class="meta-right">
@@ -272,9 +279,9 @@ DM me or WhatsApp +96879665522 to book a free 20-minute demo. thesmartpro.io
     <button class="copy-btn" id="copy-0" onclick="copyPost(0)"><span aria-hidden="true">&#128203;</span> Copy</button>
   </div>
 </div>
-<div class="card" id="post-1">
+<div class="card" id="post-1" data-pillar="pain">
   <div class="card-header">
-    <span class="pillar-tag" style="color:#f87171;border-color:#f8717155">pain</span>
+    <span class="pillar-tag pain">pain</span>
     <span class="badge draft">Needs review</span>
     
     <span class="meta-right">
@@ -330,9 +337,9 @@ Build for the audit before the auditor shows up.
     <button class="copy-btn" id="copy-1" onclick="copyPost(1)"><span aria-hidden="true">&#128203;</span> Copy</button>
   </div>
 </div>
-<div class="card" id="post-2">
+<div class="card" id="post-2" data-pillar="proof">
   <div class="card-header">
-    <span class="pillar-tag" style="color:#4ade80;border-color:#4ade8055">proof</span>
+    <span class="pillar-tag proof">proof</span>
     <span class="badge approved">Approved</span>
     
     <span class="meta-right">
@@ -384,11 +391,10 @@ thesmartpro.io
     <button class="copy-btn" id="copy-2" onclick="copyPost(2)"><span aria-hidden="true">&#128203;</span> Copy</button>
   </div>
 </div>
-<div class="card" id="post-3">
+<div class="card" id="post-3" data-pillar="proof">
   <div class="card-header">
-    <span class="pillar-tag" style="color:#4ade80;border-color:#4ade8055">proof</span>
+    <span class="pillar-tag proof">proof</span>
     <span class="badge published">&#10003; Published</span>
-    <a class="li-link" href="https://www.linkedin.com/feed/update/urn:li:share:7457670702654050305/" target="_blank" rel="noopener">View on LinkedIn &#8599;</a>
     <span class="meta-right">
       <span class="model-tag">sonnet-4-6</span>
       <span class="date">May 6, 2026 · 10:00 am Muscat</span>
@@ -433,16 +439,14 @@ thesmartpro.io
   <div class="card-footer">
     <div class="bar-track"><div class="bar-fill ok" style="width:84.7%"></div></div>
     <span class="chars ok">1271 chars</span>
-    
-    
+    <a class="li-link" href="https://www.linkedin.com/feed/update/urn:li:share:7457670702654050305/" target="_blank" rel="noopener noreferrer">View on LinkedIn &#8599;<span class="sr-only"> (opens in new tab)</span></a>
     <button class="copy-btn" id="copy-3" onclick="copyPost(3)"><span aria-hidden="true">&#128203;</span> Copy</button>
   </div>
 </div>
-<div class="card" id="post-4">
+<div class="card" id="post-4" data-pillar="pain">
   <div class="card-header">
-    <span class="pillar-tag" style="color:#f87171;border-color:#f8717155">pain</span>
+    <span class="pillar-tag pain">pain</span>
     <span class="badge published">&#10003; Published</span>
-    <a class="li-link" href="https://www.linkedin.com/feed/update/urn:li:share:7456946169810837504/" target="_blank" rel="noopener">View on LinkedIn &#8599;</a>
     <span class="meta-right">
       <span class="model-tag">sonnet-4-6</span>
       <span class="date">May 4, 2026 · 10:01 am Muscat</span>
@@ -486,16 +490,14 @@ DM me or WhatsApp +96879665522 to book a free 20-minute demo. thesmartpro.io
   <div class="card-footer">
     <div class="bar-track"><div class="bar-fill ok" style="width:94.1%"></div></div>
     <span class="chars ok">1412 chars</span>
-    
-    
+    <a class="li-link" href="https://www.linkedin.com/feed/update/urn:li:share:7456946169810837504/" target="_blank" rel="noopener noreferrer">View on LinkedIn &#8599;<span class="sr-only"> (opens in new tab)</span></a>
     <button class="copy-btn" id="copy-4" onclick="copyPost(4)"><span aria-hidden="true">&#128203;</span> Copy</button>
   </div>
 </div>
-<div class="card" id="post-5">
+<div class="card" id="post-5" data-pillar="proof">
   <div class="card-header">
-    <span class="pillar-tag" style="color:#4ade80;border-color:#4ade8055">proof</span>
+    <span class="pillar-tag proof">proof</span>
     <span class="badge published">&#10003; Published</span>
-    <a class="li-link" href="https://www.linkedin.com/feed/update/urn:li:share:7457684843695493120/" target="_blank" rel="noopener">View on LinkedIn &#8599;</a>
     <span class="meta-right">
       <span class="model-tag">sonnet-4-6</span>
       <span class="date">May 6, 2026 · 10:57 am Muscat</span>
@@ -540,16 +542,14 @@ thesmartpro.io
   <div class="card-footer">
     <div class="bar-track"><div class="bar-fill ok" style="width:83.0%"></div></div>
     <span class="chars ok">1245 chars</span>
-    
-    
+    <a class="li-link" href="https://www.linkedin.com/feed/update/urn:li:share:7457684843695493120/" target="_blank" rel="noopener noreferrer">View on LinkedIn &#8599;<span class="sr-only"> (opens in new tab)</span></a>
     <button class="copy-btn" id="copy-5" onclick="copyPost(5)"><span aria-hidden="true">&#128203;</span> Copy</button>
   </div>
 </div>
-<div class="card" id="post-6">
+<div class="card" id="post-6" data-pillar="leadership">
   <div class="card-header">
-    <span class="pillar-tag" style="color:#818cf8;border-color:#818cf855">leadership</span>
+    <span class="pillar-tag leadership">leadership</span>
     <span class="badge published">&#10003; Published</span>
-    <a class="li-link" href="https://www.linkedin.com/feed/update/urn:li:share:7456714387991543808/" target="_blank" rel="noopener">View on LinkedIn &#8599;</a>
     <span class="meta-right">
       <span class="model-tag">sonnet-4-6</span>
       <span class="date">May 3, 2026 · 6:40 pm Muscat</span>
@@ -595,16 +595,14 @@ What made the difference in your team — clarity, consistency, or something els
   <div class="card-footer">
     <div class="bar-track"><div class="bar-fill ok" style="width:95.2%"></div></div>
     <span class="chars ok">1428 chars</span>
-    
-    
+    <a class="li-link" href="https://www.linkedin.com/feed/update/urn:li:share:7456714387991543808/" target="_blank" rel="noopener noreferrer">View on LinkedIn &#8599;<span class="sr-only"> (opens in new tab)</span></a>
     <button class="copy-btn" id="copy-6" onclick="copyPost(6)"><span aria-hidden="true">&#128203;</span> Copy</button>
   </div>
 </div>
-<div class="card" id="post-7">
+<div class="card" id="post-7" data-pillar="leadership">
   <div class="card-header">
-    <span class="pillar-tag" style="color:#818cf8;border-color:#818cf855">leadership</span>
+    <span class="pillar-tag leadership">leadership</span>
     <span class="badge published">&#10003; Published</span>
-    <a class="li-link" href="https://www.linkedin.com/feed/update/urn:li:share:7455622091032215552/" target="_blank" rel="noopener">View on LinkedIn &#8599;</a>
     <span class="meta-right">
       <span class="model-tag">sonnet-4-6</span>
       <span class="date">Apr 30, 2026 · 6:20 pm Muscat</span>
@@ -655,16 +653,14 @@ When did you last check — really check — if your team is paid fairly?
   <div class="card-footer">
     <div class="bar-track"><div class="bar-fill ok" style="width:85.6%"></div></div>
     <span class="chars ok">1284 chars</span>
-    
-    
+    <a class="li-link" href="https://www.linkedin.com/feed/update/urn:li:share:7455622091032215552/" target="_blank" rel="noopener noreferrer">View on LinkedIn &#8599;<span class="sr-only"> (opens in new tab)</span></a>
     <button class="copy-btn" id="copy-7" onclick="copyPost(7)"><span aria-hidden="true">&#128203;</span> Copy</button>
   </div>
 </div>
-<div class="card" id="post-8">
+<div class="card" id="post-8" data-pillar="marketing">
   <div class="card-header">
-    <span class="pillar-tag" style="color:#fbbf24;border-color:#fbbf2455">marketing</span>
+    <span class="pillar-tag marketing">marketing</span>
     <span class="badge published">&#10003; Published</span>
-    <a class="li-link" href="https://www.linkedin.com/feed/update/urn:li:share:7455612883721228289/" target="_blank" rel="noopener">View on LinkedIn &#8599;</a>
     <span class="meta-right">
       <span class="model-tag">sonnet-4-6</span>
       <span class="date">Apr 30, 2026 · 5:43 pm Muscat</span>
@@ -715,8 +711,7 @@ What&#x27;s the longest you&#x27;ve ever stretched a single piece of content —
   <div class="card-footer">
     <div class="bar-track"><div class="bar-fill ok" style="width:78.5%"></div></div>
     <span class="chars ok">1178 chars</span>
-    
-    
+    <a class="li-link" href="https://www.linkedin.com/feed/update/urn:li:share:7455612883721228289/" target="_blank" rel="noopener noreferrer">View on LinkedIn &#8599;<span class="sr-only"> (opens in new tab)</span></a>
     <button class="copy-btn" id="copy-8" onclick="copyPost(8)"><span aria-hidden="true">&#128203;</span> Copy</button>
   </div>
 </div>

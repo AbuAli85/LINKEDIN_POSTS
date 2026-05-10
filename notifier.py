@@ -185,6 +185,98 @@ def _email_text(context: dict[str, Any]) -> str:
     )
 
 
+def send_empty_slot_alert(pillar: str, publish_date: str) -> None:
+    """Alert the owner that tomorrow's scheduled publish slot has no approved draft.
+
+    Uses the same Resend + webhook fan-out as send_draft_ready.
+    Both channels are best-effort — failures are logged but never raised.
+    """
+    if not _enabled():
+        print("Notifications disabled by NOTIFY_ON_DRAFT.")
+        return
+
+    repo       = os.environ.get("GITHUB_REPOSITORY", "AbuAli85/LINKEDIN_POSTS")
+    server_url = os.environ.get("GITHUB_SERVER_URL", "https://github.com")
+    dashboard  = _env_value("DASHBOARD_URL") or _default_dashboard_url(repo)
+    workflow_url = f"{server_url}/{repo}/actions/workflows/{WORKFLOW_FILE}"
+
+    subject = f"[Action needed] Tomorrow’s {pillar} slot is empty"
+    context: dict[str, Any] = {
+        "event":               "empty_slot_warning",
+        "pillar":              pillar,
+        "publish_date":        publish_date,
+        "dashboard_url":       dashboard,
+        "publish_workflow_url": workflow_url,
+    }
+
+    if _env_value("RESEND_API_KEY") and _env_value("NOTIFY_EMAIL"):
+        try:
+            import resend
+            sender = _env_value("NOTIFY_FROM", DEFAULT_FROM_EMAIL) or DEFAULT_FROM_EMAIL
+            resend.api_key = _env_value("RESEND_API_KEY") or ""
+            resend.Emails.send({
+                "from": sender,
+                "to":   [_env_value("NOTIFY_EMAIL") or ""],
+                "subject": subject,
+                "html": _empty_slot_html(context, subject),
+                "text": _empty_slot_text(context, subject),
+            })
+            print(f"Empty-slot alert email sent (pillar={pillar})")
+        except Exception as exc:  # noqa: BLE001
+            print(f"WARNING: empty-slot email failed: {exc}")
+    else:
+        print("Empty-slot email skipped: RESEND_API_KEY or NOTIFY_EMAIL not configured.")
+
+    if _env_value("NOTIFY_WEBHOOK_URL"):
+        try:
+            resp = requests.post(
+                _env_value("NOTIFY_WEBHOOK_URL") or "",
+                json=context,
+                timeout=10,
+                headers={"User-Agent": "linkedin-draft-notifier/1.0"},
+            )
+            resp.raise_for_status()
+            print(f"Empty-slot webhook sent: HTTP {resp.status_code}")
+        except Exception as exc:  # noqa: BLE001
+            print(f"WARNING: empty-slot webhook failed: {exc}")
+    else:
+        print("Empty-slot webhook skipped: NOTIFY_WEBHOOK_URL not configured.")
+
+
+def _empty_slot_text(context: dict[str, Any], subject: str) -> str:
+    return (
+        f"{subject}\n\n"
+        f"Tomorrow ({context['publish_date']}) is the {context['pillar']} publish day "
+        "but no approved draft was found.\n\n"
+        f"Dashboard:        {context['dashboard_url']}\n"
+        f"Dispatch workflow: {context['publish_workflow_url']}\n\n"
+        "Options: run generate_draft with FORCE_PILLAR and approve immediately, "
+        "or open the dashboard and approve an existing draft.\n\n"
+        "This alert does not generate or publish anything."
+    )
+
+
+def _empty_slot_html(context: dict[str, Any], subject: str) -> str:
+    return (
+        '<div style="font-family:Arial,sans-serif;line-height:1.5;color:#111827;max-width:640px">'
+        f'<h2 style="color:#dc2626;margin-bottom:8px">{escape(subject)}</h2>'
+        f'<p>Tomorrow (<strong>{escape(context["publish_date"])}</strong>) is the '
+        f'<strong>{escape(context["pillar"])}</strong> publish day, '
+        "but no approved draft was found for this slot.</p>"
+        "<p><strong>Options</strong></p>"
+        "<ul>"
+        f'<li>Run <code>generate_draft</code> with <code>FORCE_PILLAR={escape(context["pillar"])}</code>'
+        " and approve immediately from the dashboard.</li>"
+        f'<li>Open the <a href="{escape(context["dashboard_url"])}">dashboard</a>'
+        " and approve an existing draft.</li>"
+        "</ul>"
+        f'<p><a href="{escape(context["publish_workflow_url"])}">Open dispatch workflow</a></p>'
+        '<p style="font-size:13px;color:#6b7280">'
+        "This alert does not generate or publish anything.</p>"
+        "</div>"
+    )
+
+
 def _email_html(context: dict[str, Any]) -> str:
     run_link = ""
     if context.get("github_run_url"):

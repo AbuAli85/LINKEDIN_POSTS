@@ -305,7 +305,7 @@ def _notify_draft_ready(path: Path, post: dict, pillar: str) -> None:
 
         send_draft_ready(
             draft_path=str(path),
-            post_preview=post.get("post", "")[:200],
+            post_preview=post.get("post", ""),
             pillar=pillar,
             dashboard_url=os.environ.get("DASHBOARD_URL"),
         )

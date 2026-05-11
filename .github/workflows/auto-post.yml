@@ -1,19 +1,59 @@
 name: Auto-post to LinkedIn
 
-# Generates a LinkedIn post via Anthropic API and publishes it on a schedule.
+# Two-phase automation:
+#   Phase 1 — generate draft (Sat/Mon/Wed 5am UTC): creates a draft needing owner approval.
+#   Phase 2 — publish approved (Mon/Wed/Fri 6am UTC): publishes the approved draft for today's pillar.
+# Owner approves via the dashboard (marks JSON as approved); publishing is fully automatic.
 
 on:
   schedule:
-    # 5:00 AM UTC = 9:00 AM Muscat (UTC+4) every Mon, Wed, Fri
-    - cron: "0 5 * * 1,3,5"
+    # Phase 1: generate drafts — 2 days before publish day
+    # Sat→Pain(Mon)  Mon→Proof(Wed)  Wed→Vision(Fri)
+    - cron: "0 5 * * 6,1,3"
+    # Phase 2: publish approved drafts on publish day
+    - cron: "0 6 * * 1,3,5"
+    # Phase 3: outreach pipeline — daily at 6:00 AM UTC (10:00 AM Muscat)
+    - cron: "0 6 * * *"
   workflow_dispatch:
     inputs:
+      action:
+        description: "Action to run."
+        required: true
+        default: "generate_draft"
+        type: choice
+        options:
+          - generate_draft
+          - publish_approved
+          - publish_draft
+          - approve_draft
+          - revise_draft
+          - publish_now
+          - fetch_metrics
+          - fetch_comments
+          - post_reply
+          - run_outreach
+      draft_file:
+        description: "Draft JSON path to publish, e.g. posts_history/20260430_090000_ai.json. Required for publish_draft."
+        required: false
+        default: ""
+      engagement_file:
+        description: "Engagement JSON path for post_reply, e.g. engagement_history/20260430_120000_abc123.json."
+        required: false
+        default: ""
+      revision_notes:
+        description: "Feedback for revise_draft: what to change, improve, or fix in the draft."
+        required: false
+        default: ""
       pillar:
-        description: "Force a specific pillar (leadership/ai/marketing). Leave blank to auto-pick."
+        description: "Force a specific pillar (pain/proof/vision/conversion). Leave blank to auto-pick."
         required: false
         default: ""
       dry_run:
-        description: "Generate only, do not publish"
+        description: "For publish_now only: generate without publishing"
+        required: false
+        default: "false"
+      confirm_publish_now:
+        description: "Required safety flag for publish_now. Type true to allow immediate generation and publishing."
         required: false
         default: "false"
       model:
@@ -26,23 +66,51 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    # Skip this job when triggered by the outreach-only cron or the run_outreach dispatch action
+    if: >
+      (github.event_name == 'schedule' && github.event.schedule != '0 6 * * *') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.action != 'run_outreach')
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          cache: "pip"
 
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Generate and publish post
+      - name: Detect run mode
+        id: mode
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            # 5am UTC cron = generate draft; 6am UTC cron = publish approved
+            HOUR=$(date -u +%H)
+            [ "$HOUR" = "06" ] && echo "mode=publish_approved" >> "$GITHUB_OUTPUT" \
+                                || echo "mode=generate_draft"   >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=${{ inputs.action }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Generate draft or publish approved draft
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
           LINKEDIN_AUTHOR_URN: ${{ secrets.LINKEDIN_AUTHOR_URN }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          NOTIFY_EMAIL: ${{ secrets.NOTIFY_EMAIL }}
+          NOTIFY_WEBHOOK_URL: ${{ secrets.NOTIFY_WEBHOOK_URL }}
+          NOTIFY_FROM: ${{ vars.NOTIFY_FROM }}
+          NOTIFY_ON_DRAFT: ${{ vars.NOTIFY_ON_DRAFT }}
+          DASHBOARD_URL: ${{ vars.DASHBOARD_URL }}
+          POST_MODE: ${{ steps.mode.outputs.mode }}
+          PUBLISH_DRAFT_PATH: ${{ inputs.draft_file }}
+          ENGAGEMENT_PATH: ${{ inputs.engagement_file }}
+          REVISION_NOTES: ${{ inputs.revision_notes }}
           FORCE_PILLAR: ${{ inputs.pillar }}
           DRY_RUN: ${{ inputs.dry_run || 'false' }}
+          CONFIRM_PUBLISH_NOW: ${{ inputs.confirm_publish_now || 'false' }}
           ANTHROPIC_MODEL: ${{ inputs.model }}
         run: python main.py
 
@@ -52,10 +120,86 @@ jobs:
 
       - name: Commit history and dashboard
         if: always()
+        env:
+          RUN_MODE:   ${{ steps.mode.outputs.mode }}
+          DRAFT_FILE: ${{ inputs.draft_file }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add posts_history/ docs/
-          git diff --cached --quiet || git commit -m "dashboard: update $(date -u '+%Y-%m-%d %H:%M UTC')"
-          git push origin HEAD:claude/linkedin-post-automation-lQiJZ || true
-          git push origin HEAD:main || true
+          git add posts_history/ engagement_history/ docs/
+          if [ "$RUN_MODE" = "approve_draft" ] && [ -n "$DRAFT_FILE" ]; then
+            MSG="approve: $(basename "$DRAFT_FILE")"
+          else
+            MSG="dashboard: update $(date -u '+%Y-%m-%d %H:%M UTC')"
+          fi
+          git diff --cached --quiet || git commit -m "$MSG"
+          git pull --rebase origin ${GITHUB_REF_NAME}
+          git push origin HEAD:${GITHUB_REF_NAME}
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # Outreach Pipeline — runs daily at 06:00 UTC (10:00 Muscat)
+  # Fetches new comments → Claude qualification → reply drafts → leads.csv
+  # ──────────────────────────────────────────────────────────────────────────
+  outreach:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    if: >
+      (github.event_name == 'schedule' && github.event.schedule == '0 6 * * *') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'run_outreach')
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Fetch new comments
+        env:
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+        run: python outreach.py fetch || echo "fetch completed (errors logged above)"
+
+      - name: Qualify leads with Claude
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+        run: python outreach.py qualify || echo "qualify completed"
+
+      - name: Draft replies for qualified leads
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python outreach.py draft-replies || echo "draft-replies completed"
+
+      - name: Export leads.csv
+        run: python outreach.py export || echo "export completed"
+
+      - name: Fetch post engagement metrics (aged posts ≥7 days)
+        env:
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python content_feedback.py fetch-aged || echo "⚠ metrics fetch failed, continuing"
+
+      - name: Analyse pillar performance
+        run: python content_feedback.py analyze || echo "⚠ analysis failed, continuing"
+
+      - name: Regenerate dashboard
+        if: always()
+        run: python dashboard.py
+
+      - name: Commit outreach data and dashboard
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add outreach_history/ leads.csv docs/index.html
+          git add content_analysis.json 2>/dev/null || true
+          DATE=$(date -u '+%Y-%m-%d')
+          NLEADS=$(python -c "import csv; r=list(csv.DictReader(open('leads.csv'))); print(len([x for x in r if x.get('intent') in ('high','medium')]))" 2>/dev/null || echo 0)
+          NREPLIES=$(python -c "import csv; r=list(csv.DictReader(open('leads.csv'))); print(len([x for x in r if x.get('reply_status') in ('drafted','replied')]))" 2>/dev/null || echo 0)
+          git diff --cached --quiet || git commit -m "outreach: ${DATE} — ${NLEADS} leads, ${NREPLIES} replies | metrics updated"
+          git pull --rebase origin ${GITHUB_REF_NAME}
+          git push origin HEAD:${GITHUB_REF_NAME}

@@ -8,5 +8,4 @@ env/
 .env.local
 .DS_Store
 *.log
-posts_history/*.json
 !posts_history/.gitkeep

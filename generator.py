@@ -73,7 +73,7 @@ TOPIC: {topic}
 TONE: {tone}
 AUDIENCE: {audience}
 OPENING STYLE: {fmt}
-
+{brand_context}
 PROCESS (do this in your head — output only the final post):
 1. Draft 3 opening lines that follow the OPENING STYLE above. Make them specific and concrete.
 2. Pick the one that would stop a busy professional mid-scroll.
@@ -83,7 +83,7 @@ PROCESS (do this in your head — output only the final post):
 
 HARD LIMIT: 800-1500 characters.
 
-{recent_block}Output only the final post. No explanation, no preamble, no label."""
+{performance_block}{recent_block}Output only the final post. No explanation, no preamble, no label."""
 
 
 def _load_recent_posts(limit: int = 10) -> list[dict]:
@@ -91,45 +91,80 @@ def _load_recent_posts(limit: int = 10) -> list[dict]:
     out = []
     for f in files:
         try:
-            out.append(json.loads(f.read_text()))
+            out.append(json.loads(f.read_text(encoding="utf-8")))
         except Exception:
             continue
     return out
 
 
-def _recent_topics(limit: int = 20) -> set[str]:
-    return {p.get("topic", "") for p in _load_recent_posts(limit)}
+def _recent_topics(posts: list[dict]) -> set[str]:
+    return {p.get("topic", "") for p in posts}
 
 
-def _recent_formats(limit: int = 6) -> list[str]:
-    return [p.get("format", "") for p in _load_recent_posts(limit) if p.get("format")]
+def _recent_formats(posts: list[dict]) -> list[str]:
+    return [p.get("format", "") for p in posts if p.get("format")]
 
 
-def _recent_block(limit: int = 5) -> str:
-    posts = _load_recent_posts(limit)
+def _recent_block(posts: list[dict]) -> str:
     if not posts:
         return ""
     lines = ["RECENT POSTS (avoid repeating these angles, hooks, or phrasing):"]
-    for p in posts:
+    for p in posts[:5]:
         first_line = p.get("post", "").split("\n", 1)[0][:140]
         lines.append(f"- [{p.get('pillar', '?')}] {first_line}")
     return "\n".join(lines) + "\n\n"
 
 
-def pick_topic(pillar_config: dict) -> str:
-    recent = _recent_topics()
+def _performance_block() -> str:
+    """Return a performance insights section if enough scored posts exist, else ''."""
+    try:
+        from metrics import get_performance_summary
+        summary = get_performance_summary()
+    except Exception:
+        return ""
+    if not summary:
+        return ""
+    lines = ["PERFORMANCE INSIGHTS (your real audience data — weight toward what works):"]
+    if bp := summary.get("best_pillar"):
+        score = summary["pillar_avg_score"].get(bp, "?")
+        lines.append(f"- Highest-scoring pillar: {bp} (avg {score}/10) — lean into this.")
+    if bh := summary.get("best_hook_style"):
+        score = summary["hook_avg_score"].get(bh, "?")
+        lines.append(f"- Best-performing hook style: {bh} (avg {score}/10) — prefer this opening format.")
+    if tp := summary.get("top_topics"):
+        lines.append(f"- Top-rated topics so far: {', '.join(tp[:2])}")
+    if preview := summary.get("top_posts_preview"):
+        lines.append("- Opening lines from your highest-scoring posts (match this energy):")
+        for line in preview:
+            lines.append(f"  • {line}")
+    return "\n".join(lines) + "\n\n"
+
+
+def pick_topic(pillar_config: dict, recent_posts: list[dict]) -> str:
+    recent = _recent_topics(recent_posts)
     available = [t for t in pillar_config["topics"] if t not in recent]
     if not available:
         available = pillar_config["topics"]
     return random.choice(available)
 
 
-def pick_format(pillar_config: dict) -> str:
-    recent = set(_recent_formats(len(pillar_config["formats"])))
+def pick_format(pillar_config: dict, recent_posts: list[dict]) -> str:
+    recent = set(_recent_formats(recent_posts[-len(pillar_config["formats"]):]))
     available = [f for f in pillar_config["formats"] if f not in recent]
     if not available:
         available = pillar_config["formats"]
     return random.choice(available)
+
+
+_MOJIBAKE_MARKERS = ("ÃÂ", "Ã¢", "â€", "â€™", "â€œ")
+
+
+def _sanitize(text: str) -> str:
+    """Attempt to fix doubly-encoded UTF-8 (mojibake). Returns text unchanged if fix fails."""
+    try:
+        return text.encode("latin-1").decode("utf-8")
+    except (UnicodeEncodeError, UnicodeDecodeError):
+        return text
 
 
 def _validate(post: str) -> str | None:
@@ -138,6 +173,9 @@ def _validate(post: str) -> str | None:
         return f"too short ({n} chars, need >= {MIN_CHARS})"
     if n > MAX_CHARS:
         return f"too long ({n} chars, need <= {MAX_CHARS})"
+    for marker in _MOJIBAKE_MARKERS:
+        if marker in post:
+            return f"encoding corruption detected ({marker!r}) — will retry"
     lower = post.lower()
     for phrase in BANNED_PHRASES:
         if phrase in lower:
@@ -153,11 +191,12 @@ def _generate_once(
     topic: str,
     fmt: str,
     recent_block: str,
+    performance_block: str = "",
 ) -> tuple[str, str]:
     response = client.messages.create(
         model=model,
         max_tokens=MAX_TOKENS,
-        system=SYSTEM_PROMPT,
+        system=[{"type": "text", "text": SYSTEM_PROMPT, "cache_control": {"type": "ephemeral"}}],
         messages=[
             {
                 "role": "user",
@@ -167,30 +206,39 @@ def _generate_once(
                     tone=pillar_config["tone"],
                     audience=pillar_config["audience"],
                     fmt=fmt,
+                    brand_context=pillar_config.get("brand_context", ""),
+                    performance_block=performance_block,
                     recent_block=recent_block,
                 ),
             }
         ],
     )
-    text = next(b.text for b in response.content if b.type == "text").strip()
+    text_blocks = [b.text for b in response.content if b.type == "text"]
+    if not text_blocks:
+        raise RuntimeError(f"No text block in API response: {response.content}")
+    text = _sanitize(text_blocks[0].strip())
     return text, response.model
 
 
 def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) -> dict:
     """Generate a LinkedIn post. Validates output and retries once if needed."""
-    if topic is None:
-        topic = pick_topic(pillar_config)
+    # Load recent posts once — reused for topic/format dedup and recent_block
+    recent_posts = _load_recent_posts(20)
 
-    fmt = pick_format(pillar_config)
+    if topic is None:
+        topic = pick_topic(pillar_config, recent_posts)
+
+    fmt = pick_format(pillar_config, recent_posts)
     model = os.environ.get("ANTHROPIC_MODEL") or DEFAULT_MODEL
     client = anthropic.Anthropic()
-    recent_block = _recent_block()
+    rb = _recent_block(recent_posts)
+    pb = _performance_block()
 
     last_error: str | None = None
     last_result: tuple[str, str] | None = None
     for attempt in range(2):
         post_text, model_used = _generate_once(
-            client, model, pillar, pillar_config, topic, fmt, recent_block
+            client, model, pillar, pillar_config, topic, fmt, rb, pb
         )
         last_result = (post_text, model_used)
         err = _validate(post_text)
@@ -208,7 +256,8 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
         last_error = err
         print(f"Validation warning (attempt {attempt + 1}): {err}. Retrying...")
 
-    assert last_result is not None
+    if last_result is None:
+        raise RuntimeError("generate_once was never called — retry loop did not execute")
     post_text, model_used = last_result
     print(f"WARNING: publishing despite validation issue: {last_error}")
     return {
@@ -224,10 +273,64 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
     }
 
 
+_REVISE_TEMPLATE = """Revise this LinkedIn post based on the owner's feedback.
+
+ORIGINAL POST:
+{original_post}
+
+OWNER FEEDBACK:
+{revision_notes}
+
+Apply the feedback precisely. Keep every element that works. Fix only what was flagged.
+Maintain the same pillar ({pillar}), tone, and character range (800-1500 chars).
+Output only the revised post text. No explanation, no preamble, no label."""
+
+
+def revise_post(original: dict, revision_notes: str) -> dict:
+    """Rewrite an existing draft based on owner feedback. Returns updated post dict."""
+    client = anthropic.Anthropic()
+    model  = os.environ.get("ANTHROPIC_MODEL") or DEFAULT_MODEL
+
+    response = client.messages.create(
+        model=model,
+        max_tokens=MAX_TOKENS,
+        system=[{"type": "text", "text": SYSTEM_PROMPT, "cache_control": {"type": "ephemeral"}}],
+        messages=[{
+            "role": "user",
+            "content": _REVISE_TEMPLATE.format(
+                original_post=original["post"],
+                revision_notes=revision_notes,
+                pillar=original.get("pillar", ""),
+            ),
+        }],
+    )
+    text_blocks = [b.text for b in response.content if b.type == "text"]
+    if not text_blocks:
+        raise RuntimeError("No text in revision response.")
+    text = text_blocks[0].strip()
+
+    err = _validate(text)
+    revised = original.copy()
+    revised.update({
+        "post":            text,
+        "char_count":      len(text),
+        "model":           response.model,
+        "status":          "draft",
+        "approved":        False,
+        "approval_required": True,
+        "revision_notes":  revision_notes,
+        "revised_at":      datetime.now(timezone.utc).isoformat(),
+    })
+    revised.pop("validation_warning", None)
+    if err:
+        revised["validation_warning"] = err
+    return revised
+
+
 def save_post(post_data: dict) -> Path:
     ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     path = HISTORY_DIR / f"{ts}_{post_data['pillar']}.json"
-    path.write_text(json.dumps(post_data, indent=2))
+    path.write_text(json.dumps(post_data, indent=2), encoding="utf-8")
     return path
 
 

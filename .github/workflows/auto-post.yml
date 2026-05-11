@@ -33,7 +33,7 @@ on:
           - post_reply
           - run_outreach
       draft_file:
-        description: "Draft JSON path to publish, e.g. posts_history/20260430_090000_ai.json. Required for publish_draft."
+        description: "Draft JSON path. Required for approve_draft and publish_draft — e.g. posts_history/20260430_090000_pain.json"
         required: false
         default: ""
       engagement_file:

@@ -42,9 +42,11 @@ PILLAR_COLOR = {
     "marketing":  "#d4840a",
 }
 
-CRON_WEEKDAYS  = {5, 0, 2}   # Sat=5, Mon=0, Wed=2
-CRON_HOUR_UTC  = 5
-MUSCAT_OFFSET  = 4
+CRON_WEEKDAYS    = {5, 0, 2}   # Sat=5, Mon=0, Wed=2  (draft generation)
+CRON_HOUR_UTC    = 5
+PUBLISH_WEEKDAYS = {0, 2, 4}   # Mon=0, Wed=2, Fri=4  (auto-publish)
+PUBLISH_HOUR_UTC = 6
+MUSCAT_OFFSET    = 4
 
 
 def _to_muscat(dt: datetime) -> str:
@@ -78,6 +80,21 @@ def next_runs(n: int = 3) -> list[datetime]:
     result = []
     for _ in range(14):
         if dt.weekday() in CRON_WEEKDAYS:
+            result.append(dt)
+            if len(result) >= n:
+                break
+        dt += timedelta(days=1)
+    return result
+
+
+def next_publish_runs(n: int = 3) -> list[datetime]:
+    now = datetime.now(timezone.utc)
+    dt  = now.replace(hour=PUBLISH_HOUR_UTC, minute=0, second=0, microsecond=0)
+    if dt <= now:
+        dt += timedelta(days=1)
+    result = []
+    for _ in range(14):
+        if dt.weekday() in PUBLISH_WEEKDAYS:
             result.append(dt)
             if len(result) >= n:
                 break
@@ -1037,6 +1054,16 @@ def _card(post: dict, idx: int) -> str:
             f'<span class="sr-only"> (opens in new tab)</span></a>'
         )
 
+    cta_indicator = ""
+    cta_result = post.get("cta_comment_posted")
+    if cta_result is True:
+        cta_indicator = '<span class="metric-item" title="Sanad CTA comment posted">&#128172; CTA &#10003;</span>'
+    elif cta_result is False and pillar in ("pain", "proof"):
+        cta_indicator = (
+            '<span class="metric-item" style="opacity:.6;border-color:rgba(232,55,42,.25);'
+            'color:#e8372a" title="Sanad CTA comment failed to post">&#128172; CTA &#10007;</span>'
+        )
+
     fmt_html      = (f'<span class="fmt-tag">&#9999; {fmt[:42]}{"&#8230;" if len(fmt)>42 else ""}</span>' if fmt else "")
     attempts_html = f'<span class="retries">&#8635; {attempts} retries</span>' if attempts > 1 else ""
 
@@ -1099,6 +1126,7 @@ def _card(post: dict, idx: int) -> str:
         {attempts_html}
         {approve_btn}
         {li_link}
+        {cta_indicator}
         <button class="icon-btn" id="copy-{idx}" onclick="copyPost({idx})">&#128203; Copy</button>
       </div>
     </div>"""
@@ -1401,6 +1429,10 @@ def generate(posts: list[dict]) -> str:
     n_drafts    = sum(1 for p in posts if (p.get("status") == "draft" or p.get("approval_required")) and not p.get("published"))
     n_approved  = sum(1 for p in posts if (p.get("approved") or p.get("status") == "approved") and not p.get("published"))
     n_failed    = sum(1 for p in posts if p.get("publish_error") or p.get("status") == "failed")
+    approved_pillars = {
+        p.get("pillar") for p in posts
+        if (p.get("approved") or p.get("status") == "approved") and not p.get("published")
+    }
     success_pct = round((n_published / total * 100) if total else 0)
 
     scored_posts = [p for p in posts if (p.get("metrics") or {}).get("manual_quality_score") is not None]
@@ -1418,6 +1450,9 @@ def generate(posts: list[dict]) -> str:
 
     from content_strategy import PILLARS
     gen_weekday_to_pillar = {c["generate_weekday"]: name for name, c in PILLARS.items()}
+    pub_weekday_to_pillar = {c["weekday"]: name for name, c in PILLARS.items()
+                             if c.get("weekday") in PUBLISH_WEEKDAYS
+                             and c.get("generate_weekday", -1) >= 0}
 
     def _run_html(r: datetime) -> str:
         pillar   = gen_weekday_to_pillar.get(r.weekday(), "?")
@@ -1434,7 +1469,26 @@ def generate(posts: list[dict]) -> str:
             f'</span>'
         )
 
-    runs_html = "".join(_run_html(r) for r in next_runs(3))
+    def _pub_run_html(r: datetime) -> str:
+        pillar = pub_weekday_to_pillar.get(r.weekday(), "?")
+        color  = PILLAR_COLOR.get(pillar, "#94a3b8")
+        date   = (r + timedelta(hours=MUSCAT_OFFSET)).strftime("%a %b %d").replace(" 0", " ")
+        ready  = pillar in approved_pillars
+        indicator = (
+            ' <span style="color:#2a9a5c;font-size:.68rem;font-weight:600">&#10003;&nbsp;ready</span>'
+            if ready else
+            ' <span style="color:rgba(255,255,255,.22);font-size:.68rem">&#9898;&nbsp;no draft</span>'
+        )
+        return (
+            f'<span class="run-item">'
+            f'<b>{date}</b> &middot; '
+            f'<span class="run-pillar" style="color:{color}">{pillar}</span>'
+            f'{indicator}'
+            f'</span>'
+        )
+
+    runs_html     = "".join(_run_html(r)     for r in next_runs(3))
+    pub_runs_html = "".join(_pub_run_html(r) for r in next_publish_runs(3))
 
     _chip_defs = [
         ("All",          "all",       total),
@@ -1526,8 +1580,10 @@ def generate(posts: list[dict]) -> str:
 </div>
 
 <div class="schedbar">
-  <span class="lbl">Next draft generation &rarr;</span>
+  <span class="lbl">Drafts &rarr;</span>
   {runs_html}
+  <span class="lbl" style="margin-left:8px;border-left:1px solid rgba(255,255,255,.08);padding-left:18px">Publishes &rarr;</span>
+  {pub_runs_html}
 </div>
 
 {filter_bar_html}
@@ -1548,7 +1604,8 @@ def generate(posts: list[dict]) -> str:
   Drafts generated <b>Sat &middot; Mon &middot; Wed</b> at <b>9:00 am Muscat</b> &rarr; publishes <b>Mon &middot; Wed &middot; Fri</b> after manual approval &nbsp;&middot;&nbsp;
   <a href="https://github.com/{REPO}" target="_blank" rel="noopener noreferrer">Source<span class="sr-only"> (opens in new tab)</span></a> &middot;
   <a href="https://github.com/{REPO}/blob/main/LINKEDIN_SETUP.md" target="_blank" rel="noopener noreferrer">Renew LinkedIn token<span class="sr-only"> (opens in new tab)</span></a> &middot;
-  <a href="{ACTIONS_URL}" target="_blank" rel="noopener noreferrer">Run workflow<span class="sr-only"> (opens in new tab)</span></a>
+  <a href="{ACTIONS_URL}" target="_blank" rel="noopener noreferrer">Run workflow<span class="sr-only"> (opens in new tab)</span></a> &middot;
+  <a href="#" onclick="clearPat();return false;" title="Remove stored GitHub token from this browser">Clear stored token</a>
 </footer>
 
 <!-- Request Changes modal -->

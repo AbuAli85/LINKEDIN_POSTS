@@ -8,8 +8,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap');
 
 *{box-sizing:border-box;margin:0;padding:0}
+html{overflow-x:hidden}
 body{font-family:'Geist',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-     background:#0b0b0c;color:#ede9e3;min-height:100vh;-webkit-font-smoothing:antialiased}
+     background:#0b0b0c;color:#ede9e3;min-height:100vh;-webkit-font-smoothing:antialiased;
+     overflow-x:hidden}
 a{color:inherit;text-decoration:none}
 
 /* ── SKIP + SR ── */
@@ -21,19 +23,24 @@ a{color:inherit;text-decoration:none}
 /* ── TOPBAR ── */
 .topbar{background:#111113;border-bottom:1px solid rgba(255,255,255,.07);
         padding:0 28px;display:flex;align-items:center;height:52px;gap:12px;
-        position:sticky;top:0;z-index:50}
-.logo{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:500;letter-spacing:-.01em}
+        position:sticky;top:0;z-index:50;overflow:hidden}
+.logo{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:500;
+      letter-spacing:-.01em;flex-shrink:0;white-space:nowrap}
 .logo-mark{width:26px;height:26px;border-radius:7px;background:#e8372a;
            display:flex;align-items:center;justify-content:center;
            font-size:11px;font-weight:700;color:#fff;letter-spacing:0;flex-shrink:0}
 .logo-sep{color:rgba(255,255,255,.2);margin:0 4px}
-.topbar-right{display:flex;align-items:center;gap:6px;margin-left:auto}
-.updated{font-size:11px;color:rgba(255,255,255,.3);font-family:'DM Mono',monospace;margin-right:8px}
+.topbar-right{display:flex;align-items:center;gap:6px;margin-left:auto;
+              flex-shrink:0;overflow:hidden}
+.updated{font-size:11px;color:rgba(255,255,255,.3);font-family:'DM Mono',monospace;
+         margin-right:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+         max-width:240px}
+nav.actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
 .tb-btn{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;
-        border-radius:6px;font-size:12px;font-weight:500;
+        border-radius:6px;font-size:12px;font-weight:500;white-space:nowrap;
         border:1px solid transparent;cursor:pointer;background:transparent;
         color:rgba(255,255,255,.45);transition:color .15s,background .15s,border-color .15s;
-        min-height:32px;font-family:inherit}
+        min-height:32px;font-family:inherit;flex-shrink:0}
 .tb-btn:hover{color:#ede9e3;background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1)}
 .tb-btn.primary{background:#e8372a;color:#fff;border-color:transparent}
 .tb-btn.primary:hover{background:#c9301f}
@@ -52,7 +59,7 @@ a{color:inherit;text-decoration:none}
 .statsbar{background:#111113;border-bottom:1px solid rgba(255,255,255,.07);
           padding:16px 28px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .stat{background:#161618;border:1px solid rgba(255,255,255,.07);border-radius:10px;
-      padding:12px 18px;text-align:center;min-width:72px;transition:border-color .15s}
+      padding:12px 18px;text-align:center;min-width:72px;flex-shrink:0;transition:border-color .15s}
 .stat:hover{border-color:rgba(255,255,255,.13)}
 .stat .n{font-size:22px;font-weight:600;color:#ede9e3;line-height:1;letter-spacing:-.03em}
 .stat .l{font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.07em;margin-top:4px}
@@ -60,29 +67,33 @@ a{color:inherit;text-decoration:none}
 .stat.amber .n{color:#d4840a}
 .stat.red   .n{color:#e8372a}
 .stat.blue  .n{color:#2e7de0}
-.pillar-pills{display:flex;flex-wrap:wrap;gap:6px;margin-left:8px}
-.pillar-pill{border:1px solid;border-radius:20px;padding:3px 12px;font-size:11px;font-family:'DM Mono',monospace}
+.pillar-pills{display:flex;flex-wrap:wrap;gap:6px;margin-left:auto;padding-left:8px}
+.pillar-pill{border:1px solid;border-radius:20px;padding:3px 12px;font-size:11px;font-family:'DM Mono',monospace;white-space:nowrap}
 .pillar-pill b{color:#ede9e3;margin-left:4px}
 
 /* ── SCHEDULE BAR ── */
 .schedbar{background:#111113;border-bottom:1px solid rgba(255,255,255,.07);
-          padding:10px 28px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;font-size:12px}
-.schedbar .lbl{font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.08em}
-.run-item{color:rgba(255,255,255,.4)}.run-item b{color:#ede9e3}
+          padding:10px 28px;display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;
+          font-size:12px;min-height:40px}
+.schedbar .lbl{font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;
+               letter-spacing:.08em;white-space:nowrap;flex-shrink:0}
+.run-item{color:rgba(255,255,255,.4);white-space:nowrap}.run-item b{color:#ede9e3}
 .run-pillar{text-transform:uppercase;font-size:.7rem;letter-spacing:.06em;font-weight:600}
 .run-arrow{color:rgba(255,255,255,.2);margin:0 4px}
 
 /* ── CONTENT ── */
-.content{max-width:840px;margin:0 auto;padding:24px 28px 60px}
+.content{max-width:840px;margin:0 auto;padding:24px 28px 60px;width:100%}
 .section-lbl{font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;
              letter-spacing:.1em;margin-bottom:14px;font-weight:600}
 
 /* ── CARD ── */
 .card{background:#111113;border:1px solid rgba(255,255,255,.07);
       border-left:3px solid rgba(255,255,255,.07);border-radius:12px;
-      padding:16px 18px;margin-bottom:10px;transition:border-color .15s}
+      padding:16px 18px;margin-bottom:10px;transition:border-color .15s;
+      overflow:hidden;min-width:0;word-break:break-word}
 .card:hover{border-color:rgba(255,255,255,.13)}
-.card-header{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:10px}
+.card-header{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:10px;
+             min-width:0}
 .pillar-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;
             padding:2px 8px;border-radius:4px;border:1px solid;font-family:'DM Mono',monospace}
 
@@ -342,7 +353,8 @@ footer a:hover{color:#ede9e3}
 @media(prefers-reduced-motion:reduce){.toast{transition:opacity .01s;transform:none}.toast.out{transform:none}}
 
 /* ── FILTER BAR ── */
-.filter-bar{max-width:840px;margin:0 auto;padding:16px 28px 4px;display:flex;flex-wrap:wrap;gap:6px}
+.filter-bar{max-width:840px;margin:0 auto;padding:16px 28px 4px;display:flex;flex-wrap:wrap;
+            gap:6px;width:100%}
 .filter-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;
              font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;
              background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);
@@ -354,9 +366,14 @@ footer a:hover{color:#ede9e3}
 .filter-chip.active .count{background:rgba(232,55,42,.15)}
 
 /* ── RESPONSIVE ── */
+@media(max-width:860px){
+  .topbar-right .updated{display:none}
+}
+@media(max-width:720px){
+  .topbar-right .tb-btn:not(.primary){display:none}
+}
 @media(max-width:640px){
   .topbar,.statsbar,.schedbar,.content,.filter-bar{padding-left:16px;padding-right:16px}
-  .topbar-right .updated,.topbar-right .tb-btn:not(.primary){display:none}
   .stat{padding:10px 14px}
   .modal-box{padding:20px 18px}
   .filter-chip{font-size:11px;padding:4px 10px}
@@ -394,19 +411,13 @@ footer a:hover{color:#ede9e3}
     Dashboard
   </div>
   <div class="topbar-right">
-    <span class="updated">Updated May 11, 2026 · 10:15 am Muscat</span>
+    <span class="updated">Updated May 11, 2026 · 11:11 am Muscat</span>
     <div class="live-dot" title="Live" aria-hidden="true"></div>
     <nav class="actions" aria-label="Site actions">
       <a class="tb-btn primary" href="https://github.com/AbuAli85/LINKEDIN_POSTS/actions/workflows/auto-post.yml" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">&#9654;</span> Run workflow<span class="sr-only"> (opens in new tab)</span></a>
       <a class="tb-btn" href="https://github.com/AbuAli85/LINKEDIN_POSTS/actions" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">&#128200;</span> All runs<span class="sr-only"> (opens in new tab)</span></a>
       <a class="tb-btn" href="https://www.linkedin.com/in/fahad-alamri-b9a809123/" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">&#128279;</span> LinkedIn<span class="sr-only"> (opens in new tab)</span></a>
     </nav>
-  <h1>LinkedIn <em>Auto-Poster</em> &mdash; Dashboard</h1>
-  <span class="updated">Updated Apr 29, 2026 · 1:19 pm Muscat</span>
-  <div class="actions">
-    <a class="btn btn-primary" href="https://github.com/AbuAli85/LINKEDIN_POSTS/actions/workflows/auto-post.yml" target="_blank">&#9654; Run workflow</a>
-    <a class="btn btn-ghost" href="https://github.com/AbuAli85/LINKEDIN_POSTS/actions" target="_blank">&#128200; All runs</a>
-    <a class="btn btn-ghost" href="https://www.linkedin.com/in/" target="_blank">&#128279; LinkedIn</a>
   </div>
 </div>
 
@@ -920,12 +931,6 @@ What&#x27;s the longest you&#x27;ve ever stretched a single piece of content —
 </div>
 
 
-    <div class="content" style="margin-top:0">
-      <h2 class="section-lbl">Pending replies (0)</h2>
-      <div class="empty" style="padding:30px 20px">No pending replies</div>
-      
-      
-    </div>
 
 
 

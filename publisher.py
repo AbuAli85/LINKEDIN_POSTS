@@ -120,7 +120,11 @@ def post_cta_comment(post_urn: str, pillar: str, token: str) -> bool:
 
     person_id = (os.environ.get("LINKEDIN_PERSON_ID") or "").strip()
     if not person_id:
-        logger.warning("cta_comment skipped: LINKEDIN_PERSON_ID not set")
+        author_urn = (os.environ.get("LINKEDIN_AUTHOR_URN") or "").strip()
+        if author_urn.startswith("urn:li:person:"):
+            person_id = author_urn[len("urn:li:person:"):]
+    if not person_id:
+        logger.warning("cta_comment skipped: cannot derive person ID from LINKEDIN_AUTHOR_URN")
         return False
 
     url     = f"https://api.linkedin.com/v2/socialActions/{post_urn}/comments"

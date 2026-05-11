@@ -259,10 +259,12 @@ def _publish_post_file(path: Path) -> int:
         result = publish_post(post["post"], pillar=post.get("pillar", ""))
         print(f"Published! Post ID: {result['post_id']}  image={result.get('image_path','')}")
         _update_json(path, {
-            "status": "published",
-            "published": True,
-            "post_id": result["post_id"],
-            "published_at": datetime.now(timezone.utc).isoformat(),
+            "status":              "published",
+            "published":           True,
+            "post_id":             result["post_id"],
+            "published_at":        datetime.now(timezone.utc).isoformat(),
+            "cta_comment_posted":  result.get("cta_comment_posted", False),
+            "cta_comment_url":     result.get("cta_comment_url", ""),
         })
         return 0
     except LinkedInError as e:

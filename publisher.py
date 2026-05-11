@@ -12,6 +12,25 @@ CHAR_LIMIT       = 3000   # LinkedIn shareCommentary hard cap
 MAX_RETRIES      = 3
 RETRY_CODES      = {429, 500, 502, 503, 504}
 
+CTA_URL = "https://www.thesmartpro.io/sanad/assistant"
+
+CTA_COMMENTS: dict[str, str] = {
+    "pain": (
+        "🤖 Related question that comes up a lot:\n"
+        '"What\'s the penalty if our WPS file is rejected after the salary deadline?"\n\n'
+        "Ask Sanad — free, instant answers on Oman government services. English or Arabic:\n"
+        f"{CTA_URL}\n\n"
+        "Government fees verified May 2026. No signup needed."
+    ),
+    "proof": (
+        "🤖 Sanad handles the government compliance side the same way SmartPro\n"
+        "handles payroll — instant answers, no manual lookup.\n\n"
+        "Work permits, visa renewals, business registration fees, Sanad office finder.\n\n"
+        f"Try it free: {CTA_URL}\n\n"
+        "English or Arabic. No account needed."
+    ),
+}
+
 logger = logging.getLogger(__name__)
 
 
@@ -81,6 +100,55 @@ def _upload_image(token: str, author: str, image_bytes: bytes) -> str | None:
 
     logger.info("image_registered asset=%s", asset_urn)
     return asset_urn
+
+
+# ---------------------------------------------------------------------------
+# CTA comment
+# ---------------------------------------------------------------------------
+
+def post_cta_comment(post_urn: str, pillar: str, token: str) -> bool:
+    """Post a Sanad CTA as the first comment on a just-published post.
+
+    Only fires for pain and proof pillars. Non-fatal — a failed comment
+    never aborts or rolls back the publish.
+
+    Returns True if the comment was posted (HTTP 201), False otherwise.
+    """
+    comment_text = CTA_COMMENTS.get(pillar)
+    if not comment_text:
+        return False
+
+    person_id = (os.environ.get("LINKEDIN_PERSON_ID") or "").strip()
+    if not person_id:
+        logger.warning("cta_comment skipped: LINKEDIN_PERSON_ID not set")
+        return False
+
+    url     = f"https://api.linkedin.com/v2/socialActions/{post_urn}/comments"
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "X-Restli-Protocol-Version": "2.0.0",
+        "Content-Type": "application/json",
+    }
+    payload = {
+        "actor":   f"urn:li:person:{person_id}",
+        "message": {"text": comment_text},
+    }
+
+    try:
+        resp = requests.post(url, headers=headers, json=payload, timeout=20)
+    except Exception as exc:
+        logger.warning("cta_comment network error: %s", exc)
+        return False
+
+    if resp.status_code == 201:
+        logger.info("✓ Sanad CTA comment posted on %s", post_urn)
+        return True
+
+    logger.warning(
+        "cta_comment failed HTTP %s on %s: %s",
+        resp.status_code, post_urn, resp.text[:200],
+    )
+    return False
 
 
 # ---------------------------------------------------------------------------
@@ -193,10 +261,13 @@ def publish_post(text: str, pillar: str = "", attach_image: bool = True) -> dict
             "Published post_id=%s chars=%d elapsed=%.2fs attempt=%d image=%s",
             post_id, len(text), elapsed, attempt, image_path,
         )
+        cta_posted = post_cta_comment(post_id, pillar, token)
         return {
-            "post_id":      post_id,
-            "status":       response.status_code,
-            "elapsed_s":    round(elapsed, 2),
-            "attempts":     attempt,
-            "image_path":   image_path,
+            "post_id":            post_id,
+            "status":             response.status_code,
+            "elapsed_s":          round(elapsed, 2),
+            "attempts":           attempt,
+            "image_path":         image_path,
+            "cta_comment_posted": cta_posted,
+            "cta_comment_url":    CTA_URL if cta_posted else "",
         }

@@ -275,6 +275,11 @@ nav.actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
           display:inline-flex;align-items:center;gap:5px}
 .icon-btn:hover{background:rgba(255,255,255,.07);color:#ede9e3;border-color:rgba(255,255,255,.15)}
 .icon-btn.copied{border-color:rgba(42,154,92,.4);color:#2a9a5c}
+.delete-btn{background:transparent;border:1px solid transparent;color:rgba(255,255,255,.22);
+            font-size:11px;padding:5px 10px;border-radius:6px;cursor:pointer;
+            transition:all .15s;min-height:32px;font-family:inherit;
+            display:inline-flex;align-items:center;gap:4px}
+.delete-btn:hover{background:rgba(232,55,42,.08);color:#e8372a;border-color:rgba(232,55,42,.25)}
 .li-link{font-size:11px;background:rgba(46,125,224,.08);color:#2e7de0;
          border:1px solid rgba(46,125,224,.2);border-radius:6px;padding:5px 11px;
          min-height:32px;display:inline-flex;align-items:center;gap:5px;
@@ -522,6 +527,7 @@ var _approveSourceBtn  = null;
 var _reviseSourceBtn   = null;
 var _editSourceBtn     = null;
 var _recreateSourceBtn = null;
+var _deleteSourceBtn   = null;
 var _toastSeq = 0;
 
 /* Focus trap inside modals */
@@ -545,6 +551,7 @@ document.addEventListener('keydown', function(e) {
     else if (open.id === 'edit-modal')     closeEditModal();
     else if (open.id === 'approve-modal')  closeApproveModal();
     else if (open.id === 'recreate-modal') closeRecreateModal();
+    else if (open.id === 'delete-modal')   closeDeleteModal();
   }
 });
 
@@ -742,6 +749,87 @@ async function confirmRecreate() {
   } catch(e) {
     st.textContent = 'Network error: ' + e.message;
     st.style.color = '#e8372a'; cb.innerHTML = '&#8635; Regenerate'; cb.disabled = false;
+  }
+}
+
+/* ── DELETE MODAL ── */
+function showDeleteModal(btn) {
+  _deleteSourceBtn = btn;
+  var path     = btn.getAttribute('data-path');
+  var filename = btn.getAttribute('data-filename');
+  document.getElementById('delete-file-path').value = path;
+  document.getElementById('delete-filename-display').textContent = filename;
+  document.getElementById('delete-pat').value = _getPat();
+  document.getElementById('delete-status').textContent = '';
+  var cb = document.getElementById('delete-confirm-btn');
+  cb.innerHTML = '&#128465; Delete permanently'; cb.disabled = false;
+  document.getElementById('delete-modal').classList.add('open');
+  setTimeout(function() { document.getElementById('delete-pat').focus(); }, 50);
+}
+function closeDeleteModal() {
+  document.getElementById('delete-modal').classList.remove('open');
+  if (_deleteSourceBtn) { _deleteSourceBtn.focus(); _deleteSourceBtn = null; }
+}
+document.getElementById('delete-modal').addEventListener('click', function(e) { if (e.target === this) closeDeleteModal(); });
+
+async function confirmDelete() {
+  var pat      = document.getElementById('delete-pat').value.trim();
+  var filePath = document.getElementById('delete-file-path').value;
+  var st       = document.getElementById('delete-status');
+  var cb       = document.getElementById('delete-confirm-btn');
+  var sourceCard = _deleteSourceBtn ? _deleteSourceBtn.closest('.card') : null;
+  if (!pat) { st.textContent = 'Enter your GitHub PAT.'; st.style.color = '#e8372a'; return; }
+  _setPat(pat);
+  cb.innerHTML = 'Deleting…'; cb.disabled = true; st.textContent = '';
+  try {
+    var metaResp = await fetch(
+      'https://api.github.com/repos/' + _REPO + '/contents/' + filePath,
+      { headers: { 'Authorization': 'Bearer ' + pat, 'Accept': 'application/vnd.github.v3+json' } }
+    );
+    if (!metaResp.ok) {
+      var ge = await metaResp.json().catch(function() { return {}; });
+      throw new Error('Could not read file: ' + (ge.message || metaResp.status));
+    }
+    var meta = await metaResp.json();
+    var delResp = await fetch(
+      'https://api.github.com/repos/' + _REPO + '/contents/' + filePath,
+      { method: 'DELETE',
+        headers: { 'Authorization': 'Bearer ' + pat, 'Accept': 'application/vnd.github.v3+json',
+                   'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: 'delete: ' + filePath.split('/').pop(),
+                               sha: meta.sha, branch: _BRANCH }) }
+    );
+    if (delResp.status === 200) {
+      closeDeleteModal();
+      if (sourceCard) {
+        var status = sourceCard.getAttribute('data-status') || '';
+        _deleteStatUpdate(status);
+        sourceCard.remove();
+      }
+      toast('Draft deleted.', { variant: 'success' });
+    } else {
+      var e2 = await delResp.json().catch(function() { return {}; });
+      throw new Error('Error ' + delResp.status + ': ' + (e2.message || 'check PAT scope (needs repo or contents:write)'));
+    }
+  } catch(e) {
+    st.textContent = e.message; st.style.color = '#e8372a';
+    cb.innerHTML = '&#128465; Delete permanently'; cb.disabled = false;
+  }
+}
+
+function _deleteStatUpdate(statusKey) {
+  document.querySelectorAll('.stat .l').forEach(function(el) {
+    var n = el.previousElementSibling; if (!n) return;
+    var t = el.textContent.trim();
+    if (t === 'Total') n.textContent = Math.max(0, parseInt(n.textContent || '0') - 1);
+    if (t === 'Needs review' && statusKey === 'draft') n.textContent = Math.max(0, parseInt(n.textContent || '0') - 1);
+    if (t === 'Approved'     && statusKey === 'approved') n.textContent = Math.max(0, parseInt(n.textContent || '0') - 1);
+    if (t === 'Failed'       && statusKey === 'failed') n.textContent = Math.max(0, parseInt(n.textContent || '0') - 1);
+  });
+  var lbl = document.querySelector('.section-lbl');
+  if (lbl) {
+    var m = lbl.textContent.match(/\((\d+)\)/);
+    if (m) lbl.textContent = lbl.textContent.replace(/\(\d+\)/, '(' + Math.max(0, parseInt(m[1]) - 1) + ')');
   }
 }
 
@@ -1144,6 +1232,15 @@ def _card(post: dict, idx: int) -> str:
             f'onclick="showApproveModal(this)">&#10003; Approve for {publish_day}</button>'
         )
 
+    delete_btn = ""
+    if not (post.get("published") or status_value == "published") and draft_path:
+        safe_filename = html.escape(filename)
+        delete_btn = (
+            f'<button class="delete-btn" data-path="{draft_path}" data-filename="{safe_filename}"'
+            f' onclick="showDeleteModal(this)" title="Delete this draft permanently">'
+            f'&#128465; Delete</button>'
+        )
+
     return f"""
     <div class="card" id="post-{idx}" data-pillar="{pillar_val}" data-status="{status_key}">
       <div class="card-header">
@@ -1170,6 +1267,7 @@ def _card(post: dict, idx: int) -> str:
         {li_link}
         {cta_indicator}
         <button class="icon-btn" id="copy-{idx}" onclick="copyPost({idx})">&#128203; Copy</button>
+        {delete_btn}
       </div>
     </div>"""
 
@@ -1730,6 +1828,38 @@ def generate(posts: list[dict]) -> str:
       <button class="modal-confirm approve-green" id="approve-confirm-btn"
               onclick="confirmApprove()">&#10003; Approve</button>
       <button class="modal-cancel" onclick="closeApproveModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete modal -->
+<div class="modal-overlay" id="delete-modal" role="dialog" aria-modal="true" aria-labelledby="delete-modal-title">
+  <div class="modal-box">
+    <h3 id="delete-modal-title">&#128465; Delete Draft</h3>
+    <input type="hidden" id="delete-file-path">
+    <div class="modal-field">
+      <span class="modal-label">File</span>
+      <code class="modal-path" id="delete-filename-display"></code>
+    </div>
+    <div class="modal-field">
+      <div class="alert warn" style="margin-bottom:0">
+        &#9888; This permanently removes the file from the repository. It cannot be undone.
+      </div>
+    </div>
+    <div class="modal-field">
+      <label class="modal-label" for="delete-pat">GitHub Personal Access Token (repo scope)</label>
+      <input class="modal-input" id="delete-pat" type="password" placeholder="ghp_..."
+             autocomplete="off" aria-describedby="delete-pat-hint">
+      <div class="modal-hint" id="delete-pat-hint">
+        Needs <b>repo</b> scope (or a fine-grained PAT with <b>contents: write</b>).
+        Token is saved in your browser for future use.
+      </div>
+    </div>
+    <div class="modal-status" id="delete-status" role="status" aria-live="polite"></div>
+    <div class="modal-actions">
+      <button class="modal-confirm" id="delete-confirm-btn" style="background:#e8372a"
+              onclick="confirmDelete()">&#128465; Delete permanently</button>
+      <button class="modal-cancel" onclick="closeDeleteModal()">Cancel</button>
     </div>
   </div>
 </div>

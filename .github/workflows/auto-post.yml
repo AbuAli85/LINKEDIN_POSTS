@@ -115,10 +115,6 @@ jobs:
           ANTHROPIC_MODEL: ${{ inputs.model }}
         run: python main.py
 
-      - name: Generate dashboard
-        if: always()
-        run: python dashboard.py
-
       - name: Commit history and dashboard
         if: always()
         env:
@@ -127,14 +123,20 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add posts_history/ engagement_history/ docs/
+          # Commit data files first — unique filenames mean no conflicts
+          git add posts_history/ engagement_history/
           if [ "$RUN_MODE" = "approve_draft" ] && [ -n "$DRAFT_FILE" ]; then
             MSG="approve: $(basename "$DRAFT_FILE")"
           else
-            MSG="dashboard: update $(date -u '+%Y-%m-%d %H:%M UTC')"
+            MSG="data: update $(date -u '+%Y-%m-%d %H:%M UTC')"
           fi
           git diff --cached --quiet || git commit -m "$MSG"
+          # Pull after data commit — avoids docs/index.html conflict
           git pull --rebase origin ${GITHUB_REF_NAME}
+          # Regenerate dashboard now that we have the latest remote state
+          python dashboard.py
+          git add docs/
+          git diff --cached --quiet || git commit -m "dashboard: update $(date -u '+%Y-%m-%d %H:%M UTC')"
           git push origin HEAD:${GITHUB_REF_NAME}
 
   # ──────────────────────────────────────────────────────────────────────────
@@ -187,20 +189,22 @@ jobs:
       - name: Analyse pillar performance
         run: python content_feedback.py analyze || echo "⚠ analysis failed, continuing"
 
-      - name: Regenerate dashboard
-        if: always()
-        run: python dashboard.py
-
       - name: Commit outreach data and dashboard
         if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add outreach_history/ leads.csv docs/index.html
+          # Commit data files first — unique filenames mean no conflicts
+          git add outreach_history/ leads.csv
           git add content_analysis.json 2>/dev/null || true
           DATE=$(date -u '+%Y-%m-%d')
           NLEADS=$(python -c "import csv; r=list(csv.DictReader(open('leads.csv'))); print(len([x for x in r if x.get('intent') in ('high','medium')]))" 2>/dev/null || echo 0)
           NREPLIES=$(python -c "import csv; r=list(csv.DictReader(open('leads.csv'))); print(len([x for x in r if x.get('reply_status') in ('drafted','replied')]))" 2>/dev/null || echo 0)
           git diff --cached --quiet || git commit -m "outreach: ${DATE} — ${NLEADS} leads, ${NREPLIES} replies | metrics updated"
+          # Pull after data commit — avoids docs/index.html conflict
           git pull --rebase origin ${GITHUB_REF_NAME}
+          # Regenerate dashboard now that we have the latest remote state
+          python dashboard.py
+          git add docs/index.html
+          git diff --cached --quiet || git commit -m "dashboard: update $(date -u '+%Y-%m-%d %H:%M UTC')"
           git push origin HEAD:${GITHUB_REF_NAME}

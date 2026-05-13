@@ -517,9 +517,10 @@ footer a:hover{color:#ede9e3}
 # _REPO / _WORKFLOW / _BRANCH consts injected by generate().
 # ---------------------------------------------------------------------------
 JS_BODY = r"""
-var _approveSourceBtn = null;
-var _reviseSourceBtn  = null;
-var _editSourceBtn    = null;
+var _approveSourceBtn  = null;
+var _reviseSourceBtn   = null;
+var _editSourceBtn     = null;
+var _recreateSourceBtn = null;
 var _toastSeq = 0;
 
 /* Focus trap inside modals */
@@ -539,9 +540,10 @@ document.addEventListener('keydown', function(e) {
   if (e.key !== 'Escape') return;
   var open = document.querySelector('.modal-overlay.open');
   if (open) {
-    if (open.id === 'revise-modal')       closeReviseModal();
-    else if (open.id === 'edit-modal')    closeEditModal();
-    else if (open.id === 'approve-modal') closeApproveModal();
+    if (open.id === 'revise-modal')        closeReviseModal();
+    else if (open.id === 'edit-modal')     closeEditModal();
+    else if (open.id === 'approve-modal')  closeApproveModal();
+    else if (open.id === 'recreate-modal') closeRecreateModal();
   }
 });
 
@@ -690,21 +692,56 @@ async function confirmEdit() {
   } catch(e) { st.textContent = 'Error: ' + e.message; st.style.color = '#e8372a'; cb.textContent = '💾 Save Edit'; cb.disabled = false; }
 }
 
-/* ── RECREATE ── */
-function confirmRecreate(btn) {
-  var pillar = btn.getAttribute('data-pillar') || 'same pillar';
-  if (!confirm('Regenerate a new draft for the ' + pillar + ' pillar?\nThe current draft stays in posts_history.')) return;
-  var pat = _getPat();
-  if (!pat) { pat = prompt('GitHub PAT (workflow scope):'); if (!pat) return; _setPat(pat); }
-  fetch('https://api.github.com/repos/' + _REPO + '/actions/workflows/' + _WORKFLOW + '/dispatches',
-    { method: 'POST',
-      headers: { 'Authorization': 'Bearer ' + pat, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ref: _BRANCH, inputs: { action: 'generate_draft', pillar: pillar } }) }
-  ).then(function(r) {
-    if (r.status === 204) toast('New ' + pillar + ' draft generating — refresh in ~60 s.', { variant: 'success' });
-    else r.json().then(function(e){ toast('Error ' + r.status + ': ' + (e.message || 'check PAT'), { variant: 'error' }); })
-         .catch(function(){ toast('Error ' + r.status, { variant: 'error' }); });
-  }).catch(function(e){ toast('Network error: ' + e.message, { variant: 'error' }); });
+/* ── RECREATE MODAL ── */
+function showRecreateModal(btn) {
+  _recreateSourceBtn = btn;
+  var pillar = btn.getAttribute('data-pillar') || 'this';
+  document.getElementById('recreate-pillar').value = pillar;
+  document.getElementById('recreate-pillar-display').textContent = pillar;
+  document.getElementById('recreate-pat').value = _getPat();
+  document.getElementById('recreate-status').textContent = '';
+  var cb = document.getElementById('recreate-confirm-btn');
+  cb.textContent = '&#8635; Regenerate'; cb.disabled = false;
+  document.getElementById('recreate-modal').classList.add('open');
+  setTimeout(function() {
+    var pat = document.getElementById('recreate-pat');
+    if (pat.value) document.getElementById('recreate-confirm-btn').focus();
+    else pat.focus();
+  }, 50);
+}
+function closeRecreateModal() {
+  document.getElementById('recreate-modal').classList.remove('open');
+  if (_recreateSourceBtn) { _recreateSourceBtn.focus(); _recreateSourceBtn = null; }
+}
+document.getElementById('recreate-modal').addEventListener('click', function(e) { if (e.target === this) closeRecreateModal(); });
+
+async function confirmRecreate() {
+  var pat    = document.getElementById('recreate-pat').value.trim();
+  var pillar = document.getElementById('recreate-pillar').value;
+  var st     = document.getElementById('recreate-status');
+  var cb     = document.getElementById('recreate-confirm-btn');
+  if (!pat) { st.textContent = 'Enter your GitHub PAT (workflow scope).'; st.style.color = '#e8372a'; return; }
+  _setPat(pat);
+  cb.innerHTML = 'Triggering…'; cb.disabled = true; st.textContent = '';
+  try {
+    var resp = await fetch(
+      'https://api.github.com/repos/' + _REPO + '/actions/workflows/' + _WORKFLOW + '/dispatches',
+      { method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + pat, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ref: _BRANCH, inputs: { action: 'generate_draft', pillar: pillar } }) }
+    );
+    if (resp.status === 204) {
+      closeRecreateModal();
+      toast('New ' + pillar + ' draft generating — refresh in ~60 s.', { variant: 'success' });
+    } else {
+      var e = await resp.json().catch(function() { return {}; });
+      st.textContent = 'Error ' + resp.status + ': ' + (e.message || 'check PAT has workflow scope');
+      st.style.color = '#e8372a'; cb.innerHTML = '&#8635; Regenerate'; cb.disabled = false;
+    }
+  } catch(e) {
+    st.textContent = 'Network error: ' + e.message;
+    st.style.color = '#e8372a'; cb.innerHTML = '&#8635; Regenerate'; cb.disabled = false;
+  }
 }
 
 /* ── APPROVE MODAL ── */
@@ -1093,7 +1130,7 @@ def _card(post: dict, idx: int) -> str:
           <button class="rev-btn rev-edit" data-path="{draft_path}" data-preview="{preview_val}"
                   onclick="showEditModal(this)">&#128393; Edit</button>
           <button class="rev-btn rev-recreate" data-path="{draft_path}" data-pillar="{pillar_val}"
-                  onclick="confirmRecreate(this)">&#8635; Recreate</button>
+                  onclick="showRecreateModal(this)">&#8635; Recreate</button>
         </div>"""
         approve_btn = (
             f'<button class="approve-btn" '
@@ -1688,6 +1725,37 @@ def generate(posts: list[dict]) -> str:
       <button class="modal-confirm approve-green" id="approve-confirm-btn"
               onclick="confirmApprove()">&#10003; Approve</button>
       <button class="modal-cancel" onclick="closeApproveModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Recreate modal -->
+<div class="modal-overlay" id="recreate-modal" role="dialog" aria-modal="true" aria-labelledby="recreate-modal-title">
+  <div class="modal-box">
+    <h3 id="recreate-modal-title">&#8635; Recreate Draft</h3>
+    <input type="hidden" id="recreate-pillar">
+    <div class="modal-field">
+      <span class="modal-label">Action</span>
+      <div style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.6">
+        Generate a fresh <b id="recreate-pillar-display" style="color:#ede9e3"></b> draft with Claude.
+        The current draft stays in <code style="font-family:'DM Mono',monospace;font-size:12px;
+        color:rgba(255,255,255,.4)">posts_history/</code> and will not be overwritten.
+      </div>
+    </div>
+    <div class="modal-field">
+      <label class="modal-label" for="recreate-pat">GitHub Personal Access Token (workflow scope)</label>
+      <input class="modal-input" id="recreate-pat" type="password" placeholder="ghp_..."
+             autocomplete="off" aria-describedby="recreate-pat-hint">
+      <div class="modal-hint" id="recreate-pat-hint">
+        Saved in your browser after first use — future actions are instant.
+        Token needs <b>workflow</b> scope.
+      </div>
+    </div>
+    <div class="modal-status" id="recreate-status" role="status" aria-live="polite"></div>
+    <div class="modal-actions">
+      <button class="modal-confirm" id="recreate-confirm-btn"
+              onclick="confirmRecreate()">&#8635; Regenerate</button>
+      <button class="modal-cancel" onclick="closeRecreateModal()">Cancel</button>
     </div>
   </div>
 </div>

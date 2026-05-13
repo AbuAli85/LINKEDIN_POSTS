@@ -97,12 +97,45 @@ def generate_draft() -> int:
         "dry_run": True,
     })
     path = save_post(post)
+    if force:
+        _supersede_previous_draft(pillar, path)
     _notify_draft_ready(path, post, pillar)
 
     print(f"Saved draft -> {path}")
     _print_post(post)
     print("Draft mode — not publishing to LinkedIn. Review the draft, then run POST_MODE=publish_draft with PUBLISH_DRAFT_PATH.")
     return 0
+
+
+def _supersede_previous_draft(pillar: str, new_path: Path) -> None:
+    """Mark the most recent unreviewed draft for *pillar* as superseded.
+
+    Called when Recreate generates a replacement draft so the old one stops
+    appearing as 'Needs review' in the dashboard.  Only affects drafts that
+    are not yet approved or published — approved drafts are left alone.
+    """
+    history = Path(__file__).parent / "posts_history"
+    for f in sorted(history.glob("*.json"), reverse=True):
+        if f.resolve() == new_path.resolve():
+            continue
+        try:
+            data = json.loads(f.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if (
+            data.get("pillar") == pillar
+            and not data.get("published")
+            and not data.get("approved")
+            and data.get("status") in ("draft", None)
+        ):
+            data.update({
+                "status":        "superseded",
+                "superseded_at": datetime.now(timezone.utc).isoformat(),
+                "superseded_by": new_path.name,
+            })
+            f.write_text(json.dumps(data, indent=2), encoding="utf-8")
+            print(f"Superseded old draft: {f.name}")
+            break  # only the most recent eligible draft
 
 
 def generate_and_publish_now() -> int:

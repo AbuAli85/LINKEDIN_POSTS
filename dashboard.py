@@ -227,11 +227,12 @@ nav.actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
 /* Badges */
 .badge{font-size:10px;padding:3px 9px;border-radius:4px;font-weight:600;
        font-family:'DM Mono',monospace;letter-spacing:.03em}
-.badge.published{background:rgba(42,154,92,.12);color:#2a9a5c;border:1px solid rgba(42,154,92,.25)}
-.badge.approved {background:rgba(46,125,224,.12);color:#2e7de0;border:1px solid rgba(46,125,224,.25)}
-.badge.draft    {background:rgba(212,132,10,.12);color:#d4840a;border:1px solid rgba(212,132,10,.25)}
-.badge.failed   {background:rgba(232,55,42,.12) ;color:#e8372a;border:1px solid rgba(232,55,42,.25)}
-.badge.dry-run  {background:rgba(255,255,255,.05);color:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.1)}
+.badge.published  {background:rgba(42,154,92,.12);color:#2a9a5c;border:1px solid rgba(42,154,92,.25)}
+.badge.approved   {background:rgba(46,125,224,.12);color:#2e7de0;border:1px solid rgba(46,125,224,.25)}
+.badge.draft      {background:rgba(212,132,10,.12);color:#d4840a;border:1px solid rgba(212,132,10,.25)}
+.badge.failed     {background:rgba(232,55,42,.12) ;color:#e8372a;border:1px solid rgba(232,55,42,.25)}
+.badge.dry-run    {background:rgba(255,255,255,.05);color:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.1)}
+.badge.superseded {background:rgba(255,255,255,.03);color:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.07)}
 
 .meta-right{margin-left:auto;display:flex;gap:8px;align-items:center}
 .model-tag{font-size:10px;background:rgba(129,140,248,.1);color:#818cf8;
@@ -1039,6 +1040,9 @@ def _card(post: dict, idx: int) -> str:
     elif post.get("approved") or status_value == "approved":
         status = _badge("Approved", "approved")
         status_key = "approved"
+    elif status_value == "superseded":
+        status = _badge("Superseded", "superseded")
+        status_key = "superseded"
     elif post.get("dry_run"):
         status = _badge("Dry run", "dry-run")
         status_key = "dry-run"
@@ -1107,6 +1111,7 @@ def _card(post: dict, idx: int) -> str:
     needs_review = (
         (post.get("status") == "draft" or post.get("approval_required"))
         and not post.get("published")
+        and status_value != "superseded"
     )
     filename      = post.get("_filename", "")
     draft_path    = html.escape(f"posts_history/{filename}") if filename else ""
@@ -1463,7 +1468,7 @@ def _outreach_pipeline_section() -> str:
 def generate(posts: list[dict]) -> str:
     total       = len(posts)
     n_published = sum(1 for p in posts if p.get("published") or p.get("status") == "published")
-    n_drafts    = sum(1 for p in posts if (p.get("status") == "draft" or p.get("approval_required")) and not p.get("published"))
+    n_drafts    = sum(1 for p in posts if (p.get("status") == "draft" or p.get("approval_required")) and not p.get("published") and p.get("status") != "superseded")
     n_approved  = sum(1 for p in posts if (p.get("approved") or p.get("status") == "approved") and not p.get("published"))
     n_failed    = sum(1 for p in posts if p.get("publish_error") or p.get("status") == "failed")
     approved_pillars = {

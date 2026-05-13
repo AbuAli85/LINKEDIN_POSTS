@@ -124,7 +124,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           # Commit data files first — unique filenames mean no conflicts
-          git add posts_history/ engagement_history/
+          # Use || true so missing dirs (e.g. engagement_history on generate runs) don't abort
+          git add posts_history/ 2>/dev/null || true
+          git add engagement_history/ 2>/dev/null || true
           if [ "$RUN_MODE" = "approve_draft" ] && [ -n "$DRAFT_FILE" ]; then
             MSG="approve: $(basename "$DRAFT_FILE")"
           else

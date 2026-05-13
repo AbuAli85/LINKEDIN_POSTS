@@ -3,11 +3,11 @@
 import json
 from pathlib import Path
 
-BRAND_URL      = "thesmartpro.io"
+BRAND_URL      = "www.thesmartpro.io"
 # CTA for posts targeting companies (HR managers, business owners)
-COMPANY_CTA    = "Start a free 14-day trial at thesmartpro.io/try — no credit card needed. Or WhatsApp +96879665522 for a live demo."
+COMPANY_CTA    = "Start a free 14-day trial at www.thesmartpro.io/try — no setup fee, no credit card. Or WhatsApp +96879665522 for a live demo."
 # CTA for posts targeting candidates (job seekers)
-CANDIDATE_CTA  = "Browse open jobs and build your free candidate profile at thesmartpro.io/talent"
+CANDIDATE_CTA  = "Browse open jobs and build your free candidate profile at www.thesmartpro.io/talent"
 # Legacy alias kept so existing code that references DEMO_CTA still works
 DEMO_CTA       = COMPANY_CTA
 

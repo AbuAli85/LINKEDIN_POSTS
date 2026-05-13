@@ -203,6 +203,57 @@ PILLARS = {
             "SmartPro: HR, payroll, operations, government compliance — one connected platform for Oman",
         ],
     },
+
+    # ── JOBS ─────────────────────────────────────────────────────────────────────
+    # Auto-triggered when pending jobs exist in smartpro_feed/pending_jobs.json.
+    # Announces a specific new job opening with a direct apply CTA.
+    "jobs": {
+        "weight":           0.0,   # queue-driven only — excluded from scheduled rotation
+        "day":              "any",
+        "weekday":          -1,
+        "generate_weekday": -1,    # triggered by pending_jobs.json queue, not cron
+        "publish_day":      "when job is posted",
+        "generate_day":     "when job is posted",
+        "tone":             "clear, professional, human — describe the role honestly and make the opportunity feel worth pursuing",
+        "audience":         "job seekers and professionals in Oman looking for their next role, and their networks who may refer someone",
+        "brand_context":    _BRAND_CONTEXT,
+        "formats": [
+            "Open with the role and company type, then describe what makes this specific opportunity worth considering — not just the job spec",
+            "Lead with the day-in-the-life of someone in this role — what they would actually do and why it matters to the business",
+            "Frame the role as a problem the company is trying to solve — what gap does this hire fill and what does success look like in six months",
+            "Open with what the right candidate will gain — growth, team, environment — before listing any requirements",
+        ],
+        "topics": [],  # set dynamically from pending_jobs.json
+    },
+
+    # ── RECRUITMENT ──────────────────────────────────────────────────────────────
+    # Weekly data-driven post using live SmartPro platform metrics.
+    # Shows the talent engine is active — jobs being posted, candidates applying.
+    "recruitment": {
+        "weight":           0.0,   # manual-only for now; will auto-schedule once pillar is validated
+        "day":              "Thursday",
+        "weekday":          3,
+        "generate_weekday": -1,    # manual only: FORCE_PILLAR=recruitment
+        "publish_day":      "on demand",
+        "generate_day":     "on demand",
+        "tone":             "data-driven, platform-confident, market-aware — show that SmartPro is where Oman hiring is happening right now",
+        "audience":         "hiring managers, business owners, and HR leads in Oman who want to reach qualified candidates efficiently",
+        "brand_context":    _BRAND_CONTEXT,
+        "formats": [
+            "Open with a live metric from SmartPro's platform — applications this week, active jobs, companies hiring — then zoom out on what it means for Oman's job market",
+            "Frame the weekly hiring activity as a market signal: what roles are in demand, what companies are growing, what this tells us about where Oman's economy is moving",
+            "Build a tight weekly market snapshot: fastest-moving roles, most active industries, candidate-to-job ratio — close with one thing employers should do now",
+            "Open with a pattern in the data — then explain why it matters for anyone hiring or being hired in Oman this week",
+        ],
+        "topics": [
+            "What the most applied-for roles on SmartPro tell us about Oman's job market right now",
+            "Hiring velocity this week — which industries are growing fastest and what it signals",
+            "The candidate pool is building — what Oman employers need to do to attract the right applications",
+            "Jobs posted vs applications received — what the current ratio says about talent competition in Oman",
+            "Which locations in Oman are seeing the most hiring activity right now — and what is driving it",
+            "What the fastest-growing job categories on SmartPro reveal about Oman's economy in 2026",
+        ],
+    },
 }
 
 

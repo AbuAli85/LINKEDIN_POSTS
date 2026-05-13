@@ -8,8 +8,8 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from content_strategy import pick_pillar
-from generator import generate_post, save_post
+from content_strategy import pick_pillar, PILLARS
+from generator import generate_post, generate_job_post, save_post
 from publisher import LinkedInError, publish_post
 
 load_dotenv()
@@ -80,6 +80,36 @@ def main() -> int:
 def generate_draft() -> int:
     now = datetime.now(timezone.utc)
     force = os.environ.get("FORCE_PILLAR") or None
+
+    # Check for pending job announcements first (unless pillar is force-overridden)
+    if not force:
+        try:
+            from smartpro_data import get_pending_jobs, mark_job_announced
+            pending = get_pending_jobs()
+            if pending:
+                job = pending[0]
+                jobs_config = PILLARS["jobs"]
+                print(f"[{now.isoformat()}] Pending job found: {job.get('title')} @ {job.get('company_name')}")
+                print("Generating job announcement post with Claude...")
+
+                post = generate_job_post(job, jobs_config)
+                post.update({
+                    "status": "draft",
+                    "published": False,
+                    "approved": False,
+                    "approval_required": True,
+                    "dry_run": True,
+                })
+                path = save_post(post)
+                mark_job_announced(job["id"])
+                _notify_draft_ready(path, post, "jobs")
+
+                print(f"Saved job announcement draft -> {path}")
+                _print_post(post)
+                print("Draft mode — review the draft, then run POST_MODE=publish_draft with PUBLISH_DRAFT_PATH.")
+                return 0
+        except Exception as e:
+            print(f"[smartpro-bridge] pending jobs check failed (continuing with regular draft): {e}")
 
     pillar, config = pick_pillar(now.weekday(), force)
     print(f"[{now.isoformat()}] Pillar: {pillar} ({config['day']})")

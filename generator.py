@@ -74,7 +74,7 @@ TONE: {tone}
 AUDIENCE: {audience}
 OPENING STYLE: {fmt}
 {brand_context}
-PROCESS (do this in your head — output only the final post):
+{metrics_block}PROCESS (do this in your head — output only the final post):
 1. Draft 3 opening lines that follow the OPENING STYLE above. Make them specific and concrete.
 2. Pick the one that would stop a busy professional mid-scroll.
 3. Build the post around it. Short paragraphs. One concrete detail or data point. One clear takeaway.
@@ -84,6 +84,32 @@ PROCESS (do this in your head — output only the final post):
 HARD LIMIT: 800-1500 characters.
 
 {performance_block}{recent_block}Output only the final post. No explanation, no preamble, no label."""
+
+JOB_POST_TEMPLATE = """Write a LinkedIn post announcing a new job opening.
+
+JOB DETAILS:
+- Title: {title}
+- Company: {company_name}
+- Location: {location}
+- Employment type: {employment_type}
+- Department: {department}
+- Role summary: {description}
+
+TONE: {tone}
+AUDIENCE: {audience}
+OPENING STYLE: {fmt}
+{brand_context}
+
+INSTRUCTIONS:
+- Announce this specific role in a way that attracts the right candidates
+- Make the opportunity feel real and worth applying for — not just a job spec
+- Include the SmartPro jobs board as the place to apply (thesmartpro.io)
+- End with a clear "Apply at thesmartpro.io" or "See details at thesmartpro.io"
+- Add 3-5 relevant hashtags including #Oman #Hiring — each on its own line
+
+HARD LIMIT: 800-1500 characters.
+
+{recent_block}Output only the final post. No explanation, no preamble, no label."""
 
 
 def _load_recent_posts(limit: int = 10) -> list[dict]:
@@ -192,6 +218,7 @@ def _generate_once(
     fmt: str,
     recent_block: str,
     performance_block: str = "",
+    metrics_block: str = "",
 ) -> tuple[str, str]:
     response = client.messages.create(
         model=model,
@@ -207,6 +234,7 @@ def _generate_once(
                     audience=pillar_config["audience"],
                     fmt=fmt,
                     brand_context=pillar_config.get("brand_context", ""),
+                    metrics_block=metrics_block,
                     performance_block=performance_block,
                     recent_block=recent_block,
                 ),
@@ -234,11 +262,20 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
     rb = _recent_block(recent_posts)
     pb = _performance_block()
 
+    # Inject live SmartPro metrics for proof/recruitment pillars
+    mb = ""
+    if pillar in ("proof", "recruitment", "vision"):
+        try:
+            from smartpro_data import fetch_metrics, build_metrics_context
+            mb = build_metrics_context(fetch_metrics())
+        except Exception:
+            pass
+
     last_error: str | None = None
     last_result: tuple[str, str] | None = None
     for attempt in range(2):
         post_text, model_used = _generate_once(
-            client, model, pillar, pillar_config, topic, fmt, rb, pb
+            client, model, pillar, pillar_config, topic, fmt, rb, pb, mb
         )
         last_result = (post_text, model_used)
         err = _validate(post_text)
@@ -270,6 +307,93 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
         "model": model_used,
         "attempts": 2,
         "validation_warning": last_error,
+    }
+
+
+def generate_job_post(job: dict, pillar_config: dict) -> dict:
+    """Generate a job announcement post for a specific pending job."""
+    recent_posts = _load_recent_posts(20)
+    fmt = pick_format(pillar_config, recent_posts)
+    model = os.environ.get("ANTHROPIC_MODEL") or DEFAULT_MODEL
+    client = anthropic.Anthropic()
+    rb = _recent_block(recent_posts)
+
+    employment_map = {
+        "full_time": "Full-time",
+        "part_time": "Part-time",
+        "contract": "Contract",
+        "intern": "Internship",
+    }
+    title = job.get("title", "Open Position")
+    company_name = job.get("company_name", "SmartPro client company")
+    location = job.get("location") or "Oman"
+    employment_type = employment_map.get(job.get("type", ""), job.get("type", "Full-time"))
+    department = job.get("department") or "General"
+    description = job.get("description") or f"Join {company_name} as a {title}."
+
+    prompt = JOB_POST_TEMPLATE.format(
+        title=title,
+        company_name=company_name,
+        location=location,
+        employment_type=employment_type,
+        department=department,
+        description=description[:500],
+        tone=pillar_config["tone"],
+        audience=pillar_config["audience"],
+        fmt=fmt,
+        brand_context=pillar_config.get("brand_context", ""),
+        recent_block=rb,
+    )
+
+    last_error: str | None = None
+    last_result: tuple[str, str] | None = None
+    for attempt in range(2):
+        response = client.messages.create(
+            model=model,
+            max_tokens=MAX_TOKENS,
+            system=[{"type": "text", "text": SYSTEM_PROMPT, "cache_control": {"type": "ephemeral"}}],
+            messages=[{"role": "user", "content": prompt}],
+        )
+        text_blocks = [b.text for b in response.content if b.type == "text"]
+        if not text_blocks:
+            raise RuntimeError("No text block in job post response")
+        post_text = _sanitize(text_blocks[0].strip())
+        last_result = (post_text, response.model)
+        err = _validate(post_text)
+        if err is None:
+            return {
+                "pillar": "jobs",
+                "topic": f"{title} @ {company_name}",
+                "format": fmt,
+                "post": post_text,
+                "char_count": len(post_text),
+                "generated_at": datetime.now(timezone.utc).isoformat(),
+                "model": response.model,
+                "attempts": attempt + 1,
+                "job_id": job.get("id"),
+                "job_title": title,
+                "job_company": company_name,
+            }
+        last_error = err
+        print(f"Job post validation warning (attempt {attempt + 1}): {err}. Retrying...")
+
+    if last_result is None:
+        raise RuntimeError("generate_once was never called for job post")
+    post_text, model_used = last_result
+    print(f"WARNING: using job post despite validation issue: {last_error}")
+    return {
+        "pillar": "jobs",
+        "topic": f"{title} @ {company_name}",
+        "format": fmt,
+        "post": post_text,
+        "char_count": len(post_text),
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "model": model_used,
+        "attempts": 2,
+        "validation_warning": last_error,
+        "job_id": job.get("id"),
+        "job_title": title,
+        "job_company": company_name,
     }
 
 

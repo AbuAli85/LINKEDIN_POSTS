@@ -26,6 +26,7 @@ VALID_MODES = {
     "fetch_metrics",
     "fetch_comments",
     "post_reply",
+    "announce_jobs",   # process pending job queue from SmartPro Hub
 }
 
 
@@ -59,6 +60,8 @@ def main() -> int:
         return generate_and_publish_now()
     if mode == "revise_draft":
         return revise_saved_draft()
+    if mode == "announce_jobs":
+        return announce_pending_jobs()
     if mode == "fetch_metrics":
         from metrics import fetch_all_published
         fetch_all_published()
@@ -80,36 +83,6 @@ def main() -> int:
 def generate_draft() -> int:
     now = datetime.now(timezone.utc)
     force = os.environ.get("FORCE_PILLAR") or None
-
-    # Check for pending job announcements first (unless pillar is force-overridden)
-    if not force:
-        try:
-            from smartpro_data import get_pending_jobs, mark_job_announced
-            pending = get_pending_jobs()
-            if pending:
-                job = pending[0]
-                jobs_config = PILLARS["jobs"]
-                print(f"[{now.isoformat()}] Pending job found: {job.get('title')} @ {job.get('company_name')}")
-                print("Generating job announcement post with Claude...")
-
-                post = generate_job_post(job, jobs_config)
-                post.update({
-                    "status": "draft",
-                    "published": False,
-                    "approved": False,
-                    "approval_required": True,
-                    "dry_run": True,
-                })
-                path = save_post(post)
-                mark_job_announced(job["id"])
-                _notify_draft_ready(path, post, "jobs")
-
-                print(f"Saved job announcement draft -> {path}")
-                _print_post(post)
-                print("Draft mode — review the draft, then run POST_MODE=publish_draft with PUBLISH_DRAFT_PATH.")
-                return 0
-        except Exception as e:
-            print(f"[smartpro-bridge] pending jobs check failed (continuing with regular draft): {e}")
 
     pillar, config = pick_pillar(now.weekday(), force)
     print(f"[{now.isoformat()}] Pillar: {pillar} ({config['day']})")
@@ -327,6 +300,51 @@ def revise_saved_draft() -> int:
     path.write_text(json.dumps(revised, indent=2), encoding="utf-8")
     print(f"Draft revised → {path}")
     _print_post(revised)
+    return 0
+
+
+def announce_pending_jobs() -> int:
+    """Generate job announcement drafts for all pending (unannounced) jobs.
+
+    Run manually: POST_MODE=announce_jobs python main.py
+    This is completely separate from the 3x/week marketing schedule.
+    """
+    try:
+        from smartpro_data import get_pending_jobs, mark_job_announced
+    except ImportError:
+        print("smartpro_data.py not found — cannot process job queue.")
+        return 1
+
+    pending = get_pending_jobs()
+    if not pending:
+        print("No pending jobs to announce.")
+        return 0
+
+    jobs_config = PILLARS["jobs"]
+    announced = 0
+
+    for job in pending:
+        try:
+            print(f"\nGenerating announcement for: {job.get('title')} @ {job.get('company_name')}")
+            post = generate_job_post(job, jobs_config)
+            post.update({
+                "status": "draft",
+                "published": False,
+                "approved": False,
+                "approval_required": True,
+                "dry_run": True,
+            })
+            path = save_post(post)
+            mark_job_announced(job["id"])
+            _notify_draft_ready(path, post, "jobs")
+            print(f"Saved job draft -> {path}")
+            _print_post(post)
+            announced += 1
+        except Exception as e:
+            print(f"ERROR generating announcement for job {job.get('id')}: {e}")
+
+    print(f"\nDone — {announced}/{len(pending)} job announcement drafts created.")
+    print("Review and approve each draft, then publish with POST_MODE=publish_draft.")
     return 0
 
 

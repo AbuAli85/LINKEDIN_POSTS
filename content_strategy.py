@@ -3,9 +3,13 @@
 import json
 from pathlib import Path
 
-# Update these when you have live contact details
-DEMO_CTA  = "DM me on LinkedIn or WhatsApp +96879665522 to book a free 20-minute demo."
-BRAND_URL = "thesmartpro.io"
+BRAND_URL      = "thesmartpro.io"
+# CTA for posts targeting companies (HR managers, business owners)
+COMPANY_CTA    = "Start a free 14-day trial at thesmartpro.io/try — no credit card needed. Or WhatsApp +96879665522 for a live demo."
+# CTA for posts targeting candidates (job seekers)
+CANDIDATE_CTA  = "Browse open jobs and build your free candidate profile at thesmartpro.io/talent"
+# Legacy alias kept so existing code that references DEMO_CTA still works
+DEMO_CTA       = COMPANY_CTA
 
 _BRAND_CONTEXT = (
     "BRAND CONTEXT: You are writing on behalf of SmartPro — an end-to-end HR, payroll, "
@@ -13,8 +17,17 @@ _BRAND_CONTEXT = (
     "with Omani banks for WPS (Wage Protection System) submission and with government systems "
     "including the Ministry of Manpower. Target buyers: business owners, HR managers, and "
     "finance managers in Oman running companies with 10–200 employees. The goal of every post "
-    "is to build trust, surface a pain point the reader recognises, and generate demo requests. "
-    f"Website: {BRAND_URL}. Demo CTA: {DEMO_CTA}"
+    "is to build trust, surface a pain point the reader recognises, and generate trial signups or demo requests. "
+    f"Website: {BRAND_URL}. "
+    f"End every post with this CTA on its own line: {COMPANY_CTA}"
+)
+
+_BRAND_CONTEXT_CANDIDATES = (
+    "BRAND CONTEXT: You are writing on behalf of SmartPro — a platform that connects job seekers "
+    "with companies actively hiring in Oman. Candidates can create a free profile, browse open roles, "
+    "apply in seconds, and track their application from applied to hired. "
+    f"Website: {BRAND_URL}. "
+    f"End every post with this CTA on its own line: {CANDIDATE_CTA}"
 )
 
 PILLARS = {
@@ -216,7 +229,7 @@ PILLARS = {
         "generate_day":     "when job is posted",
         "tone":             "clear, professional, human — describe the role honestly and make the opportunity feel worth pursuing",
         "audience":         "job seekers and professionals in Oman looking for their next role, and their networks who may refer someone",
-        "brand_context":    _BRAND_CONTEXT,
+        "brand_context":    _BRAND_CONTEXT_CANDIDATES,
         "formats": [
             "Open with the role and company type, then describe what makes this specific opportunity worth considering — not just the job spec",
             "Lead with the day-in-the-life of someone in this role — what they would actually do and why it matters to the business",

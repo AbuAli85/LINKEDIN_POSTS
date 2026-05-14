@@ -91,10 +91,17 @@ def _post_json(url: str, payload: dict, api_key: str) -> dict:
 
 def send_test(issue: dict, recipient: str) -> dict:
     """Send a single test email."""
-    api_key = os.environ.get("RESEND_API_KEY")
-    sender  = os.environ.get("RESEND_FROM", "SmartPro <onboarding@resend.dev>")
+    api_key = os.environ.get("RESEND_API_KEY", "").strip()
+    sender  = os.environ.get("RESEND_FROM",    "").strip()
     if not api_key:
         raise SystemExit("RESEND_API_KEY is not set. See setup notes at the top of this file.")
+    if not sender:
+        raise SystemExit(
+            "RESEND_FROM is not set — cannot send.\n"
+            "Add a GitHub secret:  RESEND_FROM = SmartPro <newsletter@thesmartpro.io>\n"
+            "The sender address must be verified in your Resend dashboard first.\n"
+            "Quick test option: RESEND_FROM = onboarding@resend.dev  (delivers only to your Resend account email)"
+        )
 
     payload = {
         "from":    sender,

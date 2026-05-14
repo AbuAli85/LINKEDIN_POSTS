@@ -76,14 +76,21 @@ def _post_json(url: str, payload: dict, api_key: str) -> dict:
     except urllib.error.HTTPError as e:
         detail = e.read().decode("utf-8", errors="replace")
         if e.code == 403:
+            sender = os.environ.get("RESEND_FROM", "").strip()
+            hint = (
+                "  • Using onboarding@resend.dev as sender — this only works when the recipient\n"
+                "    is your Resend account email. Set RESEND_FROM to a verified domain sender instead.\n"
+                if "onboarding@resend.dev" in sender
+                else
+                "  • The sender domain in RESEND_FROM is not verified in your Resend dashboard.\n"
+                "    Go to https://resend.com/domains, add your domain, and complete DNS verification.\n"
+            )
             raise SystemExit(
-                "Resend API returned 403 Forbidden.\n"
-                "Most likely causes:\n"
-                "  • RESEND_FROM is blank — the fallback onboarding@resend.dev can only send\n"
-                "    to your own Resend account email, not arbitrary addresses.\n"
-                "  • The sender domain is not verified in your Resend dashboard.\n"
-                "  • The API key lacks send permissions.\n"
-                f"Fix: set RESEND_FROM to a verified sender, e.g. 'SmartPro <newsletter@thesmartpro.io>'\n"
+                "Resend API returned 403 Forbidden (error code: 1010).\n"
+                "Most likely cause:\n"
+                f"{hint}"
+                "  • Or the API key lacks send permissions — check key scopes in the Resend dashboard.\n"
+                f"RESEND_FROM currently set to: {sender or '(blank)'}\n"
                 f"Raw detail: {detail}"
             ) from e
         raise SystemExit(f"Resend API error {e.code}: {detail}") from e

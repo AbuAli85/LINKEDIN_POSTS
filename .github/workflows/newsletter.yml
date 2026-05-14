@@ -110,6 +110,7 @@ jobs:
 
       - name: Test send to owner
         if: steps.mode.outputs.action == 'generate_and_test' || steps.mode.outputs.action == 'test_send'
+        continue-on-error: true
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           RESEND_FROM: ${{ secrets.RESEND_FROM }}
@@ -126,7 +127,8 @@ jobs:
             echo "  The sender address must be verified in your Resend dashboard first."
             exit 0
           fi
-          python newsletter_publisher.py --issue ${{ steps.resolve.outputs.issue_number }} --test
+          python newsletter_publisher.py --issue ${{ steps.resolve.outputs.issue_number }} --test \
+            || echo "⚠ Test send failed (see above). The newsletter draft was still saved — verify your Resend sender domain to fix delivery."
 
       - name: Send to single recipient
         if: steps.mode.outputs.action == 'send_to'

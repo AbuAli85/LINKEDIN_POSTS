@@ -11,9 +11,9 @@ name: Weekly Newsletter
 # The owner can also dispatch the workflow manually with any action.
 
 on:
-  schedule:
-    # Saturday 7am UTC (11am Muscat) — generate next week's draft + test send
-    - cron: "0 7 * * 6"
+  # Schedule disabled — no email list yet. Re-enable cron when subscribers exist.
+  # schedule:
+  #   - cron: "0 7 * * 6"
   workflow_dispatch:
     inputs:
       action:

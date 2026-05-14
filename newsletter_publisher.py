@@ -75,6 +75,17 @@ def _post_json(url: str, payload: dict, api_key: str) -> dict:
             return json.loads(r.read().decode("utf-8") or "{}")
     except urllib.error.HTTPError as e:
         detail = e.read().decode("utf-8", errors="replace")
+        if e.code == 403:
+            raise SystemExit(
+                "Resend API returned 403 Forbidden.\n"
+                "Most likely causes:\n"
+                "  • RESEND_FROM is blank — the fallback onboarding@resend.dev can only send\n"
+                "    to your own Resend account email, not arbitrary addresses.\n"
+                "  • The sender domain is not verified in your Resend dashboard.\n"
+                "  • The API key lacks send permissions.\n"
+                f"Fix: set RESEND_FROM to a verified sender, e.g. 'SmartPro <newsletter@thesmartpro.io>'\n"
+                f"Raw detail: {detail}"
+            ) from e
         raise SystemExit(f"Resend API error {e.code}: {detail}") from e
 
 

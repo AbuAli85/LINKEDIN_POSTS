@@ -116,8 +116,14 @@ jobs:
           NEWSLETTER_TEST_TO: ${{ secrets.NEWSLETTER_TEST_TO }}
         run: |
           if [ -z "$NEWSLETTER_TEST_TO" ]; then
-            echo "⚠ NEWSLETTER_TEST_TO secret not set — skipping test send."
-            echo "Add it in: GitHub repo → Settings → Secrets → NEWSLETTER_TEST_TO=your-email@example.com"
+            echo "⚠ NEWSLETTER_TEST_TO not set — skipping test send."
+            echo "  Add it: repo → Settings → Secrets → NEWSLETTER_TEST_TO=your-email@example.com"
+            exit 0
+          fi
+          if [ -z "$RESEND_FROM" ]; then
+            echo "⚠ RESEND_FROM not set — skipping test send."
+            echo "  Add it: repo → Settings → Secrets → RESEND_FROM='SmartPro <newsletter@thesmartpro.io>'"
+            echo "  The sender address must be verified in your Resend dashboard first."
             exit 0
           fi
           python newsletter_publisher.py --issue ${{ steps.resolve.outputs.issue_number }} --test

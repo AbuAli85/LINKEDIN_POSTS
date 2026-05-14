@@ -357,6 +357,10 @@ nav.actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
 .modal-confirm:disabled{background:#333;color:rgba(255,255,255,.3);cursor:default}
 .modal-confirm.approve-green{background:#2a9a5c}
 .modal-confirm.approve-green:hover{background:#1d7a47}
+/* Destructive variant — outlined, so it's not visually confused with primary brand red. */
+.modal-confirm.destructive{background:transparent;color:#e8372a;border:1.5px solid #e8372a}
+.modal-confirm.destructive:hover{background:#e8372a;color:#fff}
+.modal-confirm.destructive:focus-visible{outline:2px solid #e8372a;outline-offset:2px}
 .modal-cancel{background:rgba(255,255,255,.05);color:rgba(255,255,255,.5);
               border:1px solid rgba(255,255,255,.1);padding:10px 18px;
               border-radius:7px;cursor:pointer;font-size:13px;min-height:40px;
@@ -515,11 +519,19 @@ footer a:hover{color:#ede9e3}
   .topbar,.statsbar,.schedbar,.content,.filter-bar{padding-left:16px;padding-right:16px}
   .stat{padding:10px 14px}
   .modal-box{padding:20px 18px}
-  .filter-chip{font-size:11px;padding:4px 10px}
+  .filter-chip{font-size:11px;padding:6px 12px;min-height:36px}
   .card{padding:14px 14px}
   .review-actions{gap:5px}
-  .card-footer{gap:5px}
+  .card-footer{gap:6px}
   .meta-right{flex-wrap:wrap;gap:4px}
+  /* WCAG 2.5.5 — make every actionable element comfortably tappable on touch. */
+  .tb-btn,.icon-btn,.delete-btn,.li-link,.rev-btn,.approve-btn,.expand-btn,.modal-confirm,.modal-cancel{min-height:40px;min-width:40px}
+}
+
+/* Honor user motion preferences across all transitions, not just toasts. */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001s !important;animation-iteration-count:1 !important;transition-duration:.001s !important;scroll-behavior:auto !important}
+  .live-dot{animation:none !important}
 }
 """
 
@@ -529,6 +541,25 @@ footer a:hover{color:#ede9e3}
 # _REPO / _WORKFLOW / _BRANCH consts injected by generate().
 # ---------------------------------------------------------------------------
 JS_BODY = r"""
+/* Early error filter: silence noise from browser extensions injecting scripts
+   into the page (they show up as cross-origin EXCEPTION at URL:0:0). Real
+   dashboard errors are re-logged so we still see them. */
+(function(){
+  window.addEventListener('error', function(e){
+    var f = e.filename || '';
+    var fromExtension = f.startsWith('chrome-extension://') || f.startsWith('moz-extension://') || f.startsWith('safari-extension://');
+    var fromSelf = f.indexOf(location.origin) === 0;
+    if (fromExtension || (!f && !fromSelf)) {
+      // Cross-origin / extension noise: prevent it from polluting the console.
+      e.stopImmediatePropagation && e.stopImmediatePropagation();
+      e.preventDefault && e.preventDefault();
+      return false;
+    }
+    // Real dashboard error — keep loud and add a tag so monitoring tools see it.
+    try { console.warn('[dashboard-error]', e.message, e.filename + ':' + e.lineno); } catch(_){}
+  }, true);
+})();
+
 var _approveSourceBtn  = null;
 var _reviseSourceBtn   = null;
 var _editSourceBtn     = null;
@@ -1713,11 +1744,16 @@ def generate(posts: list[dict]) -> str:
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>LinkedIn Auto-Poster &middot; Dashboard</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self' https://api.github.com; frame-ancestors 'none'; base-uri 'self'; form-action 'none'; object-src 'none'">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="description" content="Internal control panel for the LinkedIn Auto-Poster pipeline — review drafts, trigger publishing workflows, and track post engagement.">
 <meta name="robots" content="noindex,nofollow">
 <meta name="theme-color" content="#0b0b0c">
 <meta name="color-scheme" content="dark">
 <link rel="canonical" href="https://abuali85.github.io/LINKEDIN_POSTS/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23e8372a'/%3E%3Ctext x='16' y='22' font-family='system-ui,sans-serif' font-size='16' font-weight='700' text-anchor='middle' fill='%23fff'%3ELI%3C/text%3E%3C/svg%3E">
 <meta property="og:title" content="LinkedIn Auto-Poster · Dashboard">
 <meta property="og:description" content="Internal control panel for the LinkedIn Auto-Poster pipeline.">
@@ -1905,60 +1941,3 @@ def generate(posts: list[dict]) -> str:
         Needs <b>repo</b> scope (or a fine-grained PAT with <b>contents: write</b>).
         By default, the token only lives for this tab.
       </div>
-    </div>
-    <div class="modal-status" id="delete-status" role="status" aria-live="polite"></div>
-    <div class="modal-actions">
-      <button type="button" class="modal-confirm" id="delete-confirm-btn" style="background:#e8372a"
-              onclick="confirmDelete()">&#128465; Delete permanently</button>
-      <button type="button" class="modal-cancel" onclick="closeDeleteModal()">Cancel</button>
-    </div>
-  </div>
-</div>
-
-<!-- Recreate modal -->
-<div class="modal-overlay" id="recreate-modal" role="dialog" aria-modal="true" aria-labelledby="recreate-modal-title">
-  <div class="modal-box">
-    <h3 id="recreate-modal-title">&#8635; Recreate Draft</h3>
-    <input type="hidden" id="recreate-pillar">
-    <div class="modal-field">
-      <span class="modal-label">Action</span>
-      <div style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.6">
-        Generate a fresh <b id="recreate-pillar-display" style="color:#ede9e3"></b> draft with Claude.
-        The current draft stays in <code style="font-family:'DM Mono',monospace;font-size:12px;
-        color:rgba(255,255,255,.4)">posts_history/</code> and will not be overwritten.
-      </div>
-    </div>
-    <div class="modal-field">
-      <label class="modal-label" for="recreate-pat">GitHub Personal Access Token (workflow scope)</label>
-      <input class="modal-input" id="recreate-pat" type="password" placeholder="ghp_..."
-             autocomplete="off" aria-describedby="recreate-pat-hint">
-      <label class="pat-remember"><input type="checkbox" data-pat-remember> Keep token on this device <span class="pat-warn">(stored unencrypted &mdash; only on private devices)</span></label>
-      <div class="modal-hint" id="recreate-pat-hint">
-        Token needs <b>workflow</b> scope. By default, the token only lives for this tab.
-      </div>
-    </div>
-    <div class="modal-status" id="recreate-status" role="status" aria-live="polite"></div>
-    <div class="modal-actions">
-      <button type="button" class="modal-confirm" id="recreate-confirm-btn"
-              onclick="confirmRecreate()">&#8635; Regenerate</button>
-      <button type="button" class="modal-cancel" onclick="closeRecreateModal()">Cancel</button>
-    </div>
-  </div>
-</div>
-
-<div id="toast-container" aria-label="Notifications"></div>
-
-<script>
-var _REPO     = '{REPO}';
-var _WORKFLOW = '{WORKFLOW_FILE}';
-var _BRANCH   = '{branch}';
-{JS_BODY}
-</script>
-</body>
-</html>"""
-
-
-if __name__ == "__main__":
-    posts = load_posts()
-    out   = DOCS_DIR / "index.html"
-    out.write_text(generate(posts), encoding="utf-8")

@@ -502,6 +502,26 @@ footer a:hover{color:#ede9e3}
                     border-radius:10px;font-family:'DM Mono',monospace;margin-left:2px}
 .filter-chip.active .count{background:rgba(232,55,42,.15)}
 
+/* ── SEARCH BAR ── */
+.search-bar{max-width:840px;margin:0 auto;padding:14px 28px 0;display:flex;gap:8px;align-items:center;width:100%}
+.search-wrap{position:relative;flex:1;display:flex;align-items:center}
+.search-icon{position:absolute;left:12px;font-size:13px;color:rgba(255,255,255,.35);pointer-events:none}
+.search-input{flex:1;padding:8px 36px 8px 34px;background:rgba(255,255,255,.04);
+              border:1px solid rgba(255,255,255,.09);border-radius:8px;color:#ede9e3;
+              font-size:13px;font-family:inherit;min-height:36px;outline:none;
+              transition:border-color .15s,background .15s}
+.search-input:hover{border-color:rgba(255,255,255,.18)}
+.search-input:focus{border-color:rgba(232,55,42,.5);background:rgba(255,255,255,.06)}
+.search-input::placeholder{color:rgba(255,255,255,.32)}
+.search-clear{position:absolute;right:8px;width:22px;height:22px;border:none;background:transparent;
+              color:rgba(255,255,255,.35);cursor:pointer;border-radius:4px;font-size:14px;
+              display:none;align-items:center;justify-content:center;line-height:1}
+.search-clear:hover{color:#ede9e3;background:rgba(255,255,255,.07)}
+.search-input:not(:placeholder-shown) + .search-clear{display:inline-flex}
+.search-count{font-size:11px;color:rgba(255,255,255,.4);font-family:'DM Mono',monospace;
+              white-space:nowrap;padding:0 2px}
+@media(max-width:640px){.search-bar{padding-left:16px;padding-right:16px}}
+
 /* ── PAT REMEMBER CHECKBOX ── */
 .pat-remember{display:flex;align-items:center;gap:8px;margin-top:8px;
               font-size:12px;color:rgba(255,255,255,.55);cursor:pointer;font-family:inherit}
@@ -1138,22 +1158,80 @@ function toggleLead(idx) {
   if (chevron) chevron.classList.toggle('open', !isOpen);
 }
 
-/* ── FILTER CHIPS ── */
-function filterCards(key) {
+/* ── FILTER CHIPS + SEARCH ── */
+var _activeFilterKey = 'all';
+
+function applyFilters() {
+  var key = _activeFilterKey;
+  var input = document.getElementById('post-search');
+  var q = (input ? input.value : '').trim().toLowerCase();
   document.querySelectorAll('.filter-chip').forEach(function(c) {
-    c.classList.toggle('active', c.getAttribute('data-filter') === key);
+    var active = c.getAttribute('data-filter') === key;
+    c.classList.toggle('active', active);
+    c.setAttribute('aria-pressed', active ? 'true' : 'false');
   });
   var cards = document.querySelectorAll('.card');
   var shown = 0;
   cards.forEach(function(card) {
     var status = card.getAttribute('data-status') || '';
     var pillar = card.getAttribute('data-pillar') || '';
-    var show = key === 'all' || key === status || key === pillar;
+    var chipOk = key === 'all' || key === status || key === pillar;
+    var searchOk = !q || card.textContent.toLowerCase().indexOf(q) !== -1;
+    var show = chipOk && searchOk;
     card.style.display = show ? '' : 'none';
     if (show) shown++;
   });
   var lbl = document.querySelector('.section-lbl');
   if (lbl) lbl.textContent = 'Post history (' + shown + ')';
+  var sc = document.getElementById('search-count');
+  if (sc) sc.textContent = q ? (shown + ' / ' + cards.length + ' match') : '';
+}
+
+function filterCards(key) { _activeFilterKey = key; applyFilters(); }
+
+function _bindSearch() {
+  var inp = document.getElementById('post-search');
+  if (!inp) return;
+  inp.addEventListener('input', applyFilters);
+  inp.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') { inp.value = ''; applyFilters(); inp.blur(); }
+  });
+  var clr = document.getElementById('search-clear');
+  if (clr) clr.addEventListener('click', function() { inp.value = ''; applyFilters(); inp.focus(); });
+}
+_bindSearch();
+
+/* ── CSV EXPORT ── */
+function _csvCell(v) {
+  v = (v == null) ? '' : String(v);
+  if (/[",\n\r]/.test(v)) v = '"' + v.replace(/"/g, '""') + '"';
+  return v;
+}
+function exportPostsCsv() {
+  var rows = [['date', 'pillar', 'status', 'model', 'topic', 'chars', 'post_text', 'file']];
+  document.querySelectorAll('.card').forEach(function(card) {
+    var pillar = card.getAttribute('data-pillar') || '';
+    var status = card.getAttribute('data-status') || '';
+    var date   = (card.querySelector('.date') || {}).textContent || '';
+    var model  = (card.querySelector('.model-tag') || {}).textContent || '';
+    var topic  = (card.querySelector('.topic') || {}).textContent || '';
+    var chars  = (card.querySelector('.chars') || {}).textContent || '';
+    var text   = (card.querySelector('.post-text') || {}).textContent || '';
+    var delBtn = card.querySelector('.delete-btn');
+    var file   = delBtn ? (delBtn.getAttribute('data-filename') || '') : '';
+    rows.push([date.trim(), pillar, status, model.trim(), topic.trim(),
+               chars.replace(/[^0-9]/g, ''), text.trim(), file]);
+  });
+  var csv = rows.map(function(r) { return r.map(_csvCell).join(','); }).join('\r\n');
+  var blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
+  var url  = URL.createObjectURL(blob);
+  var d    = new Date();
+  var pad  = function(n){return n<10?'0'+n:''+n};
+  var name = 'linkedin-posts-' + d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()) + '.csv';
+  var a = document.createElement('a');
+  a.href = url; a.download = name; document.body.appendChild(a); a.click();
+  setTimeout(function() { document.body.removeChild(a); URL.revokeObjectURL(url); }, 100);
+  toast('Exported ' + (rows.length - 1) + ' posts to CSV.', { variant: 'success' });
 }
 """
 
@@ -1785,6 +1863,7 @@ def generate(posts: list[dict]) -> str:
     <nav class="actions" aria-label="Site actions">
       <a class="tb-btn primary" href="{ACTIONS_URL}" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">&#9654;</span> Run workflow<span class="sr-only"> (opens in new tab)</span></a>
       <a class="tb-btn" href="https://github.com/{REPO}/actions" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">&#128200;</span> All runs<span class="sr-only"> (opens in new tab)</span></a>
+      <button type="button" class="tb-btn" onclick="exportPostsCsv()" aria-label="Export all posts as CSV"><span aria-hidden="true">&#11015;</span> Export CSV</button>
       <a class="tb-btn" href="https://www.linkedin.com/in/fahad-alamri-b9a809123/" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">&#128279;</span> LinkedIn<span class="sr-only"> (opens in new tab)</span></a>
     </nav>
   </div>
@@ -1808,6 +1887,17 @@ def generate(posts: list[dict]) -> str:
   {runs_html}
   <span class="lbl" style="margin-left:8px;border-left:1px solid rgba(255,255,255,.08);padding-left:18px">Publishes &rarr;</span>
   {pub_runs_html}
+</div>
+
+<div class="search-bar">
+  <div class="search-wrap">
+    <span class="search-icon" aria-hidden="true">&#128270;</span>
+    <input type="search" id="post-search" class="search-input"
+           placeholder="Search posts by topic, content, or keyword…"
+           aria-label="Search posts" autocomplete="off">
+    <button type="button" id="search-clear" class="search-clear" aria-label="Clear search"><span aria-hidden="true">&times;</span></button>
+  </div>
+  <span class="search-count" id="search-count" aria-live="polite"></span>
 </div>
 
 {filter_bar_html}
@@ -1902,7 +1992,7 @@ def generate(posts: list[dict]) -> str:
       <label class="modal-label" for="approve-pat">GitHub Personal Access Token (workflow scope)</label>
       <input class="modal-input" id="approve-pat" type="password" placeholder="ghp_..."
              autocomplete="off" aria-describedby="approve-pat-hint">
-      <label class="pat-remember"><input type="checkbox" data-pat-remember> Keep token on this device <span class="pat-warn">(stored unencrypted — only on private devices)</span></label>
+      <label class="pat-remember"><input type="checkbox" data-pat-remember> Keep token on this device <span class="pat-warn">(stored unencrypted &mdash; only on private devices)</span></label>
       <div class="modal-hint" id="approve-pat-hint">
         Token needs <b>workflow</b> scope. By default, the token only lives for this tab.
         <a href="{ACTIONS_URL}" target="_blank" rel="noopener noreferrer"

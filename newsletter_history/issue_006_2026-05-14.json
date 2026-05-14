@@ -1,0 +1,43 @@
+{
+  "subject": "Your leave records won't survive a surprise inspection",
+  "preview": "Ministry inspectors don't give you time to find the right WhatsApp thread. Here's what to fix this week.",
+  "opening": "It's mid-May, and Oman's inspection calendar doesn't slow down for Ramadan recovery or summer staffing gaps.\n\nA Ministry of Manpower inspector walked into a Muscat business unannounced last month. The HR manager wasn't caught doing anything wrong — she just couldn't *prove* it was right, not quickly. Four hours later, she was still cross-referencing March leave records by hand while the inspector waited.\n\nNo fine. But four hours of your best person's day, gone. That's the cost nobody budgets for.",
+  "pain": {
+    "title": "The leave approval process that breaks every payroll week",
+    "body": "Most HR managers in Oman are running leave approvals across one, two, sometimes three WhatsApp groups. Someone screenshots the request. Someone approves verbally. Nobody logs it. Then payroll week hits and nobody can agree on how many days Ahmed actually took in March.\n\nThat disagreement doesn't just slow you down — it surfaces during audits, triggers salary disputes, and quietly erodes the trust employees have in your payroll accuracy. 68% of employees in Oman say a payroll error has made them question whether to stay. The root cause almost every time: leave data and payroll data living in completely different places, never properly reconciled. SmartPro connects them so that what's approved is what gets paid, automatically."
+  },
+  "proof": {
+    "title": "From 14 hours a month to a 23-minute payroll run",
+    "body": "A 74-person retail company in Muscat came to SmartPro after three consecutive months of salary disputes — wrong overtime, missed WPS deadlines, attendance figures that didn't match approvals. Their HR manager was spending 14 hours every month just reconciling payroll, and still getting it wrong. After switching to SmartPro, their next payroll run took 23 minutes. Attendance pulled directly from the system. Approvals routed and closed inside the platform. WPS file generated and submitted without a single manual step. Zero rejections from the bank. Those are the numbers their HR team reported after the first fully automated run."
+  },
+  "playbook": {
+    "title": "Run a leave-record audit this week — before someone else does",
+    "steps": [
+      "Pull every leave request from the last 90 days — WhatsApp, email, verbal approvals, all of it. If you can't find them all in under 10 minutes, that's your first finding.",
+      "Cross-check those requests against your current leave balance spreadsheet. Flag any employee where the dates don't add up. Even one discrepancy means your payroll for that period may be wrong.",
+      "Identify who holds the master leave file. If only one person can open or update it, document the location and password today. One resignation or sick day turns this into a crisis.",
+      "Check your last three WPS submissions for the correct employee count and salary figures. Late or incorrect submissions stay on record with the Ministry — a pattern is harder to explain than a one-off.",
+      "Pick one approval channel and kill the others. If leave requests are coming in via WhatsApp, email, and in-person, standardise to a single written method this month — even if it's just a shared Google Form for now. Consistency is what survives an inspection.",
+      "Document the audit findings in a one-page summary and keep it on file. If an inspector arrives tomorrow, you want to show process, not panic."
+    ]
+  },
+  "question": "If a Ministry inspector walked in tomorrow and asked to see leave records for the last six months, how long would it take your team to produce them — honestly?",
+  "signoff": "That number is worth knowing before someone else asks for it.\n\nIf the answer is longer than ten minutes, it's worth a conversation.\n\nBook a 20-minute demo at www.thesmartpro.io — or WhatsApp +96879665522 to see SmartPro live.\n\nUntil next week,\nThe SmartPro Team",
+  "_meta": {
+    "issue_number": 6,
+    "date": "2026-05-14",
+    "model": "claude-sonnet-4-6",
+    "status": "draft",
+    "source_posts": [
+      "How real-time business data changes the decisions a founder makes every single week",
+      "The hidden cost of managing leave requests over WhatsApp group chats",
+      "How payroll accuracy changed employee trust at one Oman business",
+      "Why HR data stored in Excel is a liability, not just an inconvenience",
+      "When a government inspection reveals what a manual HR system has been missing",
+      "What the HR team said after their first fully automated payroll run",
+      "How one founder recovered eight hours every week by automating business operations",
+      "WPS rejection on payday — what it actually costs a business in Oman beyond the technical fix"
+    ],
+    "created_at": "2026-05-14T18:40:34.763012+00:00"
+  }
+}

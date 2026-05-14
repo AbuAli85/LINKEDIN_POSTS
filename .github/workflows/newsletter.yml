@@ -115,6 +115,11 @@ jobs:
           RESEND_FROM: ${{ secrets.RESEND_FROM }}
           NEWSLETTER_TEST_TO: ${{ secrets.NEWSLETTER_TEST_TO }}
         run: |
+          if [ -z "$NEWSLETTER_TEST_TO" ]; then
+            echo "⚠ NEWSLETTER_TEST_TO secret not set — skipping test send."
+            echo "Add it in: GitHub repo → Settings → Secrets → NEWSLETTER_TEST_TO=your-email@example.com"
+            exit 0
+          fi
           python newsletter_publisher.py --issue ${{ steps.resolve.outputs.issue_number }} --test
 
       - name: Send to single recipient

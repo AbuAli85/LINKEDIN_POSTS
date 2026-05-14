@@ -4,10 +4,12 @@ import json
 from pathlib import Path
 
 BRAND_URL      = "www.thesmartpro.io"
-# CTA for posts targeting companies (HR managers, business owners)
-COMPANY_CTA    = "Start a free 14-day trial at www.thesmartpro.io/try — no setup fee, no credit card. Or WhatsApp +96879665522 for a live demo."
+# CTA for posts targeting companies (HR managers, business owners).
+# Note: the /try and /talent paths previously returned 404 on the live site,
+# so the CTA now points to the main domain. Update once those pages exist.
+COMPANY_CTA    = "Book a 20-minute demo at www.thesmartpro.io — or WhatsApp +96879665522 to see SmartPro live."
 # CTA for posts targeting candidates (job seekers)
-CANDIDATE_CTA  = "Browse open jobs and build your free candidate profile at www.thesmartpro.io/talent"
+CANDIDATE_CTA  = "Browse open jobs and apply at www.thesmartpro.io"
 # Legacy alias kept so existing code that references DEMO_CTA still works
 DEMO_CTA       = COMPANY_CTA
 

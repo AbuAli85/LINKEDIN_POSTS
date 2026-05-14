@@ -1813,6 +1813,11 @@ def generate(posts: list[dict]) -> str:
     now_muscat        = _to_muscat(datetime.now(timezone.utc))
     engagement_html   = _engagement_sections()
     outreach_html     = _outreach_pipeline_section()
+    try:
+        from newsletter_section import newsletter_dashboard_section
+        newsletter_html = newsletter_dashboard_section()
+    except Exception:
+        newsletter_html = ""
     branch            = _current_branch()
     pillar_class_css  = _pillar_class_css()
 
@@ -1909,6 +1914,8 @@ def generate(posts: list[dict]) -> str:
 </div>
 
 {engagement_html}
+
+{newsletter_html}
 
 {outreach_html}
 

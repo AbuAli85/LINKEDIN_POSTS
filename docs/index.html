@@ -4,6 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>LinkedIn Auto-Poster &middot; Dashboard</title>
+<meta name="description" content="Internal control panel for the LinkedIn Auto-Poster pipeline — review drafts, trigger publishing workflows, and track post engagement.">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0b0b0c">
+<meta name="color-scheme" content="dark">
+<link rel="canonical" href="https://abuali85.github.io/LINKEDIN_POSTS/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23e8372a'/%3E%3Ctext x='16' y='22' font-family='system-ui,sans-serif' font-size='16' font-weight='700' text-anchor='middle' fill='%23fff'%3ELI%3C/text%3E%3C/svg%3E">
+<meta property="og:title" content="LinkedIn Auto-Poster · Dashboard">
+<meta property="og:description" content="Internal control panel for the LinkedIn Auto-Poster pipeline.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://abuali85.github.io/LINKEDIN_POSTS/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LinkedIn Auto-Poster · Dashboard">
+<meta name="twitter:description" content="Internal control panel for the LinkedIn Auto-Poster pipeline.">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap');
 
@@ -34,7 +47,7 @@ a{color:inherit;text-decoration:none}
               flex-shrink:0;overflow:hidden}
 .updated{font-size:11px;color:rgba(255,255,255,.3);font-family:'DM Mono',monospace;
          margin-right:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-         max-width:240px}
+         max-width:320px}
 nav.actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
 .tb-btn{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;
         border-radius:6px;font-size:12px;font-weight:500;white-space:nowrap;
@@ -371,6 +384,12 @@ footer a:hover{color:#ede9e3}
                     border-radius:10px;font-family:'DM Mono',monospace;margin-left:2px}
 .filter-chip.active .count{background:rgba(232,55,42,.15)}
 
+/* ── PAT REMEMBER CHECKBOX ── */
+.pat-remember{display:flex;align-items:center;gap:8px;margin-top:8px;
+              font-size:12px;color:rgba(255,255,255,.55);cursor:pointer;font-family:inherit}
+.pat-remember input[type=checkbox]{accent-color:#e8372a;cursor:pointer;margin:0}
+.pat-warn{color:rgba(232,55,42,.75);font-size:11px}
+
 /* ── RESPONSIVE ── */
 @media(max-width:860px){
   .topbar-right .updated{display:none}
@@ -409,6 +428,8 @@ footer a:hover{color:#ede9e3}
 
 <a href="#main-content" class="skip-link">Skip to posts<span class="sr-only"> (main content)</span></a>
 
+<h1 class="sr-only">LinkedIn Auto-Poster Dashboard</h1>
+
 <div class="topbar">
   <div class="logo">
     <span class="logo-mark" aria-hidden="true">LI</span>
@@ -417,7 +438,7 @@ footer a:hover{color:#ede9e3}
     Dashboard
   </div>
   <div class="topbar-right">
-    <span class="updated">Updated May 14, 2026 · 11:02 am Muscat</span>
+    <span class="updated" title="Last refreshed: May 14, 2026 · 9:03 pm Muscat">Updated May 14, 2026 · 9:03 pm Muscat</span>
     <div class="live-dot" title="Live" aria-hidden="true"></div>
     <nav class="actions" aria-label="Site actions">
       <a class="tb-btn primary" href="https://github.com/AbuAli85/LINKEDIN_POSTS/actions/workflows/auto-post.yml" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">&#9654;</span> Run workflow<span class="sr-only"> (opens in new tab)</span></a>
@@ -447,7 +468,7 @@ footer a:hover{color:#ede9e3}
   <span class="run-item"><b>Fri May 15</b> &middot; <span class="run-pillar" style="color:#818cf8">vision</span> <span style="color:#2a9a5c;font-size:.68rem;font-weight:600">&#10003;&nbsp;ready</span></span><span class="run-item"><b>Mon May 18</b> &middot; <span class="run-pillar" style="color:#e8372a">pain</span> <span style="color:#2a9a5c;font-size:.68rem;font-weight:600">&#10003;&nbsp;ready</span></span><span class="run-item"><b>Wed May 20</b> &middot; <span class="run-pillar" style="color:#2a9a5c">proof</span> <span style="color:#2a9a5c;font-size:.68rem;font-weight:600">&#10003;&nbsp;ready</span></span>
 </div>
 
-<div class="filter-bar" role="group" aria-label="Filter posts"><button class="filter-chip active" data-filter="all" onclick="filterCards('all')">All<span class="count">12</span></button><button class="filter-chip" data-filter="draft" onclick="filterCards('draft')">Needs review<span class="count">0</span></button><button class="filter-chip" data-filter="published" onclick="filterCards('published')">Published<span class="count">8</span></button><button class="filter-chip" data-filter="approved" onclick="filterCards('approved')">Approved<span class="count">4</span></button><button class="filter-chip" data-filter="pain" onclick="filterCards('pain')">Pain<span class="count">4</span></button><button class="filter-chip" data-filter="proof" onclick="filterCards('proof')">Proof<span class="count">4</span></button><button class="filter-chip" data-filter="leadership" onclick="filterCards('leadership')">Leadership<span class="count">2</span></button><button class="filter-chip" data-filter="vision" onclick="filterCards('vision')">Vision<span class="count">1</span></button><button class="filter-chip" data-filter="marketing" onclick="filterCards('marketing')">Marketing<span class="count">1</span></button></div>
+<div class="filter-bar" role="group" aria-label="Filter posts"><button type="button" class="filter-chip active" data-filter="all" aria-pressed="true" aria-label="All, 12 posts" onclick="filterCards('all')"><span>All</span><span class="count" aria-hidden="true">12</span></button><button type="button" class="filter-chip" data-filter="draft" aria-pressed="false" aria-label="Needs review, 0 posts" onclick="filterCards('draft')"><span>Needs review</span><span class="count" aria-hidden="true">0</span></button><button type="button" class="filter-chip" data-filter="published" aria-pressed="false" aria-label="Published, 8 posts" onclick="filterCards('published')"><span>Published</span><span class="count" aria-hidden="true">8</span></button><button type="button" class="filter-chip" data-filter="approved" aria-pressed="false" aria-label="Approved, 4 posts" onclick="filterCards('approved')"><span>Approved</span><span class="count" aria-hidden="true">4</span></button><button type="button" class="filter-chip" data-filter="pain" aria-pressed="false" aria-label="Pain, 4 posts" onclick="filterCards('pain')"><span>Pain</span><span class="count" aria-hidden="true">4</span></button><button type="button" class="filter-chip" data-filter="proof" aria-pressed="false" aria-label="Proof, 4 posts" onclick="filterCards('proof')"><span>Proof</span><span class="count" aria-hidden="true">4</span></button><button type="button" class="filter-chip" data-filter="leadership" aria-pressed="false" aria-label="Leadership, 2 posts" onclick="filterCards('leadership')"><span>Leadership</span><span class="count" aria-hidden="true">2</span></button><button type="button" class="filter-chip" data-filter="vision" aria-pressed="false" aria-label="Vision, 1 posts" onclick="filterCards('vision')"><span>Vision</span><span class="count" aria-hidden="true">1</span></button><button type="button" class="filter-chip" data-filter="marketing" aria-pressed="false" aria-label="Marketing, 1 posts" onclick="filterCards('marketing')"><span>Marketing</span><span class="count" aria-hidden="true">1</span></button></div>
 
 <main id="main-content">
 <div class="content">
@@ -493,18 +514,18 @@ Start a free 14-day trial at www.thesmartpro.io/try — no setup fee, no credit 
 #BusinessLeadership
 #SmartPro
 #FounderMindset</div>
-      <button class="expand-btn" aria-expanded="false" aria-controls="pt-0"
+      <button type="button" class="expand-btn" aria-expanded="false" aria-controls="pt-0"
               onclick="toggle(0)">Show more &#9660;</button>
       
       <div class="card-footer">
-        <div class="bar-track"><div class="bar-fill ok" style="width:95.6%"></div></div>
+        <div class="bar-track" role="presentation"><div class="bar-fill ok" style="width:95.6%"></div></div>
         <span class="chars ok">1434 chars</span>
         
         
         
         
-        <button class="icon-btn" id="copy-0" onclick="copyPost(0)">&#128203; Copy</button>
-        <button class="delete-btn" data-path="posts_history/20260513_124651_vision.json" data-filename="20260513_124651_vision.json" onclick="showDeleteModal(this)" title="Delete this draft permanently">&#128465; Delete</button>
+        <button type="button" class="icon-btn" id="copy-0" aria-label="Copy post text to clipboard" onclick="copyPost(0)"><span aria-hidden="true">&#128203;</span> Copy</button>
+        <button type="button" class="delete-btn" data-path="posts_history/20260513_124651_vision.json" data-filename="20260513_124651_vision.json" onclick="showDeleteModal(this)" aria-label="Delete draft 20260513_124651_vision.json" title="Delete this draft permanently"><span aria-hidden="true">&#128465;</span> Delete</button>
       </div>
     </div>
     <div class="card" id="post-1" data-pillar="pain" data-status="approved">
@@ -549,18 +570,18 @@ Start a free 14-day trial at www.thesmartpro.io/try — no setup fee, no credit 
 #SmallBusinessOman
 #HumanResources
 #SmartPro</div>
-      <button class="expand-btn" aria-expanded="false" aria-controls="pt-1"
+      <button type="button" class="expand-btn" aria-expanded="false" aria-controls="pt-1"
               onclick="toggle(1)">Show more &#9660;</button>
       
       <div class="card-footer">
-        <div class="bar-track"><div class="bar-fill ok" style="width:86.9%"></div></div>
+        <div class="bar-track" role="presentation"><div class="bar-fill ok" style="width:86.9%"></div></div>
         <span class="chars ok">1304 chars</span>
         
         
         
         
-        <button class="icon-btn" id="copy-1" onclick="copyPost(1)">&#128203; Copy</button>
-        <button class="delete-btn" data-path="posts_history/20260513_124153_pain.json" data-filename="20260513_124153_pain.json" onclick="showDeleteModal(this)" title="Delete this draft permanently">&#128465; Delete</button>
+        <button type="button" class="icon-btn" id="copy-1" aria-label="Copy post text to clipboard" onclick="copyPost(1)"><span aria-hidden="true">&#128203;</span> Copy</button>
+        <button type="button" class="delete-btn" data-path="posts_history/20260513_124153_pain.json" data-filename="20260513_124153_pain.json" onclick="showDeleteModal(this)" aria-label="Delete draft 20260513_124153_pain.json" title="Delete this draft permanently"><span aria-hidden="true">&#128465;</span> Delete</button>
       </div>
     </div>
     <div class="card" id="post-2" data-pillar="proof" data-status="published">
@@ -605,17 +626,17 @@ What&#x27;s the one payroll issue your team keeps running into?
 #WPS
 #SmartPro
 #HumanResources</div>
-      <button class="expand-btn" aria-expanded="false" aria-controls="pt-2"
+      <button type="button" class="expand-btn" aria-expanded="false" aria-controls="pt-2"
               onclick="toggle(2)">Show more &#9660;</button>
       
       <div class="card-footer">
-        <div class="bar-track"><div class="bar-fill ok" style="width:90.7%"></div></div>
+        <div class="bar-track" role="presentation"><div class="bar-fill ok" style="width:90.7%"></div></div>
         <span class="chars ok">1360 chars</span>
         
         
         <a class="li-link" href="https://www.linkedin.com/feed/update/urn:li:share:7460209015898300416/" target="_blank" rel="noopener noreferrer">View on LinkedIn &#8599;<span class="sr-only"> (opens in new tab)</span></a>
         <span class="metric-item" style="opacity:.6;border-color:rgba(232,55,42,.25);color:#e8372a" title="Sanad CTA comment failed to post">&#128172; CTA &#10007;</span>
-        <button class="icon-btn" id="copy-2" onclick="copyPost(2)">&#128203; Copy</button>
+        <button type="button" class="icon-btn" id="copy-2" aria-label="Copy post text to clipboard" onclick="copyPost(2)"><span aria-hidden="true">&#128203;</span> Copy</button>
         
       </div>
     </div>
@@ -659,17 +680,17 @@ DM me or WhatsApp +96879665522 to book a free 20-minute demo. thesmartpro.io
 #SmallBusinessOman
 #WPSOman
 #SmartPro</div>
-      <button class="expand-btn" aria-expanded="false" aria-controls="pt-3"
+      <button type="button" class="expand-btn" aria-expanded="false" aria-controls="pt-3"
               onclick="toggle(3)">Show more &#9660;</button>
       
       <div class="card-footer">
-        <div class="bar-track"><div class="bar-fill ok" style="width:81.3%"></div></div>
+        <div class="bar-track" role="presentation"><div class="bar-fill ok" style="width:81.3%"></div></div>
         <span class="chars ok">1219 chars</span>
         
         
         <a class="li-link" href="https://www.linkedin.com/feed/update/urn:li:share:7459486429576900608/" target="_blank" rel="noopener noreferrer">View on LinkedIn &#8599;<span class="sr-only"> (opens in new tab)</span></a>
         
-        <button class="icon-btn" id="copy-3" onclick="copyPost(3)">&#128203; Copy</button>
+        <button type="button" class="icon-btn" id="copy-3" aria-label="Copy post text to clipboard" onclick="copyPost(3)"><span aria-hidden="true">&#128203;</span> Copy</button>
         
       </div>
     </div>
@@ -709,18 +730,18 @@ Build for the audit before the auditor shows up.
 #WorkplaceCompliance
 #HRLeadership
 #OperationalExcellence</div>
-      <button class="expand-btn" aria-expanded="false" aria-controls="pt-4"
+      <button type="button" class="expand-btn" aria-expanded="false" aria-controls="pt-4"
               onclick="toggle(4)">Show more &#9660;</button>
       
       <div class="card-footer">
-        <div class="bar-track"><div class="bar-fill ok" style="width:74.3%"></div></div>
+        <div class="bar-track" role="presentation"><div class="bar-fill ok" style="width:74.3%"></div></div>
         <span class="chars ok">1115 chars</span>
         
         
         
         
-        <button class="icon-btn" id="copy-4" onclick="copyPost(4)">&#128203; Copy</button>
-        <button class="delete-btn" data-path="posts_history/20260509_055543_pain.json" data-filename="20260509_055543_pain.json" onclick="showDeleteModal(this)" title="Delete this draft permanently">&#128465; Delete</button>
+        <button type="button" class="icon-btn" id="copy-4" aria-label="Copy post text to clipboard" onclick="copyPost(4)"><span aria-hidden="true">&#128203;</span> Copy</button>
+        <button type="button" class="delete-btn" data-path="posts_history/20260509_055543_pain.json" data-filename="20260509_055543_pain.json" onclick="showDeleteModal(this)" aria-label="Delete draft 20260509_055543_pain.json" title="Delete this draft permanently"><span aria-hidden="true">&#128465;</span> Delete</button>
       </div>
     </div>
     <div class="card" id="post-5" data-pillar="proof" data-status="approved">
@@ -764,18 +785,18 @@ thesmartpro.io
 #WPS
 #SmartPro
 #Oman</div>
-      <button class="expand-btn" aria-expanded="false" aria-controls="pt-5"
+      <button type="button" class="expand-btn" aria-expanded="false" aria-controls="pt-5"
               onclick="toggle(5)">Show more &#9660;</button>
       
       <div class="card-footer">
-        <div class="bar-track"><div class="bar-fill ok" style="width:86.3%"></div></div>
+        <div class="bar-track" role="presentation"><div class="bar-fill ok" style="width:86.3%"></div></div>
         <span class="chars ok">1294 chars</span>
         
         
         
         
-        <button class="icon-btn" id="copy-5" onclick="copyPost(5)">&#128203; Copy</button>
-        <button class="delete-btn" data-path="posts_history/20260504_070326_proof.json" data-filename="20260504_070326_proof.json" onclick="showDeleteModal(this)" title="Delete this draft permanently">&#128465; Delete</button>
+        <button type="button" class="icon-btn" id="copy-5" aria-label="Copy post text to clipboard" onclick="copyPost(5)"><span aria-hidden="true">&#128203;</span> Copy</button>
+        <button type="button" class="delete-btn" data-path="posts_history/20260504_070326_proof.json" data-filename="20260504_070326_proof.json" onclick="showDeleteModal(this)" aria-label="Delete draft 20260504_070326_proof.json" title="Delete this draft permanently"><span aria-hidden="true">&#128465;</span> Delete</button>
       </div>
     </div>
     <div class="card" id="post-6" data-pillar="proof" data-status="published">
@@ -819,17 +840,17 @@ thesmartpro.io
 #WPS
 #PayrollAutomation
 #SmartPro</div>
-      <button class="expand-btn" aria-expanded="false" aria-controls="pt-6"
+      <button type="button" class="expand-btn" aria-expanded="false" aria-controls="pt-6"
               onclick="toggle(6)">Show more &#9660;</button>
       
       <div class="card-footer">
-        <div class="bar-track"><div class="bar-fill ok" style="width:84.7%"></div></div>
+        <div class="bar-track" role="presentation"><div class="bar-fill ok" style="width:84.7%"></div></div>
         <span class="chars ok">1271 chars</span>
         
         
         <a class="li-link" href="https://www.linkedin.com/feed/update/urn:li:share:7457670702654050305/" target="_blank" rel="noopener noreferrer">View on LinkedIn &#8599;<span class="sr-only"> (opens in new tab)</span></a>
         
-        <button class="icon-btn" id="copy-6" onclick="copyPost(6)">&#128203; Copy</button>
+        <button type="button" class="icon-btn" id="copy-6" aria-label="Copy post text to clipboard" onclick="copyPost(6)"><span aria-hidden="true">&#128203;</span> Copy</button>
         
       </div>
     </div>
@@ -873,17 +894,17 @@ DM me or WhatsApp +96879665522 to book a free 20-minute demo. thesmartpro.io
 #HROman
 #SmartPro
 #BusinessOman</div>
-      <button class="expand-btn" aria-expanded="false" aria-controls="pt-7"
+      <button type="button" class="expand-btn" aria-expanded="false" aria-controls="pt-7"
               onclick="toggle(7)">Show more &#9660;</button>
       
       <div class="card-footer">
-        <div class="bar-track"><div class="bar-fill ok" style="width:94.1%"></div></div>
+        <div class="bar-track" role="presentation"><div class="bar-fill ok" style="width:94.1%"></div></div>
         <span class="chars ok">1412 chars</span>
         
         
         <a class="li-link" href="https://www.linkedin.com/feed/update/urn:li:share:7456946169810837504/" target="_blank" rel="noopener noreferrer">View on LinkedIn &#8599;<span class="sr-only"> (opens in new tab)</span></a>
         
-        <button class="icon-btn" id="copy-7" onclick="copyPost(7)">&#128203; Copy</button>
+        <button type="button" class="icon-btn" id="copy-7" aria-label="Copy post text to clipboard" onclick="copyPost(7)"><span aria-hidden="true">&#128203;</span> Copy</button>
         
       </div>
     </div>
@@ -928,17 +949,17 @@ thesmartpro.io
 #WPS
 #SmartPro
 #BusinessOman</div>
-      <button class="expand-btn" aria-expanded="false" aria-controls="pt-8"
+      <button type="button" class="expand-btn" aria-expanded="false" aria-controls="pt-8"
               onclick="toggle(8)">Show more &#9660;</button>
       
       <div class="card-footer">
-        <div class="bar-track"><div class="bar-fill ok" style="width:83.0%"></div></div>
+        <div class="bar-track" role="presentation"><div class="bar-fill ok" style="width:83.0%"></div></div>
         <span class="chars ok">1245 chars</span>
         
         
         <a class="li-link" href="https://www.linkedin.com/feed/update/urn:li:share:7457684843695493120/" target="_blank" rel="noopener noreferrer">View on LinkedIn &#8599;<span class="sr-only"> (opens in new tab)</span></a>
         
-        <button class="icon-btn" id="copy-8" onclick="copyPost(8)">&#128203; Copy</button>
+        <button type="button" class="icon-btn" id="copy-8" aria-label="Copy post text to clipboard" onclick="copyPost(8)"><span aria-hidden="true">&#128203;</span> Copy</button>
         
       </div>
     </div>
@@ -984,17 +1005,17 @@ What made the difference in your team — clarity, consistency, or something els
 #CompanyCulture
 #FounderLessons
 #TeamBuilding</div>
-      <button class="expand-btn" aria-expanded="false" aria-controls="pt-9"
+      <button type="button" class="expand-btn" aria-expanded="false" aria-controls="pt-9"
               onclick="toggle(9)">Show more &#9660;</button>
       
       <div class="card-footer">
-        <div class="bar-track"><div class="bar-fill ok" style="width:95.2%"></div></div>
+        <div class="bar-track" role="presentation"><div class="bar-fill ok" style="width:95.2%"></div></div>
         <span class="chars ok">1428 chars</span>
         
         
         <a class="li-link" href="https://www.linkedin.com/feed/update/urn:li:share:7456714387991543808/" target="_blank" rel="noopener noreferrer">View on LinkedIn &#8599;<span class="sr-only"> (opens in new tab)</span></a>
         
-        <button class="icon-btn" id="copy-9" onclick="copyPost(9)">&#128203; Copy</button>
+        <button type="button" class="icon-btn" id="copy-9" aria-label="Copy post text to clipboard" onclick="copyPost(9)"><span aria-hidden="true">&#128203;</span> Copy</button>
         
       </div>
     </div>
@@ -1045,17 +1066,17 @@ When did you last check — really check — if your team is paid fairly?
 #Retention
 #Founders
 #BuildingTeams</div>
-      <button class="expand-btn" aria-expanded="false" aria-controls="pt-10"
+      <button type="button" class="expand-btn" aria-expanded="false" aria-controls="pt-10"
               onclick="toggle(10)">Show more &#9660;</button>
       
       <div class="card-footer">
-        <div class="bar-track"><div class="bar-fill ok" style="width:85.6%"></div></div>
+        <div class="bar-track" role="presentation"><div class="bar-fill ok" style="width:85.6%"></div></div>
         <span class="chars ok">1284 chars</span>
         
         
         <a class="li-link" href="https://www.linkedin.com/feed/update/urn:li:share:7455622091032215552/" target="_blank" rel="noopener noreferrer">View on LinkedIn &#8599;<span class="sr-only"> (opens in new tab)</span></a>
         
-        <button class="icon-btn" id="copy-10" onclick="copyPost(10)">&#128203; Copy</button>
+        <button type="button" class="icon-btn" id="copy-10" aria-label="Copy post text to clipboard" onclick="copyPost(10)"><span aria-hidden="true">&#128203;</span> Copy</button>
         
       </div>
     </div>
@@ -1106,43 +1127,25 @@ What&#x27;s the longest you&#x27;ve ever stretched a single piece of content —
 #MarketingStrategy
 #FounderMarketing
 #B2BMarketing</div>
-      <button class="expand-btn" aria-expanded="false" aria-controls="pt-11"
+      <button type="button" class="expand-btn" aria-expanded="false" aria-controls="pt-11"
               onclick="toggle(11)">Show more &#9660;</button>
       
       <div class="card-footer">
-        <div class="bar-track"><div class="bar-fill ok" style="width:78.5%"></div></div>
+        <div class="bar-track" role="presentation"><div class="bar-fill ok" style="width:78.5%"></div></div>
         <span class="chars ok">1178 chars</span>
         
         
         <a class="li-link" href="https://www.linkedin.com/feed/update/urn:li:share:7455612883721228289/" target="_blank" rel="noopener noreferrer">View on LinkedIn &#8599;<span class="sr-only"> (opens in new tab)</span></a>
         
-        <button class="icon-btn" id="copy-11" onclick="copyPost(11)">&#128203; Copy</button>
+        <button type="button" class="icon-btn" id="copy-11" aria-label="Copy post text to clipboard" onclick="copyPost(11)"><span aria-hidden="true">&#128203;</span> Copy</button>
         
       </div>
     </div>
 </div>
 
 
-    <div class="content" style="margin-top:0">
-      <h2 class="section-lbl">Pending replies (0)</h2>
-      <div class="empty" style="padding:30px 20px">No pending replies</div>
-      
-      
-    </div>
 
 
-<div class="outreach-statsbar">
-  <span class="outreach-lbl">Outreach</span>
-  <div class="stat"><div class="n">0</div><div class="l">Comments</div></div>
-  <div class="stat amber"><div class="n">0</div><div class="l">Qualified</div></div>
-  <div class="stat blue"><div class="n">0</div><div class="l">Replies drafted</div></div>
-  <div class="stat"><div class="n">0</div><div class="l">DMs queued</div></div>
-  <div class="stat green"><div class="n">0</div><div class="l">In pipeline</div></div>
-</div>
-<div class="content" style="margin-top:0;padding-top:18px">
-  <h2 class="section-lbl">Outreach Pipeline</h2>
-  <div class="empty" style="padding:24px">No comments fetched yet — run <code>python outreach.py fetch</code> or wait for the daily outreach workflow.</div>
-</div>
 
 </main>
 
@@ -1172,12 +1175,13 @@ What&#x27;s the longest you&#x27;ve ever stretched a single piece of content —
     <div class="modal-field">
       <label class="modal-label" for="revise-pat">GitHub Personal Access Token (workflow scope)</label>
       <input class="modal-input" id="revise-pat" type="password" placeholder="ghp_..." autocomplete="off" aria-describedby="revise-pat-hint">
-      <div class="modal-hint" id="revise-pat-hint">Used to trigger the revision workflow. Token saved in browser localStorage.</div>
+      <label class="pat-remember"><input type="checkbox" data-pat-remember> Keep token on this device <span class="pat-warn">(stored unencrypted — only on private devices)</span></label>
+      <div class="modal-hint" id="revise-pat-hint">By default, the token is held only for this tab and wiped when you close it.</div>
     </div>
     <div class="modal-status" id="revise-status" role="status" aria-live="polite"></div>
     <div class="modal-actions">
-      <button class="modal-confirm" id="revise-confirm-btn" onclick="confirmRevise()">&#9998; Request Changes</button>
-      <button class="modal-cancel" onclick="closeReviseModal()">Cancel</button>
+      <button type="button" class="modal-confirm" id="revise-confirm-btn" onclick="confirmRevise()">&#9998; Request Changes</button>
+      <button type="button" class="modal-cancel" onclick="closeReviseModal()">Cancel</button>
     </div>
   </div>
 </div>
@@ -1195,12 +1199,13 @@ What&#x27;s the longest you&#x27;ve ever stretched a single piece of content —
     <div class="modal-field">
       <label class="modal-label" for="edit-pat">GitHub Personal Access Token (repo scope)</label>
       <input class="modal-input" id="edit-pat" type="password" placeholder="ghp_..." autocomplete="off" aria-describedby="edit-pat-hint">
-      <div class="modal-hint" id="edit-pat-hint">Saves the edit directly to the repo as a commit.</div>
+      <label class="pat-remember"><input type="checkbox" data-pat-remember> Keep token on this device <span class="pat-warn">(stored unencrypted — only on private devices)</span></label>
+      <div class="modal-hint" id="edit-pat-hint">Saves the edit directly to the repo as a commit. By default, the token only lives for this tab.</div>
     </div>
     <div class="modal-status" id="edit-status" role="status" aria-live="polite"></div>
     <div class="modal-actions">
-      <button class="modal-confirm" id="edit-confirm-btn" onclick="confirmEdit()">&#128190; Save Edit</button>
-      <button class="modal-cancel" onclick="closeEditModal()">Cancel</button>
+      <button type="button" class="modal-confirm" id="edit-confirm-btn" onclick="confirmEdit()">&#128190; Save Edit</button>
+      <button type="button" class="modal-cancel" onclick="closeEditModal()">Cancel</button>
     </div>
   </div>
 </div>
@@ -1222,18 +1227,18 @@ What&#x27;s the longest you&#x27;ve ever stretched a single piece of content —
       <label class="modal-label" for="approve-pat">GitHub Personal Access Token (workflow scope)</label>
       <input class="modal-input" id="approve-pat" type="password" placeholder="ghp_..."
              autocomplete="off" aria-describedby="approve-pat-hint">
+      <label class="pat-remember"><input type="checkbox" data-pat-remember> Keep token on this device <span class="pat-warn">(stored unencrypted — only on private devices)</span></label>
       <div class="modal-hint" id="approve-pat-hint">
-        Saved in your browser after first use — future approvals are instant.
-        Token needs <b>workflow</b> scope.
+        Token needs <b>workflow</b> scope. By default, the token only lives for this tab.
         <a href="https://github.com/AbuAli85/LINKEDIN_POSTS/actions/workflows/auto-post.yml" target="_blank" rel="noopener noreferrer"
            style="color:rgba(255,255,255,.35)">Open Actions directly &#8599;</a>
       </div>
     </div>
     <div class="modal-status" id="approve-status" role="status" aria-live="polite"></div>
     <div class="modal-actions">
-      <button class="modal-confirm approve-green" id="approve-confirm-btn"
+      <button type="button" class="modal-confirm approve-green" id="approve-confirm-btn"
               onclick="confirmApprove()">&#10003; Approve</button>
-      <button class="modal-cancel" onclick="closeApproveModal()">Cancel</button>
+      <button type="button" class="modal-cancel" onclick="closeApproveModal()">Cancel</button>
     </div>
   </div>
 </div>
@@ -1256,16 +1261,17 @@ What&#x27;s the longest you&#x27;ve ever stretched a single piece of content —
       <label class="modal-label" for="delete-pat">GitHub Personal Access Token (repo scope)</label>
       <input class="modal-input" id="delete-pat" type="password" placeholder="ghp_..."
              autocomplete="off" aria-describedby="delete-pat-hint">
+      <label class="pat-remember"><input type="checkbox" data-pat-remember> Keep token on this device <span class="pat-warn">(stored unencrypted &mdash; only on private devices)</span></label>
       <div class="modal-hint" id="delete-pat-hint">
         Needs <b>repo</b> scope (or a fine-grained PAT with <b>contents: write</b>).
-        Token is saved in your browser for future use.
+        By default, the token only lives for this tab.
       </div>
     </div>
     <div class="modal-status" id="delete-status" role="status" aria-live="polite"></div>
     <div class="modal-actions">
-      <button class="modal-confirm" id="delete-confirm-btn" style="background:#e8372a"
+      <button type="button" class="modal-confirm" id="delete-confirm-btn" style="background:#e8372a"
               onclick="confirmDelete()">&#128465; Delete permanently</button>
-      <button class="modal-cancel" onclick="closeDeleteModal()">Cancel</button>
+      <button type="button" class="modal-cancel" onclick="closeDeleteModal()">Cancel</button>
     </div>
   </div>
 </div>
@@ -1287,16 +1293,16 @@ What&#x27;s the longest you&#x27;ve ever stretched a single piece of content —
       <label class="modal-label" for="recreate-pat">GitHub Personal Access Token (workflow scope)</label>
       <input class="modal-input" id="recreate-pat" type="password" placeholder="ghp_..."
              autocomplete="off" aria-describedby="recreate-pat-hint">
+      <label class="pat-remember"><input type="checkbox" data-pat-remember> Keep token on this device <span class="pat-warn">(stored unencrypted &mdash; only on private devices)</span></label>
       <div class="modal-hint" id="recreate-pat-hint">
-        Saved in your browser after first use — future actions are instant.
-        Token needs <b>workflow</b> scope.
+        Token needs <b>workflow</b> scope. By default, the token only lives for this tab.
       </div>
     </div>
     <div class="modal-status" id="recreate-status" role="status" aria-live="polite"></div>
     <div class="modal-actions">
-      <button class="modal-confirm" id="recreate-confirm-btn"
+      <button type="button" class="modal-confirm" id="recreate-confirm-btn"
               onclick="confirmRecreate()">&#8635; Regenerate</button>
-      <button class="modal-cancel" onclick="closeRecreateModal()">Cancel</button>
+      <button type="button" class="modal-cancel" onclick="closeRecreateModal()">Cancel</button>
     </div>
   </div>
 </div>
@@ -1371,10 +1377,31 @@ function copyPost(i) {
   });
 }
 
-/* PAT helpers */
-function _getPat() { return localStorage.getItem('gh_pat') || ''; }
-function _setPat(v) { if (v) localStorage.setItem('gh_pat', v); }
-function clearPat() { localStorage.removeItem('gh_pat'); toast('GitHub token cleared.', { variant: 'info' }); }
+/* PAT helpers — session-scoped by default; persistent only if user opts in. */
+function _getPat() {
+  return sessionStorage.getItem('gh_pat') || localStorage.getItem('gh_pat') || '';
+}
+function _setPat(v, persist) {
+  if (!v) return;
+  if (persist) {
+    localStorage.setItem('gh_pat', v);
+    sessionStorage.removeItem('gh_pat');
+  } else {
+    sessionStorage.setItem('gh_pat', v);
+    localStorage.removeItem('gh_pat');
+  }
+}
+function clearPat() {
+  sessionStorage.removeItem('gh_pat');
+  localStorage.removeItem('gh_pat');
+  toast('GitHub token cleared from this browser.', { variant: 'info' });
+}
+function _patPersist() {
+  /* Look for the checked persist toggle in the currently open modal. */
+  var open = document.querySelector('.modal-overlay.open');
+  var el   = open && open.querySelector('input[data-pat-remember]');
+  return !!(el && el.checked);
+}
 
 /* ── REVISE MODAL ── */
 function showReviseModal(btn) {
@@ -1404,7 +1431,7 @@ async function confirmRevise() {
   var cb    = document.getElementById('revise-confirm-btn');
   if (!pat)   { st.textContent = 'Enter your GitHub PAT.'; st.style.color = '#e8372a'; return; }
   if (!notes) { st.textContent = 'Describe what needs to change.'; st.style.color = '#e8372a'; return; }
-  _setPat(pat);
+  _setPat(pat, _patPersist());
   cb.textContent = 'Triggering…'; cb.disabled = true; st.textContent = '';
   try {
     var resp = await fetch(
@@ -1455,7 +1482,7 @@ async function confirmEdit() {
   var cb      = document.getElementById('edit-confirm-btn');
   if (!pat)           { st.textContent = 'Enter your GitHub PAT.'; st.style.color = '#e8372a'; return; }
   if (!content.trim()){ st.textContent = 'Post text cannot be empty.'; st.style.color = '#e8372a'; return; }
-  _setPat(pat);
+  _setPat(pat, _patPersist());
   cb.textContent = 'Saving…'; cb.disabled = true; st.textContent = '';
   try {
     var metaResp = await fetch(
@@ -1514,7 +1541,7 @@ async function confirmRecreate() {
   var st     = document.getElementById('recreate-status');
   var cb     = document.getElementById('recreate-confirm-btn');
   if (!pat) { st.textContent = 'Enter your GitHub PAT (workflow scope).'; st.style.color = '#e8372a'; return; }
-  _setPat(pat);
+  _setPat(pat, _patPersist());
   cb.innerHTML = 'Triggering…'; cb.disabled = true; st.textContent = '';
   try {
     var resp = await fetch(
@@ -1564,7 +1591,7 @@ async function confirmDelete() {
   var cb       = document.getElementById('delete-confirm-btn');
   var sourceCard = _deleteSourceBtn ? _deleteSourceBtn.closest('.card') : null;
   if (!pat) { st.textContent = 'Enter your GitHub PAT.'; st.style.color = '#e8372a'; return; }
-  _setPat(pat);
+  _setPat(pat, _patPersist());
   cb.innerHTML = 'Deleting…'; cb.disabled = true; st.textContent = '';
   try {
     var metaResp = await fetch(
@@ -1651,7 +1678,7 @@ async function confirmApprove() {
   var st   = document.getElementById('approve-status');
   var cb   = document.getElementById('approve-confirm-btn');
   if (!pat) { st.textContent = 'Enter your GitHub PAT (workflow scope).'; st.style.color = '#e8372a'; return; }
-  _setPat(pat);
+  _setPat(pat, _patPersist());
   cb.textContent = 'Approving…'; cb.disabled = true; st.textContent = '';
   await _doApproveWorkflow(path, pat, st, cb);
 }
@@ -1809,7 +1836,7 @@ async function markReplied(filePath, commentId, btn) {
   if (!pat) {
     pat = prompt('GitHub PAT (repo scope) to update the outreach file:');
     if (!pat) return;
-    _setPat(pat);
+    _setPat(pat, _patPersist());
   }
   btn.disabled = true;
   btn.textContent = 'Updating…';

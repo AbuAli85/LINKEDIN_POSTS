@@ -8,9 +8,11 @@
   "generated_at": "2026-05-15T17:17:29.076112+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 1,
-  "status": "draft",
+  "status": "superseded",
   "published": false,
   "approved": false,
   "approval_required": true,
-  "dry_run": true
+  "dry_run": true,
+  "superseded_at": "2026-05-15T19:12:21.287522+00:00",
+  "superseded_by": "20260515_191221_sanad_pro_ar.json"
 }

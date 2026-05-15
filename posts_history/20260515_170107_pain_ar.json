@@ -8,9 +8,11 @@
   "generated_at": "2026-05-15T17:01:07.931471+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 1,
-  "status": "draft",
+  "status": "superseded",
   "published": false,
   "approved": false,
   "approval_required": true,
-  "dry_run": true
+  "dry_run": true,
+  "superseded_at": "2026-05-15T19:14:27.091080+00:00",
+  "superseded_by": "20260515_191427_pain_ar.json"
 }

@@ -7,11 +7,12 @@ name: Auto-post to LinkedIn
 
 on:
   schedule:
-    # Phase 1: generate drafts — 2 days before publish day
-    # Sat→Pain(Mon)  Mon→Proof(Wed)  Wed→Vision(Fri)
+    # Phase 1: generate drafts — 1-2 days before publish day
+    # Sat→Pain(Mon)  Mon→Proof(Wed)  Wed→Sanad(Thu)+Vision(Fri)
     - cron: "0 5 * * 6,1,3"
     # Phase 2: publish approved drafts on publish day
-    - cron: "0 6 * * 1,3,5"
+    # Mon=Pain  Wed=Proof  Thu=Sanad/PRO  Fri=Vision
+    - cron: "0 6 * * 1,3,4,5"
     # Phase 3: outreach pipeline — daily at 6:00 AM UTC (10:00 AM Muscat)
     - cron: "0 6 * * *"
   workflow_dispatch:

@@ -39,15 +39,24 @@ _BRAND_CONTEXT_CANDIDATES = (
 )
 
 _BRAND_CONTEXT_SANAD = (
-    "BRAND CONTEXT: You are writing on behalf of SmartPro Hub — the platform built for PRO service "
-    "firms, Sanad offices, and government-licensing businesses in Oman. SmartPro Hub automates the "
-    "entire government services workflow: client request intake, work permit and visa tracking, MOL "
-    "filings, permit expiry alerts, PRO officer assignment, Sanad service catalog management, "
-    "client portal for request status, and automatic invoicing per service delivered. "
-    "It replaces the WhatsApp groups, shared spreadsheets, and manual follow-up that most PRO firms "
-    "still run on. Bilingual Arabic and English. 14-day free trial, no credit card. "
-    "Target readers: owners and managers of PRO service companies, Sanad offices, and HR consulting "
-    "firms in Oman who manage government filings for multiple client companies. "
+    "BRAND CONTEXT: You are writing on behalf of SmartPro Hub — the platform purpose-built for "
+    "Sanad offices and PRO service firms in Oman. "
+    "There are 924 licensed Sanad offices across Oman. Every company in Oman — from a 2-person shop "
+    "to a 500-employee enterprise — depends on a Sanad office to handle their government paperwork: "
+    "work permits, residency visas, ID cards, company registrations, labour clearances, Ministry of "
+    "Manpower filings, Civil Status Authority transactions, Royal Oman Police clearances, and more. "
+    "Most Sanad offices today manage all of this through WhatsApp groups, shared Excel files, and "
+    "handwritten registers. SmartPro Hub replaces that entirely with: structured case intake per "
+    "client company, service catalog with live pricing, automatic work permit and visa expiry alerts, "
+    "PRO officer task assignment, digital document vault per client, a client portal so companies can "
+    "track every request themselves without calling, automated invoicing per service delivered, "
+    "compliance dashboard across all clients, and bilingual Arabic/English interface. "
+    "Pricing: Starter OMR 12/month, Business OMR 25/month, Enterprise OMR 60/month. "
+    "14-day free trial, no credit card required. "
+    "Target readers: Sanad office owners and managers, PRO service firm directors, and anyone running "
+    "a government services business in Oman who manages work for multiple client companies. "
+    "The goal of every post is to make the reader feel deeply understood, surface the exact pain they "
+    "experience daily, and drive them to book a demo or start a trial. "
     f"Website: {BRAND_URL}. "
     f"End every post with this CTA on its own line: {COMPANY_CTA}"
 )
@@ -258,51 +267,73 @@ PILLARS = {
     },
 
     # ── SANAD / PRO SERVICES ─────────────────────────────────────────────────────
-    # Manually triggered — FORCE_PILLAR=sanad_pro.
-    # Targets owners of PRO service firms, Sanad offices, government-licensing businesses.
-    # Addresses the specific pain of running a multi-client government services operation.
+    # Thursday posts — targeting the 924 licensed Sanad offices across Oman.
+    # Every company in Oman depends on a Sanad office for work permits, visas,
+    # ID cards, clearances, MOL filings, and all government paperwork.
+    # This is the highest-leverage channel in the platform: win Sanad offices,
+    # reach every business they serve.
     "sanad_pro": {
-        "weight":           0.0,   # manual-only; trigger with FORCE_PILLAR=sanad_pro
-        "day":              "Tuesday",
-        "weekday":          1,
-        "generate_weekday": -1,    # manual only
-        "publish_day":      "on demand",
-        "generate_day":     "on demand",
-        "tone":             "peer-to-peer, operational, direct — write as someone who has managed a PRO office and knows exactly what it feels like to track 40 work permits across 15 clients on a shared spreadsheet",
-        "audience":         "owners and managers of PRO service companies, Sanad offices, HR consulting firms, and any Oman business managing government compliance for multiple client companies",
+        "weight":           2.5,   # high-priority scheduled pillar — 924 offices, massive channel
+        "day":              "Thursday",
+        "weekday":          3,
+        "generate_weekday": 2,     # Wednesday — 1 day before Thursday publish
+        "publish_day":      "Thursday",
+        "generate_day":     "Wednesday",
+        "tone":             "peer-to-peer, operational, direct — write as someone who has sat inside a Sanad office and knows exactly what it feels like to track 40 work permits, 15 visa renewals, and 8 MOL filings across 20 client companies using nothing but WhatsApp and Excel",
+        "audience":         "owners and managers of the 924 licensed Sanad offices in Oman, PRO service firm directors, and anyone running a government services business handling work permits, residency visas, ID cards, clearances, and Ministry filings for multiple client companies",
         "brand_context":    _BRAND_CONTEXT_SANAD,
         "formats": [
-            "Open with a specific PRO or Sanad failure moment — a permit that expired, a client who found out at the airport, a missed MOL deadline — make the reader immediately recognise it",
-            "Walk through the day-in-the-life of a PRO officer managing 15 clients with no case tracking system — show every painful step in sequence",
-            "Build the before/after: what managing government services for clients looks like without a system versus with SmartPro Hub case tracking and a client portal",
-            "List 5 specific signs that a PRO service firm's operations have outgrown their current setup — make each one precise enough that the reader recognises it",
-            "Open with a number — permits managed, clients served, government filings per month — then show what happens when you try to track that volume manually",
-            "Frame it as a client trust story: the PRO firm that started giving clients a portal to track their own cases, and what happened to renewals and referrals as a result",
+            "Open with a specific Sanad or PRO failure moment — a visa that expired, a client who found out at the airport, a missed MOL filing — make it so specific the reader stops scrolling",
+            "Walk through the exact day-in-the-life of a Sanad office manager handling 20+ client companies with no case tracking system — every painful step in sequence",
+            "Build a sharp before/after: managing government services with WhatsApp and Excel versus SmartPro Hub case tracking and a client portal — show the same week, completely different experience",
+            "Write a numbered list of 5 signs that a Sanad office has outgrown its current setup — make each one precise enough that most readers recognise at least four",
+            "Open with a number that puts the problem in scale — 924 offices, 40 permits, 15 visa renewals, 200 filings per month — then show what managing that volume without a system actually looks like",
+            "Client trust story: the Sanad office that started giving every client a portal to track their own cases — what happened to client retention and referrals in the first three months",
+            "Open with a question that forces the reader to calculate their own answer: how many work permits are you tracking right now, and where exactly is that information?",
         ],
         "topics": [
-            # Pain-angle topics
-            "How PRO firms in Oman lose clients: it is never the service, it is always the communication",
-            "Running a Sanad office with 30 clients and no case management system — what every busy week looks like",
-            "The work permit expiry your team missed — and the phone call you had to make to the client",
-            "Why most PRO service firms in Oman plateau at 15 clients — and what the ceiling is made of",
-            "Managing MOL deadlines across 20 client companies in a shared Excel — when does it break?",
-            "The government filing request that came in by WhatsApp at 8pm — how your team handles it right now",
-            "What happens to your PRO firm when your most experienced officer is on leave for two weeks",
-            "Client A calls to ask about their work permit. Client B sends a WhatsApp. Client C emails. How many hours does this take every week?",
-            "How Omanisation non-compliance sneaks up on PRO firms managing multi-client portfolios",
-            "The PRO firm that won the tender and then lost the client at renewal — what went wrong",
-            # Vision / opportunity topics
-            "What the top-performing PRO service firms in Oman are doing differently from everyone else",
-            "Sanad offices that give clients a portal to track their own cases are winning the renewal game — here is why",
-            "The PRO firm that systematised its government services workflow and doubled its client capacity without hiring",
-            "Why government digitisation in Oman is the biggest opportunity for PRO service businesses right now",
-            "What a scalable Sanad office operation looks like — and how far most firms in Oman are from it",
-            # Feature-specific topics
-            "Automatic permit expiry alerts: what changes when no renewal date can ever be missed again",
-            "What a structured PRO case workflow looks like from client request to government submission to invoice",
-            "How PRO firms use SmartPro Hub to give every client live visibility into their own government cases",
-            "The Sanad service catalog that prices itself: how dynamic service pricing works in SmartPro Hub",
-            "One compliance dashboard for 25 client companies — what the morning review actually looks like",
+            # Pain — daily operational reality
+            "There are 924 Sanad offices in Oman. Most are managing 30+ client companies on WhatsApp. Here is what that actually looks like on a busy Tuesday.",
+            "How Sanad offices in Oman lose clients: it is never the service quality, it is always the communication gap",
+            "The work permit expiry your team missed — and the exact phone call you had to make to the client afterward",
+            "Why most Sanad offices plateau at 15–20 clients — and what the operational ceiling is made of",
+            "Managing MOL filing deadlines across 20 client companies in a shared Excel file — when exactly does it break?",
+            "The government service request that came in by WhatsApp at 8pm — and how your team is expected to handle it",
+            "What happens to your Sanad office when your most experienced PRO officer is on leave for two weeks?",
+            "Client A calls about their work permit. Client B sends a WhatsApp. Client C emails. Client D walks in. How many hours does this take every single week?",
+            "Tracking 80 residency visa expiry dates across 25 companies — what system are you actually using right now?",
+            "The ID card renewal request that was submitted, processed, and collected — but nobody told the client",
+            "How Omanisation non-compliance quietly builds when you manage 10 client companies from a spreadsheet",
+            "The Sanad office that won the contract and lost the client at renewal — what went wrong between those two moments",
+            "A clearance application that needed three follow-ups, two visits, and four WhatsApp messages — for one client",
+            "What your Sanad office looks like to a client who cannot get a status update without calling you directly",
+            "The monthly MOL filing that was late because the file was on a laptop that was being repaired",
+            "Managing work permits for a client's 40 employees — how many expiry dates are stored in your head right now?",
+            "The visa that was ready for collection for three days before anyone thought to tell the client",
+            "Your Sanad office handles work permits, visas, ID cards, clearances, and MOL filings — for how many companies, tracked where exactly?",
+            # Pain — growth and scale
+            "Why the Sanad offices growing fastest in Oman all share one thing — and it is not location or pricing",
+            "At what client count does a Sanad office running on WhatsApp and Excel start making serious mistakes?",
+            "The Sanad office owner who cannot take a week off because the entire operation is in their head",
+            "How do you onboard a new PRO officer without losing track of open cases mid-handover?",
+            "The Sanad office that could not take on a new client because it had no capacity to track one more company",
+            # Vision — opportunity and industry direction
+            "There are 924 Sanad offices in Oman. The ones that digitise in the next two years will take the market. The rest will lose clients to them.",
+            "What the highest-performing Sanad offices in Oman are doing differently from the average office right now",
+            "Sanad offices that give every client a portal to track their own cases are winning the retention game",
+            "Government digitisation in Oman is accelerating. The Sanad offices that connect to it early will own the compliance services market.",
+            "What a Sanad office with 100 active client companies and zero missed deadlines actually looks like operationally",
+            "Why Oman's 924 Sanad offices represent the single biggest untapped B2B software market in the country",
+            "The Sanad office that doubled its client capacity without hiring a single new PRO officer — what changed",
+            # Proof / feature specific
+            "Zero missed permit renewals across 40 client companies for six consecutive months — what makes that possible",
+            "What automatic work permit and visa expiry alerts change about the daily routine of a Sanad office team",
+            "A client portal that shows every company the live status of every government case — without a single phone call",
+            "From WhatsApp intake to structured case tracking: what the first month looks like for a Sanad office that switches",
+            "How a Sanad office cut its client status-update calls by 80% in one month — exactly what changed",
+            "The service catalog that generates an invoice automatically when a case is closed — what that does for cash flow",
+            "One compliance dashboard: every client's work permits, visas, clearances, and MOL filings in a single morning view",
+            "What it means to hand a new PRO officer a structured case queue instead of a WhatsApp group and a spreadsheet",
         ],
     },
 

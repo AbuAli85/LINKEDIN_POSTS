@@ -41,10 +41,13 @@ _BRAND_CONTEXT_CANDIDATES = (
 _BRAND_CONTEXT_SANAD = (
     "BRAND CONTEXT: You are writing on behalf of SmartPro Hub — the platform purpose-built for "
     "Sanad offices and PRO service firms in Oman. "
-    "There are 924 licensed Sanad offices across Oman. Every company in Oman — from a 2-person shop "
-    "to a 500-employee enterprise — depends on a Sanad office to handle their government paperwork: "
-    "work permits, residency visas, ID cards, company registrations, labour clearances, Ministry of "
-    "Manpower filings, Civil Status Authority transactions, Royal Oman Police clearances, and more. "
+    "There are 924 licensed Sanad offices across Oman — and by law, they must be staffed exclusively "
+    "by Omani nationals. This is a government-mandated Omanisation channel: Sanad offices are the "
+    "legal gateway between every company in Oman and every government authority. Every business — "
+    "from a 2-person shop to a 500-employee enterprise — depends on a Sanad office to handle all their "
+    "government paperwork: work permits, residency visas, ID cards, company registrations, labour "
+    "clearances, Ministry of Manpower filings, Civil Status Authority transactions, Royal Oman Police "
+    "clearances, Omanisation certificates, and more. "
     "Most Sanad offices today manage all of this through WhatsApp groups, shared Excel files, and "
     "handwritten registers. SmartPro Hub replaces that entirely with: structured case intake per "
     "client company, service catalog with live pricing, automatic work permit and visa expiry alerts, "
@@ -293,7 +296,7 @@ PILLARS = {
         ],
         "topics": [
             # Pain — daily operational reality
-            "There are 924 Sanad offices in Oman. Most are managing 30+ client companies on WhatsApp. Here is what that actually looks like on a busy Tuesday.",
+            "There are 924 Sanad offices in Oman — staffed entirely by Omani nationals, handling every company's government paperwork. Most are still managing 30+ clients on WhatsApp. Here is what that looks like on a busy Tuesday.",
             "How Sanad offices in Oman lose clients: it is never the service quality, it is always the communication gap",
             "The work permit expiry your team missed — and the exact phone call you had to make to the client afterward",
             "Why most Sanad offices plateau at 15–20 clients — and what the operational ceiling is made of",
@@ -318,7 +321,7 @@ PILLARS = {
             "How do you onboard a new PRO officer without losing track of open cases mid-handover?",
             "The Sanad office that could not take on a new client because it had no capacity to track one more company",
             # Vision — opportunity and industry direction
-            "There are 924 Sanad offices in Oman. The ones that digitise in the next two years will take the market. The rest will lose clients to them.",
+            "924 Sanad offices. All staffed by Omani nationals. All serving every company in the country. The ones that digitise their operations first will take the market — the rest will lose clients to them.",
             "What the highest-performing Sanad offices in Oman are doing differently from the average office right now",
             "Sanad offices that give every client a portal to track their own cases are winning the retention game",
             "Government digitisation in Oman is accelerating. The Sanad offices that connect to it early will own the compliance services market.",
@@ -334,6 +337,11 @@ PILLARS = {
             "The service catalog that generates an invoice automatically when a case is closed — what that does for cash flow",
             "One compliance dashboard: every client's work permits, visas, clearances, and MOL filings in a single morning view",
             "What it means to hand a new PRO officer a structured case queue instead of a WhatsApp group and a spreadsheet",
+            # Omani-staffing angle
+            "Sanad offices are staffed entirely by Omani nationals — the only sector in Oman where 100% Omanisation is mandatory. Here is what that means for how they operate.",
+            "Every Sanad office employee is Omani. That is a strength. But when the operation runs on WhatsApp and Excel, it is also a single point of failure.",
+            "Sanad offices create direct employment for Omani nationals. SmartPro Hub is built to make those jobs more professional, more efficient, and more scalable.",
+            "Why Sanad offices — 100% Omani-staffed, government-mandated — are the most important B2B channel in Oman that nobody has built software for yet",
         ],
     },
 

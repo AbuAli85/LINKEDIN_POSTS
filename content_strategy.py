@@ -9,6 +9,8 @@ COMPANY_CTA    = "Book a 20-minute demo at www.thesmartpro.io — or WhatsApp +9
 # CTA for Sanad/PRO posts — free AI assistant is the entry point, no login needed.
 SANAD_CTA      = "Try the Sanad AI Assistant free — instant answers on work permits, visas & government fees: www.thesmartpro.io/sanad/assistant"
 SANAD_CTA_AR   = "جرّب مساعد سند الذكي مجاناً — إجابات فورية عن تصاريح العمل والتأشيرات والرسوم الحكومية: www.thesmartpro.io/sanad/assistant"
+# CTA for Arabic posts targeting companies (pain_ar pillar)
+COMPANY_CTA_AR = "احجز عرضاً تجريبياً مجانياً مدته ٢٠ دقيقة على www.thesmartpro.io — أو راسلنا على واتساب +96879665522 لمشاهدة SmartPro مباشرة."
 # CTA for posts targeting candidates (job seekers)
 CANDIDATE_CTA  = "Browse open jobs and apply at www.thesmartpro.io"
 # Legacy alias kept so existing code that references DEMO_CTA still works
@@ -56,7 +58,7 @@ _BRAND_CONTEXT_AR = (
     "المستهدفون: أصحاب الأعمال والمديرون في شركات عُمان ودول الخليج التي تضم ١٠ إلى ٥٠٠ موظف. "
     "هدف كل منشور: إبراز الألم الذي يعرفه القارئ، وبناء الثقة، وتوليد طلبات تجريب أو عروض توضيحية. "
     f"الموقع الإلكتروني: {BRAND_URL}. "
-    f"أنهِ كل منشور بهذه الدعوة للتصرف في سطر منفصل: {COMPANY_CTA}"
+    f"أنهِ كل منشور بهذه الدعوة للتصرف في سطر منفصل: {COMPANY_CTA_AR}"
 )
 
 _BRAND_CONTEXT_SANAD_AR = (
@@ -611,7 +613,7 @@ PILLARS = {
             "٩٢٤ مكتب سند في عُمان. المكاتب التي ترقمن عملياتها في السنتين القادمتين ستأخذ السوق. الباقي سيخسر العملاء لصالحها.",
             "ما الذي تفعله مكاتب سند الأفضل أداءً في عُمان بشكل مختلف عن المتوسط الآن",
             "مكاتب سند التي تمنح كل عميل بوابة لمتابعة قضاياه بنفسه تربح معركة الاحتفاظ بالعملاء",
-            "التحول الرقمي الحكومي في عُمان يتسارع. مكاتب سند التي تتصل به مبكراً ستمتلك سوق خدمات الامتثال.",
+            "عميل اتصل بمكتب سند منافس لأنك لم ترد في ١٠ دقائق — وهو يعرف أن معاملته انتظرت ثلاثة أيام بدون تحديث",
             "لماذا تُمثّل مكاتب سند الـ٩٢٤ في عُمان — المُشغَّلة بالعُمانيين حصراً — أكبر سوق برمجيات B2B غير مستغل في البلاد",
             # دليل / ميزات محددة
             "صفر تصاريح عمل منتهية الصلاحية لدى ٤٠ شركة عميل في ستة أشهر متتالية — ما الذي جعل هذا ممكناً",

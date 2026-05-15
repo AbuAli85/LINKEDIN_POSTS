@@ -18,8 +18,8 @@ _BRAND_CONTEXT = (
     "BRAND CONTEXT: You are writing on behalf of SmartPro Hub — the enterprise operations platform "
     "built exclusively for Oman and GCC businesses. SmartPro Hub brings together in one system: "
     "CRM with deal pipeline and quotations, a white-label client portal, HR and workforce management, "
-    "WPS payroll with direct bank integration, PASI and Omanisation compliance, MOL and Ministry of "
-    "Manpower government filings, Sanad office management, PRO services workflow, work permit and visa "
+    "WPS payroll with direct bank integration, PASI and Omanisation compliance, Ministry of Labour (MOL) "
+    "government filings, Sanad office management, PRO services workflow, work permit and visa "
     "tracking, e-signature contract management, automated invoicing and billing, and a growth partner "
     "programme with automatic commission tracking. "
     "It replaces WhatsApp groups, spreadsheets, and fragmented vendor systems with one connected platform. "
@@ -46,7 +46,7 @@ _BRAND_CONTEXT_AR = (
     "المصممة خصيصاً لشركات عُمان ودول الخليج العربي. تجمع SmartPro Hub في نظام واحد: "
     "إدارة علاقات العملاء مع خط صفقات وعروض الأسعار، بوابة العملاء الإلكترونية، "
     "إدارة الموارد البشرية والقوى العاملة، رواتب WPS مع تكامل مصرفي مباشر، "
-    "الامتثال لـPASI والتعُّمن، تسجيلات وزارة القوى العاملة، "
+    "الامتثال لـPASI والتعُّمن، تسجيلات وزارة العمل، "
     "إدارة مكاتب سند وخدمات PRO، تتبع تصاريح العمل والتأشيرات، "
     "إدارة العقود بالتوقيع الإلكتروني، إصدار الفواتير التلقائي، "
     "وبرنامج شركاء النمو مع تتبع العمولات تلقائياً. "
@@ -65,7 +65,7 @@ _BRAND_CONTEXT_SANAD_AR = (
     "يوجد ٩٢٤ مكتب سند مرخص في عُمان، ويشترط القانون أن يعمل بها مواطنون عُمانيون حصراً — "
     "وهي قناة التعُّمن الحكومية الإلزامية. مكاتب سند هي البوابة الرسمية بين كل شركة في عُمان "
     "وكل جهة حكومية. كل شركة تعتمد على مكتب سند لإنجاز: تصاريح العمل، "
-    "التأشيرات، بطاقات الهوية، تسجيل الشركات، تخليص وزارة القوى العاملة، "
+    "التأشيرات، بطاقات الهوية، تسجيل الشركات، تخليص وزارة العمل، "
     "معاملات هيئة الوضع المدني، تخليص الشرطة العُمانية، شهادات التعُّمن، وغيرها. "
     "معظم مكاتب سند تُدير كل هذا اليوم عبر مجموعات واتساب وملفات إكسل مشتركة وسجلات ورقية. "
     "SmartPro Hub تستبدل ذلك كلياً بـ: استقبال منظّم للقضايا لكل شركة عميل، "
@@ -97,7 +97,7 @@ _BRAND_CONTEXT_SANAD = (
     "legal gateway between every company in Oman and every government authority. Every business — "
     "from a 2-person shop to a 500-employee enterprise — depends on a Sanad office to handle all their "
     "government paperwork: work permits, residency visas, ID cards, company registrations, labour "
-    "clearances, Ministry of Manpower filings, Civil Status Authority transactions, Royal Oman Police "
+    "clearances, Ministry of Labour (MOL) filings, Civil Status Authority transactions, Royal Oman Police "
     "clearances, Omanisation certificates, and more. "
     "Most Sanad offices today manage all of this through WhatsApp groups, shared Excel files, and "
     "handwritten registers. SmartPro Hub replaces that entirely with: structured case intake per "
@@ -574,7 +574,7 @@ PILLARS = {
         "publish_day":      "Tuesday",
         "generate_day":     "Sunday",
         "language":         "ar",
-        "tone":             "من زميل إلى زميل، عملي، مباشر — اكتب كشخص جلس داخل مكتب سند ويعرف بالضبط كيف يبدو تتبع ٤٠ تصريح عمل و١٥ تأشيرة و٨ تسجيلات وزارة القوى العاملة لـ٢٠ شركة عميل بواتساب وإكسل",
+        "tone":             "من زميل إلى زميل، عملي، مباشر — اكتب كشخص جلس داخل مكتب سند ويعرف بالضبط كيف يبدو تتبع ٤٠ تصريح عمل و١٥ تأشيرة و٨ تسجيلات وزارة العمل لـ٢٠ شركة عميل بواتساب وإكسل",
         "audience":         "أصحاب ومديرو مكاتب سند الـ٩٢٤ المرخصة في عُمان، ومديرو شركات خدمات PRO، وكل من يُدير معاملات حكومية لشركات متعددة: تصاريح عمل، تأشيرات، بطاقات هوية، تسجيلات، تخليص وزاري",
         "brand_context":    _BRAND_CONTEXT_SANAD_AR,
         "formats": [
@@ -592,7 +592,7 @@ PILLARS = {
             "كيف تخسر مكاتب سند في عُمان عملاءها: ليس بسبب جودة الخدمة، بل بسبب فجوة التواصل",
             "تصريح العمل الذي انتهت صلاحيته في صمت — والمكالمة التي اضطررت لإجرائها مع العميل بعدها",
             "لماذا تتوقف معظم مكاتب سند عند ١٥-٢٠ عميلاً — وما الذي يُشكّل السقف التشغيلي؟",
-            "تتبع مواعيد تسجيل وزارة القوى العاملة لـ٢٠ شركة عميل في إكسل مشترك — متى بالضبط ينكسر هذا؟",
+            "تتبع مواعيد تسجيل وزارة العمل لـ٢٠ شركة عميل في إكسل مشترك — متى بالضبط ينكسر هذا؟",
             "طلب الخدمة الحكومية الذي وصل عبر واتساب الساعة الثامنة مساءً — وكيف يُفترض أن يتعامل معه فريقك",
             "ماذا يحدث لمكتب سندك حين يكون مسؤول PRO الأكثر خبرة في إجازة لأسبوعين؟",
             "عميل أ يتصل بشأن تصريح عمله. عميل ب يرسل واتساب. عميل ج يُرسل بريداً. عميل د يأتي شخصياً. كم ساعة يستغرق هذا كل أسبوع؟",
@@ -620,7 +620,7 @@ PILLARS = {
             "من استقبال الطلبات بواتساب إلى تتبع القضايا المنظّم: الشهر الأول لمكتب سند بعد التحول",
             "كيف قلّص مكتب سند مكالمات استفسار العملاء بنسبة ٨٠٪ في شهر واحد — بالضبط ماذا تغيّر",
             "كتالوج الخدمات الذي يُصدر الفاتورة تلقائياً حين تُغلق القضية — ما الذي يفعله هذا للتدفق النقدي",
-            "لوحة امتثال واحدة: تصاريح العمل والتأشيرات والتخليص وتسجيلات وزارة القوى العاملة لكل عملائك في نظرة صباحية واحدة",
+            "لوحة امتثال واحدة: تصاريح العمل والتأشيرات والتخليص وتسجيلات وزارة العمل لكل عملائك في نظرة صباحية واحدة",
             # مساعد سند الذكي
             "بنينا وكيل ذكاء اصطناعي يُجيب على أي سؤال عن المعاملات الحكومية في عُمان — تصاريح العمل، التأشيرات، الرسوم، تسجيل الشركات — بالعربية أو الإنجليزية. مجاني. بدون تسجيل دخول.",
             "مساعد سند الذكي: اسأله كم تكلفة تصريح العمل، وأين أقرب مكتب سند مرخص، وكيف تؤسس شركة في عُمان. يُجيب كمسؤول PRO متمرس أنجز المعاملة مئات المرات.",

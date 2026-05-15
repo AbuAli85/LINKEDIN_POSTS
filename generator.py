@@ -319,6 +319,15 @@ def _generate_once(
     return text, response.model
 
 
+def _apply_humanizer(post_text: str, pillar: str, tone: str) -> str:
+    try:
+        from humanizer import humanize
+        return humanize(post_text, pillar=pillar, tone=tone)
+    except Exception as exc:
+        print(f"WARNING: humanizer failed, using original: {exc}")
+        return post_text
+
+
 def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) -> dict:
     """Generate a LinkedIn post. Validates output and retries once if needed."""
     # Load recent posts once — reused for topic/format dedup and recent_block
@@ -352,6 +361,7 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
         last_result = (post_text, model_used)
         err = _validate(post_text, language)
         if err is None:
+            post_text = _apply_humanizer(post_text, pillar, pillar_config.get("tone", ""))
             return {
                 "pillar": pillar,
                 "topic": topic,
@@ -369,6 +379,7 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
     if last_result is None:
         raise RuntimeError("generate_once was never called — retry loop did not execute")
     post_text, model_used = last_result
+    post_text = _apply_humanizer(post_text, pillar, pillar_config.get("tone", ""))
     print(f"WARNING: publishing despite validation issue: {last_error}")
     return {
         "pillar": pillar,
@@ -435,6 +446,7 @@ def generate_job_post(job: dict, pillar_config: dict) -> dict:
         last_result = (post_text, response.model)
         err = _validate(post_text)
         if err is None:
+            post_text = _apply_humanizer(post_text, "jobs", pillar_config.get("tone", ""))
             return {
                 "pillar": "jobs",
                 "topic": f"{title} @ {company_name}",
@@ -454,6 +466,7 @@ def generate_job_post(job: dict, pillar_config: dict) -> dict:
     if last_result is None:
         raise RuntimeError("generate_once was never called for job post")
     post_text, model_used = last_result
+    post_text = _apply_humanizer(post_text, "jobs", pillar_config.get("tone", ""))
     print(f"WARNING: using job post despite validation issue: {last_error}")
     return {
         "pillar": "jobs",
@@ -506,6 +519,7 @@ def revise_post(original: dict, revision_notes: str) -> dict:
     if not text_blocks:
         raise RuntimeError("No text in revision response.")
     text = text_blocks[0].strip()
+    text = _apply_humanizer(text, original.get("pillar", ""), "")
 
     err = _validate(text)
     revised = original.copy()

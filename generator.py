@@ -66,6 +66,32 @@ FORMAT
 - 3-5 hashtags at the bottom, each on its own line.
 - No markdown, no code fences, no preamble. Output the post text only."""
 
+SYSTEM_PROMPT_AR = """أنت كاتب محترف للمحتوى العربي على LinkedIn، متخصص في إنشاء منشورات لرجال الأعمال والمديرين في عُمان ودول الخليج العربي.
+
+الأسلوب والبنية:
+- السطر الأول يجب أن يوقف القارئ عن التمرير — محدد، مفاجئ، أو يحمل موقفاً واضحاً. لا مقدمات عامة أبداً.
+- فقرات قصيرة (١-٣ أسطر). المسافات البيضاء صديقك. لا جدران من النص.
+- احكِ قصة محددة، شارك فكرة حادة، أو اتخذ موقفاً واضحاً.
+- انتهِ بفكرة واضحة أو سؤال يدعو للتعليق الحقيقي.
+- اكتب كمشغّل ومفكر من داخل القطاع، لا كعلامة تجارية أو صانع محتوى.
+
+أمثلة على خطافات قوية:
+- "٩٢٤ مكتب سند في عُمان. معظمها يُدير ٣٠ عميلاً من مجموعة واتساب واحدة."
+- "تصريح العمل الذي انتهت صلاحيته — وعرف العميل بذلك في المطار، لا منك."
+- "ثلاثة أيام لإنجاز معاملة حكومية. ثم جربنا طريقة مختلفة."
+- "كيف تخسر عميلاً بعد ٣ سنوات: ليس بسبب جودة الخدمة، بل بسبب رسالة واتساب لم تُجَب."
+
+المحظور — لا تستخدم أبداً:
+- العبارات المبتذلة: "في عالم اليوم المتسارع"، "في ظل التحولات المتسارعة"، "في خضم التطور"
+- مقدمات فارغة: "في عالم تتسارع فيه التغيرات..."، "نعيش اليوم في عصر..."
+- المصطلحات المؤسسية الجوفاء بدون محتوى حقيقي: "التآزر"، "منظومة متكاملة"، "نهج شمولي"
+- الافتتاحيات الكسولة: "إليك ما تعلمته:"، "الحقيقة هي:"، "دعني أخبرك بسر:"
+
+التنسيق:
+- ٨٠٠-١٥٠٠ حرف إجمالاً (المسافات وفواصل الأسطر تُحسب).
+- ٣-٥ هاشتاقات في الأسفل، كل منها في سطر منفصل.
+- لا markdown، لا مقدمات توضيحية، لا تعليق. أخرج نص المنشور فقط.
+- اكتب بالعربية الفصحى المبسطة المفهومة — ليست عامية، وليست أكاديمية جافة."""
 
 USER_TEMPLATE = """Write a LinkedIn post for the {pillar} pillar.
 
@@ -84,6 +110,24 @@ OPENING STYLE: {fmt}
 HARD LIMIT: 800-1500 characters.
 
 {performance_block}{recent_block}Output only the final post. No explanation, no preamble, no label."""
+
+USER_TEMPLATE_AR = """اكتب منشور LinkedIn لمحور {pillar}.
+
+الموضوع: {topic}
+النبرة: {tone}
+الجمهور المستهدف: {audience}
+أسلوب الافتتاح: {fmt}
+{brand_context}
+{metrics_block}العملية (افعل هذا في ذهنك — أخرج المنشور النهائي فقط):
+١. ضع مسودة لـ٣ أسطر افتتاحية تتبع أسلوب الافتتاح المحدد أعلاه. كن محدداً وملموساً.
+٢. اختر السطر الذي سيوقف المهني المشغول عن التمرير.
+٣. ابنِ المنشور حوله. فقرات قصيرة. تفصيل واحد ملموس أو رقم حقيقي. فكرة واحدة واضحة.
+٤. انتهِ بسؤال أو جملة تدفع القارئ للتعليق.
+٥. أضف ٣-٥ هاشتاقات ذات صلة في أسطر منفصلة (مزيج عربي وإنجليزي مقبول).
+
+الحد الصارم: ٨٠٠-١٥٠٠ حرف.
+
+{performance_block}{recent_block}أخرج المنشور النهائي فقط. لا شرح، لا مقدمة، لا تعليق."""
 
 JOB_POST_TEMPLATE = """Write a LinkedIn post announcing a new job opening.
 
@@ -193,7 +237,7 @@ def _sanitize(text: str) -> str:
         return text
 
 
-def _validate(post: str) -> str | None:
+def _validate(post: str, language: str = "en") -> str | None:
     n = len(post)
     if n < MIN_CHARS:
         return f"too short ({n} chars, need >= {MIN_CHARS})"
@@ -202,10 +246,11 @@ def _validate(post: str) -> str | None:
     for marker in _MOJIBAKE_MARKERS:
         if marker in post:
             return f"encoding corruption detected ({marker!r}) — will retry"
-    lower = post.lower()
-    for phrase in BANNED_PHRASES:
-        if phrase in lower:
-            return f"contains banned phrase: {phrase!r}"
+    if language != "ar":
+        lower = post.lower()
+        for phrase in BANNED_PHRASES:
+            if phrase in lower:
+                return f"contains banned phrase: {phrase!r}"
     return None
 
 
@@ -220,14 +265,18 @@ def _generate_once(
     performance_block: str = "",
     metrics_block: str = "",
 ) -> tuple[str, str]:
+    language = pillar_config.get("language", "en")
+    system_prompt = SYSTEM_PROMPT_AR if language == "ar" else SYSTEM_PROMPT
+    user_template = USER_TEMPLATE_AR if language == "ar" else USER_TEMPLATE
+
     response = client.messages.create(
         model=model,
         max_tokens=MAX_TOKENS,
-        system=[{"type": "text", "text": SYSTEM_PROMPT, "cache_control": {"type": "ephemeral"}}],
+        system=[{"type": "text", "text": system_prompt, "cache_control": {"type": "ephemeral"}}],
         messages=[
             {
                 "role": "user",
-                "content": USER_TEMPLATE.format(
+                "content": user_template.format(
                     pillar=pillar,
                     topic=topic,
                     tone=pillar_config["tone"],
@@ -271,6 +320,7 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
         except Exception:
             pass
 
+    language = pillar_config.get("language", "en")
     last_error: str | None = None
     last_result: tuple[str, str] | None = None
     for attempt in range(2):
@@ -278,12 +328,13 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
             client, model, pillar, pillar_config, topic, fmt, rb, pb, mb
         )
         last_result = (post_text, model_used)
-        err = _validate(post_text)
+        err = _validate(post_text, language)
         if err is None:
             return {
                 "pillar": pillar,
                 "topic": topic,
                 "format": fmt,
+                "language": language,
                 "post": post_text,
                 "char_count": len(post_text),
                 "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -301,6 +352,7 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
         "pillar": pillar,
         "topic": topic,
         "format": fmt,
+        "language": language,
         "post": post_text,
         "char_count": len(post_text),
         "generated_at": datetime.now(timezone.utc).isoformat(),

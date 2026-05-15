@@ -1,12 +1,10 @@
-"""Content strategy: SmartPro — HR, Payroll & Operations platform for Oman businesses."""
+"""Content strategy: SmartPro Hub — enterprise operations platform for Oman & GCC businesses."""
 
 import json
 from pathlib import Path
 
 BRAND_URL      = "www.thesmartpro.io"
-# CTA for posts targeting companies (HR managers, business owners).
-# Note: the /try and /talent paths previously returned 404 on the live site,
-# so the CTA now points to the main domain. Update once those pages exist.
+# CTA for posts targeting companies (HR managers, business owners, PRO service firms).
 COMPANY_CTA    = "Book a 20-minute demo at www.thesmartpro.io — or WhatsApp +96879665522 to see SmartPro live."
 # CTA for posts targeting candidates (job seekers)
 CANDIDATE_CTA  = "Browse open jobs and apply at www.thesmartpro.io"
@@ -14,12 +12,20 @@ CANDIDATE_CTA  = "Browse open jobs and apply at www.thesmartpro.io"
 DEMO_CTA       = COMPANY_CTA
 
 _BRAND_CONTEXT = (
-    "BRAND CONTEXT: You are writing on behalf of SmartPro — an end-to-end HR, payroll, "
-    "and business operations platform built for companies in Oman. It integrates directly "
-    "with Omani banks for WPS (Wage Protection System) submission and with government systems "
-    "including the Ministry of Manpower. Target buyers: business owners, HR managers, and "
-    "finance managers in Oman running companies with 10–200 employees. The goal of every post "
-    "is to build trust, surface a pain point the reader recognises, and generate trial signups or demo requests. "
+    "BRAND CONTEXT: You are writing on behalf of SmartPro Hub — the enterprise operations platform "
+    "built exclusively for Oman and GCC businesses. SmartPro Hub brings together in one system: "
+    "CRM with deal pipeline and quotations, a white-label client portal, HR and workforce management, "
+    "WPS payroll with direct bank integration, PASI and Omanisation compliance, MOL and Ministry of "
+    "Manpower government filings, Sanad office management, PRO services workflow, work permit and visa "
+    "tracking, e-signature contract management, automated invoicing and billing, and a growth partner "
+    "programme with automatic commission tracking. "
+    "It replaces WhatsApp groups, spreadsheets, and fragmented vendor systems with one connected platform. "
+    "Bilingual — Arabic and English. "
+    "Pricing: Starter OMR 12/month, Business OMR 25/month, Enterprise OMR 60/month. 14-day free trial, no credit card. "
+    "Target buyers: business owners, HR managers, finance managers, and operations directors at Oman and GCC "
+    "companies with 10–500 employees, PRO service firms, staffing agencies, Sanad offices, and any "
+    "multi-client B2B service business. "
+    "The goal of every post is to surface a pain the reader recognises, build trust, and drive trial signups or demo requests. "
     f"Website: {BRAND_URL}. "
     f"End every post with this CTA on its own line: {COMPANY_CTA}"
 )
@@ -30,6 +36,20 @@ _BRAND_CONTEXT_CANDIDATES = (
     "apply in seconds, and track their application from applied to hired. "
     f"Website: {BRAND_URL}. "
     f"End every post with this CTA on its own line: {CANDIDATE_CTA}"
+)
+
+_BRAND_CONTEXT_SANAD = (
+    "BRAND CONTEXT: You are writing on behalf of SmartPro Hub — the platform built for PRO service "
+    "firms, Sanad offices, and government-licensing businesses in Oman. SmartPro Hub automates the "
+    "entire government services workflow: client request intake, work permit and visa tracking, MOL "
+    "filings, permit expiry alerts, PRO officer assignment, Sanad service catalog management, "
+    "client portal for request status, and automatic invoicing per service delivered. "
+    "It replaces the WhatsApp groups, shared spreadsheets, and manual follow-up that most PRO firms "
+    "still run on. Bilingual Arabic and English. 14-day free trial, no credit card. "
+    "Target readers: owners and managers of PRO service companies, Sanad offices, and HR consulting "
+    "firms in Oman who manage government filings for multiple client companies. "
+    f"Website: {BRAND_URL}. "
+    f"End every post with this CTA on its own line: {COMPANY_CTA}"
 )
 
 PILLARS = {
@@ -55,6 +75,7 @@ PILLARS = {
             "Open with a question that forces the reader to calculate their own answer — time lost, money wasted, or risk carried",
         ],
         "topics": [
+            # HR & Payroll pain
             "WPS rejection on payday — what it actually costs a business in Oman beyond the technical fix",
             "How many hours does your HR team spend on payroll every month — and what is that time really worth?",
             "The hidden cost of managing leave requests over WhatsApp group chats",
@@ -74,12 +95,36 @@ PILLARS = {
             "The month payroll ran three days late because the accountant was on sick leave",
             "Tracking 80 leave balances in a shared spreadsheet — someone always gets the wrong number",
             "Why your best employees leave when HR and payroll operations are chaotic",
-            "The onboarding process that makes a new hire question whether they made the right choice",
-            "What manual HR really costs over a full year when you total every hidden expense",
-            "Why growing from 20 to 50 employees breaks most manual HR and payroll systems",
             "The salary dispute that a proper system would have prevented entirely",
             "Your entire HR operation exists in one person's head — what happens when they are unreachable",
-            "The difference between processing payroll and processing it accurately every time",
+            "Why growing from 20 to 50 employees breaks most manual HR and payroll systems",
+            # Client management & portal pain
+            "Managing 15 client companies from a WhatsApp group — what breaks and when",
+            "Your client calls to ask for a status update you cannot give because no one has logged it",
+            "Sending a quotation as a Word document attached to an email — why that approach is costing you deals",
+            "The service request that fell through the cracks because it came in on WhatsApp at 9pm",
+            "How much time does your team spend answering client status questions every week?",
+            "When a client disputes an invoice and you cannot show them the paper trail in 60 seconds",
+            "Managing client contracts across email, WhatsApp, and a shared drive — what a government audit sees",
+            "Your client signed a contract. It is now in someone's email attachment. What happens when that person leaves?",
+            # PRO / Sanad / government services pain
+            "The work permit that expired because no one was tracking the renewal date",
+            "Managing 40 client work permits in a shared Excel — what the first missed expiry actually costs",
+            "How PRO service firms in Oman lose clients: it is never about the service, it is always about visibility",
+            "The MOL filing deadline your team missed because it was written on a sticky note",
+            "Your client finds out their employee's residency visa expired from the airport — not from you",
+            "Tracking Omanisation quotas manually across 10 client companies — what happens when one is non-compliant",
+            "The government service request that took three WhatsApp messages, two phone calls, and four days",
+            "Running a Sanad office with no case tracking system — what every busy week actually looks like",
+            # Contract & e-signature pain
+            "A contract that needs three signatures in two countries — how long does that take your business right now?",
+            "The deal you lost because the contract sat unsigned in someone's email for eight days",
+            "Printing, signing, scanning, and emailing a contract in 2026 — why this is still how most Oman businesses operate",
+            "What happens when you cannot find the signed version of a client contract you need right now",
+            # Partner & commission pain
+            "Tracking referral commissions in a spreadsheet — what happens when two salespeople claim the same lead",
+            "Your growth partner brought you three clients last quarter and is still waiting for their commission statement",
+            "The commission dispute that damaged a business relationship because there was no audit trail",
         ],
     },
 
@@ -105,6 +150,7 @@ PILLARS = {
             "State the result first, then walk backwards step by step to show exactly what made it possible",
         ],
         "topics": [
+            # HR & Payroll proof
             "Payroll that used to take three days now takes under two hours — what changed",
             "Zero WPS rejections in twelve months after switching to an integrated system",
             "What onboarding ten new employees looks like when every step is automated",
@@ -116,20 +162,35 @@ PILLARS = {
             "The HR manager who finally stopped taking payroll work home on weekends",
             "From three spreadsheets to one system — what the first month of transition looked like",
             "How payroll accuracy changed employee trust at one Oman business",
-            "What happened to staff turnover when HR operations started working properly",
             "The direct bank integration that eliminated manual WPS submission permanently",
             "How one founder recovered eight hours every week by automating business operations",
-            "Employee self-service: what changes when staff can check their own leave balance anytime",
             "Processing 200 salaries in a single run — what that means in practice for the team",
-            "What the HR team said after their first fully automated payroll run",
-            "Government integration that used to consume a full week — now handled in real time",
-            "How data accuracy changed the hiring decisions at one Oman business",
-            "The operations dashboard that gave a CEO genuine visibility into their business for the first time",
-            "What end-to-end actually means when HR, payroll, and operations are in one connected system",
-            "How proper contract management stopped a costly labour dispute before it escalated",
             "The company that scaled from 30 to 120 employees without adding HR headcount",
             "Real numbers: what manual HR was costing annually before the switch",
             "How accurate labour cost data changed the way one owner made pricing decisions",
+            # Client portal & CRM proof
+            "The client portal that cut inbound status-update calls by 80% in the first month",
+            "From WhatsApp to a client portal: what the first week of transition looked like for a Muscat service firm",
+            "A quotation built, sent, and accepted in the same afternoon — what that pipeline looks like in SmartPro",
+            "How one service firm tracked 25 active client deals without a single spreadsheet",
+            "The client who renewed their contract without a single phone call — what made that possible",
+            "Before and after: what client communication looked like for a PRO firm running on WhatsApp vs. a portal",
+            "How real-time deal visibility changed the way a business owner prioritised their week",
+            # PRO / Sanad / government services proof
+            "Zero missed permit renewals in six months — how a PRO firm achieved it with automatic expiry tracking",
+            "Managing 40 client work permits from one compliance dashboard — what the daily routine now looks like",
+            "The government filing that used to take a full day — now submitted in 20 minutes from one screen",
+            "How a Sanad office in Muscat eliminated double-entry and cut admin time by half",
+            "What happened when one PRO firm gave every client a portal to track their own government cases",
+            "From paper forms and WhatsApp to structured case tracking — one Oman PRO firm's first 60 days",
+            "Omanisation compliance across 12 client companies — how one firm now reports it in minutes not days",
+            # Contract & e-signature proof
+            "A contract signed by two parties in different cities in under four minutes — what that workflow looks like",
+            "How digital contracts eliminated a class of client dispute for one Oman service business",
+            "The contract renewal that was automatic — owner got an email, clicked approve, done",
+            # Partner program proof
+            "How one growth partner tracked every referral commission in real time without a single email",
+            "The partner dashboard that replaced a monthly spreadsheet reconciliation with live numbers",
         ],
     },
 
@@ -155,6 +216,7 @@ PILLARS = {
             "Before/after: describe what a business looks like before and after it builds proper operational infrastructure — show how it feels to run",
         ],
         "topics": [
+            # Broad Oman business vision
             "Oman Vision 2040 demands private sector productivity — that starts with how you run daily operations",
             "The real difference between Oman businesses that scale and businesses that stay stuck",
             "Why digital transformation in Oman is no longer a choice for any company with employees",
@@ -178,8 +240,69 @@ PILLARS = {
             "The compliance landscape in Oman — what is tightening and what it will mean for your business",
             "Why government system integrations are a competitive opportunity, not just an administrative burden",
             "Building an Oman business that is ready for foreign investment — what investors check before they commit",
-            "The platform economy and what it means for service businesses operating in Oman",
-            "What world-class operations look like when you are building the whole thing from Muscat",
+            # PRO / Sanad industry vision
+            "The PRO services industry in Oman is moving from WhatsApp to platforms — what that means for firms that adapt early",
+            "What a modern Sanad office looks like in 2026 — and why the ones running on spreadsheets will not survive the next five years",
+            "Government digitisation in Oman is accelerating — the service businesses that connect to it now will own the market",
+            "The client portal is becoming the baseline expectation in Oman B2B — service firms that still rely on WhatsApp updates are losing contracts to those that do not",
+            "Why Oman's government services sector will consolidate around platforms — and what that means if you run a PRO firm today",
+            "The competitive advantage of a Sanad office that can show every client the live status of every government case at any moment",
+            # Client experience vision
+            "The future of B2B client relationships in Oman is self-service — what your business needs to be ready",
+            "What Oman's most successful service firms are building now that their clients did not know they wanted yet",
+            "The business that gives clients a portal instead of a phone number will win the next decade of Oman B2B",
+            # Partner economy vision
+            "The partner economy is arriving in Oman — what it means to build a growth model that rewards the people who bring you clients",
+            "Why referral programmes with transparent commission tracking are the most efficient sales channel most Oman businesses are not using",
+        ],
+    },
+
+    # ── SANAD / PRO SERVICES ─────────────────────────────────────────────────────
+    # Manually triggered — FORCE_PILLAR=sanad_pro.
+    # Targets owners of PRO service firms, Sanad offices, government-licensing businesses.
+    # Addresses the specific pain of running a multi-client government services operation.
+    "sanad_pro": {
+        "weight":           0.0,   # manual-only; trigger with FORCE_PILLAR=sanad_pro
+        "day":              "Tuesday",
+        "weekday":          1,
+        "generate_weekday": -1,    # manual only
+        "publish_day":      "on demand",
+        "generate_day":     "on demand",
+        "tone":             "peer-to-peer, operational, direct — write as someone who has managed a PRO office and knows exactly what it feels like to track 40 work permits across 15 clients on a shared spreadsheet",
+        "audience":         "owners and managers of PRO service companies, Sanad offices, HR consulting firms, and any Oman business managing government compliance for multiple client companies",
+        "brand_context":    _BRAND_CONTEXT_SANAD,
+        "formats": [
+            "Open with a specific PRO or Sanad failure moment — a permit that expired, a client who found out at the airport, a missed MOL deadline — make the reader immediately recognise it",
+            "Walk through the day-in-the-life of a PRO officer managing 15 clients with no case tracking system — show every painful step in sequence",
+            "Build the before/after: what managing government services for clients looks like without a system versus with SmartPro Hub case tracking and a client portal",
+            "List 5 specific signs that a PRO service firm's operations have outgrown their current setup — make each one precise enough that the reader recognises it",
+            "Open with a number — permits managed, clients served, government filings per month — then show what happens when you try to track that volume manually",
+            "Frame it as a client trust story: the PRO firm that started giving clients a portal to track their own cases, and what happened to renewals and referrals as a result",
+        ],
+        "topics": [
+            # Pain-angle topics
+            "How PRO firms in Oman lose clients: it is never the service, it is always the communication",
+            "Running a Sanad office with 30 clients and no case management system — what every busy week looks like",
+            "The work permit expiry your team missed — and the phone call you had to make to the client",
+            "Why most PRO service firms in Oman plateau at 15 clients — and what the ceiling is made of",
+            "Managing MOL deadlines across 20 client companies in a shared Excel — when does it break?",
+            "The government filing request that came in by WhatsApp at 8pm — how your team handles it right now",
+            "What happens to your PRO firm when your most experienced officer is on leave for two weeks",
+            "Client A calls to ask about their work permit. Client B sends a WhatsApp. Client C emails. How many hours does this take every week?",
+            "How Omanisation non-compliance sneaks up on PRO firms managing multi-client portfolios",
+            "The PRO firm that won the tender and then lost the client at renewal — what went wrong",
+            # Vision / opportunity topics
+            "What the top-performing PRO service firms in Oman are doing differently from everyone else",
+            "Sanad offices that give clients a portal to track their own cases are winning the renewal game — here is why",
+            "The PRO firm that systematised its government services workflow and doubled its client capacity without hiring",
+            "Why government digitisation in Oman is the biggest opportunity for PRO service businesses right now",
+            "What a scalable Sanad office operation looks like — and how far most firms in Oman are from it",
+            # Feature-specific topics
+            "Automatic permit expiry alerts: what changes when no renewal date can ever be missed again",
+            "What a structured PRO case workflow looks like from client request to government submission to invoice",
+            "How PRO firms use SmartPro Hub to give every client live visibility into their own government cases",
+            "The Sanad service catalog that prices itself: how dynamic service pricing works in SmartPro Hub",
+            "One compliance dashboard for 25 client companies — what the morning review actually looks like",
         ],
     },
 
@@ -206,16 +329,35 @@ PILLARS = {
             "Before/after: the manual process most Oman businesses run today versus SmartPro — end with a clear 20-minute demo invitation",
         ],
         "topics": [
+            # HR / payroll conversion
             "If you run a business in Oman with 10 or more employees — I want to show you something specific",
-            "SmartPro: one platform for HR, payroll, and business operations built for Oman",
-            "WPS compliance made fully automatic — what SmartPro does for Oman businesses every month",
-            "What a 20-minute SmartPro demo shows you — and what you will know by the end of it",
-            "Three problems SmartPro solves that most Oman businesses deal with every single month",
+            "SmartPro Hub: one platform for HR, payroll, CRM, client portal, and government compliance in Oman",
+            "WPS compliance made fully automatic — what SmartPro Hub does for Oman businesses every month",
+            "What a 20-minute SmartPro Hub demo shows you — and what you will know by the end of it",
+            "Three problems SmartPro Hub solves that most Oman businesses deal with every single month",
             "If payroll still takes your team more than four hours — there is a faster and more accurate way",
             "What SmartPro's direct bank integration means for your WPS submission process",
-            "Built specifically for Oman: what makes SmartPro different from generic HR software",
-            "See SmartPro handle your entire payroll run automatically — free 20-minute demo",
-            "SmartPro: HR, payroll, operations, government compliance — one connected platform for Oman",
+            "Built specifically for Oman: what makes SmartPro Hub different from generic HR software",
+            "See SmartPro Hub handle your entire payroll run automatically — free 20-minute demo",
+            # Client management / CRM conversion
+            "If you manage more than five client companies — SmartPro Hub has a dashboard built for exactly that",
+            "Replace the WhatsApp group and the shared spreadsheet: SmartPro Hub's client portal in 20 minutes",
+            "Send a professional quotation, get it signed, deliver the service, generate the invoice — all in one system",
+            "What SmartPro Hub's CRM shows a business owner that a spreadsheet never can",
+            # PRO / Sanad conversion
+            "If you run a PRO service firm or Sanad office in Oman — this 20-minute demo is built for you",
+            "SmartPro Hub tracks every work permit, visa, and MOL filing across all your clients — automatically",
+            "What automatic permit expiry alerts mean for a PRO firm managing 30+ client work permits",
+            "See how Sanad offices use SmartPro Hub to give every client live visibility into their government cases",
+            # Contract conversion
+            "Sign contracts digitally, store them centrally, get renewal alerts automatically — SmartPro Hub",
+            "The e-signature workflow that replaces printing, scanning, and emailing — see it in 20 minutes",
+            # Partner programme conversion
+            "SmartPro Hub's growth partner programme: refer clients, track commissions in real time, get paid automatically",
+            "If you know Oman businesses that need better operations — SmartPro Hub's partner programme rewards every referral",
+            # Trial CTA
+            "SmartPro Hub: 14-day free trial, no credit card required — starts at OMR 12/month after trial",
+            "Start your SmartPro Hub trial today: HR, payroll, CRM, client portal, and government compliance from OMR 12/month",
         ],
     },
 

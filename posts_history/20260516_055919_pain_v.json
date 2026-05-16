@@ -8,11 +8,12 @@
   "generated_at": "2026-05-16T05:59:29.789605+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 1,
-  "status": "draft",
+  "status": "approved",
   "published": false,
-  "approved": false,
-  "approval_required": true,
-  "dry_run": true,
+  "approved": true,
+  "approval_required": false,
+  "dry_run": false,
   "is_variant": true,
-  "variant_of": "20260516_055920_pain.json"
+  "variant_of": "20260516_055920_pain.json",
+  "approved_at": "2026-05-16T09:52:06.967192+00:00"
 }

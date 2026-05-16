@@ -477,7 +477,7 @@ footer a:hover{color:#ede9e3}
     Dashboard
   </div>
   <div class="topbar-right">
-    <span class="updated" title="Last refreshed: May 16, 2026 · 1:22 pm Muscat">Updated May 16, 2026 · 1:22 pm Muscat</span>
+    <span class="updated" title="Last refreshed: May 16, 2026 · 1:26 pm Muscat">Updated May 16, 2026 · 1:26 pm Muscat</span>
     <div class="live-dot" title="Live" aria-hidden="true"></div>
     <nav class="actions" aria-label="Site actions">
       <a class="tb-btn primary" href="https://github.com/AbuAli85/LINKEDIN_POSTS/actions/workflows/auto-post.yml" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">&#9654;</span> Run workflow<span class="sr-only"> (opens in new tab)</span></a>
@@ -2539,9 +2539,11 @@ function applyFilters() {
   cards.forEach(function(card) {
     var status  = card.getAttribute('data-status') || '';
     var pillar  = card.getAttribute('data-pillar') || '';
-    var variant = card.getAttribute('data-variant') || '';
+    var isVariant = card.getAttribute('data-variant') === 'true';
+    // Variants are hidden from all views except the explicit Variants chip
+    if (isVariant && key !== 'variant') { card.style.display = 'none'; return; }
     var chipOk  = key === 'all' || key === status || key === pillar
-                  || (key === 'variant' && variant === 'true');
+                  || (key === 'variant' && isVariant);
     var searchOk = !q || card.textContent.toLowerCase().indexOf(q) !== -1;
     var show = chipOk && searchOk;
     card.style.display = show ? '' : 'none';

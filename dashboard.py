@@ -1179,9 +1179,11 @@ function applyFilters() {
   cards.forEach(function(card) {
     var status  = card.getAttribute('data-status') || '';
     var pillar  = card.getAttribute('data-pillar') || '';
-    var variant = card.getAttribute('data-variant') || '';
+    var isVariant = card.getAttribute('data-variant') === 'true';
+    // Variants are hidden from all views except the explicit Variants chip
+    if (isVariant && key !== 'variant') { card.style.display = 'none'; return; }
     var chipOk  = key === 'all' || key === status || key === pillar
-                  || (key === 'variant' && variant === 'true');
+                  || (key === 'variant' && isVariant);
     var searchOk = !q || card.textContent.toLowerCase().indexOf(q) !== -1;
     var show = chipOk && searchOk;
     card.style.display = show ? '' : 'none';

@@ -40,7 +40,7 @@ def _issue_card(issue: dict) -> str:
     opening   = html.escape((issue.get("opening") or "")[:280])
 
     status_badge = {
-        "draft":     '<span class="badge needs-review">Draft</span>',
+        "draft":     '<span class="badge draft">Draft</span>',
         "approved":  '<span class="badge approved">Approved</span>',
         "sent":      '<span class="badge published">&#10003; Sent</span>',
     }.get(status, f'<span class="badge">{html.escape(status)}</span>')
@@ -56,10 +56,25 @@ def _issue_card(issue: dict) -> str:
             "</div>"
         )
 
+    num_esc = html.escape(str(num))
+
+    draft_actions = ""
+    if status == "draft":
+        draft_actions = f"""
+      <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06)">
+        <span style="font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.08em;align-self:center;margin-right:2px">Newsletter:</span>
+        <button type="button" class="approve-btn" style="font-size:11px;padding:6px 14px"
+                onclick="showNewsletterApproveModal('{num_esc}')">&#10003; Approve &amp; Test Send</button>
+        <button type="button" class="rev-btn rev-recreate"
+                onclick="showNewsletterTestModal('{num_esc}')">&#128231; Send Test</button>
+      </div>"""
+    elif status == "sent":
+        draft_actions = '<div style="margin-top:10px"><span class="badge published" style="font-size:11px">&#10003; Sent to audience</span></div>'
+
     return f"""
-    <div class="card news-card" data-issue="{num}">
+    <div class="card news-card" data-issue="{num_esc}">
       <div class="card-header">
-        <span class="pillar-tag" style="background:rgba(42,154,92,.15);color:#2a9a5c;border-color:rgba(42,154,92,.35)">NEWSLETTER &middot; #{num}</span>
+        <span class="pillar-tag" style="background:rgba(42,154,92,.15);color:#2a9a5c;border-color:rgba(42,154,92,.35)">NEWSLETTER &middot; #{num_esc}</span>
         {status_badge}
         <span class="meta-right">
           <span class="model-tag">{html.escape(model)}</span>
@@ -70,8 +85,9 @@ def _issue_card(issue: dict) -> str:
       <div class="news-preview">{preview}</div>
       <div class="post-text collapsed" style="margin-top:10px">{opening}&hellip;</div>
       {sent_info}
+      {draft_actions}
       <div class="card-footer" style="margin-top:14px">
-        <span class="chars" style="color:rgba(255,255,255,.45)">Issue #{num}</span>
+        <span class="chars" style="color:rgba(255,255,255,.45)">Issue #{num_esc}</span>
         <span style="color:rgba(255,255,255,.3);font-size:11px;font-family:'DM Mono',monospace">
           newsletter_history/{html.escape(issue.get("_filename", ""))}
         </span>

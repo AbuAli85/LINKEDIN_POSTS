@@ -233,6 +233,8 @@ nav.actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
 .badge.failed     {background:rgba(232,55,42,.12) ;color:#e8372a;border:1px solid rgba(232,55,42,.25)}
 .badge.dry-run    {background:rgba(255,255,255,.05);color:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.1)}
 .badge.superseded {background:rgba(255,255,255,.03);color:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.07)}
+.badge.variant    {background:rgba(255,255,255,.05);color:rgba(255,255,255,.4); border:1px solid rgba(255,255,255,.1)}
+.variant-link{font-size:11px;color:rgba(255,255,255,.35);margin-top:4px;display:block;font-family:'DM Mono',monospace}
 
 .meta-right{margin-left:auto;display:flex;gap:8px;align-items:center}
 .model-tag{font-size:10px;background:rgba(129,140,248,.1);color:#818cf8;
@@ -608,7 +610,9 @@ document.addEventListener('keydown', function(e) {
     else if (open.id === 'edit-modal')     closeEditModal();
     else if (open.id === 'approve-modal')  closeApproveModal();
     else if (open.id === 'recreate-modal') closeRecreateModal();
-    else if (open.id === 'delete-modal')   closeDeleteModal();
+    else if (open.id === 'delete-modal')          closeDeleteModal();
+    else if (open.id === 'newsletter-approve-modal') closeNewsletterApproveModal();
+    else if (open.id === 'newsletter-test-modal') closeNewsletterTestModal();
   }
 });
 
@@ -1173,9 +1177,11 @@ function applyFilters() {
   var cards = document.querySelectorAll('.card');
   var shown = 0;
   cards.forEach(function(card) {
-    var status = card.getAttribute('data-status') || '';
-    var pillar = card.getAttribute('data-pillar') || '';
-    var chipOk = key === 'all' || key === status || key === pillar;
+    var status  = card.getAttribute('data-status') || '';
+    var pillar  = card.getAttribute('data-pillar') || '';
+    var variant = card.getAttribute('data-variant') || '';
+    var chipOk  = key === 'all' || key === status || key === pillar
+                  || (key === 'variant' && variant === 'true');
     var searchOk = !q || card.textContent.toLowerCase().indexOf(q) !== -1;
     var show = chipOk && searchOk;
     card.style.display = show ? '' : 'none';
@@ -1200,6 +1206,104 @@ function _bindSearch() {
   if (clr) clr.addEventListener('click', function() { inp.value = ''; applyFilters(); inp.focus(); });
 }
 _bindSearch();
+
+/* ── NEWSLETTER APPROVE MODAL ── */
+var _nlApproveSourceBtn = null;
+function showNewsletterApproveModal(issueNum) {
+  _nlApproveSourceBtn = document.activeElement;
+  document.getElementById('nl-approve-issue-num').value = issueNum;
+  document.getElementById('nl-approve-issue-display').textContent = '#' + issueNum;
+  document.getElementById('nl-approve-pat').value = _getPat();
+  document.getElementById('nl-approve-status').textContent = '';
+  var cb = document.getElementById('nl-approve-confirm-btn');
+  cb.textContent = '✓ Approve & Test Send'; cb.disabled = false;
+  document.getElementById('newsletter-approve-modal').classList.add('open');
+  setTimeout(function() {
+    var pat = document.getElementById('nl-approve-pat');
+    if (pat.value) document.getElementById('nl-approve-confirm-btn').focus();
+    else pat.focus();
+  }, 50);
+}
+function closeNewsletterApproveModal() {
+  document.getElementById('newsletter-approve-modal').classList.remove('open');
+  if (_nlApproveSourceBtn) { _nlApproveSourceBtn.focus(); _nlApproveSourceBtn = null; }
+}
+document.getElementById('newsletter-approve-modal').addEventListener('click', function(e) { if (e.target === this) closeNewsletterApproveModal(); });
+
+async function confirmNewsletterApprove() {
+  var pat = document.getElementById('nl-approve-pat').value.trim();
+  var num = document.getElementById('nl-approve-issue-num').value;
+  var st  = document.getElementById('nl-approve-status');
+  var cb  = document.getElementById('nl-approve-confirm-btn');
+  if (!pat) { st.textContent = 'Enter your GitHub PAT (workflow scope).'; st.style.color = '#e8372a'; return; }
+  _setPat(pat, _patPersist());
+  cb.textContent = 'Triggering…'; cb.disabled = true; st.textContent = '';
+  try {
+    var resp = await fetch(
+      'https://api.github.com/repos/' + _REPO + '/actions/workflows/newsletter.yml/dispatches',
+      { method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + pat, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ref: _BRANCH, inputs: { action: 'generate_and_test', issue_number: num } }) }
+    );
+    if (resp.status === 204) {
+      closeNewsletterApproveModal();
+      toast('Newsletter issue #' + num + ' — test send triggered.', { variant: 'success' });
+    } else {
+      var e = await resp.json().catch(function() { return {}; });
+      st.textContent = 'Error ' + resp.status + ': ' + (e.message || 'check PAT has workflow scope');
+      st.style.color = '#e8372a'; cb.textContent = '✓ Approve & Test Send'; cb.disabled = false;
+    }
+  } catch(e) { st.textContent = 'Network error: ' + e.message; st.style.color = '#e8372a'; cb.textContent = '✓ Approve & Test Send'; cb.disabled = false; }
+}
+
+/* ── NEWSLETTER TEST SEND MODAL ── */
+var _nlTestSourceBtn = null;
+function showNewsletterTestModal(issueNum) {
+  _nlTestSourceBtn = document.activeElement;
+  document.getElementById('nl-test-issue-num').value = issueNum;
+  document.getElementById('nl-test-issue-display').textContent = '#' + issueNum;
+  document.getElementById('nl-test-pat').value = _getPat();
+  document.getElementById('nl-test-status').textContent = '';
+  var cb = document.getElementById('nl-test-confirm-btn');
+  cb.textContent = '📧 Send Test Email'; cb.disabled = false;
+  document.getElementById('newsletter-test-modal').classList.add('open');
+  setTimeout(function() {
+    var pat = document.getElementById('nl-test-pat');
+    if (pat.value) document.getElementById('nl-test-confirm-btn').focus();
+    else pat.focus();
+  }, 50);
+}
+function closeNewsletterTestModal() {
+  document.getElementById('newsletter-test-modal').classList.remove('open');
+  if (_nlTestSourceBtn) { _nlTestSourceBtn.focus(); _nlTestSourceBtn = null; }
+}
+document.getElementById('newsletter-test-modal').addEventListener('click', function(e) { if (e.target === this) closeNewsletterTestModal(); });
+
+async function confirmNewsletterTest() {
+  var pat = document.getElementById('nl-test-pat').value.trim();
+  var num = document.getElementById('nl-test-issue-num').value;
+  var st  = document.getElementById('nl-test-status');
+  var cb  = document.getElementById('nl-test-confirm-btn');
+  if (!pat) { st.textContent = 'Enter your GitHub PAT (workflow scope).'; st.style.color = '#e8372a'; return; }
+  _setPat(pat, _patPersist());
+  cb.textContent = 'Triggering…'; cb.disabled = true; st.textContent = '';
+  try {
+    var resp = await fetch(
+      'https://api.github.com/repos/' + _REPO + '/actions/workflows/newsletter.yml/dispatches',
+      { method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + pat, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ref: _BRANCH, inputs: { action: 'test_send', issue_number: num } }) }
+    );
+    if (resp.status === 204) {
+      closeNewsletterTestModal();
+      toast('Test email for issue #' + num + ' triggered — check your inbox.', { variant: 'success' });
+    } else {
+      var e = await resp.json().catch(function() { return {}; });
+      st.textContent = 'Error ' + resp.status + ': ' + (e.message || 'check PAT has workflow scope');
+      st.style.color = '#e8372a'; cb.textContent = '📧 Send Test Email'; cb.disabled = false;
+    }
+  } catch(e) { st.textContent = 'Network error: ' + e.message; st.style.color = '#e8372a'; cb.textContent = '📧 Send Test Email'; cb.disabled = false; }
+}
 
 /* ── CSV EXPORT ── */
 function _csvCell(v) {
@@ -1377,11 +1481,18 @@ def _card(post: dict, idx: int) -> str:
             f'<span aria-hidden="true">&#128465;</span> Delete</button>'
         )
 
+    is_variant  = post.get("is_variant", False)
+    has_variant = post.get("has_variant", False)
+    variant_attr = ' data-variant="true"' if is_variant else ""
+
+    variant_badge = ' <span class="badge variant" title="This is a hook variant">Hook variant</span>' if is_variant else ""
+    variant_link  = '<span class="variant-link">&#8627; Hook variant available</span>' if has_variant else ""
+
     return f"""
-    <div class="card" id="post-{idx}" data-pillar="{pillar_val}" data-status="{status_key}">
+    <div class="card" id="post-{idx}" data-pillar="{pillar_val}" data-status="{status_key}"{variant_attr}>
       <div class="card-header">
         <span class="pillar-tag {pillar_val}">{pillar}</span>
-        {status}
+        {status}{variant_badge}
         <span class="meta-right">
           <span class="model-tag">{model_short}</span>
           <span class="date">{date_str}</span>
@@ -1394,6 +1505,7 @@ def _card(post: dict, idx: int) -> str:
       <div class="post-text collapsed" id="pt-{idx}">{post_text}</div>
       <button type="button" class="expand-btn" aria-expanded="false" aria-controls="pt-{idx}"
               onclick="toggle({idx})">Show more &#9660;</button>
+      {variant_link}
       {review_actions}
       <div class="card-footer">
         <div class="bar-track" role="presentation"><div class="bar-fill {char_cls}" style="width:{char_pct:.1f}%"></div></div>
@@ -1771,6 +1883,8 @@ def generate(posts: list[dict]) -> str:
     runs_html     = "".join(_run_html(r)     for r in next_runs(3))
     pub_runs_html = "".join(_pub_run_html(r) for r in next_publish_runs(3))
 
+    n_variants = sum(1 for p in posts if p.get("is_variant"))
+
     _chip_defs = [
         ("All",          "all",       total),
         ("Needs review", "draft",     n_drafts),
@@ -1779,6 +1893,8 @@ def generate(posts: list[dict]) -> str:
     ]
     if n_failed:
         _chip_defs.append(("Failed", "failed", n_failed))
+    if n_variants:
+        _chip_defs.append(("Variants", "variant", n_variants))
     for _p, _c in sorted(counts.items(), key=lambda x: -x[1]):
         _chip_defs.append((_p.capitalize(), _p, _c))
     filter_bar_html = (
@@ -2075,6 +2191,63 @@ def generate(posts: list[dict]) -> str:
       <button type="button" class="modal-confirm" id="recreate-confirm-btn"
               onclick="confirmRecreate()">&#8635; Regenerate</button>
       <button type="button" class="modal-cancel" onclick="closeRecreateModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Newsletter Approve & Test Send modal -->
+<div class="modal-overlay" id="newsletter-approve-modal" role="dialog" aria-modal="true" aria-labelledby="nl-approve-modal-title">
+  <div class="modal-box">
+    <h3 id="nl-approve-modal-title">&#10003; Approve Newsletter Issue</h3>
+    <input type="hidden" id="nl-approve-issue-num">
+    <div class="modal-field">
+      <span class="modal-label">Issue</span>
+      <code class="modal-path" id="nl-approve-issue-display"></code>
+    </div>
+    <div class="modal-field">
+      <div style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.6">
+        Triggers the <b>generate_and_test</b> workflow — drafts the next newsletter issue
+        and sends a test email to <code style="font-family:'DM Mono',monospace;font-size:12px;color:rgba(255,255,255,.4)">NEWSLETTER_TEST_TO</code>.
+      </div>
+    </div>
+    <div class="modal-field">
+      <label class="modal-label" for="nl-approve-pat">GitHub Personal Access Token (workflow scope)</label>
+      <input class="modal-input" id="nl-approve-pat" type="password" placeholder="ghp_..." autocomplete="off">
+      <label class="pat-remember"><input type="checkbox" data-pat-remember> Keep token on this device <span class="pat-warn">(stored unencrypted &mdash; only on private devices)</span></label>
+    </div>
+    <div class="modal-status" id="nl-approve-status" role="status" aria-live="polite"></div>
+    <div class="modal-actions">
+      <button type="button" class="modal-confirm approve-green" id="nl-approve-confirm-btn"
+              onclick="confirmNewsletterApprove()">&#10003; Approve &amp; Test Send</button>
+      <button type="button" class="modal-cancel" onclick="closeNewsletterApproveModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Newsletter Test Send modal -->
+<div class="modal-overlay" id="newsletter-test-modal" role="dialog" aria-modal="true" aria-labelledby="nl-test-modal-title">
+  <div class="modal-box">
+    <h3 id="nl-test-modal-title">&#128231; Send Test Email</h3>
+    <input type="hidden" id="nl-test-issue-num">
+    <div class="modal-field">
+      <span class="modal-label">Issue</span>
+      <code class="modal-path" id="nl-test-issue-display"></code>
+    </div>
+    <div class="modal-field">
+      <div style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.6">
+        Sends the existing draft to <code style="font-family:'DM Mono',monospace;font-size:12px;color:rgba(255,255,255,.4)">NEWSLETTER_TEST_TO</code> only — does not generate a new draft.
+      </div>
+    </div>
+    <div class="modal-field">
+      <label class="modal-label" for="nl-test-pat">GitHub Personal Access Token (workflow scope)</label>
+      <input class="modal-input" id="nl-test-pat" type="password" placeholder="ghp_..." autocomplete="off">
+      <label class="pat-remember"><input type="checkbox" data-pat-remember> Keep token on this device <span class="pat-warn">(stored unencrypted &mdash; only on private devices)</span></label>
+    </div>
+    <div class="modal-status" id="nl-test-status" role="status" aria-live="polite"></div>
+    <div class="modal-actions">
+      <button type="button" class="modal-confirm" id="nl-test-confirm-btn"
+              onclick="confirmNewsletterTest()">&#128231; Send Test Email</button>
+      <button type="button" class="modal-cancel" onclick="closeNewsletterTestModal()">Cancel</button>
     </div>
   </div>
 </div>

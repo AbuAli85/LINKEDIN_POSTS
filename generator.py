@@ -539,6 +539,91 @@ def revise_post(original: dict, revision_notes: str) -> dict:
     return revised
 
 
+_ARABIC_PILLARS = {"pain_ar", "sanad_pro_ar"}
+
+_VARIANT_SYSTEM = """You are an elite LinkedIn ghostwriter. Your job is to rewrite ONLY the opening hook of a post — the first 1-2 lines — using a different hook style.
+
+Keep everything after the first paragraph exactly as-is. Only rewrite the opening hook.
+
+The new hook must:
+- Deliver the same core message as the original
+- Use a noticeably different approach (e.g. if original is a question, try a bold statement or a data-lead)
+- Be specific and concrete — no vague generalities
+- Stay within the same character budget (800-1500 chars total)
+
+Output only the complete revised post. No explanation, no preamble."""
+
+_VARIANT_USER = """Original post (pillar: {pillar}, tone: {tone}):
+
+{post}
+
+Write a version with a different opening hook style. Keep everything after the first paragraph unchanged."""
+
+
+def generate_hook_variant(original: dict, pillar_config: dict) -> dict | None:
+    """Generate an alternative hook for an existing post. Returns None if skipped."""
+    pillar = original.get("pillar", "")
+    if pillar in _ARABIC_PILLARS:
+        print(f"hook_variant: SKIP — Arabic pillar ({pillar})")
+        return None
+
+    post_text = original.get("post", "")
+    if not post_text:
+        print("hook_variant: SKIP — empty post text")
+        return None
+
+    tone = pillar_config.get("tone", "")
+    client = anthropic.Anthropic()
+    model = os.environ.get("ANTHROPIC_MODEL") or DEFAULT_MODEL
+
+    try:
+        response = client.messages.create(
+            model=model,
+            max_tokens=MAX_TOKENS,
+            system=[{"type": "text", "text": _VARIANT_SYSTEM, "cache_control": {"type": "ephemeral"}}],
+            messages=[{
+                "role": "user",
+                "content": _VARIANT_USER.format(pillar=pillar, tone=tone, post=post_text),
+            }],
+        )
+        text_blocks = [b.text for b in response.content if b.type == "text"]
+        if not text_blocks:
+            print("hook_variant: SKIP — empty API response")
+            return None
+
+        variant_text = _sanitize(text_blocks[0].strip())
+        err = _validate(variant_text, pillar_config.get("language", "en"))
+        if err:
+            print(f"hook_variant: SKIP — validation failed: {err}")
+            return None
+
+        variant_text = _apply_humanizer(variant_text, pillar, tone)
+        print(f"hook_variant: OK ({len(post_text)} → {len(variant_text)} chars)")
+
+        variant = original.copy()
+        variant.update({
+            "post":           variant_text,
+            "char_count":     len(variant_text),
+            "model":          response.model,
+            "is_variant":     True,
+            "variant_of":     original.get("_filename", ""),
+            "generated_at":   datetime.now(timezone.utc).isoformat(),
+            "status":         "draft",
+            "approved":       False,
+            "approval_required": True,
+            "published":      False,
+            "dry_run":        True,
+        })
+        variant.pop("_filename", None)
+        variant.pop("has_variant", None)
+        variant.pop("validation_warning", None)
+        return variant
+
+    except Exception as exc:
+        print(f"hook_variant: SKIP — {exc}")
+        return None
+
+
 def save_post(post_data: dict) -> Path:
     ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     path = HISTORY_DIR / f"{ts}_{post_data['pillar']}.json"

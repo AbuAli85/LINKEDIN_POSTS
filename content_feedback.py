@@ -19,6 +19,59 @@ HISTORY_DIR   = Path(__file__).parent / "posts_history"
 ANALYSIS_FILE = Path(__file__).parent / "content_analysis.json"
 LEADS_CSV     = Path(__file__).parent / "leads.csv"
 
+ARABIC_PILLARS = {"pain_ar", "sanad_pro_ar"}
+
+
+# ---------------------------------------------------------------------------
+# Hook style detection
+# ---------------------------------------------------------------------------
+
+def detect_hook_style(first_line: str) -> str:
+    """Classify the hook style of a post's first line into one of 7 categories."""
+    import re
+    line = first_line.strip()
+    lower = line.lower()
+
+    # numbered-list: digit followed closely by a list count word, OR count-word pattern anywhere
+    if re.match(r"^\d+\s+\w*\s*\b(ways|things|reasons|steps|signs)\b", lower):
+        return "numbered-list"
+    if re.search(r"\b\d+\s+\b(ways|things|reasons|steps|signs)\b", lower):
+        return "numbered-list"
+
+    # question: ends with ?
+    if line.endswith("?"):
+        return "question"
+
+    # observation: specific first-person observation phrases (before generic story/data checks)
+    if re.search(r"(i'?ve noticed|i noticed|i keep|something i|one thing|here'?s what)", lower):
+        return "observation"
+
+    # story: first-person or time markers
+    if re.search(r"\b(i |we |last |yesterday)\b", lower):
+        return "story"
+
+    # data-lead: statistic at start, or digit with financial/time unit
+    if re.match(r"^\d", line):
+        return "data-lead"
+    if re.search(r"\b\d+\s*(%|omr|\$|hours?|minutes?|days?)\b", lower):
+        return "data-lead"
+    if re.search(r"(omr|%|\$)\s*\d+", lower):
+        return "data-lead"
+
+    # story: past tense in first 4 words (after digit-start check to avoid adjectives like "licensed")
+    first_words = lower.split()[:4]
+    if any(w.endswith("ed") for w in first_words):
+        return "story"
+
+    # contrast: adversative markers
+    if re.search(r"\b(but|yet|however)\b", lower):
+        return "contrast"
+    if re.search(r"(everyone says|most people|conventional)", lower):
+        return "contrast"
+
+    # fallback
+    return "bold-statement"
+
 
 # ---------------------------------------------------------------------------
 # I/O helpers
@@ -95,6 +148,26 @@ def cmd_fetch_aged() -> int:
 
         if _fetch_post(f):
             updated += 1
+
+        # Auto-tag hook_style if not already set (English pillars only)
+        if post.get("pillar") in ARABIC_PILLARS:
+            continue
+        try:
+            post = _load(f)  # reload after potential fetch update
+            metrics = post.get("metrics") or {}
+            if metrics.get("hook_style"):
+                continue
+            post_text = post.get("post", "")
+            if not post_text:
+                continue
+            first_line = post_text.strip().split("\n")[0]
+            style = detect_hook_style(first_line)
+            metrics["hook_style"] = style
+            post["metrics"] = metrics
+            _save(f, post)
+            print(f"hook_style auto-tagged: {style} for {f.name}")
+        except Exception:
+            pass
 
     print(f"Fetched metrics for {updated} post(s).")
     return updated

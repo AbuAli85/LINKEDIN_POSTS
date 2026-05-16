@@ -9,7 +9,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 from content_strategy import pick_pillar, PILLARS
-from generator import generate_post, generate_job_post, save_post
+from generator import generate_post, generate_job_post, generate_hook_variant, save_post
 from publisher import LinkedInError, publish_post
 
 load_dotenv()
@@ -103,6 +103,20 @@ def generate_draft() -> int:
 
     print(f"Saved draft -> {path}")
     _print_post(post)
+
+    # Generate hook variant (English pillars only — skipped for Arabic automatically)
+    print("Generating hook variant...")
+    variant = generate_hook_variant(post, config)
+    if variant is not None:
+        variant["variant_of"] = path.name
+        variant_path = save_post(variant)
+        # Tag primary draft with has_variant
+        post["has_variant"] = True
+        path.write_text(json.dumps(post, indent=2), encoding="utf-8")
+        print(f"Saved hook variant -> {variant_path}")
+    else:
+        print("hook_variant: no variant generated (skipped or failed)")
+
     print("Draft mode — not publishing to LinkedIn. Review the draft, then run POST_MODE=publish_draft with PUBLISH_DRAFT_PATH.")
     return 0
 

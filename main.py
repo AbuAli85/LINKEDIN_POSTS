@@ -3,7 +3,7 @@
 import json
 import os
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -109,7 +109,15 @@ def generate_draft() -> int:
     variant = generate_hook_variant(post, config)
     if variant is not None:
         variant["variant_of"] = path.name
-        variant_path = save_post(variant)
+        # Save variant with timestamp 1 s before the primary so it sorts AFTER
+        # the primary in the descending-timestamp dashboard list.
+        primary_parts = path.stem.split("_")  # ["20260516", "095923", "pain"]
+        primary_dt = datetime.strptime(
+            primary_parts[0] + "_" + primary_parts[1], "%Y%m%d_%H%M%S"
+        )
+        variant_ts = (primary_dt - timedelta(seconds=1)).strftime("%Y%m%d_%H%M%S")
+        variant_path = path.parent / f"{variant_ts}_{pillar}_v.json"
+        variant_path.write_text(json.dumps(variant, indent=2), encoding="utf-8")
         # Tag primary draft with has_variant
         post["has_variant"] = True
         path.write_text(json.dumps(post, indent=2), encoding="utf-8")

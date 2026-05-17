@@ -55,9 +55,13 @@ STRUCTURE (every issue follows this shape)
 7. ONE QUESTION — a single open question that invites a reply. Real curiosity.
 8. SIGN-OFF — short, by name, with a clear CTA to www.thesmartpro.io.
 
-TERMINOLOGY (use these exact terms — never the wrong alternative)
-- Ministry of Labour  (NOT "Ministry of Manpower")
-- WPS  (not "Wages Protection System" spelled out every time)
+TERMINOLOGY (use these exact English terms — never the wrong alternative)
+- Ministry of Labour  (NOT "Ministry of Manpower" — the ministry was renamed)
+- Wages Protection System / WPS  (NOT "salary protection", "payroll system")
+- Social Protection Fund / SPF  (NOT "PASI", "social insurance authority")
+- Omanization  (NOT "localization", "Omanisation" with an 's')
+- work permit  (NOT "work authorisation", "work licence")
+- end-of-service gratuity  (NOT "end-of-service bonus", "severance pay")
 
 BANNED
 - "In today's fast-paced world", "delve", "tapestry", "game-changer", "unlock"

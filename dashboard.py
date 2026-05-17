@@ -33,18 +33,24 @@ def _current_branch() -> str:
 
 
 PILLAR_COLOR = {
-    "pain":       "#e8372a",
-    "proof":      "#2a9a5c",
-    "vision":     "#818cf8",
-    "conversion": "#d4840a",
-    "leadership": "#2e7de0",
-    "ai":         "#06b6d4",
-    "marketing":  "#d4840a",
+    "pain":         "#e8372a",
+    "proof":        "#2a9a5c",
+    "vision":       "#818cf8",
+    "conversion":   "#d4840a",
+    "leadership":   "#2e7de0",
+    "ai":           "#06b6d4",
+    "marketing":    "#d4840a",
+    "sanad_pro":    "#0ea5e9",
+    "sanad_pro_ar": "#38bdf8",
+    "pain_ar":      "#f87171",
+    "tech":         "#06b6d4",
 }
 
-CRON_WEEKDAYS    = {5, 0, 2}   # Sat=5, Mon=0, Wed=2  (draft generation)
+SEGMENT_COLOR = {"A": "#2e7de0", "B": "#818cf8", "C": "#06b6d4"}
+
+CRON_WEEKDAYS    = {5, 0, 1, 2, 3, 4, 6}  # every day — tech adds Thu generate + Sat publish
 CRON_HOUR_UTC    = 5
-PUBLISH_WEEKDAYS = {0, 2, 4}   # Mon=0, Wed=2, Fri=4  (auto-publish)
+PUBLISH_WEEKDAYS = {0, 1, 2, 3, 4, 5, 6}  # every day
 PUBLISH_HOUR_UTC = 6
 MUSCAT_OFFSET    = 4
 
@@ -524,6 +530,30 @@ footer a:hover{color:#ede9e3}
               white-space:nowrap;padding:0 2px}
 @media(max-width:640px){.search-bar{padding-left:16px;padding-right:16px}}
 
+/* ── SEGMENT BADGES ── */
+.seg-badge{font-size:9px;padding:2px 7px;border-radius:10px;font-weight:700;
+           font-family:'DM Mono',monospace;letter-spacing:.06em;text-transform:uppercase}
+.seg-badge.A{background:rgba(46,125,224,.12);color:#2e7de0;border:1px solid rgba(46,125,224,.25)}
+.seg-badge.B{background:rgba(129,140,248,.12);color:#818cf8;border:1px solid rgba(129,140,248,.25)}
+.seg-badge.C{background:rgba(6,182,212,.12);color:#06b6d4;border:1px solid rgba(6,182,212,.25)}
+
+/* ── KPI PANEL ── */
+.kpi-panel{max-width:840px;margin:0 auto;padding:0 28px 12px;width:100%}
+.kpi-toggle{background:none;border:none;color:rgba(255,255,255,.35);font-size:11px;
+            cursor:pointer;padding:6px 0;font-family:inherit;display:flex;align-items:center;gap:6px;
+            letter-spacing:.06em;text-transform:uppercase;transition:color .15s;min-height:32px}
+.kpi-toggle:hover{color:rgba(255,255,255,.65)}
+.kpi-toggle .kpi-chevron{font-size:9px;transition:transform .2s;display:inline-block}
+.kpi-toggle.open .kpi-chevron{transform:rotate(180deg)}
+.kpi-grid{display:none;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:8px;margin-top:8px}
+.kpi-grid.open{display:grid}
+.kpi-cell{background:#111113;border:1px solid rgba(255,255,255,.07);border-radius:8px;
+          padding:10px 14px;display:flex;flex-direction:column;gap:4px}
+.kpi-target{font-size:16px;font-weight:600;color:#ede9e3;font-family:'DM Mono',monospace;
+            letter-spacing:-.03em;line-height:1}
+.kpi-label{font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;
+           letter-spacing:.07em;line-height:1.3}
+
 /* ── PAT REMEMBER CHECKBOX ── */
 .pat-remember{display:flex;align-items:center;gap:8px;margin-top:8px;
               font-size:12px;color:rgba(255,255,255,.55);cursor:pointer;font-family:inherit}
@@ -538,7 +568,7 @@ footer a:hover{color:#ede9e3}
   .topbar-right .tb-btn:not(.primary){display:none}
 }
 @media(max-width:640px){
-  .topbar,.statsbar,.schedbar,.content,.filter-bar{padding-left:16px;padding-right:16px}
+  .topbar,.statsbar,.schedbar,.content,.filter-bar,.kpi-panel{padding-left:16px;padding-right:16px}
   .stat{padding:10px 14px}
   .modal-box{padding:20px 18px}
   .filter-chip{font-size:11px;padding:6px 12px;min-height:36px}
@@ -1187,8 +1217,11 @@ function applyFilters() {
     if (isVariant && key !== 'variant' && (variantStatus === 'draft' || variantStatus === 'dry-run')) {
       card.style.display = 'none'; return;
     }
+    var segment = card.getAttribute('data-segment') || '';
+    var isSegFilter = key.indexOf('seg:') === 0;
     var chipOk  = key === 'all' || key === status || key === pillar
-                  || (key === 'variant' && isVariant);
+                  || (key === 'variant' && isVariant)
+                  || (isSegFilter && key === 'seg:' + segment);
     var searchOk = !q || card.textContent.toLowerCase().indexOf(q) !== -1;
     var show = chipOk && searchOk;
     card.style.display = show ? '' : 'none';
@@ -1493,14 +1526,21 @@ def _card(post: dict, idx: int) -> str:
     has_variant = post.get("has_variant", False)
     variant_attr = ' data-variant="true"' if is_variant else ""
 
+    segment      = post.get("segment", "")
+    segment_attr = f' data-segment="{html.escape(segment)}"' if segment else ""
+    segment_badge = (
+        f' <span class="seg-badge {html.escape(segment)}" title="Audience segment {html.escape(segment)}">Seg {html.escape(segment)}</span>'
+        if segment else ""
+    )
+
     variant_badge = ' <span class="badge variant" title="This is a hook variant">Hook variant</span>' if is_variant else ""
     variant_link  = '<span class="variant-link">&#8627; Hook variant available</span>' if has_variant else ""
 
     return f"""
-    <div class="card" id="post-{idx}" data-pillar="{pillar_val}" data-status="{status_key}"{variant_attr}>
+    <div class="card" id="post-{idx}" data-pillar="{pillar_val}" data-status="{status_key}"{variant_attr}{segment_attr}>
       <div class="card-header">
         <span class="pillar-tag {pillar_val}">{pillar}</span>
-        {status}{variant_badge}
+        {segment_badge}{status}{variant_badge}
         <span class="meta-right">
           <span class="model-tag">{model_short}</span>
           <span class="date">{date_str}</span>
@@ -1905,6 +1945,14 @@ def generate(posts: list[dict]) -> str:
         _chip_defs.append(("Variants", "variant", n_variants))
     for _p, _c in sorted(counts.items(), key=lambda x: -x[1]):
         _chip_defs.append((_p.capitalize(), _p, _c))
+
+    # Segment chips (A/B/C) — only show if posts have segment data
+    seg_counts = Counter(p.get("segment", "") for p in posts if p.get("segment"))
+    seg_chip_defs = [
+        (f"Seg {s}", f"seg:{s}", seg_counts.get(s, 0))
+        for s in ("A", "B", "C") if seg_counts.get(s, 0)
+    ]
+
     filter_bar_html = (
         '<div class="filter-bar" role="group" aria-label="Filter posts">'
         + "".join(
@@ -1914,8 +1962,40 @@ def generate(posts: list[dict]) -> str:
             f'<span>{n}</span><span class="count" aria-hidden="true">{c}</span></button>'
             for n, k, c in _chip_defs
         )
+        + ("".join(
+            f'<button type="button" class="filter-chip" data-filter="{k}" '
+            f'aria-pressed="false" aria-label="{n}, {c} posts" onclick="filterCards(\'{k}\')" '
+            f'style="border-color:{SEGMENT_COLOR.get(k.split(":")[-1],"#94a3b8")}44;'
+            f'color:{SEGMENT_COLOR.get(k.split(":")[-1],"#94a3b8")}">'
+            f'<span>{n}</span><span class="count" aria-hidden="true">{c}</span></button>'
+            for n, k, c in seg_chip_defs
+        ) if seg_chip_defs else "")
         + "</div>"
     )
+
+    # KPI targets panel
+    _kpi_items = [
+        ("50/wk",  "Followers"),
+        ("3,000",  "Impressions/post"),
+        ("100/wk", "Profile views"),
+        ("20/wk",  "DMs"),
+        ("30%",    "Reply rate"),
+        ("2/wk",   "Demos booked"),
+        ("30/wk",  "Newsletter subs"),
+        ("60%",    "Connection accept"),
+    ]
+    kpi_cells = "".join(
+        f'<div class="kpi-cell"><div class="kpi-target">{v}</div><div class="kpi-label">{l}</div></div>'
+        for v, l in _kpi_items
+    )
+    kpi_panel_html = f"""
+    <div class="kpi-panel">
+      <button type="button" class="kpi-toggle" aria-expanded="false" aria-controls="kpi-grid"
+              onclick="this.classList.toggle('open');var g=document.getElementById('kpi-grid');g.classList.toggle('open');this.setAttribute('aria-expanded',g.classList.contains('open'))">
+        <span class="kpi-chevron">&#9660;</span> KPI Targets
+      </button>
+      <div class="kpi-grid" id="kpi-grid">{kpi_cells}</div>
+    </div>"""
 
     token_msg, token_level = _token_health(posts)
     token_banner = ""
@@ -2030,6 +2110,8 @@ def generate(posts: list[dict]) -> str:
 </div>
 
 {filter_bar_html}
+
+{kpi_panel_html}
 
 <main id="main-content">
 <div class="content">

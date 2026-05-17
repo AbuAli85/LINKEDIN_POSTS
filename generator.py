@@ -123,12 +123,12 @@ TONE: {tone}
 AUDIENCE: {audience}
 OPENING STYLE: {fmt}
 {brand_context}
-{metrics_block}PROCESS (do this in your head — output only the final post):
+{hashtag_block}{seo_block}{metrics_block}PROCESS (do this in your head — output only the final post):
 1. Draft 3 opening lines that follow the OPENING STYLE above. Make them specific and concrete.
 2. Pick the one that would stop a busy professional mid-scroll.
 3. Build the post around it. Short paragraphs. One concrete detail or data point. One clear takeaway.
 4. End with a question or statement that makes someone want to comment.
-5. Add 3-5 relevant hashtags on their own lines.
+5. Add 3-5 relevant hashtags on their own lines. Choose from the HASHTAGS list above if provided.
 
 HARD LIMIT: 800-1500 characters.
 
@@ -141,7 +141,7 @@ USER_TEMPLATE_AR = """اكتب منشور LinkedIn لمحور {pillar}.
 الجمهور المستهدف: {audience}
 أسلوب الافتتاح: {fmt}
 {brand_context}
-{metrics_block}العملية (نفّذ في ذهنك — أخرج المنشور النهائي فقط):
+{hashtag_block}{seo_block}{metrics_block}العملية (نفّذ في ذهنك — أخرج المنشور النهائي فقط):
 ١. اكتب ٣ سطور افتتاحية مختلفة تماماً — كل واحدة تتبع أسلوب الافتتاح، ومحددة وملموسة وتحمل ثقل الخبرة.
 ٢. اختر السطر الذي سيوقف مدير موارد بشرية أو صاحب مكتب سند أو مسؤول PRO عن التمرير فوراً.
 ٣. ابنِ المنشور حوله — فقرات قصيرة، رقم واحد حقيقي أو مشهد واحد ملموس، فكرة واحدة واضحة لا أكثر.
@@ -177,6 +177,29 @@ INSTRUCTIONS:
 HARD LIMIT: 800-1500 characters.
 
 {recent_block}Output only the final post. No explanation, no preamble, no label."""
+
+
+def _hashtag_block(segment: str) -> str:
+    """Return a hashtag guidance line for the given audience segment."""
+    try:
+        from content_strategy import HASHTAGS
+        tags = HASHTAGS.get(segment, [])
+        if not tags:
+            return ""
+        return f"HASHTAGS (choose 3-5 from this list): {' '.join(tags)}\n"
+    except Exception:
+        return ""
+
+
+def _seo_block() -> str:
+    """Return SEO keyword guidance."""
+    try:
+        from content_strategy import SEO_KEYWORDS
+        if not SEO_KEYWORDS:
+            return ""
+        return f"SEO KEYWORDS (weave 1-2 naturally into the post): {', '.join(SEO_KEYWORDS[:6])}\n"
+    except Exception:
+        return ""
 
 
 def _load_recent_posts(limit: int = 10) -> list[dict]:
@@ -312,6 +335,8 @@ def _generate_once(
     recent_block: str,
     performance_block: str = "",
     metrics_block: str = "",
+    hashtag_block: str = "",
+    seo_block: str = "",
 ) -> tuple[str, str]:
     language = pillar_config.get("language", "en")
     system_prompt = SYSTEM_PROMPT_AR if language == "ar" else SYSTEM_PROMPT
@@ -331,6 +356,8 @@ def _generate_once(
                     audience=pillar_config["audience"],
                     fmt=fmt,
                     brand_context=pillar_config.get("brand_context", ""),
+                    hashtag_block=hashtag_block,
+                    seo_block=seo_block,
                     metrics_block=metrics_block,
                     performance_block=performance_block,
                     recent_block=recent_block,
@@ -366,8 +393,11 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
     model = os.environ.get("ANTHROPIC_MODEL") or DEFAULT_MODEL
     client = anthropic.Anthropic()
     language = pillar_config.get("language", "en")
+    segment  = pillar_config.get("segment", "A")
     rb = _recent_block(recent_posts, language)
     pb = _performance_block(language)
+    hb = _hashtag_block(segment)
+    sb = _seo_block()
 
     # Inject live SmartPro metrics for proof/recruitment pillars
     mb = ""
@@ -382,7 +412,7 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
     last_result: tuple[str, str] | None = None
     for attempt in range(2):
         post_text, model_used = _generate_once(
-            client, model, pillar, pillar_config, topic, fmt, rb, pb, mb
+            client, model, pillar, pillar_config, topic, fmt, rb, pb, mb, hb, sb
         )
         last_result = (post_text, model_used)
         err = _validate(post_text, language)
@@ -393,6 +423,7 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
                 "topic": topic,
                 "format": fmt,
                 "language": language,
+                "segment": segment,
                 "post": post_text,
                 "char_count": len(post_text),
                 "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -412,6 +443,7 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
         "topic": topic,
         "format": fmt,
         "language": language,
+        "segment": segment,
         "post": post_text,
         "char_count": len(post_text),
         "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -478,6 +510,7 @@ def generate_job_post(job: dict, pillar_config: dict) -> dict:
                 "topic": f"{title} @ {company_name}",
                 "format": fmt,
                 "language": "en",
+                "segment": pillar_config.get("segment", "A"),
                 "post": post_text,
                 "char_count": len(post_text),
                 "generated_at": datetime.now(timezone.utc).isoformat(),

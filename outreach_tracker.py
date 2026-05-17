@@ -197,6 +197,7 @@ def add_prospect(
     company: str,
     segment: Segment | str,
     prospect_id: str,
+    *,
     started_at: str | None = None,
     notes: str = "",
     tags: list[str] | None = None,
@@ -229,7 +230,7 @@ def add_prospect(
     return p
 
 
-def advance_prospect(prospect_id: str, path: str = TRACKER_FILE) -> dict:
+def advance_prospect(prospect_id: str, *, path: str = TRACKER_FILE) -> dict:
     """Advance a prospect to their next sequence step.
 
     Saves to disk.  Returns the updated next-action dict, or a completion
@@ -260,6 +261,7 @@ def advance_prospect(prospect_id: str, path: str = TRACKER_FILE) -> dict:
 
 
 def get_todays_actions(
+    *,
     today: date | None = None,
     path: str = TRACKER_FILE,
 ) -> list[dict[str, Any]]:
@@ -295,7 +297,7 @@ def get_todays_actions(
     return due
 
 
-def mark_converted(prospect_id: str, path: str = TRACKER_FILE) -> bool:
+def mark_converted(prospect_id: str, *, path: str = TRACKER_FILE) -> bool:
     try:
         prospects = load_tracker(path)
     except FileNotFoundError:
@@ -309,7 +311,7 @@ def mark_converted(prospect_id: str, path: str = TRACKER_FILE) -> bool:
     return False
 
 
-def mark_opted_out(prospect_id: str, path: str = TRACKER_FILE) -> bool:
+def mark_opted_out(prospect_id: str, *, path: str = TRACKER_FILE) -> bool:
     try:
         prospects = load_tracker(path)
     except FileNotFoundError:
@@ -326,7 +328,7 @@ def mark_opted_out(prospect_id: str, path: str = TRACKER_FILE) -> bool:
 # KPI summary — consumed by dashboard.py
 # ---------------------------------------------------------------------------
 
-def kpi_summary(path: str = TRACKER_FILE) -> dict[str, Any]:
+def kpi_summary(*, path: str = TRACKER_FILE) -> dict[str, Any]:
     """Return outreach KPIs.
 
     Raises FileNotFoundError if the tracker file has not been created yet

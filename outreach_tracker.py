@@ -5,20 +5,20 @@ Segments:
   B — Investors & government          (vision pillar)
   C — Tech founders & SaaS builders   (tech pillar)
 
-Each prospect moves through a timed sequence of touch-points.  The tracker
-persists state in outreach_tracker.json (git-committed alongside other data).
+Each prospect moves through a timed sequence of touch-points.  State is
+persisted in outreach_tracker.json (or the path set by TRACKER_FILE env var).
 """
 
 from __future__ import annotations
 
 import json
+import os
 from dataclasses import asdict, dataclass, field
 from datetime import date, datetime, timedelta, timezone
 from enum import Enum
 from pathlib import Path
 from typing import Any
 
-_STORE = Path(__file__).parent / "outreach_tracker.json"
 
 # ---------------------------------------------------------------------------
 # Enums
@@ -39,60 +39,51 @@ class Status(str, Enum):
 
 
 # ---------------------------------------------------------------------------
-# Sequence definitions
+# Sequence definitions — must match the LinkedIn playbook exactly (FIX A)
 # ---------------------------------------------------------------------------
-# Each list entry: (day_offset, action_label)
-# day_offset is relative to the prospect's enroll_date.
 
-SEQUENCE_DAYS: dict[str, list[tuple[int, str]]] = {
+SEQUENCE_DAYS: dict[Segment, list[int]] = {
+    Segment.A: [1, 4, 7, 9, 14],   # 5 touches over 14 days
+    Segment.B: [1, 5, 8],           # 3 touches over 8 days
+    Segment.C: [1, 3, 5],           # 3 touches over 5 days
+}
+
+SEQUENCE_ACTIONS: dict[Segment, list[str]] = {
     Segment.A: [
-        (0,  "connect_request"),
-        (3,  "welcome_dm"),
-        (7,  "value_share"),       # share a pain-point post or case study
-        (14, "soft_pitch"),        # SmartPro trial offer
-        (21, "follow_up"),
-        (30, "final_touch"),
+        "Like + genuine comment on their latest post (never 'great post')",
+        "Share their post with a value-adding note — tag them",
+        "Send connection request — no note needed",
+        "Send first DM — value offer, no pitch (use Arabic template for Seg A)",
+        "Follow-up — offer free 15-min SmartPRO Hub demo tailored to their sector",
     ],
     Segment.B: [
-        (0,  "connect_request"),
-        (5,  "welcome_dm"),
-        (10, "insight_share"),     # Vision 2040 / compliance angle
-        (18, "demo_invite"),
-        (28, "follow_up"),
+        "Comment on a Vision 2040 / digital Oman post they engaged with — be substantive",
+        "Send connection request with note: 'Building Oman's first multi-tenant HR compliance platform — would value connecting'",
+        "Send DM — attach 1-page PDF overview (not a pitch deck)",
     ],
     Segment.C: [
-        (0,  "connect_request"),
-        (2,  "welcome_dm"),        # faster cadence for tech founders
-        (6,  "build_in_public"),   # link to tech pillar post
-        (12, "collab_offer"),      # co-build / API partner angle
-        (20, "follow_up"),
+        "Comment on a #BuildInPublic or tech architecture post — reference a specific technical detail",
+        "Send connection request — no note, let the comment do the work",
+        "Send DM — peer conversation, no pitch (use English template for Seg C)",
     ],
 }
 
-SEQUENCE_ACTIONS: dict[str, dict[str, str]] = {
-    Segment.A: {
-        "connect_request": "Send LinkedIn connection request mentioning SmartPro Hub",
-        "welcome_dm":       "Send welcome DM: introduce SmartPro, ask about current HR pain",
-        "value_share":      "Share a relevant pain-point post or WPS compliance tip",
-        "soft_pitch":       "Offer 14-day free trial: www.thesmartpro.io",
-        "follow_up":        "Check in — any questions about the trial?",
-        "final_touch":      "Final value nudge — share a customer proof story",
-    },
-    Segment.B: {
-        "connect_request": "Send LinkedIn connection request (Vision 2040 / compliance angle)",
-        "welcome_dm":       "Welcome DM: SmartPro supports Ministry of Labour compliance",
-        "insight_share":    "Share Vision 2040 workforce insight or Omanization update",
-        "demo_invite":      "Invite to live product demo (personalised calendar link)",
-        "follow_up":        "Follow-up after demo — any questions or blockers?",
-    },
-    Segment.C: {
-        "connect_request": "Send LinkedIn connection request (fellow builder angle)",
-        "welcome_dm":       "Welcome DM: reference their stack / recent build-in-public post",
-        "build_in_public":  "Share tech pillar post — tRPC/Drizzle architecture thread",
-        "collab_offer":     "Propose API partnership or integration collaboration",
-        "follow_up":        "Check in — interested in SmartPro early-adopter plan?",
-    },
-}
+# Fail loudly at import if the two dicts fall out of sync
+for _seg in Segment:
+    assert len(SEQUENCE_DAYS[_seg]) == len(SEQUENCE_ACTIONS[_seg]), (
+        f"SEQUENCE_DAYS and SEQUENCE_ACTIONS length mismatch for segment {_seg}"
+    )
+
+
+# ---------------------------------------------------------------------------
+# Store path — respects TRACKER_FILE env var so tests can use a temp file
+# ---------------------------------------------------------------------------
+
+def _store_path() -> Path:
+    return Path(
+        os.environ.get("TRACKER_FILE",
+                       str(Path(__file__).parent / "outreach_tracker.json"))
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -101,56 +92,71 @@ SEQUENCE_ACTIONS: dict[str, dict[str, str]] = {
 
 @dataclass
 class Prospect:
-    linkedin_id:  str
+    id:           str
     name:         str
-    segment:      str                       # "A" | "B" | "C"
-    enroll_date:  str                       # ISO date string, e.g. "2026-05-18"
-    status:       str  = Status.ACTIVE      # Status enum value
-    sequence_idx: int  = 0                  # index into SEQUENCE_DAYS[segment]
-    notes:        str  = ""
+    company:      str
+    segment:      Segment
+    started_at:   str           # ISO date, e.g. "2026-05-18"
+    status:       str = Status.ACTIVE
+    current_step: int = 0       # 0-based index into SEQUENCE_DAYS/ACTIONS
+    notes:        str = ""
     tags:         list[str] = field(default_factory=list)
-    last_action:  str  = ""
-    last_action_date: str = ""
-    converted_at: str  = ""
+    converted_at: str = ""
 
-    # convenience ─────────────────────────────────────────────────────────
-    @property
-    def enroll(self) -> date:
-        return date.fromisoformat(self.enroll_date)
+    # ── Plain methods (not @property — avoids asdict/API inconsistency) ──
 
-    @property
-    def next_action(self) -> tuple[str, date] | None:
-        seq = SEQUENCE_DAYS.get(self.segment, [])
-        if self.sequence_idx >= len(seq):
+    def next_action_date(self) -> str | None:
+        steps = SEQUENCE_DAYS.get(self.segment, [])
+        if self.current_step >= len(steps):
             return None
-        day_offset, action = seq[self.sequence_idx]
-        return action, self.enroll + timedelta(days=day_offset)
+        offset = steps[self.current_step]
+        return (date.fromisoformat(self.started_at) + timedelta(days=offset)).isoformat()
+
+    def next_action(self) -> str | None:
+        actions = SEQUENCE_ACTIONS.get(self.segment, [])
+        if self.current_step >= len(actions):
+            return None
+        return actions[self.current_step]
+
+    def advance(self) -> bool:
+        """Increment current_step. Returns True if still active, False if sequence finished."""
+        self.current_step += 1
+        if self.current_step >= len(SEQUENCE_DAYS.get(self.segment, [])):
+            self.status = Status.REPLIED
+            return False
+        return True
 
     def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
+        d = asdict(self)
+        # Ensure enum fields serialize as plain strings across all Python versions
+        d["segment"] = d["segment"].value if isinstance(d["segment"], Enum) else d["segment"]
+        d["status"]  = d["status"].value  if isinstance(d["status"],  Enum) else d["status"]
+        return d
 
     @classmethod
     def from_dict(cls, d: dict[str, Any]) -> "Prospect":
         known = {f.name for f in cls.__dataclass_fields__.values()}  # type: ignore[attr-defined]
-        return cls(**{k: v for k, v in d.items() if k in known})
+        filtered = {k: v for k, v in d.items() if k in known}
+        seg = filtered.get("segment", "A")
+        filtered["segment"] = Segment(str(seg).upper()) if not isinstance(seg, Segment) else seg
+        return cls(**filtered)
 
 
 # ---------------------------------------------------------------------------
-# Persistence
+# Persistence — public names for external callers (FIX B)
 # ---------------------------------------------------------------------------
 
-def _load() -> list[Prospect]:
-    if not _STORE.exists():
-        return []
-    try:
-        raw: list[dict] = json.loads(_STORE.read_text(encoding="utf-8"))
-        return [Prospect.from_dict(r) for r in raw]
-    except Exception:
-        return []
+def load_tracker() -> list[Prospect]:
+    """Load all prospects from disk. Raises FileNotFoundError if store absent."""
+    store = _store_path()
+    if not store.exists():
+        raise FileNotFoundError(f"Tracker file not found: {store}")
+    raw: list[dict] = json.loads(store.read_text(encoding="utf-8"))
+    return [Prospect.from_dict(r) for r in raw]
 
 
-def _save(prospects: list[Prospect]) -> None:
-    _STORE.write_text(
+def save_tracker(prospects: list[Prospect]) -> None:
+    _store_path().write_text(
         json.dumps([p.to_dict() for p in prospects], indent=2, ensure_ascii=False),
         encoding="utf-8",
     )
@@ -161,133 +167,149 @@ def _save(prospects: list[Prospect]) -> None:
 # ---------------------------------------------------------------------------
 
 def add_prospect(
-    linkedin_id: str,
     name: str,
-    segment: str,
-    enroll_date: str | None = None,
+    company: str,
+    segment: Segment | str,
+    prospect_id: str,
+    started_at: str | None = None,
     notes: str = "",
     tags: list[str] | None = None,
 ) -> Prospect:
-    """Enrol a new prospect; skip silently if already enrolled."""
-    prospects = _load()
-    if any(p.linkedin_id == linkedin_id for p in prospects):
-        return next(p for p in prospects if p.linkedin_id == linkedin_id)
+    """Enrol a new prospect; returns existing record silently if already enrolled."""
+    try:
+        prospects = load_tracker()
+    except FileNotFoundError:
+        prospects = []
 
-    seg = (segment or "A").strip().upper()
-    if seg not in (s.value for s in Segment):
-        seg = "A"
+    existing = next((p for p in prospects if p.id == prospect_id), None)
+    if existing is not None:
+        return existing
+
+    if not isinstance(segment, Segment):
+        segment = Segment(str(segment).upper())
 
     p = Prospect(
-        linkedin_id=linkedin_id,
+        id=prospect_id,
         name=name,
-        segment=seg,
-        enroll_date=enroll_date or date.today().isoformat(),
+        company=company,
+        segment=segment,
+        started_at=started_at or date.today().isoformat(),
         notes=notes,
         tags=tags or [],
     )
     prospects.append(p)
-    _save(prospects)
+    save_tracker(prospects)
     return p
 
 
-def get_todays_actions(today: date | None = None) -> list[dict[str, Any]]:
-    """Return all prospects whose next sequence action is due today or overdue."""
-    today = today or date.today()
-    due: list[dict[str, Any]] = []
+def advance_prospect(prospect_id: str) -> dict:
+    """Advance a prospect to their next sequence step.
 
-    for p in _load():
+    Saves to disk.  Returns the updated next-action dict, or a completion
+    dict if the sequence is finished.
+    """
+    prospects = load_tracker()
+    target = next((p for p in prospects if p.id == prospect_id), None)
+    if target is None:
+        raise ValueError(f"No prospect found with id '{prospect_id}'")
+
+    still_active = target.advance()
+    save_tracker(prospects)
+
+    if not still_active:
+        return {
+            "status":       "sequence_complete",
+            "prospect":     target.name,
+            "final_status": target.status,
+        }
+    return {
+        "status":           "advanced",
+        "prospect":         target.name,
+        "next_action_date": target.next_action_date(),
+        "next_action":      target.next_action(),
+        "step":             target.current_step + 1,
+        "total_steps":      len(SEQUENCE_DAYS[target.segment]),
+    }
+
+
+def get_todays_actions(today: date | None = None) -> list[dict[str, Any]]:
+    """Return all prospects whose next action is due today or overdue."""
+    today = today or date.today()
+    try:
+        prospects = load_tracker()
+    except FileNotFoundError:
+        return []
+
+    due: list[dict[str, Any]] = []
+    for p in prospects:
         if p.status not in (Status.ACTIVE, Status.PENDING):
             continue
-        na = p.next_action
-        if na is None:
+        nad = p.next_action_date()
+        na  = p.next_action()
+        if nad is None or na is None:
             continue
-        action, action_date = na
+        action_date = date.fromisoformat(nad)
         if action_date <= today:
             due.append({
-                "linkedin_id":   p.linkedin_id,
-                "name":          p.name,
-                "segment":       p.segment,
-                "action":        action,
-                "action_label":  SEQUENCE_ACTIONS.get(p.segment, {}).get(action, action),
-                "due_date":      action_date.isoformat(),
-                "overdue_days":  (today - action_date).days,
-                "sequence_idx":  p.sequence_idx,
+                "id":           p.id,
+                "name":         p.name,
+                "company":      p.company,
+                "segment":      p.segment.value if isinstance(p.segment, Segment) else p.segment,
+                "action":       na,
+                "due_date":     nad,
+                "overdue_days": (today - action_date).days,
+                "current_step": p.current_step,
             })
 
-    due.sort(key=lambda x: (x["overdue_days"] * -1, x["segment"]))
+    due.sort(key=lambda x: (-x["overdue_days"], x["segment"]))
     return due
 
 
-def mark_action_done(linkedin_id: str, notes: str = "") -> bool:
-    """Advance a prospect's sequence index after completing an action."""
-    prospects = _load()
+def mark_converted(prospect_id: str) -> bool:
+    try:
+        prospects = load_tracker()
+    except FileNotFoundError:
+        return False
     for p in prospects:
-        if p.linkedin_id != linkedin_id:
-            continue
-        seq = SEQUENCE_DAYS.get(p.segment, [])
-        if p.sequence_idx < len(seq):
-            _, action = seq[p.sequence_idx]
-            p.last_action = action
-            p.last_action_date = date.today().isoformat()
-            if notes:
-                p.notes = (p.notes + "\n" + notes).strip()
-        p.sequence_idx += 1
-        if p.sequence_idx >= len(seq):
-            p.status = Status.REPLIED   # sequence exhausted; awaiting reply
-        _save(prospects)
-        return True
-    return False
-
-
-def mark_converted(linkedin_id: str) -> bool:
-    prospects = _load()
-    for p in prospects:
-        if p.linkedin_id == linkedin_id:
+        if p.id == prospect_id:
             p.status = Status.CONVERTED
             p.converted_at = datetime.now(timezone.utc).isoformat()
-            _save(prospects)
+            save_tracker(prospects)
             return True
     return False
 
 
-def mark_opted_out(linkedin_id: str) -> bool:
-    prospects = _load()
+def mark_opted_out(prospect_id: str) -> bool:
+    try:
+        prospects = load_tracker()
+    except FileNotFoundError:
+        return False
     for p in prospects:
-        if p.linkedin_id == linkedin_id:
+        if p.id == prospect_id:
             p.status = Status.OPTED_OUT
-            _save(prospects)
+            save_tracker(prospects)
             return True
     return False
 
 
 # ---------------------------------------------------------------------------
-# KPI summary (consumed by dashboard.py)
+# KPI summary — consumed by dashboard.py
 # ---------------------------------------------------------------------------
 
 def kpi_summary() -> dict[str, Any]:
-    """Return outreach KPIs for embedding in the dashboard KPI panel.
+    """Return outreach KPIs.
 
-    Keys
-    ----
-    total           — total prospects enrolled
-    active          — currently in-sequence
-    converted       — marked converted
-    opted_out       — opted out
-    replied         — sequence exhausted, awaiting reply
-    by_segment      — {"A": int, "B": int, "C": int}
-    conversion_rate — converted / total (0–100 %)
-    due_today       — number of actions due today or overdue
+    Raises FileNotFoundError if the tracker file has not been created yet
+    (no prospects enrolled).  The dashboard catches this and shows a placeholder.
     """
-    prospects = _load()
+    prospects = load_tracker()   # propagates FileNotFoundError intentionally
     total     = len(prospects)
     by_seg: dict[str, int] = {"A": 0, "B": 0, "C": 0}
-    converted = 0
-    opted_out = 0
-    replied   = 0
-    active    = 0
+    converted = opted_out = replied = active = 0
 
     for p in prospects:
-        by_seg[p.segment] = by_seg.get(p.segment, 0) + 1
+        seg_key = p.segment.value if isinstance(p.segment, Segment) else str(p.segment)
+        by_seg[seg_key] = by_seg.get(seg_key, 0) + 1
         if p.status == Status.CONVERTED:
             converted += 1
         elif p.status == Status.OPTED_OUT:

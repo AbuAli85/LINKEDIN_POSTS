@@ -1996,7 +1996,12 @@ def generate(posts: list[dict]) -> str:
         for v, l in _kpi_items
     )
 
-    # Live outreach KPIs from outreach_tracker.py (fails silently if file absent)
+    # Live outreach KPIs from outreach_tracker.py
+    _OUTREACH_DIVIDER = (
+        '<div class="kpi-cell kpi-divider" style="grid-column:1/-1">'
+        '<div class="kpi-label" style="font-size:10px;opacity:.5;text-transform:uppercase;'
+        'letter-spacing:.08em">Outreach tracker</div></div>'
+    )
     outreach_cells = ""
     try:
         from outreach_tracker import kpi_summary as _kpi_summary
@@ -2012,18 +2017,23 @@ def generate(posts: list[dict]) -> str:
             (_due,                 "Due today"),
             (_seg,                 "By segment (A/B/C)"),
         ]
-        outreach_cells = (
-            '<div class="kpi-cell kpi-divider" style="grid-column:1/-1">'
-            '<div class="kpi-label" style="font-size:10px;opacity:.5;text-transform:uppercase;'
-            'letter-spacing:.08em">Outreach tracker</div></div>'
-            + "".join(
-                f'<div class="kpi-cell"><div class="kpi-target">{v}</div>'
-                f'<div class="kpi-label">{l}</div></div>'
-                for v, l in outreach_rows
-            )
+        outreach_cells = _OUTREACH_DIVIDER + "".join(
+            f'<div class="kpi-cell"><div class="kpi-target">{v}</div>'
+            f'<div class="kpi-label">{l}</div></div>'
+            for v, l in outreach_rows
         )
-    except Exception:
-        pass
+    except FileNotFoundError:
+        outreach_cells = (
+            _OUTREACH_DIVIDER
+            + '<div class="kpi-cell" style="grid-column:1/-1">'
+            '<div class="kpi-label" style="opacity:.6">'
+            'No outreach data yet — add your first prospect to outreach_tracker.py'
+            '</div></div>'
+        )
+    except Exception as e:
+        raise RuntimeError(
+            f"outreach_tracker.kpi_summary() failed unexpectedly: {e}"
+        ) from e
 
     kpi_panel_html = f"""
     <div class="kpi-panel">

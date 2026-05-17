@@ -76,14 +76,17 @@ for _seg in Segment:
 
 
 # ---------------------------------------------------------------------------
-# Store path — respects TRACKER_FILE env var so tests can use a temp file
+# Store path — respects TRACKER_FILE env var so tests can override it
 # ---------------------------------------------------------------------------
 
-def _store_path() -> Path:
-    return Path(
-        os.environ.get("TRACKER_FILE",
-                       str(Path(__file__).parent / "outreach_tracker.json"))
-    )
+TRACKER_FILE: str = os.environ.get(
+    "TRACKER_FILE",
+    str(Path(__file__).parent / "outreach_tracker.json"),
+)
+
+REQUIRED_FIELDS: frozenset[str] = frozenset({
+    "id", "name", "company", "segment", "started_at", "current_step", "status",
+})
 
 
 # ---------------------------------------------------------------------------
@@ -146,17 +149,40 @@ class Prospect:
 # Persistence — public names for external callers (FIX B)
 # ---------------------------------------------------------------------------
 
-def load_tracker() -> list[Prospect]:
-    """Load all prospects from disk. Raises FileNotFoundError if store absent."""
-    store = _store_path()
-    if not store.exists():
-        raise FileNotFoundError(f"Tracker file not found: {store}")
-    raw: list[dict] = json.loads(store.read_text(encoding="utf-8"))
-    return [Prospect.from_dict(r) for r in raw]
+def load_tracker(path: str = TRACKER_FILE) -> list[Prospect]:
+    """Load all prospects from disk.
+
+    Raises FileNotFoundError if the store doesn't exist yet.
+    Raises ValueError for any record that is missing required fields or still
+    carries legacy field names — both indicate a migration is needed.
+    """
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"Tracker file not found: '{path}'")
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    prospects = []
+    for i, record in enumerate(data):
+        missing = REQUIRED_FIELDS - record.keys()
+        legacy  = {"linkedin_id", "sequence_idx"} & record.keys()
+        if missing or legacy:
+            hint = ""
+            if legacy:
+                hint = (
+                    f" Legacy fields detected ({legacy}). "
+                    f"Run: python migrate_outreach_tracker.py"
+                )
+            raise ValueError(
+                f"outreach_tracker.json record {i} "
+                f"(name={record.get('name', '?')}) is malformed. "
+                f"Missing fields: {missing}.{hint}"
+            )
+        prospects.append(Prospect(**{k: v for k, v in record.items()
+                                     if k in Prospect.__dataclass_fields__}))
+    return prospects
 
 
-def save_tracker(prospects: list[Prospect]) -> None:
-    _store_path().write_text(
+def save_tracker(prospects: list[Prospect], path: str = TRACKER_FILE) -> None:
+    Path(path).write_text(
         json.dumps([p.to_dict() for p in prospects], indent=2, ensure_ascii=False),
         encoding="utf-8",
     )

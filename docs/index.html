@@ -415,6 +415,46 @@ footer a:hover{color:#ede9e3}
               white-space:nowrap;padding:0 2px}
 @media(max-width:640px){.search-bar{padding-left:16px;padding-right:16px}}
 
+/* ── SEGMENT BADGES ── */
+.seg-badge{font-size:9px;padding:2px 7px;border-radius:10px;font-weight:700;
+           font-family:'DM Mono',monospace;letter-spacing:.06em;text-transform:uppercase}
+.seg-badge.A{background:rgba(46,125,224,.12);color:#2e7de0;border:1px solid rgba(46,125,224,.25)}
+.seg-badge.B{background:rgba(129,140,248,.12);color:#818cf8;border:1px solid rgba(129,140,248,.25)}
+.seg-badge.C{background:rgba(6,182,212,.12);color:#06b6d4;border:1px solid rgba(6,182,212,.25)}
+.seg-chip:disabled{opacity:.4;cursor:not-allowed;pointer-events:none}
+
+/* ── KPI PANEL ── */
+.kpi-panel{max-width:840px;margin:0 auto;padding:0 28px 12px;width:100%}
+.kpi-toggle{background:none;border:none;color:rgba(255,255,255,.35);font-size:11px;
+            cursor:pointer;padding:6px 0;font-family:inherit;display:flex;align-items:center;gap:6px;
+            letter-spacing:.06em;text-transform:uppercase;transition:color .15s;min-height:32px}
+.kpi-toggle:hover{color:rgba(255,255,255,.65)}
+.kpi-toggle .kpi-chevron{font-size:9px;transition:transform .2s;display:inline-block}
+.kpi-toggle.open .kpi-chevron{transform:rotate(180deg)}
+.kpi-grid{display:none;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:8px;margin-top:8px}
+.kpi-grid.open{display:grid}
+.kpi-cell{background:#111113;border:1px solid rgba(255,255,255,.07);border-radius:8px;
+          padding:10px 14px;display:flex;flex-direction:column;gap:4px}
+.kpi-target{font-size:16px;font-weight:600;color:#ede9e3;font-family:'DM Mono',monospace;
+            letter-spacing:-.03em;line-height:1}
+.kpi-label{font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;
+           letter-spacing:.07em;line-height:1.3}
+.kpi-divider{background:transparent;border:none;padding:4px 0 0;justify-content:flex-end}
+
+/* ── BOOKINGS SECTION ── */
+.bookings-section{max-width:840px;margin:0 auto;padding:0 28px 12px;width:100%}
+.bookings-section h3{font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;
+                     letter-spacing:.1em;font-weight:600;margin-bottom:10px}
+.bookings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:8px}
+.bookings-kpi{background:#111113;border:1px solid rgba(255,255,255,.07);border-radius:8px;
+              padding:10px 14px;display:flex;flex-direction:column;gap:4px}
+.bookings-kpi .kpi-value{font-size:16px;font-weight:600;color:#ede9e3;
+                          font-family:'DM Mono',monospace;letter-spacing:-.03em;line-height:1}
+.bookings-kpi .kpi-label{font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;
+                          letter-spacing:.07em;line-height:1.3}
+.bookings-kpi .kpi-target{font-size:10px;color:rgba(46,125,224,.6);margin-top:2px}
+.bookings-kpi.highlight .kpi-value{color:#2e7de0}
+
 /* ── PAT REMEMBER CHECKBOX ── */
 .pat-remember{display:flex;align-items:center;gap:8px;margin-top:8px;
               font-size:12px;color:rgba(255,255,255,.55);cursor:pointer;font-family:inherit}
@@ -429,7 +469,7 @@ footer a:hover{color:#ede9e3}
   .topbar-right .tb-btn:not(.primary){display:none}
 }
 @media(max-width:640px){
-  .topbar,.statsbar,.schedbar,.content,.filter-bar{padding-left:16px;padding-right:16px}
+  .topbar,.statsbar,.schedbar,.content,.filter-bar,.kpi-panel{padding-left:16px;padding-right:16px}
   .stat{padding:10px 14px}
   .modal-box{padding:20px 18px}
   .filter-chip{font-size:11px;padding:6px 12px;min-height:36px}
@@ -461,6 +501,14 @@ footer a:hover{color:#ede9e3}
 .card[data-pillar="ai"]{border-left-color:#06b6d4}
 .pillar-tag.marketing{color:#d4840a;background:#d4840a33;border-color:#d4840a55}
 .card[data-pillar="marketing"]{border-left-color:#d4840a}
+.pillar-tag.sanad_pro{color:#0ea5e9;background:#0ea5e933;border-color:#0ea5e955}
+.card[data-pillar="sanad_pro"]{border-left-color:#0ea5e9}
+.pillar-tag.sanad_pro_ar{color:#38bdf8;background:#38bdf833;border-color:#38bdf855}
+.card[data-pillar="sanad_pro_ar"]{border-left-color:#38bdf8}
+.pillar-tag.pain_ar{color:#f87171;background:#f8717133;border-color:#f8717155}
+.card[data-pillar="pain_ar"]{border-left-color:#f87171}
+.pillar-tag.tech{color:#06b6d4;background:#06b6d433;border-color:#06b6d455}
+.card[data-pillar="tech"]{border-left-color:#06b6d4}
 </style>
 </head>
 <body>
@@ -477,7 +525,7 @@ footer a:hover{color:#ede9e3}
     Dashboard
   </div>
   <div class="topbar-right">
-    <span class="updated" title="Last refreshed: May 17, 2026 · 9:31 pm Muscat">Updated May 17, 2026 · 9:31 pm Muscat</span>
+    <span class="updated" title="Last refreshed: May 18, 2026 · 1:54 am Muscat">Updated May 18, 2026 · 1:54 am Muscat</span>
     <div class="live-dot" title="Live" aria-hidden="true"></div>
     <nav class="actions" aria-label="Site actions">
       <a class="tb-btn primary" href="https://github.com/AbuAli85/LINKEDIN_POSTS/actions/workflows/auto-post.yml" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">&#9654;</span> Run workflow<span class="sr-only"> (opens in new tab)</span></a>
@@ -498,14 +546,14 @@ footer a:hover{color:#ede9e3}
   <div class="stat"><div class="n">0</div><div class="l">Failed</div></div>
   
   <div class="stat green"><div class="n">53%</div><div class="l">Success</div></div>
-  <div class="pillar-pills"><span class="pillar-pill" style="border-color:#e8372a55;color:#e8372a">pain <b>5</b></span><span class="pillar-pill" style="border-color:#2a9a5c55;color:#2a9a5c">proof <b>5</b></span><span class="pillar-pill" style="border-color:#94a3b855;color:#94a3b8">sanad_pro_ar <b>2</b></span><span class="pillar-pill" style="border-color:#2e7de055;color:#2e7de0">leadership <b>2</b></span><span class="pillar-pill" style="border-color:#94a3b855;color:#94a3b8">pain_ar <b>1</b></span><span class="pillar-pill" style="border-color:#818cf855;color:#818cf8">vision <b>1</b></span><span class="pillar-pill" style="border-color:#d4840a55;color:#d4840a">marketing <b>1</b></span></div>
+  <div class="pillar-pills"><span class="pillar-pill" style="border-color:#e8372a55;color:#e8372a">pain <b>5</b></span><span class="pillar-pill" style="border-color:#2a9a5c55;color:#2a9a5c">proof <b>5</b></span><span class="pillar-pill" style="border-color:#38bdf855;color:#38bdf8">sanad_pro_ar <b>2</b></span><span class="pillar-pill" style="border-color:#2e7de055;color:#2e7de0">leadership <b>2</b></span><span class="pillar-pill" style="border-color:#f8717155;color:#f87171">pain_ar <b>1</b></span><span class="pillar-pill" style="border-color:#818cf855;color:#818cf8">vision <b>1</b></span><span class="pillar-pill" style="border-color:#d4840a55;color:#d4840a">marketing <b>1</b></span></div>
 </div>
 
 <div class="schedbar">
   <span class="lbl">Drafts &rarr;</span>
-  <span class="run-item"><b>Mon May 18</b> &middot; 9:00 am Muscat &middot; <span class="run-pillar" style="color:#2a9a5c">proof</span> <span class="run-arrow">&rarr;</span> publishes Wednesday</span><span class="run-item"><b>Wed May 20</b> &middot; 9:00 am Muscat &middot; <span class="run-pillar" style="color:#818cf8">vision</span> <span class="run-arrow">&rarr;</span> publishes Friday</span><span class="run-item"><b>Sat May 23</b> &middot; 9:00 am Muscat &middot; <span class="run-pillar" style="color:#e8372a">pain</span> <span class="run-arrow">&rarr;</span> publishes Monday</span>
+  <span class="run-item"><b>Mon May 18</b> &middot; 9:00 am Muscat &middot; <span class="run-pillar" style="color:#2a9a5c">proof</span> <span class="run-arrow">&rarr;</span> publishes Wednesday</span><span class="run-item"><b>Tue May 19</b> &middot; 9:00 am Muscat &middot; <span class="run-pillar" style="color:#0ea5e9">sanad_pro</span> <span class="run-arrow">&rarr;</span> publishes Thursday</span><span class="run-item"><b>Wed May 20</b> &middot; 9:00 am Muscat &middot; <span class="run-pillar" style="color:#818cf8">vision</span> <span class="run-arrow">&rarr;</span> publishes Friday</span>
   <span class="lbl" style="margin-left:8px;border-left:1px solid rgba(255,255,255,.08);padding-left:18px">Publishes &rarr;</span>
-  <span class="run-item"><b>Mon May 18</b> &middot; <span class="run-pillar" style="color:#e8372a">pain</span> <span style="color:#2a9a5c;font-size:.68rem;font-weight:600">&#10003;&nbsp;ready</span></span><span class="run-item"><b>Wed May 20</b> &middot; <span class="run-pillar" style="color:#2a9a5c">proof</span> <span style="color:#2a9a5c;font-size:.68rem;font-weight:600">&#10003;&nbsp;ready</span></span><span class="run-item"><b>Fri May 22</b> &middot; <span class="run-pillar" style="color:#818cf8">vision</span> <span style="color:#2a9a5c;font-size:.68rem;font-weight:600">&#10003;&nbsp;ready</span></span>
+  <span class="run-item"><b>Mon May 18</b> &middot; <span class="run-pillar" style="color:#e8372a">pain</span> <span style="color:#2a9a5c;font-size:.68rem;font-weight:600">&#10003;&nbsp;ready</span></span><span class="run-item"><b>Tue May 19</b> &middot; <span class="run-pillar" style="color:#38bdf8">sanad_pro_ar</span> <span style="color:#2a9a5c;font-size:.68rem;font-weight:600">&#10003;&nbsp;ready</span></span><span class="run-item"><b>Wed May 20</b> &middot; <span class="run-pillar" style="color:#2a9a5c">proof</span> <span style="color:#2a9a5c;font-size:.68rem;font-weight:600">&#10003;&nbsp;ready</span></span>
 </div>
 
 <div class="search-bar">
@@ -519,7 +567,44 @@ footer a:hover{color:#ede9e3}
   <span class="search-count" id="search-count" aria-live="polite"></span>
 </div>
 
-<div class="filter-bar" role="group" aria-label="Filter posts"><button type="button" class="filter-chip active" data-filter="all" aria-pressed="true" aria-label="All, 17 posts" onclick="filterCards('all')"><span>All</span><span class="count" aria-hidden="true">17</span></button><button type="button" class="filter-chip" data-filter="draft" aria-pressed="false" aria-label="Needs review, 0 posts" onclick="filterCards('draft')"><span>Needs review</span><span class="count" aria-hidden="true">0</span></button><button type="button" class="filter-chip" data-filter="published" aria-pressed="false" aria-label="Published, 9 posts" onclick="filterCards('published')"><span>Published</span><span class="count" aria-hidden="true">9</span></button><button type="button" class="filter-chip" data-filter="approved" aria-pressed="false" aria-label="Approved, 8 posts" onclick="filterCards('approved')"><span>Approved</span><span class="count" aria-hidden="true">8</span></button><button type="button" class="filter-chip" data-filter="variant" aria-pressed="false" aria-label="Variants, 1 posts" onclick="filterCards('variant')"><span>Variants</span><span class="count" aria-hidden="true">1</span></button><button type="button" class="filter-chip" data-filter="pain" aria-pressed="false" aria-label="Pain, 5 posts" onclick="filterCards('pain')"><span>Pain</span><span class="count" aria-hidden="true">5</span></button><button type="button" class="filter-chip" data-filter="proof" aria-pressed="false" aria-label="Proof, 5 posts" onclick="filterCards('proof')"><span>Proof</span><span class="count" aria-hidden="true">5</span></button><button type="button" class="filter-chip" data-filter="sanad_pro_ar" aria-pressed="false" aria-label="Sanad_pro_ar, 2 posts" onclick="filterCards('sanad_pro_ar')"><span>Sanad_pro_ar</span><span class="count" aria-hidden="true">2</span></button><button type="button" class="filter-chip" data-filter="leadership" aria-pressed="false" aria-label="Leadership, 2 posts" onclick="filterCards('leadership')"><span>Leadership</span><span class="count" aria-hidden="true">2</span></button><button type="button" class="filter-chip" data-filter="pain_ar" aria-pressed="false" aria-label="Pain_ar, 1 posts" onclick="filterCards('pain_ar')"><span>Pain_ar</span><span class="count" aria-hidden="true">1</span></button><button type="button" class="filter-chip" data-filter="vision" aria-pressed="false" aria-label="Vision, 1 posts" onclick="filterCards('vision')"><span>Vision</span><span class="count" aria-hidden="true">1</span></button><button type="button" class="filter-chip" data-filter="marketing" aria-pressed="false" aria-label="Marketing, 1 posts" onclick="filterCards('marketing')"><span>Marketing</span><span class="count" aria-hidden="true">1</span></button></div>
+<div class="filter-bar" role="group" aria-label="Filter posts"><button type="button" class="filter-chip active" data-filter="all" aria-pressed="true" aria-label="All, 17 posts" onclick="filterCards('all')"><span>All</span><span class="count" aria-hidden="true">17</span></button><button type="button" class="filter-chip" data-filter="draft" aria-pressed="false" aria-label="Needs review, 0 posts" onclick="filterCards('draft')"><span>Needs review</span><span class="count" aria-hidden="true">0</span></button><button type="button" class="filter-chip" data-filter="published" aria-pressed="false" aria-label="Published, 9 posts" onclick="filterCards('published')"><span>Published</span><span class="count" aria-hidden="true">9</span></button><button type="button" class="filter-chip" data-filter="approved" aria-pressed="false" aria-label="Approved, 8 posts" onclick="filterCards('approved')"><span>Approved</span><span class="count" aria-hidden="true">8</span></button><button type="button" class="filter-chip" data-filter="variant" aria-pressed="false" aria-label="Variants, 1 posts" onclick="filterCards('variant')"><span>Variants</span><span class="count" aria-hidden="true">1</span></button><button type="button" class="filter-chip" data-filter="pain" aria-pressed="false" aria-label="Pain, 5 posts" onclick="filterCards('pain')"><span>Pain</span><span class="count" aria-hidden="true">5</span></button><button type="button" class="filter-chip" data-filter="proof" aria-pressed="false" aria-label="Proof, 5 posts" onclick="filterCards('proof')"><span>Proof</span><span class="count" aria-hidden="true">5</span></button><button type="button" class="filter-chip" data-filter="sanad_pro_ar" aria-pressed="false" aria-label="Sanad_pro_ar, 2 posts" onclick="filterCards('sanad_pro_ar')"><span>Sanad_pro_ar</span><span class="count" aria-hidden="true">2</span></button><button type="button" class="filter-chip" data-filter="leadership" aria-pressed="false" aria-label="Leadership, 2 posts" onclick="filterCards('leadership')"><span>Leadership</span><span class="count" aria-hidden="true">2</span></button><button type="button" class="filter-chip" data-filter="pain_ar" aria-pressed="false" aria-label="Pain_ar, 1 posts" onclick="filterCards('pain_ar')"><span>Pain_ar</span><span class="count" aria-hidden="true">1</span></button><button type="button" class="filter-chip" data-filter="vision" aria-pressed="false" aria-label="Vision, 1 posts" onclick="filterCards('vision')"><span>Vision</span><span class="count" aria-hidden="true">1</span></button><button type="button" class="filter-chip" data-filter="marketing" aria-pressed="false" aria-label="Marketing, 1 posts" onclick="filterCards('marketing')"><span>Marketing</span><span class="count" aria-hidden="true">1</span></button><button type="button" class="filter-chip seg-chip seg-A" disabled data-filter="seg:A" aria-pressed="false" aria-label="HR & Ops (0)" title="No posts yet" style="border-color:#2e7de044;color:#2e7de0"><span>HR & Ops (0)</span></button><button type="button" class="filter-chip seg-chip seg-B" disabled data-filter="seg:B" aria-pressed="false" aria-label="Investors (0)" title="No posts yet" style="border-color:#818cf844;color:#818cf8"><span>Investors (0)</span></button><button type="button" class="filter-chip seg-chip seg-C" disabled data-filter="seg:C" aria-pressed="false" aria-label="Tech (0)" title="No posts yet" style="border-color:#06b6d444;color:#06b6d4"><span>Tech (0)</span></button></div>
+
+
+    <div class="kpi-panel">
+      <button type="button" class="kpi-toggle" aria-expanded="false" aria-controls="kpi-grid"
+              onclick="this.classList.toggle('open');var g=document.getElementById('kpi-grid');g.classList.toggle('open');this.setAttribute('aria-expanded',g.classList.contains('open'))">
+        <span class="kpi-chevron">&#9660;</span> KPI Targets &amp; Outreach
+      </button>
+      <div class="kpi-grid" id="kpi-grid"><div class="kpi-cell"><div class="kpi-target">50/wk</div><div class="kpi-label">Followers target</div></div><div class="kpi-cell"><div class="kpi-target">3,000</div><div class="kpi-label">Impressions/post target</div></div><div class="kpi-cell"><div class="kpi-target">100/wk</div><div class="kpi-label">Profile views target</div></div><div class="kpi-cell"><div class="kpi-target">20/wk</div><div class="kpi-label">DMs target</div></div><div class="kpi-cell"><div class="kpi-target">30%</div><div class="kpi-label">Reply rate target</div></div><div class="kpi-cell"><div class="kpi-target">2/wk</div><div class="kpi-label">Demos booked target</div></div><div class="kpi-cell"><div class="kpi-target">30/wk</div><div class="kpi-label">Newsletter subs target</div></div><div class="kpi-cell"><div class="kpi-target">60%</div><div class="kpi-label">Connection accept target</div></div><div class="kpi-cell kpi-divider" style="grid-column:1/-1"><div class="kpi-label" style="font-size:10px;opacity:.5;text-transform:uppercase;letter-spacing:.08em">Outreach tracker</div></div><div class="kpi-cell" style="grid-column:1/-1"><div class="kpi-label" style="opacity:.6">No outreach data yet — add your first prospect to outreach_tracker.py</div></div></div>
+    </div>
+
+
+    <div class="bookings-section">
+      <h3>Bookings from LinkedIn</h3>
+      <div class="bookings-grid">
+        <div class="bookings-kpi highlight">
+          <span class="kpi-value">1</span>
+          <span class="kpi-label">This week</span>
+          <span class="kpi-target">Target: 2+</span>
+        </div>
+        <div class="bookings-kpi">
+          <span class="kpi-value">1</span>
+          <span class="kpi-label">Total from LinkedIn</span>
+        </div>
+        <div class="bookings-kpi">
+          <span class="kpi-value">1</span>
+          <span class="kpi-label">Demo calls</span>
+        </div>
+        <div class="bookings-kpi">
+          <span class="kpi-value">0</span>
+          <span class="kpi-label">Investor briefings</span>
+        </div>
+        <div class="bookings-kpi">
+          <span class="kpi-value">test-001</span>
+          <span class="kpi-label">Top campaign</span>
+        </div>
+      </div>
+    </div>
 
 <main id="main-content">
 <div class="content">
@@ -1494,166 +1579,14 @@ What&#x27;s the longest you&#x27;ve ever stretched a single piece of content —
 
 
 <div class="statsbar" style="padding-top:30px;border-top:1px solid rgba(255,255,255,.05);margin-top:12px">
-  <div class="stat"><div class="n">7</div><div class="l">Newsletter issues</div></div>
-  <div class="stat"><div class="n">7</div><div class="l">Drafts</div></div>
+  <div class="stat"><div class="n">1</div><div class="l">Newsletter issues</div></div>
+  <div class="stat"><div class="n">1</div><div class="l">Drafts</div></div>
   <div class="stat green"><div class="n">0</div><div class="l">Sent</div></div>
 </div>
 
 <div class="content" style="margin-top:0;padding-top:18px">
-  <h2 class="section-lbl">Newsletter (7)</h2>
+  <h2 class="section-lbl">Newsletter (1)</h2>
   
-    <div class="card news-card" data-issue="7">
-      <div class="card-header">
-        <span class="pillar-tag" style="background:rgba(42,154,92,.15);color:#2a9a5c;border-color:rgba(42,154,92,.35)">NEWSLETTER &middot; #7</span>
-        <span class="badge draft">Draft</span>
-        <span class="meta-right">
-          <span class="model-tag">claude-sonnet-4-6</span>
-          <span class="date">2026-05-14</span>
-        </span>
-      </div>
-      <div class="topic" style="font-size:16px;margin-top:8px">Your leave records won&#x27;t survive a ministry inspection</div>
-      <div class="news-preview">An inspector doesn&#x27;t wait while you search three binders. Here&#x27;s what ready actually looks like.</div>
-      <div class="post-text collapsed" style="margin-top:10px">It&#x27;s mid-May and the heat isn&#x27;t the only thing turning up the pressure.
-
-Ministry of Manpower inspections have picked up frequency in 2026 — and the businesses getting caught off-guard aren&#x27;t the ones doing anything wrong. They&#x27;re the ones who can&#x27;t *prove* they&#x27;re doing it right&hellip;</div>
-      
-      
-      <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06)">
-        <span style="font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.08em;align-self:center;margin-right:2px">Newsletter:</span>
-        <button type="button" class="approve-btn" style="font-size:11px;padding:6px 14px"
-                onclick="showNewsletterApproveModal('7')">&#10003; Approve &amp; Test Send</button>
-        <button type="button" class="rev-btn rev-recreate"
-                onclick="showNewsletterTestModal('7')">&#128231; Send Test</button>
-      </div>
-      <div class="card-footer" style="margin-top:14px">
-        <span class="chars" style="color:rgba(255,255,255,.45)">Issue #7</span>
-        <span style="color:rgba(255,255,255,.3);font-size:11px;font-family:'DM Mono',monospace">
-          newsletter_history/issue_007_2026-05-14.json
-        </span>
-      </div>
-    </div>
-    <div class="card news-card" data-issue="6">
-      <div class="card-header">
-        <span class="pillar-tag" style="background:rgba(42,154,92,.15);color:#2a9a5c;border-color:rgba(42,154,92,.35)">NEWSLETTER &middot; #6</span>
-        <span class="badge draft">Draft</span>
-        <span class="meta-right">
-          <span class="model-tag">claude-sonnet-4-6</span>
-          <span class="date">2026-05-14</span>
-        </span>
-      </div>
-      <div class="topic" style="font-size:16px;margin-top:8px">Your leave records won&#x27;t survive a surprise inspection</div>
-      <div class="news-preview">Ministry inspectors don&#x27;t give you time to find the right WhatsApp thread. Here&#x27;s what to fix this week.</div>
-      <div class="post-text collapsed" style="margin-top:10px">It&#x27;s mid-May, and Oman&#x27;s inspection calendar doesn&#x27;t slow down for Ramadan recovery or summer staffing gaps.
-
-A Ministry of Manpower inspector walked into a Muscat business unannounced last month. The HR manager wasn&#x27;t caught doing anything wrong — she just couldn&#x27;t *prove* it wa&hellip;</div>
-      
-      
-      <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06)">
-        <span style="font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.08em;align-self:center;margin-right:2px">Newsletter:</span>
-        <button type="button" class="approve-btn" style="font-size:11px;padding:6px 14px"
-                onclick="showNewsletterApproveModal('6')">&#10003; Approve &amp; Test Send</button>
-        <button type="button" class="rev-btn rev-recreate"
-                onclick="showNewsletterTestModal('6')">&#128231; Send Test</button>
-      </div>
-      <div class="card-footer" style="margin-top:14px">
-        <span class="chars" style="color:rgba(255,255,255,.45)">Issue #6</span>
-        <span style="color:rgba(255,255,255,.3);font-size:11px;font-family:'DM Mono',monospace">
-          newsletter_history/issue_006_2026-05-14.json
-        </span>
-      </div>
-    </div>
-    <div class="card news-card" data-issue="5">
-      <div class="card-header">
-        <span class="pillar-tag" style="background:rgba(42,154,92,.15);color:#2a9a5c;border-color:rgba(42,154,92,.35)">NEWSLETTER &middot; #5</span>
-        <span class="badge draft">Draft</span>
-        <span class="meta-right">
-          <span class="model-tag">claude-sonnet-4-6</span>
-          <span class="date">2026-05-14</span>
-        </span>
-      </div>
-      <div class="topic" style="font-size:16px;margin-top:8px">Your leave records are in a WhatsApp chat</div>
-      <div class="news-preview">Payroll week arrives and nobody agrees how many days Ahmed actually took in March.</div>
-      <div class="post-text collapsed" style="margin-top:10px">It&#x27;s mid-May and Oman&#x27;s public holiday calendar just handed a lot of companies a short week.
-
-Short weeks are stress tests. Approvals pile up on the wrong days. Someone takes an unlogged day. The attendance sheet goes stale. And by the time payroll week hits, you&#x27;re not running n&hellip;</div>
-      
-      
-      <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06)">
-        <span style="font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.08em;align-self:center;margin-right:2px">Newsletter:</span>
-        <button type="button" class="approve-btn" style="font-size:11px;padding:6px 14px"
-                onclick="showNewsletterApproveModal('5')">&#10003; Approve &amp; Test Send</button>
-        <button type="button" class="rev-btn rev-recreate"
-                onclick="showNewsletterTestModal('5')">&#128231; Send Test</button>
-      </div>
-      <div class="card-footer" style="margin-top:14px">
-        <span class="chars" style="color:rgba(255,255,255,.45)">Issue #5</span>
-        <span style="color:rgba(255,255,255,.3);font-size:11px;font-family:'DM Mono',monospace">
-          newsletter_history/issue_005_2026-05-14.json
-        </span>
-      </div>
-    </div>
-    <div class="card news-card" data-issue="4">
-      <div class="card-header">
-        <span class="pillar-tag" style="background:rgba(42,154,92,.15);color:#2a9a5c;border-color:rgba(42,154,92,.35)">NEWSLETTER &middot; #4</span>
-        <span class="badge draft">Draft</span>
-        <span class="meta-right">
-          <span class="model-tag">claude-sonnet-4-6</span>
-          <span class="date">2026-05-14</span>
-        </span>
-      </div>
-      <div class="topic" style="font-size:16px;margin-top:8px">Your leave records won&#x27;t survive a Ministry inspection</div>
-      <div class="news-preview">Four hours reconstructing records that should take one click. Here&#x27;s how to fix that before an inspector arrives.</div>
-      <div class="post-text collapsed" style="margin-top:10px">It&#x27;s mid-May, and Ramadan leave reconciliations are still tripping up payroll runs across Muscat.
-
-The Ministry of Manpower doesn&#x27;t announce visits. An inspector shows up at 9am, and suddenly the most capable person in your office spends the rest of the morning digging through bi&hellip;</div>
-      
-      
-      <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06)">
-        <span style="font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.08em;align-self:center;margin-right:2px">Newsletter:</span>
-        <button type="button" class="approve-btn" style="font-size:11px;padding:6px 14px"
-                onclick="showNewsletterApproveModal('4')">&#10003; Approve &amp; Test Send</button>
-        <button type="button" class="rev-btn rev-recreate"
-                onclick="showNewsletterTestModal('4')">&#128231; Send Test</button>
-      </div>
-      <div class="card-footer" style="margin-top:14px">
-        <span class="chars" style="color:rgba(255,255,255,.45)">Issue #4</span>
-        <span style="color:rgba(255,255,255,.3);font-size:11px;font-family:'DM Mono',monospace">
-          newsletter_history/issue_004_2026-05-14.json
-        </span>
-      </div>
-    </div>
-    <div class="card news-card" data-issue="3">
-      <div class="card-header">
-        <span class="pillar-tag" style="background:rgba(42,154,92,.15);color:#2a9a5c;border-color:rgba(42,154,92,.35)">NEWSLETTER &middot; #3</span>
-        <span class="badge draft">Draft</span>
-        <span class="meta-right">
-          <span class="model-tag">claude-sonnet-4-6</span>
-          <span class="date">2026-05-14</span>
-        </span>
-      </div>
-      <div class="topic" style="font-size:16px;margin-top:8px">Your leave records can&#x27;t survive a 9am inspection</div>
-      <div class="news-preview">Ministry inspectors don&#x27;t schedule visits. Your WhatsApp thread of approved leave requests won&#x27;t hold up.</div>
-      <div class="post-text collapsed" style="margin-top:10px">It&#x27;s mid-May, and the Ministry of Manpower inspection cycle is active.
-
-That means somewhere in Muscat right now, an HR manager is spending her Thursday morning reconstructing March&#x27;s leave records from a WhatsApp scroll history — because an inspector is sitting in the lobby.
-
-No&hellip;</div>
-      
-      
-      <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06)">
-        <span style="font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.08em;align-self:center;margin-right:2px">Newsletter:</span>
-        <button type="button" class="approve-btn" style="font-size:11px;padding:6px 14px"
-                onclick="showNewsletterApproveModal('3')">&#10003; Approve &amp; Test Send</button>
-        <button type="button" class="rev-btn rev-recreate"
-                onclick="showNewsletterTestModal('3')">&#128231; Send Test</button>
-      </div>
-      <div class="card-footer" style="margin-top:14px">
-        <span class="chars" style="color:rgba(255,255,255,.45)">Issue #3</span>
-        <span style="color:rgba(255,255,255,.3);font-size:11px;font-family:'DM Mono',monospace">
-          newsletter_history/issue_003_2026-05-14.json
-        </span>
-      </div>
-    </div>
     <div class="card news-card" data-issue="2">
       <div class="card-header">
         <span class="pillar-tag" style="background:rgba(42,154,92,.15);color:#2a9a5c;border-color:rgba(42,154,92,.35)">NEWSLETTER &middot; #2</span>
@@ -1683,7 +1616,7 @@ The cut-off is close. Someone is cross-referencing attendance. Someone else is c
           newsletter_history/issue_002_2026-05-14.json
         </span>
       </div>
-    </div><div class="empty" style="padding:14px;font-size:13px;color:rgba(255,255,255,.4)">+1 older issues in newsletter_history/</div>
+    </div>
 </div>
 
 <style>
@@ -1699,7 +1632,10 @@ The cut-off is close. Someone is cross-referencing attendance. Someone else is c
 </main>
 
 <footer>
-  Drafts generated <b>Sat &middot; Mon &middot; Wed</b> at <b>9:00 am Muscat</b> &rarr; publishes <b>Mon &middot; Wed &middot; Fri</b> after manual approval &nbsp;&middot;&nbsp;
+  <b>English</b> drafts: <b>Sat</b> (pain) &middot; <b>Mon</b> (proof) &middot; <b>Wed</b> (vision) at <b>9 am Muscat</b> &rarr; publishes <b>Mon &middot; Wed &middot; Fri</b>
+  &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+  <b>Arabic</b> drafts: <b>Fri</b> (pain_ar) &middot; <b>Sun</b> (sanad_pro_ar) at <b>9 am Muscat</b> &rarr; publishes <b>Sun &middot; Tue</b>
+  &nbsp;&nbsp;&middot;&nbsp;&nbsp; All require manual approval &nbsp;&middot;&nbsp;
   <a href="https://github.com/AbuAli85/LINKEDIN_POSTS" target="_blank" rel="noopener noreferrer">Source<span class="sr-only"> (opens in new tab)</span></a> &middot;
   <a href="https://github.com/AbuAli85/LINKEDIN_POSTS/blob/main/LINKEDIN_SETUP.md" target="_blank" rel="noopener noreferrer">Renew LinkedIn token<span class="sr-only"> (opens in new tab)</span></a> &middot;
   <a href="https://github.com/AbuAli85/LINKEDIN_POSTS/actions/workflows/auto-post.yml" target="_blank" rel="noopener noreferrer">Run workflow<span class="sr-only"> (opens in new tab)</span></a> &middot;
@@ -2537,10 +2473,18 @@ function applyFilters() {
     var status  = card.getAttribute('data-status') || '';
     var pillar  = card.getAttribute('data-pillar') || '';
     var isVariant = card.getAttribute('data-variant') === 'true';
-    // Variants are hidden from all views except the explicit Variants chip
-    if (isVariant && key !== 'variant') { card.style.display = 'none'; return; }
+    var variantStatus = card.getAttribute('data-status') || '';
+    // Draft variants are hidden from all views except the explicit Variants chip.
+    // Approved/published variants remain visible in their own status view so the
+    // owner can see what was actually approved.
+    if (isVariant && key !== 'variant' && (variantStatus === 'draft' || variantStatus === 'dry-run')) {
+      card.style.display = 'none'; return;
+    }
+    var segment = card.getAttribute('data-segment') || '';
+    var isSegFilter = key.indexOf('seg:') === 0;
     var chipOk  = key === 'all' || key === status || key === pillar
-                  || (key === 'variant' && isVariant);
+                  || (key === 'variant' && isVariant)
+                  || (isSegFilter && key === 'seg:' + segment);
     var searchOk = !q || card.textContent.toLowerCase().indexOf(q) !== -1;
     var show = chipOk && searchOk;
     card.style.display = show ? '' : 'none';

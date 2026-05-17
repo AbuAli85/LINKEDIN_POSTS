@@ -1,27 +1,25 @@
 name: Auto-post to LinkedIn
 
-# Two-phase automation:
-#   Phase 1 — generate draft (Sat/Mon/Wed 5am UTC): creates a draft needing owner approval.
-#   Phase 2 — publish approved (Mon/Wed/Fri 6am UTC): publishes the approved draft for today's pillar.
-# Owner approves via the dashboard (marks JSON as approved); publishing is fully automatic.
+# Two-phase automation (daily, all pillars):
+#   Phase 1 — generate-or-publish-posts job runs at both 5am and 6am UTC.
+#     • 5am UTC (9am Muscat): generate draft for today's pillar, needs owner approval.
+#     • 6am UTC (10am Muscat): publish the approved draft for today's publish pillar.
+#   Phase 2 — outreach-sequence job also runs at 6am UTC (same trigger, separate job):
+#     fetches comments → qualifies leads → drafts replies → exports leads.csv
+#
+# Full 7-day schedule (all times UTC):
+#   Generate 5am: Sat→Pain/EN  Sun→Sanad/AR  Mon→Proof/EN  Tue→Sanad/EN
+#                 Wed→Vision/EN  Thu→Tech/EN[C]  Fri→Pain/AR
+#   Publish 6am:  Sun→Pain/AR   Mon→Pain/EN    Tue→Sanad/AR  Wed→Proof/EN
+#                 Thu→Sanad/EN  Fri→Vision/EN  Sat→Tech/EN[C]
 
 on:
   schedule:
-    # Phase 1: generate drafts (5am UTC) — runs 1-2 days before publish
-    # Sat  → Pain/EN       (publishes Mon)
-    # Mon  → Proof/EN      (publishes Wed)
-    # Tue  → Sanad/EN      (publishes Thu)
-    # Wed  → Vision/EN     (publishes Fri)
-    # Thu  → Tech/EN [C]   (publishes Sat)
-    # Fri  → Pain/AR       (publishes Sun)
-    # Sun  → Sanad/AR      (publishes Tue)
+    # Phase 1: generate draft for today's pillar — fires daily at 5am UTC (9am Muscat)
     - cron: "0 5 * * *"
-    # Phase 2: publish approved drafts (6am UTC)
-    # Sun=Pain/AR  Mon=Pain/EN  Tue=Sanad/AR  Wed=Proof/EN  Thu=Sanad/EN  Fri=Vision/EN  Sat=Tech/EN
-    # NOTE: explicit day list keeps the string distinct from outreach "0 6 * * *"
-    # so the job routing if-conditions still work correctly.
-    - cron: "0 6 * * 0,1,2,3,4,5,6"
-    # Phase 3: outreach pipeline — daily at 6:00 AM UTC (10:00 AM Muscat)
+    # Phase 2: publish approved draft for today's pillar + run outreach pipeline
+    # Both the generate-or-publish-posts job and outreach-sequence job trigger from this cron.
+    # Hour detection inside generate-or-publish-posts (06 UTC → publish mode) routes correctly.
     - cron: "0 6 * * *"
   workflow_dispatch:
     inputs:
@@ -72,12 +70,14 @@ on:
 
 jobs:
   post:
+    name: generate-or-publish-posts
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    # Skip this job when triggered by the outreach-only cron or the run_outreach dispatch action
+    # Runs on any scheduled cron (5am → generate, 6am → publish, distinguished by hour detection below)
+    # and on any workflow_dispatch action except run_outreach (handled by the outreach-sequence job).
     if: >
-      (github.event_name == 'schedule' && github.event.schedule != '0 6 * * *') ||
+      github.event_name == 'schedule' ||
       (github.event_name == 'workflow_dispatch' && github.event.inputs.action != 'run_outreach')
     steps:
       - uses: actions/checkout@v4
@@ -152,9 +152,11 @@ jobs:
 
   # ──────────────────────────────────────────────────────────────────────────
   # Outreach Pipeline — runs daily at 06:00 UTC (10:00 Muscat)
+  # Fires from the same "0 6 * * *" cron as the publish step.
   # Fetches new comments → Claude qualification → reply drafts → leads.csv
   # ──────────────────────────────────────────────────────────────────────────
   outreach:
+    name: outreach-sequence
     runs-on: ubuntu-latest
     permissions:
       contents: write

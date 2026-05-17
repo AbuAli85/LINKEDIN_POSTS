@@ -179,16 +179,46 @@ HARD LIMIT: 800-1500 characters.
 {recent_block}Output only the final post. No explanation, no preamble, no label."""
 
 
-def _hashtag_block(segment: str) -> str:
-    """Return a hashtag guidance line for the given audience segment."""
+VALID_SEGMENTS = {"A", "B", "C"}
+
+
+def _hashtag_block(segment: str | None) -> str:
+    """Return hashtag guidance for the segment. Normalises to uppercase; falls back to A."""
     try:
         from content_strategy import HASHTAGS
-        tags = HASHTAGS.get(segment, [])
-        if not tags:
-            return ""
-        return f"HASHTAGS (choose 3-5 from this list): {' '.join(tags)}\n"
     except Exception:
         return ""
+    normalised = (segment or "").strip().upper()
+    if normalised not in VALID_SEGMENTS:
+        import warnings
+        warnings.warn(
+            f"_hashtag_block: invalid segment {segment!r} — falling back to Segment A. "
+            "Check the pillar definition in content_strategy.py.",
+            stacklevel=2,
+        )
+        normalised = "A"
+    tags = HASHTAGS.get(normalised, [])
+    if not tags:
+        return ""
+    return (
+        f"Include these hashtags at the end of the post (after a blank line): "
+        f"{' '.join(tags)}\n"
+        f"Do not insert hashtags mid-post.\n"
+    )
+
+
+def _validate_pillars(pillars: list[dict]) -> None:
+    """Raise ValueError listing all pillars with missing or invalid segment fields."""
+    bad = [
+        p.get("name", f"pillar[{i}]")
+        for i, p in enumerate(pillars)
+        if (p.get("segment") or "").strip().upper() not in VALID_SEGMENTS
+    ]
+    if bad:
+        raise ValueError(
+            f"The following pillars have missing or invalid 'segment' fields: {bad}. "
+            "Each pillar must have segment='A', 'B', or 'C'."
+        )
 
 
 def _seo_block() -> str:
@@ -383,6 +413,9 @@ def _apply_humanizer(post_text: str, pillar: str, tone: str) -> str:
 
 def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) -> dict:
     """Generate a LinkedIn post. Validates output and retries once if needed."""
+    from content_strategy import ALL_PILLARS
+    _validate_pillars(ALL_PILLARS)
+
     # Load recent posts once — reused for topic/format dedup and recent_block
     recent_posts = _load_recent_posts(20)
 
@@ -424,6 +457,7 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
                 "format": fmt,
                 "language": language,
                 "segment": segment,
+                "publish_day": pillar_config.get("publish_day", ""),
                 "post": post_text,
                 "char_count": len(post_text),
                 "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -444,6 +478,7 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
         "format": fmt,
         "language": language,
         "segment": segment,
+        "publish_day": pillar_config.get("publish_day", ""),
         "post": post_text,
         "char_count": len(post_text),
         "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -455,6 +490,9 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
 
 def generate_job_post(job: dict, pillar_config: dict) -> dict:
     """Generate a job announcement post for a specific pending job."""
+    from content_strategy import ALL_PILLARS
+    _validate_pillars(ALL_PILLARS)
+
     recent_posts = _load_recent_posts(20)
     fmt = pick_format(pillar_config, recent_posts)
     model = os.environ.get("ANTHROPIC_MODEL") or DEFAULT_MODEL

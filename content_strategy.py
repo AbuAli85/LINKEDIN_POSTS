@@ -742,6 +742,9 @@ PILLARS = {
 }
 
 
+ALL_PILLARS: list[dict] = [{"name": name, **config} for name, config in PILLARS.items()]
+
+
 def get_pillar_weights() -> dict[str, float]:
     """Return pillar weights from content_analysis.json when available, else PILLARS defaults.
 

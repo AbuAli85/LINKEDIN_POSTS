@@ -536,6 +536,7 @@ footer a:hover{color:#ede9e3}
 .seg-badge.A{background:rgba(46,125,224,.12);color:#2e7de0;border:1px solid rgba(46,125,224,.25)}
 .seg-badge.B{background:rgba(129,140,248,.12);color:#818cf8;border:1px solid rgba(129,140,248,.25)}
 .seg-badge.C{background:rgba(6,182,212,.12);color:#06b6d4;border:1px solid rgba(6,182,212,.25)}
+.seg-chip:disabled{opacity:.4;cursor:not-allowed;pointer-events:none}
 
 /* ── KPI PANEL ── */
 .kpi-panel{max-width:840px;margin:0 auto;padding:0 28px 12px;width:100%}
@@ -553,6 +554,7 @@ footer a:hover{color:#ede9e3}
             letter-spacing:-.03em;line-height:1}
 .kpi-label{font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;
            letter-spacing:.07em;line-height:1.3}
+.kpi-divider{background:transparent;border:none;padding:4px 0 0;justify-content:flex-end}
 
 /* ── PAT REMEMBER CHECKBOX ── */
 .pat-remember{display:flex;align-items:center;gap:8px;margin-top:8px;
@@ -1946,12 +1948,24 @@ def generate(posts: list[dict]) -> str:
     for _p, _c in sorted(counts.items(), key=lambda x: -x[1]):
         _chip_defs.append((_p.capitalize(), _p, _c))
 
-    # Segment chips (A/B/C) — only show if posts have segment data
+    # Segment chips (A/B/C) — always rendered; disabled (not hidden) when count == 0
     seg_counts = Counter(p.get("segment", "") for p in posts if p.get("segment"))
-    seg_chip_defs = [
-        (f"Seg {s}", f"seg:{s}", seg_counts.get(s, 0))
-        for s in ("A", "B", "C") if seg_counts.get(s, 0)
-    ]
+    _SEG_LABELS = {"A": "HR & Ops", "B": "Investors", "C": "Tech"}
+
+    def _seg_chip(seg: str) -> str:
+        count = seg_counts.get(seg, 0)
+        color = SEGMENT_COLOR.get(seg, "#94a3b8")
+        disabled_attr = " disabled" if count == 0 else ""
+        title = "No posts yet" if count == 0 else f"{count} posts"
+        onclick = f" onclick=\"filterCards('seg:{seg}')\"" if count > 0 else ""
+        label = f"{_SEG_LABELS[seg]} ({count})"
+        return (
+            f'<button type="button" class="filter-chip seg-chip seg-{seg}"{disabled_attr} '
+            f'data-filter="seg:{seg}" aria-pressed="false" aria-label="{label}" '
+            f'title="{title}"{onclick} '
+            f'style="border-color:{color}44;color:{color}">'
+            f'<span>{label}</span></button>'
+        )
 
     filter_bar_html = (
         '<div class="filter-bar" role="group" aria-label="Filter posts">'
@@ -1962,39 +1976,62 @@ def generate(posts: list[dict]) -> str:
             f'<span>{n}</span><span class="count" aria-hidden="true">{c}</span></button>'
             for n, k, c in _chip_defs
         )
-        + ("".join(
-            f'<button type="button" class="filter-chip" data-filter="{k}" '
-            f'aria-pressed="false" aria-label="{n}, {c} posts" onclick="filterCards(\'{k}\')" '
-            f'style="border-color:{SEGMENT_COLOR.get(k.split(":")[-1],"#94a3b8")}44;'
-            f'color:{SEGMENT_COLOR.get(k.split(":")[-1],"#94a3b8")}">'
-            f'<span>{n}</span><span class="count" aria-hidden="true">{c}</span></button>'
-            for n, k, c in seg_chip_defs
-        ) if seg_chip_defs else "")
+        + "".join(_seg_chip(s) for s in ("A", "B", "C"))
         + "</div>"
     )
 
-    # KPI targets panel
+    # KPI targets panel — static playbook targets + live outreach data
     _kpi_items = [
-        ("50/wk",  "Followers"),
-        ("3,000",  "Impressions/post"),
-        ("100/wk", "Profile views"),
-        ("20/wk",  "DMs"),
-        ("30%",    "Reply rate"),
-        ("2/wk",   "Demos booked"),
-        ("30/wk",  "Newsletter subs"),
-        ("60%",    "Connection accept"),
+        ("50/wk",  "Followers target"),
+        ("3,000",  "Impressions/post target"),
+        ("100/wk", "Profile views target"),
+        ("20/wk",  "DMs target"),
+        ("30%",    "Reply rate target"),
+        ("2/wk",   "Demos booked target"),
+        ("30/wk",  "Newsletter subs target"),
+        ("60%",    "Connection accept target"),
     ]
-    kpi_cells = "".join(
+    static_cells = "".join(
         f'<div class="kpi-cell"><div class="kpi-target">{v}</div><div class="kpi-label">{l}</div></div>'
         for v, l in _kpi_items
     )
+
+    # Live outreach KPIs from outreach_tracker.py (fails silently if file absent)
+    outreach_cells = ""
+    try:
+        from outreach_tracker import kpi_summary as _kpi_summary
+        ok = _kpi_summary()
+        _conv = f'{ok["conversion_rate"]}%'
+        _due  = str(ok["due_today"]) if ok["due_today"] else "0"
+        _seg  = f'A:{ok["by_segment"].get("A",0)} B:{ok["by_segment"].get("B",0)} C:{ok["by_segment"].get("C",0)}'
+        outreach_rows = [
+            (str(ok["total"]),     "Prospects enrolled"),
+            (str(ok["active"]),    "Active in sequence"),
+            (str(ok["converted"]), "Converted"),
+            (_conv,                "Conversion rate"),
+            (_due,                 "Due today"),
+            (_seg,                 "By segment (A/B/C)"),
+        ]
+        outreach_cells = (
+            '<div class="kpi-cell kpi-divider" style="grid-column:1/-1">'
+            '<div class="kpi-label" style="font-size:10px;opacity:.5;text-transform:uppercase;'
+            'letter-spacing:.08em">Outreach tracker</div></div>'
+            + "".join(
+                f'<div class="kpi-cell"><div class="kpi-target">{v}</div>'
+                f'<div class="kpi-label">{l}</div></div>'
+                for v, l in outreach_rows
+            )
+        )
+    except Exception:
+        pass
+
     kpi_panel_html = f"""
     <div class="kpi-panel">
       <button type="button" class="kpi-toggle" aria-expanded="false" aria-controls="kpi-grid"
               onclick="this.classList.toggle('open');var g=document.getElementById('kpi-grid');g.classList.toggle('open');this.setAttribute('aria-expanded',g.classList.contains('open'))">
-        <span class="kpi-chevron">&#9660;</span> KPI Targets
+        <span class="kpi-chevron">&#9660;</span> KPI Targets &amp; Outreach
       </button>
-      <div class="kpi-grid" id="kpi-grid">{kpi_cells}</div>
+      <div class="kpi-grid" id="kpi-grid">{static_cells}{outreach_cells}</div>
     </div>"""
 
     token_msg, token_level = _token_health(posts)

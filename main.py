@@ -203,8 +203,9 @@ def publish_approved_for_today() -> int:
     """
     from content_strategy import PILLARS
 
-    now     = datetime.now(timezone.utc)
-    weekday = now.weekday()  # 0=Mon … 6=Sun
+    now        = datetime.now(timezone.utc)
+    weekday    = now.weekday()  # 0=Mon … 6=Sun
+    today_name = now.strftime("%A")  # "Monday", "Saturday", etc.
 
     # Identify which scheduled pillar publishes today (exclude conversion — manual only)
     todays_pillar = next(
@@ -222,6 +223,11 @@ def publish_approved_for_today() -> int:
         try:
             post = json.loads(f.read_text(encoding="utf-8"))
         except Exception:
+            continue
+        post_publish_day = post.get("publish_day", "")
+        # publish_day guard: skip posts whose publish_day doesn't match today.
+        # Legacy posts without publish_day pass through (backwards-compatible).
+        if post_publish_day and post_publish_day != today_name:
             continue
         if (
             post.get("pillar") == todays_pillar

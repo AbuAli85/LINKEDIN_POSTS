@@ -200,10 +200,11 @@ def add_prospect(
     started_at: str | None = None,
     notes: str = "",
     tags: list[str] | None = None,
+    path: str = TRACKER_FILE,
 ) -> Prospect:
     """Enrol a new prospect; returns existing record silently if already enrolled."""
     try:
-        prospects = load_tracker()
+        prospects = load_tracker(path)
     except FileNotFoundError:
         prospects = []
 
@@ -224,23 +225,23 @@ def add_prospect(
         tags=tags or [],
     )
     prospects.append(p)
-    save_tracker(prospects)
+    save_tracker(prospects, path)
     return p
 
 
-def advance_prospect(prospect_id: str) -> dict:
+def advance_prospect(prospect_id: str, path: str = TRACKER_FILE) -> dict:
     """Advance a prospect to their next sequence step.
 
     Saves to disk.  Returns the updated next-action dict, or a completion
     dict if the sequence is finished.
     """
-    prospects = load_tracker()
+    prospects = load_tracker(path)
     target = next((p for p in prospects if p.id == prospect_id), None)
     if target is None:
         raise ValueError(f"No prospect found with id '{prospect_id}'")
 
     still_active = target.advance()
-    save_tracker(prospects)
+    save_tracker(prospects, path)
 
     if not still_active:
         return {
@@ -258,11 +259,14 @@ def advance_prospect(prospect_id: str) -> dict:
     }
 
 
-def get_todays_actions(today: date | None = None) -> list[dict[str, Any]]:
+def get_todays_actions(
+    today: date | None = None,
+    path: str = TRACKER_FILE,
+) -> list[dict[str, Any]]:
     """Return all prospects whose next action is due today or overdue."""
     today = today or date.today()
     try:
-        prospects = load_tracker()
+        prospects = load_tracker(path)
     except FileNotFoundError:
         return []
 
@@ -291,29 +295,29 @@ def get_todays_actions(today: date | None = None) -> list[dict[str, Any]]:
     return due
 
 
-def mark_converted(prospect_id: str) -> bool:
+def mark_converted(prospect_id: str, path: str = TRACKER_FILE) -> bool:
     try:
-        prospects = load_tracker()
+        prospects = load_tracker(path)
     except FileNotFoundError:
         return False
     for p in prospects:
         if p.id == prospect_id:
             p.status = Status.CONVERTED
             p.converted_at = datetime.now(timezone.utc).isoformat()
-            save_tracker(prospects)
+            save_tracker(prospects, path)
             return True
     return False
 
 
-def mark_opted_out(prospect_id: str) -> bool:
+def mark_opted_out(prospect_id: str, path: str = TRACKER_FILE) -> bool:
     try:
-        prospects = load_tracker()
+        prospects = load_tracker(path)
     except FileNotFoundError:
         return False
     for p in prospects:
         if p.id == prospect_id:
             p.status = Status.OPTED_OUT
-            save_tracker(prospects)
+            save_tracker(prospects, path)
             return True
     return False
 
@@ -322,13 +326,13 @@ def mark_opted_out(prospect_id: str) -> bool:
 # KPI summary — consumed by dashboard.py
 # ---------------------------------------------------------------------------
 
-def kpi_summary() -> dict[str, Any]:
+def kpi_summary(path: str = TRACKER_FILE) -> dict[str, Any]:
     """Return outreach KPIs.
 
     Raises FileNotFoundError if the tracker file has not been created yet
     (no prospects enrolled).  The dashboard catches this and shows a placeholder.
     """
-    prospects = load_tracker()   # propagates FileNotFoundError intentionally
+    prospects = load_tracker(path)   # propagates FileNotFoundError intentionally
     total     = len(prospects)
     by_seg: dict[str, int] = {"A": 0, "B": 0, "C": 0}
     converted = opted_out = replied = active = 0
@@ -345,7 +349,7 @@ def kpi_summary() -> dict[str, Any]:
         else:
             active += 1
 
-    due_today = len(get_todays_actions())
+    due_today = len(get_todays_actions(path=path))
     conv_rate = round(converted / total * 100, 1) if total else 0.0
 
     return {

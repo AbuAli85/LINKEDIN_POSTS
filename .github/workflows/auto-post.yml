@@ -1,26 +1,28 @@
 name: Auto-post to LinkedIn
 
-# Two-phase automation (daily, all pillars):
-#   Phase 1 — generate-or-publish-posts job runs at both 5am and 6am UTC.
-#     • 5am UTC (9am Muscat): generate draft for today's pillar, needs owner approval.
-#     • 6am UTC (10am Muscat): publish the approved draft for today's publish pillar.
-#   Phase 2 — outreach-sequence job also runs at 6am UTC (same trigger, separate job):
-#     fetches comments → qualifies leads → drafts replies → exports leads.csv
+# Four automated jobs (all times UTC / Muscat +4):
+#   05:00 UTC (09:00 Muscat) — generate-or-publish-posts: generate draft for today's pillar
+#   05:15 UTC (09:15 Muscat) — publish-sweep: publish oldest approved post for today
+#   06:00 UTC (10:00 Muscat) — generate-or-publish-posts: publish-approved backup pass
+#                              outreach-sequence: comments → qualify → replies → leads.csv
+#   06:00 UTC Sunday only    — fetch-metrics: pull LinkedIn engagement for all published posts
 #
-# Full 7-day schedule (all times UTC):
-#   Generate 5am: Sat→Pain/EN  Sun→Sanad/AR  Mon→Proof/EN  Tue→Sanad/EN
-#                 Wed→Vision/EN  Thu→Tech/EN[C]  Fri→Pain/AR
-#   Publish 6am:  Sun→Pain/AR   Mon→Pain/EN    Tue→Sanad/AR  Wed→Proof/EN
-#                 Thu→Sanad/EN  Fri→Vision/EN  Sat→Tech/EN[C]
+# Full 7-day schedule:
+#   Generate 05:00: Sat→Pain/EN  Sun→Sanad/AR  Mon→Proof/EN  Tue→Sanad/EN
+#                   Wed→Vision/EN  Thu→Tech/EN[C]  Fri→Pain/AR
+#   Publish 05:15:  any approved post whose publish_day == today (pillar-agnostic sweep)
+#   Publish 06:00:  backup pass via hour-detection (publishes if 05:15 missed anything)
 
 on:
   schedule:
-    # Phase 1: generate draft for today's pillar — fires daily at 5am UTC (9am Muscat)
+    # generate draft for today's pillar
     - cron: "0 5 * * *"
-    # Phase 2: publish approved draft for today's pillar + run outreach pipeline
-    # Both the generate-or-publish-posts job and outreach-sequence job trigger from this cron.
-    # Hour detection inside generate-or-publish-posts (06 UTC → publish mode) routes correctly.
+    # publish sweep — pillar-agnostic, publishes oldest approved post for today
+    - cron: "15 5 * * *"
+    # publish-approved backup pass + outreach pipeline
     - cron: "0 6 * * *"
+    # weekly engagement metrics fetch (Sunday only)
+    - cron: "0 6 * * 0"
   workflow_dispatch:
     inputs:
       action:
@@ -74,10 +76,11 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    # Runs on any scheduled cron (5am → generate, 6am → publish, distinguished by hour detection below)
-    # and on any workflow_dispatch action except run_outreach (handled by the outreach-sequence job).
+    # Runs on the 05:00 (generate) and 06:00 (publish backup) crons — NOT the 05:15 sweep.
+    # Hour detection inside the Detect-run-mode step routes to generate_draft or publish_approved.
+    # Also runs on any workflow_dispatch action except run_outreach.
     if: >
-      github.event_name == 'schedule' ||
+      (github.event_name == 'schedule' && (github.event.schedule == '0 5 * * *' || github.event.schedule == '0 6 * * *')) ||
       (github.event_name == 'workflow_dispatch' && github.event.inputs.action != 'run_outreach')
     steps:
       - uses: actions/checkout@v4
@@ -220,4 +223,91 @@ jobs:
           python dashboard.py
           git add docs/index.html
           git diff --cached --quiet || git commit -m "dashboard: update $(date -u '+%Y-%m-%d %H:%M UTC')"
+          git push origin HEAD:${GITHUB_REF_NAME}
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # Publish Sweep — runs daily at 05:15 UTC (09:15 Muscat)
+  # Publishes the oldest approved post whose publish_day matches today.
+  # Pillar-agnostic — clears any backlog of approved-but-unpublished posts.
+  # Publishes at most one post per run.
+  # ──────────────────────────────────────────────────────────────────────────
+  sweep:
+    name: publish-sweep
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    if: github.event_name == 'schedule' && github.event.schedule == '15 5 * * *'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Publish approved post for today
+        env:
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+          LINKEDIN_AUTHOR_URN: ${{ secrets.LINKEDIN_AUTHOR_URN }}
+          POST_MODE: publish_approved
+        run: python main.py
+
+      - name: Commit updated post status and dashboard
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add posts_history/ 2>/dev/null || true
+          git diff --cached --quiet || git commit -m "publish: sweep $(date -u '+%Y-%m-%d %H:%M UTC')"
+          git pull --rebase origin ${GITHUB_REF_NAME}
+          python dashboard.py
+          git add docs/
+          git diff --cached --quiet || git commit -m "dashboard: update $(date -u '+%Y-%m-%d %H:%M UTC')"
+          git push origin HEAD:${GITHUB_REF_NAME}
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # Weekly Metrics Fetch — runs every Sunday at 06:00 UTC (10:00 Muscat)
+  # Pulls LinkedIn engagement counts for all published posts.
+  # Rebuilds dashboard with updated metrics data.
+  # NOTE: On Sunday the outreach job also fires at 06:00 UTC — both run in
+  # parallel (separate jobs). The outreach job's dashboard commit may race
+  # this one; git pull --rebase handles it cleanly.
+  # ──────────────────────────────────────────────────────────────────────────
+  metrics:
+    name: fetch-engagement-metrics
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    if: github.event_name == 'schedule' && github.event.schedule == '0 6 * * 0'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Fetch LinkedIn engagement for all published posts
+        env:
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+          LINKEDIN_AUTHOR_URN: ${{ secrets.LINKEDIN_AUTHOR_URN }}
+        run: python metrics.py fetch-all || echo "⚠ metrics fetch failed, continuing"
+
+      - name: Rebuild dashboard with updated metrics
+        run: python dashboard.py
+
+      - name: Commit updated metrics and dashboard
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add posts_history/ docs/
+          git diff --cached --quiet || git commit -m "chore: weekly metrics fetch $(date -u '+%Y-%m-%d')"
+          git pull --rebase origin ${GITHUB_REF_NAME}
           git push origin HEAD:${GITHUB_REF_NAME}

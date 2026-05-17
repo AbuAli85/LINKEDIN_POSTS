@@ -136,6 +136,51 @@ def _format_recent_posts(posts: list[dict]) -> str:
     return "\n".join(lines)
 
 
+def _recent_newsletter_topics(n: int = 5) -> list[str]:
+    """Return subject + summary strings for the last n newsletter issues, oldest first."""
+    files = sorted(NEWSLETTER_DIR.glob("*.json"))[-n:]
+    topics: list[str] = []
+    for f in files:
+        try:
+            data = json.loads(f.read_text(encoding="utf-8"))
+            subject = data.get("subject") or data.get("title") or ""
+            summary = data.get("summary") or data.get("preview") or ""
+            if subject:
+                topics.append(f"Issue subject: {subject} | Summary: {summary[:120]}")
+        except Exception:
+            pass
+    return topics
+
+
+_STOP_WORDS = frozenset({
+    "a", "an", "the", "your", "our", "is", "are", "was", "were",
+    "in", "on", "at", "to", "of", "and", "or", "for", "with",
+    "that", "it", "its", "this", "how", "what", "why", "when", "will", "won",
+})
+
+
+def _subject_too_similar(
+    new_subject: str,
+    recent_topics: list[str],
+    threshold: float = 0.6,
+) -> bool:
+    """True if new_subject shares ≥ threshold of its keywords with any recent subject."""
+    def keywords(s: str) -> set[str]:
+        return {w.lower() for w in s.split() if w.lower() not in _STOP_WORDS and len(w) > 3}
+
+    new_kw = keywords(new_subject)
+    if not new_kw:
+        return False
+    for recent in recent_topics:
+        subject_part = recent.split("|")[0].replace("Issue subject:", "").strip()
+        recent_kw = keywords(subject_part)
+        if not recent_kw:
+            continue
+        if len(new_kw & recent_kw) / len(new_kw) >= threshold:
+            return True
+    return False
+
+
 def _next_issue_number() -> int:
     existing = list(NEWSLETTER_DIR.glob("issue_*.json"))
     if not existing:
@@ -170,9 +215,19 @@ def generate_issue(model: str = DEFAULT_MODEL) -> dict:
 
     Returns the parsed issue dict (with metadata)."""
     client = anthropic.Anthropic()
-    issue_num  = _next_issue_number()
-    issue_date = datetime.now(timezone.utc).date().isoformat()
-    recent     = _load_recent_posts()
+    issue_num   = _next_issue_number()
+    issue_date  = datetime.now(timezone.utc).date().isoformat()
+    recent      = _load_recent_posts()
+    recent_nls  = _recent_newsletter_topics()
+
+    if recent_nls:
+        avoid_block = (
+            "\n\nRECENT NEWSLETTER ISSUES (do NOT repeat these topics or frames):\n"
+            + "\n".join(f"  - {t}" for t in recent_nls)
+            + "\n\nChoose a completely different topic, angle, and subject line."
+        )
+    else:
+        avoid_block = ""
 
     prompt = USER_TEMPLATE.format(
         issue_num=issue_num,
@@ -180,7 +235,7 @@ def generate_issue(model: str = DEFAULT_MODEL) -> dict:
         brand_url=BRAND_URL,
         cta_line=COMPANY_CTA,
         recent_posts=_format_recent_posts(recent),
-    )
+    ) + avoid_block
 
     resp = client.messages.create(
         model=model,
@@ -190,6 +245,35 @@ def generate_issue(model: str = DEFAULT_MODEL) -> dict:
     )
     raw = "".join(b.text for b in resp.content if getattr(b, "type", None) == "text")
     issue = _parse_json_response(raw)
+
+    # Post-generation subject uniqueness check — regenerate once if too similar
+    if recent_nls and _subject_too_similar(issue.get("subject", ""), recent_nls):
+        print(
+            f"WARNING: Subject too similar to recent issues ({issue.get('subject')!r}). "
+            "Regenerating with stronger avoid block…"
+        )
+        stronger = prompt + (
+            "\n\nCRITICAL: The previous attempt produced a subject line too close to a "
+            "recent issue. You MUST choose an entirely different angle, pain point, and "
+            "framing. Avoid anything related to the topics listed above."
+        )
+        resp2 = client.messages.create(
+            model=model,
+            max_tokens=MAX_TOKENS,
+            system=SYSTEM_PROMPT,
+            messages=[{"role": "user", "content": stronger}],
+        )
+        raw2 = "".join(b.text for b in resp2.content if getattr(b, "type", None) == "text")
+        try:
+            issue2 = _parse_json_response(raw2)
+            if _subject_too_similar(issue2.get("subject", ""), recent_nls):
+                print(
+                    f"WARNING: Second attempt still similar ({issue2.get('subject')!r}). "
+                    "Proceeding anyway — review manually."
+                )
+            issue = issue2
+        except Exception as e:
+            print(f"WARNING: Second attempt failed to parse ({e}). Using first result.")
 
     # Attach metadata
     issue["_meta"] = {

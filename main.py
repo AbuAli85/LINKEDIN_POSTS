@@ -196,55 +196,50 @@ def generate_and_publish_now() -> int:
 
 
 def publish_approved_for_today() -> int:
-    """Cron phase-2: find the most recent approved draft for today's publish pillar and publish it.
+    """Publish sweep: find the oldest approved draft whose publish_day matches today.
 
-    Runs Mon/Wed/Fri at 6am UTC. If no approved draft exists, exits cleanly — the owner
-    simply hasn't approved yet and the post will be skipped for this cycle.
+    Pillar-agnostic — publishes any approved post scheduled for today, regardless of
+    which pillar generated it.  Legacy posts with no publish_day are included so they
+    are never silently stuck.  Publishes at most one post per run to avoid bulk-publishing.
     """
-    from content_strategy import PILLARS
-
+    dry_run    = os.environ.get("DRY_RUN", "false").lower() == "true"
     now        = datetime.now(timezone.utc)
-    weekday    = now.weekday()  # 0=Mon … 6=Sun
-    today_name = now.strftime("%A")  # "Monday", "Saturday", etc.
+    today_name = now.strftime("%A")  # e.g. "Monday"
 
-    # Identify which scheduled pillar publishes today (exclude conversion — manual only)
-    todays_pillar = next(
-        (name for name, cfg in PILLARS.items()
-         if cfg["weekday"] == weekday and cfg.get("generate_weekday", -1) >= 0),
-        None,
-    )
-    if todays_pillar is None:
-        print(f"No pillar scheduled to publish today (weekday={weekday}). Nothing to do.")
-        return 0
-
-    history = Path(__file__).parent / "posts_history"
+    history    = Path(__file__).parent / "posts_history"
     candidates: list[tuple[Path, dict]] = []
-    for f in sorted(history.glob("*.json"), reverse=True):
+
+    # Walk oldest-first so candidates[0] is the post that has waited longest
+    for f in sorted(history.glob("*.json")):
         try:
             post = json.loads(f.read_text(encoding="utf-8"))
         except Exception:
             continue
+        if not (post.get("approved") or post.get("status") == "approved"):
+            continue
+        if post.get("published"):
+            continue
+        if post.get("status") == "superseded":
+            continue
         post_publish_day = post.get("publish_day", "")
-        # publish_day guard: skip posts whose publish_day doesn't match today.
-        # Legacy posts without publish_day pass through (backwards-compatible).
+        # Include posts whose publish_day matches today, or legacy posts with no publish_day
         if post_publish_day and post_publish_day != today_name:
             continue
-        if (
-            post.get("pillar") == todays_pillar
-            and (post.get("approved") or post.get("status") == "approved")
-            and not post.get("published")
-        ):
-            candidates.append((f, post))
+        candidates.append((f, post))
 
     if not candidates:
-        print(
-            f"No approved draft found for pillar={todays_pillar!r} (weekday={weekday}). "
-            "Owner has not approved a draft yet — skipping this publish cycle."
-        )
+        print(f"No approved posts scheduled for {today_name}. Nothing to publish.")
         return 0
 
-    path, _ = candidates[0]  # most recently generated approved draft
-    print(f"Auto-publishing approved {todays_pillar} draft: {path.name}")
+    path, post = candidates[0]
+    print(f"[publish_approved] Candidate: {path.name}  pillar={post.get('pillar')}  publish_day={post.get('publish_day', 'legacy')}")
+
+    if dry_run:
+        print(f"DRY_RUN=true — would publish {path.name}. Remaining candidates: {len(candidates) - 1}")
+        for p, _ in candidates[1:]:
+            print(f"  (queued) {p.name}")
+        return 0
+
     return _publish_post_file(path)
 
 

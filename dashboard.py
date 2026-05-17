@@ -1180,8 +1180,13 @@ function applyFilters() {
     var status  = card.getAttribute('data-status') || '';
     var pillar  = card.getAttribute('data-pillar') || '';
     var isVariant = card.getAttribute('data-variant') === 'true';
-    // Variants are hidden from all views except the explicit Variants chip
-    if (isVariant && key !== 'variant') { card.style.display = 'none'; return; }
+    var variantStatus = card.getAttribute('data-status') || '';
+    // Draft variants are hidden from all views except the explicit Variants chip.
+    // Approved/published variants remain visible in their own status view so the
+    // owner can see what was actually approved.
+    if (isVariant && key !== 'variant' && (variantStatus === 'draft' || variantStatus === 'dry-run')) {
+      card.style.display = 'none'; return;
+    }
     var chipOk  = key === 'all' || key === status || key === pillar
                   || (key === 'variant' && isVariant);
     var searchOk = !q || card.textContent.toLowerCase().indexOf(q) !== -1;
@@ -1442,6 +1447,7 @@ def _card(post: dict, idx: int) -> str:
         (post.get("status") == "draft" or post.get("approval_required"))
         and not post.get("published")
         and status_value != "superseded"
+        and not post.get("is_variant", False)
     )
     filename      = post.get("_filename", "")
     draft_path    = html.escape(f"posts_history/{filename}") if filename else ""
@@ -2040,7 +2046,10 @@ def generate(posts: list[dict]) -> str:
 </main>
 
 <footer>
-  Drafts generated <b>Sat &middot; Mon &middot; Wed</b> at <b>9:00 am Muscat</b> &rarr; publishes <b>Mon &middot; Wed &middot; Fri</b> after manual approval &nbsp;&middot;&nbsp;
+  <b>English</b> drafts: <b>Sat</b> (pain) &middot; <b>Mon</b> (proof) &middot; <b>Wed</b> (vision) at <b>9 am Muscat</b> &rarr; publishes <b>Mon &middot; Wed &middot; Fri</b>
+  &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+  <b>Arabic</b> drafts: <b>Fri</b> (pain_ar) &middot; <b>Sun</b> (sanad_pro_ar) at <b>9 am Muscat</b> &rarr; publishes <b>Sun &middot; Tue</b>
+  &nbsp;&nbsp;&middot;&nbsp;&nbsp; All require manual approval &nbsp;&middot;&nbsp;
   <a href="https://github.com/{REPO}" target="_blank" rel="noopener noreferrer">Source<span class="sr-only"> (opens in new tab)</span></a> &middot;
   <a href="https://github.com/{REPO}/blob/main/LINKEDIN_SETUP.md" target="_blank" rel="noopener noreferrer">Renew LinkedIn token<span class="sr-only"> (opens in new tab)</span></a> &middot;
   <a href="{ACTIONS_URL}" target="_blank" rel="noopener noreferrer">Run workflow<span class="sr-only"> (opens in new tab)</span></a> &middot;

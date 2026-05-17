@@ -55,6 +55,10 @@ STRUCTURE (every issue follows this shape)
 7. ONE QUESTION — a single open question that invites a reply. Real curiosity.
 8. SIGN-OFF — short, by name, with a clear CTA to www.thesmartpro.io.
 
+TERMINOLOGY (use these exact terms — never the wrong alternative)
+- Ministry of Labour  (NOT "Ministry of Manpower")
+- WPS  (not "Wages Protection System" spelled out every time)
+
 BANNED
 - "In today's fast-paced world", "delve", "tapestry", "game-changer", "unlock"
 - Hashtags (this isn't social — it's email)

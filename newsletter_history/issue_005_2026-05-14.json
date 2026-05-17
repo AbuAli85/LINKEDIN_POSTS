@@ -1,10 +1,10 @@
-{
+﻿{
   "subject": "Your leave records are in a WhatsApp chat",
   "preview": "Payroll week arrives and nobody agrees how many days Ahmed actually took in March.",
   "opening": "It's mid-May and Oman's public holiday calendar just handed a lot of companies a short week.\n\nShort weeks are stress tests. Approvals pile up on the wrong days. Someone takes an unlogged day. The attendance sheet goes stale. And by the time payroll week hits, you're not running numbers — you're investigating.\n\nThat investigation is usually conducted inside a WhatsApp group. Which tells you everything.",
   "pain": {
     "title": "The WhatsApp leave system is costing you more than you think",
-    "body": "Most HR managers in Oman are managing leave across at least one group chat — sometimes three. Requests arrive between forwarded videos and birthday messages. Someone screenshots it. Someone approves verbally and logs nothing. Then month-end arrives and no one can reconstruct what actually happened.\n\nThe time cost alone is significant: HR teams at companies our size typically spend 6 to 10 hours a month just reconciling leave before they can close payroll. That's before you factor in the dispute with the employee, the wrong WPS figure, or the Ministry of Manpower inspection where you have to explain why your leave records are a screenshot from March. SmartPro exists precisely for this — leave requests, approvals, balances, and payroll all talking to each other in one place."
+    "body": "Most HR managers in Oman are managing leave across at least one group chat — sometimes three. Requests arrive between forwarded videos and birthday messages. Someone screenshots it. Someone approves verbally and logs nothing. Then month-end arrives and no one can reconstruct what actually happened.\n\nThe time cost alone is significant: HR teams at companies our size typically spend 6 to 10 hours a month just reconciling leave before they can close payroll. That's before you factor in the dispute with the employee, the wrong WPS figure, or the Ministry of Labour inspection where you have to explain why your leave records are a screenshot from March. SmartPro exists precisely for this — leave requests, approvals, balances, and payroll all talking to each other in one place."
   },
   "proof": {
     "title": "From 14 hours of payroll reconciliation to 23 minutes",
@@ -21,7 +21,7 @@
       "If you're still running this on spreadsheets, calculate the actual hours your HR person spends on leave reconciliation per month. Write that number down. It's the starting point for any honest conversation about whether the current setup is worth keeping."
     ]
   },
-  "question": "When a Ministry of Manpower inspector walked in tomorrow morning, how long would it take your team to pull a complete, accurate leave record for any one employee — and what would you have to open to do it?",
+  "question": "When a Ministry of Labour inspector walked in tomorrow morning, how long would it take your team to pull a complete, accurate leave record for any one employee — and what would you have to open to do it?",
   "signoff": "If any step in that playbook made you uncomfortable, that's useful information.\n\nThe companies that handle compliance calmly aren't doing more work — they're doing it in one place instead of five.\n\nBook a 20-minute demo at www.thesmartpro.io, or WhatsApp +96879665522 to see SmartPro live. We'll show you exactly how leave, attendance, and WPS connect.\n\n— The SmartPro Team",
   "_meta": {
     "issue_number": 5,

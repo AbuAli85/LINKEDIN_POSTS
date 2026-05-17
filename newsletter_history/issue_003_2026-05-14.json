@@ -1,7 +1,7 @@
-{
+﻿{
   "subject": "Your leave records can't survive a 9am inspection",
   "preview": "Ministry inspectors don't schedule visits. Your WhatsApp thread of approved leave requests won't hold up.",
-  "opening": "It's mid-May, and the Ministry of Manpower inspection cycle is active.\n\nThat means somewhere in Muscat right now, an HR manager is spending her Thursday morning reconstructing March's leave records from a WhatsApp scroll history — because an inspector is sitting in the lobby.\n\nNot because she's careless. Because the system she's working in was never built to be audited.",
+  "opening": "It's mid-May, and the Ministry of Labour inspection cycle is active.\n\nThat means somewhere in Muscat right now, an HR manager is spending her Thursday morning reconstructing March's leave records from a WhatsApp scroll history — because an inspector is sitting in the lobby.\n\nNot because she's careless. Because the system she's working in was never built to be audited.",
   "pain": {
     "title": "The four hours nobody puts on the compliance invoice",
     "body": "The fine gets talked about. The four hours don't.\n\nWhen a Ministry inspector arrives unannounced, the real cost isn't the penalty — it's your best HR person spending half a working day cross-referencing handwritten leave records against a spreadsheet last updated in March. That's before anyone touches the WPS submission history or the attendance register.\n\nMost Oman SMBs run three separate systems for what should be one record: WhatsApp for leave requests, Excel for balances, and a manual WPS file built the night before the bank deadline. The moment any inspector — or any payroll dispute — asks you to prove what happened in February, those three systems rarely agree."

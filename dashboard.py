@@ -108,6 +108,39 @@ def next_publish_runs(n: int = 3) -> list[datetime]:
     return result
 
 
+def _booking_summary(path: str = "bookings.json") -> dict:
+    """Return booking KPIs for dashboard display."""
+    from datetime import timedelta
+    try:
+        with open(path, encoding="utf-8") as f:
+            bookings = json.load(f)
+    except FileNotFoundError:
+        return {
+            "total": 0, "from_linkedin": 0,
+            "demo_bookings": 0, "investor_bookings": 0,
+            "this_week": 0, "top_campaign": None,
+        }
+
+    week_ago = (datetime.now(timezone.utc) - timedelta(days=7)).isoformat()
+    linkedin  = [b for b in bookings if b.get("utm_source") == "linkedin"]
+    this_week = [b for b in linkedin  if b.get("booked_at", "") >= week_ago]
+
+    campaigns: dict[str, int] = {}
+    for b in linkedin:
+        c = b.get("utm_campaign") or "unknown"
+        campaigns[c] = campaigns.get(c, 0) + 1
+    top = max(campaigns, key=lambda k: campaigns[k]) if campaigns else None
+
+    return {
+        "total":             len(bookings),
+        "from_linkedin":     len(linkedin),
+        "demo_bookings":     sum(1 for b in bookings if "demo"     in b.get("event_type", "")),
+        "investor_bookings": sum(1 for b in bookings if "investor" in b.get("event_type", "")),
+        "this_week":         len(this_week),
+        "top_campaign":      top,
+    }
+
+
 def _token_health(posts: list[dict]) -> tuple[str, str]:
     published = [p for p in posts if p.get("published") and p.get("published_at")]
     if not published:
@@ -555,6 +588,20 @@ footer a:hover{color:#ede9e3}
 .kpi-label{font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;
            letter-spacing:.07em;line-height:1.3}
 .kpi-divider{background:transparent;border:none;padding:4px 0 0;justify-content:flex-end}
+
+/* ── BOOKINGS SECTION ── */
+.bookings-section{max-width:840px;margin:0 auto;padding:0 28px 12px;width:100%}
+.bookings-section h3{font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;
+                     letter-spacing:.1em;font-weight:600;margin-bottom:10px}
+.bookings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:8px}
+.bookings-kpi{background:#111113;border:1px solid rgba(255,255,255,.07);border-radius:8px;
+              padding:10px 14px;display:flex;flex-direction:column;gap:4px}
+.bookings-kpi .kpi-value{font-size:16px;font-weight:600;color:#ede9e3;
+                          font-family:'DM Mono',monospace;letter-spacing:-.03em;line-height:1}
+.bookings-kpi .kpi-label{font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;
+                          letter-spacing:.07em;line-height:1.3}
+.bookings-kpi .kpi-target{font-size:10px;color:rgba(46,125,224,.6);margin-top:2px}
+.bookings-kpi.highlight .kpi-value{color:#2e7de0}
 
 /* ── PAT REMEMBER CHECKBOX ── */
 .pat-remember{display:flex;align-items:center;gap:8px;margin-top:8px;
@@ -2072,6 +2119,35 @@ def generate(posts: list[dict]) -> str:
     branch            = _current_branch()
     pillar_class_css  = _pillar_class_css()
 
+    bk = _booking_summary()
+    bookings_section_html = f"""
+    <div class="bookings-section">
+      <h3>Bookings from LinkedIn</h3>
+      <div class="bookings-grid">
+        <div class="bookings-kpi highlight">
+          <span class="kpi-value">{bk['this_week']}</span>
+          <span class="kpi-label">This week</span>
+          <span class="kpi-target">Target: 2+</span>
+        </div>
+        <div class="bookings-kpi">
+          <span class="kpi-value">{bk['from_linkedin']}</span>
+          <span class="kpi-label">Total from LinkedIn</span>
+        </div>
+        <div class="bookings-kpi">
+          <span class="kpi-value">{bk['demo_bookings']}</span>
+          <span class="kpi-label">Demo calls</span>
+        </div>
+        <div class="bookings-kpi">
+          <span class="kpi-value">{bk['investor_bookings']}</span>
+          <span class="kpi-label">Investor briefings</span>
+        </div>
+        <div class="bookings-kpi">
+          <span class="kpi-value">{html.escape(str(bk['top_campaign'] or '—'))}</span>
+          <span class="kpi-label">Top campaign</span>
+        </div>
+      </div>
+    </div>"""
+
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -2159,6 +2235,8 @@ def generate(posts: list[dict]) -> str:
 {filter_bar_html}
 
 {kpi_panel_html}
+
+{bookings_section_html}
 
 <main id="main-content">
 <div class="content">

@@ -8,9 +8,10 @@
   "generated_at": "2026-05-17T07:09:36.057019+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 1,
-  "status": "draft",
+  "status": "approved",
   "published": false,
-  "approved": false,
-  "approval_required": true,
-  "dry_run": true
+  "approved": true,
+  "approval_required": false,
+  "dry_run": false,
+  "approved_at": "2026-05-17T08:05:17.447137+00:00"
 }

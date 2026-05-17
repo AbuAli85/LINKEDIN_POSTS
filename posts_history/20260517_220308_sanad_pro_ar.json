@@ -10,11 +10,12 @@
   "generated_at": "2026-05-17T22:03:08.524559+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 1,
-  "status": "draft",
+  "status": "approved",
   "published": false,
-  "approved": false,
-  "approval_required": true,
-  "dry_run": true,
+  "approved": true,
+  "approval_required": false,
+  "dry_run": false,
   "revision_notes": "#\u0639\u064f\u0645\u0627\u0646_\u0627\u0644\u0623\u0639\u0645\u0627\u0644\n#\u0625\u062f\u0627\u0631\u0629_\u0627\u0644\u0645\u0648\u0627\u0631\u062f_\u0627\u0644\u0628\u0634\u0631\u064a\u0629\n#\u062a\u0635\u0627\u0631\u064a\u062d_\u0627\u0644\u0639\u0645\u0644\n#SmartPro\n#\u0633\u0646\u062f",
-  "revised_at": "2026-05-17T22:06:11.643043+00:00"
+  "revised_at": "2026-05-17T22:06:11.643043+00:00",
+  "approved_at": "2026-05-17T22:07:48.772079+00:00"
 }

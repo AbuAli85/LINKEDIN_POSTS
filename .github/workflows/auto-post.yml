@@ -218,7 +218,7 @@ jobs:
           NREPLIES=$(python -c "import csv; r=list(csv.DictReader(open('leads.csv'))); print(len([x for x in r if x.get('reply_status') in ('drafted','replied')]))" 2>/dev/null || echo 0)
           git diff --cached --quiet || git commit -m "outreach: ${DATE} — ${NLEADS} leads, ${NREPLIES} replies | metrics updated"
           # Pull after data commit — avoids docs/index.html conflict
-          git pull --rebase origin ${GITHUB_REF_NAME}
+          git pull --rebase --autostash origin ${GITHUB_REF_NAME}
           # Regenerate dashboard now that we have the latest remote state
           python dashboard.py
           git add docs/index.html

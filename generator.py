@@ -123,7 +123,7 @@ TONE: {tone}
 AUDIENCE: {audience}
 OPENING STYLE: {fmt}
 {brand_context}
-{hashtag_block}{seo_block}{metrics_block}PROCESS (do this in your head — output only the final post):
+{cta_override}{brand_bridge}{hashtag_block}{seo_block}{metrics_block}PROCESS (do this in your head — output only the final post):
 1. Draft 3 opening lines that follow the OPENING STYLE above. Make them specific and concrete.
 2. Pick the one that would stop a busy professional mid-scroll.
 3. Build the post around it. Short paragraphs. One concrete detail or data point. One clear takeaway.
@@ -141,7 +141,7 @@ USER_TEMPLATE_AR = """اكتب منشور LinkedIn لمحور {pillar}.
 الجمهور المستهدف: {audience}
 أسلوب الافتتاح: {fmt}
 {brand_context}
-{hashtag_block}{seo_block}{metrics_block}العملية (نفّذ في ذهنك — أخرج المنشور النهائي فقط):
+{cta_override}{brand_bridge}{hashtag_block}{seo_block}{metrics_block}العملية (نفّذ في ذهنك — أخرج المنشور النهائي فقط):
 ١. اكتب ٣ سطور افتتاحية مختلفة تماماً — كل واحدة تتبع أسلوب الافتتاح، ومحددة وملموسة وتحمل ثقل الخبرة.
 ٢. اختر السطر الذي سيوقف مدير موارد بشرية أو صاحب مكتب سند أو مسؤول PRO عن التمرير فوراً.
 ٣. ابنِ المنشور حوله — فقرات قصيرة، رقم واحد حقيقي أو مشهد واحد ملموس، فكرة واحدة واضحة لا أكثر.
@@ -180,6 +180,21 @@ HARD LIMIT: 800-1500 characters.
 
 
 VALID_SEGMENTS = {"A", "B", "C"}
+
+# ── Brand hashtag normalisation ──────────────────────────────────────────────
+BRAND_HASHTAG_VARIANTS = [
+    "#SmartPro", "#SmartPro_Hub", "#smartpro", "#smartprohub",
+    "#Smartpro", "#SMARTPRO", "#SmartProHub",
+]
+BRAND_HASHTAG_CANONICAL = "#SmartPROHub"
+
+
+def _sanitise_hashtags(content: str) -> str:
+    """Replace all brand hashtag variants with the canonical form (case-insensitive)."""
+    import re
+    for variant in BRAND_HASHTAG_VARIANTS:
+        content = re.sub(re.escape(variant), BRAND_HASHTAG_CANONICAL, content, flags=re.IGNORECASE)
+    return content
 
 
 def _hashtag_block(segment: str | None) -> str:
@@ -230,6 +245,28 @@ def _seo_block() -> str:
         return f"SEO KEYWORDS (weave 1-2 naturally into the post): {', '.join(SEO_KEYWORDS[:6])}\n"
     except Exception:
         return ""
+
+
+def _cta_block(pillar_config: dict) -> str:
+    """Return the UTM-tracked CTA for the given pillar's segment."""
+    try:
+        from content_strategy import (
+            CTA_DEMO, CTA_DEMO_AR, CTA_INVESTORS, CTA_INVESTORS_AR, CTA_TECH,
+        )
+    except ImportError:
+        return ""
+    segment  = (pillar_config.get("segment") or "A").strip().upper()
+    language = pillar_config.get("language", "en")
+    campaign = (pillar_config.get("name") or "general").replace("_", "-")
+
+    if segment == "B":
+        template = CTA_INVESTORS_AR if language == "ar" else CTA_INVESTORS
+    elif segment == "C":
+        return f"CTA: {CTA_TECH}\n"
+    else:
+        template = CTA_DEMO_AR if language == "ar" else CTA_DEMO
+
+    return f"CTA (use this exact URL with tracking): {template.format(campaign=campaign)}\n"
 
 
 def _load_recent_posts(limit: int = 10) -> list[dict]:
@@ -367,6 +404,8 @@ def _generate_once(
     metrics_block: str = "",
     hashtag_block: str = "",
     seo_block: str = "",
+    cta_override: str = "",
+    brand_bridge: str = "",
 ) -> tuple[str, str]:
     language = pillar_config.get("language", "en")
     system_prompt = SYSTEM_PROMPT_AR if language == "ar" else SYSTEM_PROMPT
@@ -386,6 +425,8 @@ def _generate_once(
                     audience=pillar_config["audience"],
                     fmt=fmt,
                     brand_context=pillar_config.get("brand_context", ""),
+                    cta_override=cta_override,
+                    brand_bridge=brand_bridge,
                     hashtag_block=hashtag_block,
                     seo_block=seo_block,
                     metrics_block=metrics_block,
@@ -441,12 +482,18 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
         except Exception:
             pass
 
+    cb = _cta_block(pillar_config)
+    bb = pillar_config.get("brand_bridge", "")
+    if bb:
+        bb = f"Brand connection: {bb}\n"
+
     last_error: str | None = None
     last_result: tuple[str, str] | None = None
     for attempt in range(2):
         post_text, model_used = _generate_once(
-            client, model, pillar, pillar_config, topic, fmt, rb, pb, mb, hb, sb
+            client, model, pillar, pillar_config, topic, fmt, rb, pb, mb, hb, sb, cb, bb
         )
+        post_text = _sanitise_hashtags(post_text)
         last_result = (post_text, model_used)
         err = _validate(post_text, language)
         if err is None:

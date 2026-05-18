@@ -18,11 +18,43 @@ TECH_CTA       = "SmartPro Hub is open for early adopters — OMR 12/month, 14-d
 # Legacy alias kept so existing code that references DEMO_CTA still works
 DEMO_CTA       = COMPANY_CTA
 
+# ── UTM-tracked CTA templates per segment ──────────────────────────────────
+# {campaign} is filled at generation time with the pillar name (e.g. "pain-en").
+# Segment A — HR managers and business owners
+CTA_DEMO = (
+    "Book a free 20-minute demo: "
+    "https://www.thesmartpro.io/demo"
+    "?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}"
+    "\nOr WhatsApp +96879665522"
+)
+CTA_DEMO_AR = (
+    "احجز عرضاً تجريبياً مجانياً مدته ٢٠ دقيقة: "
+    "https://www.thesmartpro.io/demo"
+    "?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}"
+    "\nأو واتساب +96879665522"
+)
+# Segment B — Investors and government
+CTA_INVESTORS = (
+    "Request an investor briefing: "
+    "https://www.thesmartpro.io/investors"
+    "?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}"
+)
+CTA_INVESTORS_AR = (
+    "اطلب جلسة إحاطة للمستثمرين: "
+    "https://www.thesmartpro.io/investors"
+    "?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}"
+)
+# Segment C — Tech founders
+CTA_TECH = (
+    "Follow for build-in-public updates from SmartPRO Hub. "
+    "DM if you want to compare notes on multi-tenant architecture."
+)
+
 # Segment-specific hashtag sets (3-5 per post; generator picks from the segment's list)
 HASHTAGS: dict[str, list[str]] = {
-    "A": ["#OmanBusiness", "#HRManagement", "#PayrollOman", "#WPS", "#SmartPro", "#Omanization", "#GCCBusiness"],
-    "B": ["#OmanVision2040", "#GCCBusiness", "#HRTech", "#SMEOman", "#BusinessGrowth", "#SmartPro", "#Oman"],
-    "C": ["#BuildInPublic", "#SaaS", "#GCCTech", "#TypeScript", "#ClaudeAI", "#OmanTech", "#SmartPro"],
+    "A": ["#OmanBusiness", "#HRManagement", "#PayrollOman", "#WPS", "#SmartPROHub", "#Omanization", "#GCCBusiness"],
+    "B": ["#OmanVision2040", "#GCCBusiness", "#HRTech", "#SMEOman", "#BusinessGrowth", "#SmartPROHub", "#Oman"],
+    "C": ["#BuildInPublic", "#SaaS", "#GCCTech", "#TypeScript", "#ClaudeAI", "#OmanTech", "#SmartPROHub"],
 }
 
 # SEO keywords to surface in generation context — models weave these in naturally
@@ -687,6 +719,77 @@ PILLARS = {
             "مساعد سند الذكي يجد أقرب مكتب سند مرخص إليك، ويُخبرك بالتكلفة الدقيقة، ويشرح كل خطوة. بنيناه لأن المعلومة كانت متفرقة وغير واضحة — وهذا يُكلّف الشركات وقتاً ومالاً كل يوم.",
         ],
     },
+    # ── LEADERSHIP (SEGMENT A) ───────────────────────────────────────────────────
+    # Manual-only. Shares leadership principles from running an Oman tech startup.
+    # Bridges to SmartPRO Hub at the end — one sentence, natural not salesy.
+    "leadership": {
+        "weight":           0.0,   # manual-only: FORCE_PILLAR=leadership
+        "segment":          "A",
+        "post_type":        ["Story", "Data/Insight"],
+        "day":              "any",
+        "weekday":          -1,
+        "generate_weekday": -1,
+        "publish_day":      "on demand",
+        "generate_day":     "on demand",
+        "tone":             "reflective, direct, peer-to-peer — a founder sharing what they've learned running a team in Oman, not a business coach",
+        "audience":         "founders, CEOs, and senior managers in Oman who lead teams and think about building a company that works without them",
+        "brand_context":    _BRAND_CONTEXT,
+        "brand_bridge": (
+            "End with one sentence connecting the leadership lesson to how SmartPRO Hub "
+            "helps Oman business owners focus on leadership instead of HR administration. "
+            "Natural, not salesy. One sentence only. Example: "
+            "'This is exactly why SmartPRO Hub exists — so founders spend time on "
+            "decisions like this, not on chasing payroll spreadsheets.'"
+        ),
+        "formats": [
+            "Share a specific leadership decision — what you chose, why, and what you learned six months later",
+            "Describe a moment your team surprised you — what it revealed about the culture you'd actually built",
+            "Before/after: how you handled a team problem the wrong way first, then the right way",
+            "Open with a counterintuitive leadership truth — prove it with one specific story from your own experience",
+        ],
+        "topics": [
+            "The hire that changed how I think about delegation",
+            "What I got wrong about accountability in the first two years",
+            "The performance review I dreaded giving — and what happened when I gave it honestly",
+            "How I stopped being the bottleneck in my own company",
+            "The meeting that cost us three weeks — and how I prevented it from happening again",
+        ],
+    },
+
+    # ── MARKETING (SEGMENT A) ────────────────────────────────────────────────────
+    # Manual-only. Shares content and growth lessons from building SmartPRO's audience.
+    # Bridges to SmartPRO Hub at the end — one sentence, peer-to-peer not promotional.
+    "marketing": {
+        "weight":           0.0,   # manual-only: FORCE_PILLAR=marketing
+        "segment":          "A",
+        "post_type":        ["Story", "Data/Insight"],
+        "day":              "any",
+        "weekday":          -1,
+        "generate_weekday": -1,
+        "publish_day":      "on demand",
+        "generate_day":     "on demand",
+        "tone":             "candid, tactical, peer-to-peer — a founder sharing what actually worked in growing a B2B SaaS audience in Oman",
+        "audience":         "founders and marketing leads at Oman and GCC companies who are figuring out content and growth without a big team or budget",
+        "brand_context":    _BRAND_CONTEXT,
+        "brand_bridge": (
+            "End with one sentence connecting the marketing lesson to SmartPRO Hub's "
+            "own content approach or growth story. Natural, peer-to-peer. One sentence only."
+        ),
+        "formats": [
+            "Share a specific content experiment — what you tested, the result, and what you changed because of it",
+            "Open with a counterintuitive growth insight and prove it with your own numbers",
+            "Before/after: the marketing approach that wasn't working and what replaced it",
+            "A tactical breakdown of one specific thing that drove measurable growth — no theory",
+        ],
+        "topics": [
+            "The LinkedIn post format that drives 3× more comments than any other",
+            "Why we stopped running ads and doubled down on content instead",
+            "The cold outreach approach that actually gets replies in the GCC market",
+            "What 6 months of daily posting taught me about building an audience in Oman",
+            "The CTA change that doubled our demo bookings",
+        ],
+    },
+
     # ── TECH / BUILD-IN-PUBLIC (SEGMENT C) ───────────────────────────────────────
     # Saturday posts — peer-to-peer technical content targeting engineers and SaaS founders.
     # Candid, first-person, architecture and engineering decisions. No marketing language.

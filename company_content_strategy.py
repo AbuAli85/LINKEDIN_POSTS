@@ -284,7 +284,7 @@ PILLARS = {
     },
 }
 
-ALL_PILLARS = list(PILLARS.keys())
+ALL_PILLARS: list[dict] = [{"name": name, **config} for name, config in PILLARS.items()]
 
 # ── History directory — separate from personal ──────────────────────────────
 HISTORY_DIR = Path(__file__).parent / "company_posts_history"

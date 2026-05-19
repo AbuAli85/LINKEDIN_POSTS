@@ -139,6 +139,7 @@ jobs:
           # Use || true so missing dirs (e.g. engagement_history on generate runs) don't abort
           git add posts_history/ 2>/dev/null || true
           git add engagement_history/ 2>/dev/null || true
+          git add company_posts_history/ 2>/dev/null || true
           if [ "$RUN_MODE" = "approve_draft" ] && [ -n "$DRAFT_FILE" ]; then
             MSG="approve: $(basename "$DRAFT_FILE")"
           else
@@ -146,7 +147,7 @@ jobs:
           fi
           git diff --cached --quiet || git commit -m "$MSG"
           # Pull after data commit — avoids docs/index.html conflict
-          git pull --rebase origin ${GITHUB_REF_NAME}
+          git pull --rebase --autostash origin ${GITHUB_REF_NAME}
           # Regenerate dashboard now that we have the latest remote state
           python dashboard.py
           git add docs/

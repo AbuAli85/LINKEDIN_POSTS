@@ -1,0 +1,20 @@
+{
+  "pillar": "product_proof",
+  "topic": "How a multi-branch operation manages payroll for four locations from one screen",
+  "format": "Lead with a specific customer outcome \u2014 time saved, errors eliminated, hours recovered \u2014 then describe what changed",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "A restaurant group with four branches in Muscat cut payroll processing from two days to under three hours.\n\nNo extra headcount. Just a switch to WPS payroll software actually built for how Oman businesses operate.\n\nBefore SmartPro Hub, their HR manager was juggling four spreadsheets, two WhatsApp groups, and a separate system for each branch \u2014 manually reconciling figures before every pay run. Errors showed up after money had already moved. Bank transfers ran late. Staff complained every single month.\n\nAfter: one screen. All four locations. Salaries calculated, WPS files generated, bank transfers initiated \u2014 one workflow, start to finish.\n\nNo more spreadsheet version chaos across branches. No more missed SPF contributions. No more Monday-morning panic before pay day.\n\nWe built this because multi-branch operations in Oman were being forced to manage like single-entity businesses. They're not single entities. The software is built around that reality.\n\nCustomers running 3\u201310 locations tell us the same thing: the first full payroll cycle on SmartPro Hub is when the team stops dreading month-end. Not gradually \u2014 immediately.\n\nIf payroll is taking longer than half a day, the process is broken. Not your team.\n\nBook a 20-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=general\n\n#SmartPROHub\n#WPS\n#PayrollOman\n#OmanBusiness\n#GCCBusiness",
+  "char_count": 1396,
+  "generated_at": "2026-05-19T21:04:09.890939+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "failed",
+  "published": false,
+  "approved": true,
+  "approval_required": false,
+  "dry_run": false,
+  "approved_at": "2026-05-19T21:04:09.891295+00:00",
+  "publish_error": "LinkedIn rejected the access token (401). Re-run the OAuth flow in COMPANY_SETUP.md and update the LINKEDIN_ORG_TOKEN secret. Raw response: {\"status\":401,\"serviceErrorCode\":65600,\"code\":\"INVALID_ACCESS_TOKEN\",\"message\":\"Invalid access token\"}"
+}

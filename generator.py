@@ -192,9 +192,15 @@ BRAND_HASHTAG_CANONICAL = "#SmartPROHub"
 def _sanitise_hashtags(content: str) -> str:
     """Replace all brand hashtag variants with the canonical form (case-insensitive)."""
     import re
-    for variant in BRAND_HASHTAG_VARIANTS:
-        content = re.sub(re.escape(variant), BRAND_HASHTAG_CANONICAL, content, flags=re.IGNORECASE)
-    return content
+    # Whole-token match via word-char lookarounds — prevents the canonical
+    # replacement from re-matching as a substring of its own output.
+    sorted_variants = sorted(BRAND_HASHTAG_VARIANTS, key=len, reverse=True)
+    pattern = (
+        r'(?<![A-Za-z0-9_])'
+        r'(?:' + '|'.join(re.escape(v) for v in sorted_variants) + r')'
+        r'(?![A-Za-z0-9_])'
+    )
+    return re.sub(pattern, BRAND_HASHTAG_CANONICAL, content, flags=re.IGNORECASE)
 
 
 def _hashtag_block(segment: str | None) -> str:

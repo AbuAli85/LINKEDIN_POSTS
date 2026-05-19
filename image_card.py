@@ -87,7 +87,7 @@ def render_quote_card(text: str, pillar: str = "", post_index: int = 0) -> bytes
     from PIL import Image, ImageDraw
 
     accent  = _hex_rgb(PILLAR_COLOR.get(pillar, _DEFAULT_ACCENT))
-    handle  = os.environ.get("LINKEDIN_HANDLE", "linkedin.com/in/fahad-alamri-b9a809123")
+    handle  = os.environ.get("LINKEDIN_HANDLE", "linkedin.com/in/fahad-alamri-smartpro")
     quote   = _best_quote(text)
     wrapped = textwrap.fill(quote, width=MAX_LINE_CHARS)
 

@@ -2196,7 +2196,7 @@ def generate(posts: list[dict]) -> str:
       <a class="tb-btn primary" href="{ACTIONS_URL}" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">&#9654;</span> Run workflow<span class="sr-only"> (opens in new tab)</span></a>
       <a class="tb-btn" href="https://github.com/{REPO}/actions" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">&#128200;</span> All runs<span class="sr-only"> (opens in new tab)</span></a>
       <button type="button" class="tb-btn" onclick="exportPostsCsv()" aria-label="Export all posts as CSV"><span aria-hidden="true">&#11015;</span> Export CSV</button>
-      <a class="tb-btn" href="https://www.linkedin.com/in/fahad-alamri-b9a809123/" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">&#128279;</span> LinkedIn<span class="sr-only"> (opens in new tab)</span></a>
+      <a class="tb-btn" href="https://www.linkedin.com/in/fahad-alamri-smartpro/" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">&#128279;</span> LinkedIn<span class="sr-only"> (opens in new tab)</span></a>
     </nav>
   </div>
 </div>

@@ -115,9 +115,11 @@ def _clean_url(value: str | None) -> str:
 
 def _display_draft_path(draft_path: str) -> str:
     clean_path = draft_path.strip()
-    marker = "posts_history/"
-    if marker in clean_path:
-        return marker + clean_path.split(marker, 1)[1]
+    # Check company_posts_history/ BEFORE posts_history/ — the latter is a
+    # substring of the former and would strip the 'company_' prefix otherwise.
+    for marker in ("company_posts_history/", "posts_history/"):
+        if marker in clean_path:
+            return marker + clean_path.split(marker, 1)[1]
 
     try:
         path = Path(clean_path)

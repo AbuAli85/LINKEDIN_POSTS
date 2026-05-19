@@ -98,8 +98,11 @@ jobs:
       - name: Generate or publish (company audience)
         env:
           ANTHROPIC_API_KEY:      ${{ secrets.ANTHROPIC_API_KEY }}
-          LINKEDIN_ORG_TOKEN:     ${{ secrets.LINKEDIN_ORG_TOKEN }}
-          LINKEDIN_ORG_URN:       ${{ secrets.LINKEDIN_ORG_URN }}
+          # Using personal token+URN until Community Management API grants w_organization_social.
+          # Posts publish as Fahad (personal profile) with company voice and company_posts_history/.
+          # Swap back to LINKEDIN_ORG_TOKEN / LINKEDIN_ORG_URN when org API access is approved.
+          LINKEDIN_ORG_TOKEN:     ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+          LINKEDIN_ORG_URN:       ${{ secrets.LINKEDIN_AUTHOR_URN }}
           RESEND_API_KEY:         ${{ secrets.RESEND_API_KEY }}
           NOTIFY_EMAIL:           ${{ secrets.NOTIFY_EMAIL }}
           NOTIFY_WEBHOOK_URL:     ${{ secrets.NOTIFY_WEBHOOK_URL }}

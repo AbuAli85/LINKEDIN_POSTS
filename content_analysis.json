@@ -1,0 +1,54 @@
+{
+  "generated_at": "2026-05-19T07:14:56.452464+00:00",
+  "total_posts_analyzed": 7,
+  "pillar_performance": {
+    "leadership": {
+      "posts": 2,
+      "total_reactions": 0,
+      "total_comments": 0,
+      "total_shares": 0,
+      "avg_engagement_rate": 0.0
+    },
+    "pain": {
+      "posts": 2,
+      "total_reactions": 0,
+      "total_comments": 0,
+      "total_shares": 0,
+      "avg_engagement_rate": 0.0
+    },
+    "marketing": {
+      "posts": 1,
+      "total_reactions": 0,
+      "total_comments": 0,
+      "total_shares": 0,
+      "avg_engagement_rate": 0.0
+    },
+    "proof": {
+      "posts": 2,
+      "total_reactions": 0,
+      "total_comments": 0,
+      "total_shares": 0,
+      "avg_engagement_rate": 0.0
+    }
+  },
+  "hook_performance": {
+    "story": 0.0,
+    "bold-statement": 0.0,
+    "data-lead": 0.0
+  },
+  "frequency_multipliers": {
+    "leadership": 1.0,
+    "pain": 1.0,
+    "marketing": 1.0,
+    "proof": 1.0
+  },
+  "best_pillar": "leadership",
+  "best_hook_style": "story",
+  "recommended_emphasis": [
+    "leadership",
+    "pain",
+    "marketing",
+    "proof"
+  ],
+  "demo_pipeline": {}
+}

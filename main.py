@@ -8,9 +8,15 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from content_strategy import pick_pillar, PILLARS
+from strategy_loader import history_dir as _history_dir, load_strategy
 from generator import generate_post, generate_job_post, generate_hook_variant, save_post
 from publisher import LinkedInError, publish_post
+
+# Audience-aware strategy module — defaults to content_strategy unless
+# LINKEDIN_AUDIENCE=company is set in the environment.
+_strategy = load_strategy()
+pick_pillar = _strategy.pick_pillar
+PILLARS = _strategy.PILLARS
 
 load_dotenv()
 
@@ -136,7 +142,7 @@ def _supersede_previous_draft(pillar: str, new_path: Path) -> None:
     appearing as 'Needs review' in the dashboard.  Only affects drafts that
     are not yet approved or published — approved drafts are left alone.
     """
-    history = Path(__file__).parent / "posts_history"
+    history = _history_dir()
     for f in sorted(history.glob("*.json"), reverse=True):
         if f.resolve() == new_path.resolve():
             continue
@@ -206,7 +212,7 @@ def publish_approved_for_today() -> int:
     now        = datetime.now(timezone.utc)
     today_name = now.strftime("%A")  # e.g. "Monday"
 
-    history    = Path(__file__).parent / "posts_history"
+    history    = _history_dir()
     candidates: list[tuple[Path, dict]] = []
 
     # Walk oldest-first so candidates[0] is the post that has waited longest

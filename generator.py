@@ -1,4 +1,9 @@
-"""Generate LinkedIn posts using Claude."""
+"""Generate LinkedIn posts using Claude.
+
+Audience-aware: when LINKEDIN_AUDIENCE=company, the strategy_loader
+routes pillar/hashtag/CTA reads to company_content_strategy and writes
+drafts to company_posts_history/. Defaults to personal pipeline.
+"""
 
 import json
 import os
@@ -8,7 +13,9 @@ from pathlib import Path
 
 import anthropic
 
-HISTORY_DIR = Path(__file__).parent / "posts_history"
+from strategy_loader import history_dir as _history_dir, load_strategy
+
+HISTORY_DIR = _history_dir()
 HISTORY_DIR.mkdir(exist_ok=True)
 
 DEFAULT_MODEL = "claude-sonnet-4-6"
@@ -206,7 +213,7 @@ def _sanitise_hashtags(content: str) -> str:
 def _hashtag_block(segment: str | None) -> str:
     """Return hashtag guidance for the segment. Normalises to uppercase; falls back to A."""
     try:
-        from content_strategy import HASHTAGS
+        HASHTAGS = load_strategy().HASHTAGS
     except Exception:
         return ""
     normalised = (segment or "").strip().upper()
@@ -245,7 +252,7 @@ def _validate_pillars(pillars: list[dict]) -> None:
 def _seo_block() -> str:
     """Return SEO keyword guidance."""
     try:
-        from content_strategy import SEO_KEYWORDS
+        SEO_KEYWORDS = load_strategy().SEO_KEYWORDS
         if not SEO_KEYWORDS:
             return ""
         return f"SEO KEYWORDS (weave 1-2 naturally into the post): {', '.join(SEO_KEYWORDS[:6])}\n"
@@ -256,10 +263,11 @@ def _seo_block() -> str:
 def _cta_block(pillar_config: dict) -> str:
     """Return the UTM-tracked CTA for the given pillar's segment."""
     try:
-        from content_strategy import (
-            CTA_DEMO, CTA_DEMO_AR, CTA_INVESTORS, CTA_INVESTORS_AR, CTA_TECH,
-        )
-    except ImportError:
+        _s = load_strategy()
+        CTA_DEMO, CTA_DEMO_AR = _s.CTA_DEMO, _s.CTA_DEMO_AR
+        CTA_INVESTORS, CTA_INVESTORS_AR = _s.CTA_INVESTORS, _s.CTA_INVESTORS_AR
+        CTA_TECH = _s.CTA_TECH
+    except (ImportError, AttributeError):
         return ""
     segment  = (pillar_config.get("segment") or "A").strip().upper()
     language = pillar_config.get("language", "en")
@@ -460,7 +468,7 @@ def _apply_humanizer(post_text: str, pillar: str, tone: str) -> str:
 
 def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) -> dict:
     """Generate a LinkedIn post. Validates output and retries once if needed."""
-    from content_strategy import ALL_PILLARS
+    ALL_PILLARS = load_strategy().ALL_PILLARS
     _validate_pillars(ALL_PILLARS)
 
     # Load recent posts once — reused for topic/format dedup and recent_block
@@ -543,7 +551,7 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
 
 def generate_job_post(job: dict, pillar_config: dict) -> dict:
     """Generate a job announcement post for a specific pending job."""
-    from content_strategy import ALL_PILLARS
+    ALL_PILLARS = load_strategy().ALL_PILLARS
     _validate_pillars(ALL_PILLARS)
 
     recent_posts = _load_recent_posts(20)
@@ -799,7 +807,7 @@ def save_post(post_data: dict) -> Path:
 
 
 if __name__ == "__main__":
-    from content_strategy import pick_pillar
+    pick_pillar = load_strategy().pick_pillar
 
     weekday = datetime.now(timezone.utc).weekday()
     force = os.environ.get("FORCE_PILLAR") or None

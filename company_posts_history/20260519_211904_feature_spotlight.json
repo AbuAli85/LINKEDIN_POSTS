@@ -15,6 +15,6 @@
   "approved": true,
   "approval_required": false,
   "dry_run": false,
-  "approved_at": "2026-05-19T21:19:04.769852+00:00",
-  "publish_error": "LinkedIn API error 403: {\"status\":403,\"serviceErrorCode\":100,\"code\":\"ACCESS_DENIED\",\"message\":\"Field Value validation failed in REQUEST_BODY: Data Processing Exception while processing fields [/author]\"}"
+  "approved_at": "2026-05-20T08:26:14.411031+00:00",
+  "publish_error": "LINKEDIN_ORG_TOKEN and LINKEDIN_ORG_URN are required when LINKEDIN_AUDIENCE=company. See COMPANY_SETUP.md."
 }

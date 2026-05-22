@@ -1,42 +1,82 @@
-# Company Page Setup — OAuth + Secrets
+# Company Page Setup — Decision Record
 
-To post to your LinkedIn company page (ID `108832221`) the automation needs a token with org-scoped permissions that your current personal token does not have. This is a one-time setup. **Plan ~20 minutes.**
-
----
-
-## What you'll need
-
-- Admin access to the SmartPro company page (you already have this — confirmed by the admin dashboard URL you shared)
-- Access to your LinkedIn Developer app (the same app you used for the personal token in `LINKEDIN_SETUP.md`)
-- 20 minutes uninterrupted
+> **Status (2026-05-22):** ❌ **Direct company-page posting is not pursued.** The company pipeline publishes to Fahad's personal feed under the SmartPro brand voice, and tracks everything in `company_posts_history/`. This is the permanent design, not a workaround. Reasoning below.
 
 ---
 
-## Step 1 — Add product access to your LinkedIn app
+## Why we are not chasing a real org token
 
-Go to https://www.linkedin.com/developers/apps and open the app you already use.
+The original plan (kept in [Appendix A](#appendix-a-the-original-org-token-plan-do-not-pursue) for the record) was to mint a `LINKEDIN_ORG_TOKEN` with `w_organization_social` scope and publish directly to the SmartPro Hub page. After investigating the LinkedIn Developer dashboard on 2026-05-22, this path is not realistically available to us:
 
-Under **Products**, request access to:
+1. **Marketing Developer Platform no longer exists as a single product.** LinkedIn restructured it. The capability we needed is now in **Community Management API**.
+2. **Community Management API is restricted.** On our app, the "Request access" button is greyed out with no public application form. LinkedIn reserves this product for their Marketing Partner Program (Buffer, Hootsuite, Sprout Social, Publer, etc.). Individual developers and small businesses are not accepted directly.
+3. **The personal feed is the better channel anyway.** Fahad's profile has 28k+ followers and direct audience engagement. The company page is a logo people click through after seeing a personal post. B2B reach in 2026 is human-to-human on LinkedIn — company pages are secondary.
 
-- **Marketing Developer Platform** — required for `w_organization_social` and `r_organization_social` scopes
-
-Approval is usually instant for individual developers but can take up to 24 hours. You'll get an email when approved.
-
-> **Why this product:** "Share on LinkedIn" only grants member-level scopes. Company posting requires the Marketing Developer Platform product, which adds the organization scopes.
+**Net:** Spending more time on LinkedIn app approvals is negative ROI. The current setup ships the same content via the channel that performs better.
 
 ---
 
-## Step 2 — Link your app to the company page
+## How the company pipeline actually works today
 
-In the same app, go to **Settings → Verified company page** and link `SmartPro Hub` (ID `108832221`). This tells LinkedIn that this app is authorized to act on behalf of the page.
+The file [`.github/workflows/auto-post-company.yml`](.github/workflows/auto-post-company.yml) runs on its own schedule (06:30 / 07:15 UTC) and:
 
-You must be an Admin of the page to do this. The dashboard URL you shared confirms you are.
+- Reads `LINKEDIN_AUDIENCE=company` at the job level
+- Maps the personal secrets to the org variable names:
+  ```yaml
+  LINKEDIN_ORG_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+  LINKEDIN_ORG_URN:   ${{ secrets.LINKEDIN_AUTHOR_URN }}
+  ```
+- Drafts use the **company content strategy** (`company_content_strategy.py`) — pillars `product_proof`, `feature_spotlight`, `oman_market`, `hiring`, `partnership`
+- Drafts are saved in `company_posts_history/` (separate from `posts_history/`)
+- Publishes to Fahad's personal feed when approved
+- Skips the Sanad CTA comment (the `post_cta_comment` function in `publisher.py` already special-cases `audience=company` to avoid double-promoting)
+
+The personal pipeline (`auto-post.yml`) continues unchanged on its own cron and history folder.
 
 ---
 
-## Step 3 — Generate an OAuth token with org scopes
+## What to do when something breaks
 
-Replace `CLIENT_ID` below with your app's Client ID (Auth tab in the app dashboard), paste into a browser, then approve:
+| Symptom | Fix |
+|---|---|
+| `LINKEDIN_ORG_TOKEN and LINKEDIN_ORG_URN are required` in a workflow log | Check that both `secrets.LINKEDIN_ACCESS_TOKEN` and `secrets.LINKEDIN_AUTHOR_URN` are populated. Both company jobs (`post` and `sweep`) must map these into the `LINKEDIN_ORG_*` env vars. |
+| `LinkedIn rejected the access token (401)` | Personal token has expired (60-day rolling) or lost scope. Re-run the OAuth flow in `LINKEDIN_SETUP.md` and update the `LINKEDIN_ACCESS_TOKEN` secret. |
+| Draft stuck in `status: failed` | After fixing the underlying cause, reset its JSON to `status: approved`, `published: false`, clear `publish_error`, and trigger Actions → Auto-post (Company) → Run workflow → `publish_approved`. |
+
+---
+
+## What would make us revisit this
+
+We would only re-open the direct-org-posting path if **all** of the following become true:
+
+1. SmartPro grows to the point where the company page has more reach than Fahad's personal feed.
+2. LinkedIn opens Community Management API to non-partner developers, **or** SmartPro qualifies for the Marketing Partner Program.
+3. We have a dedicated content person who needs separate publishing controls.
+
+Until then, the answer is no.
+
+---
+
+## Appendix A — The original org-token plan (do not pursue)
+
+This is preserved for context. **Do not follow these steps.** They reference a LinkedIn product (Marketing Developer Platform) that no longer exists as described.
+
+<details>
+<summary>Click to expand the deprecated setup steps</summary>
+
+### Step 1 — Add product access to your LinkedIn app
+
+Go to https://www.linkedin.com/developers/apps and open the app. Under **Products**, request access to **Marketing Developer Platform**.
+
+> Status 2026-05-22: This product no longer exists. The equivalent is **Community Management API**, which is restricted to LinkedIn Marketing Partners and cannot be requested directly.
+
+### Step 2 — Link your app to the company page
+
+App → Settings → Verified company page → link SmartPro Hub (ID `108832221`).
+
+> Status 2026-05-22: Doing this alone does not unlock company posting. It's a prerequisite, not a sufficient condition.
+
+### Step 3 — OAuth with org scopes
 
 ```
 https://www.linkedin.com/oauth/v2/authorization?
@@ -46,43 +86,33 @@ response_type=code
 &scope=openid%20profile%20email%20w_member_social%20r_member_social%20w_organization_social%20r_organization_social
 ```
 
-(Put it on one line in the browser — the line breaks are just for readability.)
+> Status 2026-05-22: The org scopes will be rejected with "invalid scope" because the app doesn't have a product that grants them.
 
-> **Key difference from your personal-only setup:** the scope string now ends with `w_organization_social r_organization_social`.
+### Step 4 — Get the organization URN
 
-After approving, LinkedIn redirects you back with a `code=` query parameter. Use it to exchange for a token using the same curl pattern you used in `LINKEDIN_SETUP.md` Step 4.
+`urn:li:organization:108832221`.
 
-Save the resulting access token somewhere safe — it lasts 60 days, same as the personal one.
+### Step 5 — Add GitHub secrets
 
----
-
-## Step 4 — Get your organization URN
-
-This is already known: **`urn:li:organization:108832221`**. No lookup needed.
-
-(If you ever change companies or add a second page, run `curl -H "Authorization: Bearer YOUR_TOKEN" https://api.linkedin.com/v2/organizationAcls?q=roleAssignee` to list pages your token can post to.)
-
----
-
-## Step 5 — Add new GitHub secrets
-
-Repo → Settings → Secrets and variables → Actions → New repository secret. Add:
-
-| Secret name | Value |
+| Secret | Value |
 |---|---|
-| `LINKEDIN_ORG_TOKEN` | The access token from Step 3 |
+| `LINKEDIN_ORG_TOKEN` | (would be the org-scoped token from Step 3) |
 | `LINKEDIN_ORG_URN` | `urn:li:organization:108832221` |
 
-Leave your existing `LINKEDIN_ACCESS_TOKEN` and `LINKEDIN_AUTHOR_URN` untouched — the personal pipeline keeps using those.
+### Step 6 — Smoke test
+
+Was planned as the final verification.
+
+</details>
 
 ---
 
-## Step 6 — Verify the token works (manual smoke test)
+## If we ever did want to publish to the company page
 
-Once Claude builds the company pipeline (see `IMPLEMENTATION_PLAN_COMPANY.md`), the first thing you'll do is run the new workflow with `action=publish_now` and `dry_run=true`. That generates a draft without publishing — proves the auth works end-to-end before anything goes live.
+Realistic options, in increasing order of effort:
 
----
+1. **Manual.** Generate drafts via this pipeline, copy-paste into the LinkedIn page composer once approved. Zero engineering, full control.
+2. **Partner tool (Buffer / Publer / Postiz).** Connect SmartPro page to one of them via their UI (they have the partner-grade API access). Modify the publish step in this repo to push to their API instead of LinkedIn's. ~1 day of work, ~$15/month.
+3. **Apply for LinkedIn Marketing Partner Program.** ~3–6 month process, requires a business case and a product LinkedIn cares about. Not realistic for a single-developer ops tool.
 
-## Token renewal
-
-LinkedIn tokens expire in 60 days. The repo already has a `LinkedIn token health check` workflow for the personal token. Once the company pipeline ships, we'll extend that workflow to monitor `LINKEDIN_ORG_TOKEN` too and warn you ~10 days before expiry.
+None of these is on the roadmap. Adding them later is straightforward; we just don't need them now.

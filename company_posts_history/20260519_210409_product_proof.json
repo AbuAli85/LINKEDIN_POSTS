@@ -10,11 +10,15 @@
   "generated_at": "2026-05-19T21:04:09.890939+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 1,
-  "status": "failed",
-  "published": false,
+  "status": "published",
+  "published": true,
   "approved": true,
   "approval_required": false,
   "dry_run": false,
-  "approved_at": "2026-05-19T21:04:09.891295+00:00",
-  "publish_error": "LinkedIn rejected the access token (401). Re-run the OAuth flow in COMPANY_SETUP.md and update the LINKEDIN_ORG_TOKEN secret. Raw response: {\"status\":401,\"serviceErrorCode\":65600,\"code\":\"INVALID_ACCESS_TOKEN\",\"message\":\"Invalid access token\"}"
+  "approved_at": "2026-05-22T17:21:47.757117+00:00",
+  "publish_error": "LinkedIn rejected the access token (401). Re-run the OAuth flow in COMPANY_SETUP.md and update the LINKEDIN_ORG_TOKEN secret. Raw response: {\"status\":401,\"serviceErrorCode\":65600,\"code\":\"INVALID_ACCESS_TOKEN\",\"message\":\"Invalid access token\"}",
+  "post_id": "urn:li:share:7463640271856156672",
+  "published_at": "2026-05-22T17:21:49.105708+00:00",
+  "cta_comment_posted": false,
+  "cta_comment_url": ""
 }

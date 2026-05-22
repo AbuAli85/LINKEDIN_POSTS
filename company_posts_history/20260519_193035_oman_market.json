@@ -10,12 +10,13 @@
   "generated_at": "2026-05-19T19:30:35.442358+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 1,
-  "status": "failed",
+  "status": "approved",
   "published": false,
   "approved": true,
   "approval_required": false,
   "dry_run": false,
   "has_variant": true,
   "approved_at": "2026-05-22T08:25:12.031548+00:00",
-  "publish_error": "LINKEDIN_ORG_TOKEN and LINKEDIN_ORG_URN are required when LINKEDIN_AUDIENCE=company. See COMPANY_SETUP.md."
+  "publish_reset_at": "2026-05-22T16:30:00+00:00",
+  "publish_reset_reason": "workflow env vars were missing in sweep job \u2014 see auto-post-company.yml fix"
 }

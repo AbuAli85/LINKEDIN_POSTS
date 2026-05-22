@@ -168,11 +168,10 @@ def _badge(text: str, cls: str) -> str:
 # ---------------------------------------------------------------------------
 # CSS — single source of truth. Dark editorial theme.
 # Brand: black / red / white. Primary accent: #e8372a.
-# @import must be the first statement — placed at top of CSS_BASE.
+# Web fonts are loaded via <link rel="stylesheet"> in <head> (non-render-blocking
+# vs. CSS @import). Keep CSS_BASE pure CSS — no @import at top.
 # ---------------------------------------------------------------------------
 CSS_BASE = r"""
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap');
-
 *{box-sizing:border-box;margin:0;padding:0}
 html{overflow-x:hidden}
 body{font-family:'Geist',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
@@ -198,18 +197,25 @@ a{color:inherit;text-decoration:none}
 .logo-sep{color:rgba(255,255,255,.2);margin:0 4px}
 .topbar-right{display:flex;align-items:center;gap:6px;margin-left:auto;
               flex-shrink:0;overflow:hidden}
-.updated{font-size:11px;color:rgba(255,255,255,.3);font-family:'DM Mono',monospace;
+.updated{font-size:11px;color:rgba(255,255,255,.6);font-family:'DM Mono',monospace;
          margin-right:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
          max-width:320px}
 nav.actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.brand-accent{color:#e8372a}
 .tb-btn{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;
         border-radius:6px;font-size:12px;font-weight:500;white-space:nowrap;
         border:1px solid transparent;cursor:pointer;background:transparent;
-        color:rgba(255,255,255,.45);transition:color .15s,background .15s,border-color .15s;
+        color:rgba(255,255,255,.72);transition:color .15s,background .15s,border-color .15s;
         min-height:32px;font-family:inherit;flex-shrink:0}
 .tb-btn:hover{color:#ede9e3;background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1)}
 .tb-btn.primary{background:#e8372a;color:#fff;border-color:transparent}
 .tb-btn.primary:hover{background:#c9301f}
+/* Visually-styled-as-link <button> (used in footer for Clear stored token).
+   Uses real button semantics so keyboard + AT see it as an action, not a nav. */
+.link-btn{background:none;border:none;padding:0;margin:0;color:rgba(255,255,255,.55);
+          font:inherit;cursor:pointer;border-bottom:1px dotted rgba(255,255,255,.25);
+          line-height:1.2}
+.link-btn:hover{color:#ede9e3;border-bottom-color:rgba(255,255,255,.45)}
 .live-dot{width:6px;height:6px;border-radius:50%;background:#e8372a;animation:pulse 2s ease-in-out infinite;flex-shrink:0}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
 
@@ -311,7 +317,7 @@ nav.actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
 .retries{font-size:11px;color:#d4840a;font-family:'DM Mono',monospace}
 
 .icon-btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
-          color:rgba(255,255,255,.4);font-size:11px;padding:5px 12px;border-radius:6px;
+          color:rgba(255,255,255,.7);font-size:11px;padding:5px 12px;border-radius:6px;
           cursor:pointer;transition:all .15s;min-height:32px;font-family:inherit;
           display:inline-flex;align-items:center;gap:5px}
 .icon-btn:hover{background:rgba(255,255,255,.07);color:#ede9e3;border-color:rgba(255,255,255,.15)}
@@ -536,7 +542,7 @@ footer a:hover{color:#ede9e3}
 .filter-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;
              font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;
              background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);
-             color:rgba(255,255,255,.45);min-height:30px;font-family:inherit}
+             color:rgba(255,255,255,.72);min-height:30px;font-family:inherit}
 .filter-chip:hover{color:#ede9e3;border-color:rgba(255,255,255,.18)}
 .filter-chip.active{background:rgba(232,55,42,.1);border-color:rgba(232,55,42,.3);color:#e8372a}
 .filter-chip .count{font-size:10px;background:rgba(255,255,255,.07);padding:1px 6px;
@@ -1293,6 +1299,20 @@ function _bindSearch() {
   });
   var clr = document.getElementById('search-clear');
   if (clr) clr.addEventListener('click', function() { inp.value = ''; applyFilters(); inp.focus(); });
+
+  /* Global "/" shortcut: focus the search input from anywhere on the page.
+     Ignore if the user is already typing in a field or a modal is open,
+     so we don't hijack keystrokes. */
+  document.addEventListener('keydown', function(e) {
+    if (e.key !== '/' || e.ctrlKey || e.metaKey || e.altKey) return;
+    var t = e.target;
+    var typing = t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable);
+    if (typing) return;
+    if (document.querySelector('.modal-overlay.open')) return;
+    e.preventDefault();
+    inp.focus();
+    inp.select();
+  });
 }
 _bindSearch();
 
@@ -2154,7 +2174,7 @@ def generate(posts: list[dict]) -> str:
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>LinkedIn Auto-Poster &middot; Dashboard</title>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self' https://api.github.com; frame-ancestors 'none'; base-uri 'self'; form-action 'none'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self' https://api.github.com https://raw.githubusercontent.com; frame-ancestors 'none'; base-uri 'self'; form-action 'none'; object-src 'none'">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="description" content="Internal control panel for the LinkedIn Auto-Poster pipeline — review drafts, trigger publishing workflows, and track post engagement.">
@@ -2165,13 +2185,17 @@ def generate(posts: list[dict]) -> str:
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23e8372a'/%3E%3Ctext x='16' y='22' font-family='system-ui,sans-serif' font-size='16' font-weight='700' text-anchor='middle' fill='%23fff'%3ELI%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%23e8372a'/%3E%3Ctext x='90' y='118' font-family='system-ui,sans-serif' font-size='80' font-weight='700' text-anchor='middle' fill='%23fff'%3ELI%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&amp;family=DM+Mono:wght@400;500&amp;family=Instrument+Serif:ital@0;1&amp;display=swap">
 <meta property="og:title" content="LinkedIn Auto-Poster · Dashboard">
 <meta property="og:description" content="Internal control panel for the LinkedIn Auto-Poster pipeline.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://abuali85.github.io/LINKEDIN_POSTS/">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 630'%3E%3Crect width='1200' height='630' fill='%230b0b0c'/%3E%3Crect x='60' y='60' width='100' height='100' rx='22' fill='%23e8372a'/%3E%3Ctext x='110' y='130' font-family='system-ui,sans-serif' font-size='52' font-weight='700' text-anchor='middle' fill='%23fff'%3ELI%3C/text%3E%3Ctext x='60' y='340' font-family='system-ui,sans-serif' font-size='84' font-weight='600' fill='%23ede9e3'%3ELinkedIn Auto-Poster%3C/text%3E%3Ctext x='60' y='420' font-family='system-ui,sans-serif' font-size='40' fill='%23a09a92'%3EDashboard %C2%B7 Drafts %C2%B7 Workflow control%3C/text%3E%3C/svg%3E">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="LinkedIn Auto-Poster · Dashboard">
 <meta name="twitter:description" content="Internal control panel for the LinkedIn Auto-Poster pipeline.">
+<meta name="twitter:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 630'%3E%3Crect width='1200' height='630' fill='%230b0b0c'/%3E%3Crect x='60' y='60' width='100' height='100' rx='22' fill='%23e8372a'/%3E%3Ctext x='110' y='130' font-family='system-ui,sans-serif' font-size='52' font-weight='700' text-anchor='middle' fill='%23fff'%3ELI%3C/text%3E%3C/svg%3E">
 <style>{CSS_BASE}
 {pillar_class_css}
 </style>
@@ -2180,12 +2204,18 @@ def generate(posts: list[dict]) -> str:
 
 <a href="#main-content" class="skip-link">Skip to posts<span class="sr-only"> (main content)</span></a>
 
+<noscript>
+  <div style="background:#2d1800;color:#d4840a;border-bottom:1px solid rgba(212,132,10,.4);padding:10px 28px;font-size:13px;text-align:center">
+    JavaScript is required to filter, approve, edit, or delete drafts. Posts will still display, but actions are disabled.
+  </div>
+</noscript>
+
 <h1 class="sr-only">LinkedIn Auto-Poster Dashboard</h1>
 
 <div class="topbar">
   <div class="logo">
     <span class="logo-mark" aria-hidden="true">LI</span>
-    LinkedIn&nbsp;<em style="font-style:normal;color:#e8372a">Auto-Poster</em>
+    LinkedIn&nbsp;<span class="brand-accent">Auto-Poster</span>
     <span class="logo-sep">/</span>
     Dashboard
   </div>
@@ -2225,8 +2255,9 @@ def generate(posts: list[dict]) -> str:
   <div class="search-wrap">
     <span class="search-icon" aria-hidden="true">&#128270;</span>
     <input type="search" id="post-search" class="search-input"
-           placeholder="Search posts by topic, content, or keyword…"
-           aria-label="Search posts" autocomplete="off">
+           placeholder="Search posts by topic, content, or keyword…  (press / to focus)"
+           aria-label="Search posts. Press the slash key to focus." autocomplete="off"
+           autocapitalize="off" autocorrect="off" spellcheck="false">
     <button type="button" id="search-clear" class="search-clear" aria-label="Clear search"><span aria-hidden="true">&times;</span></button>
   </div>
   <span class="search-count" id="search-count" aria-live="polite"></span>
@@ -2260,7 +2291,7 @@ def generate(posts: list[dict]) -> str:
   <a href="https://github.com/{REPO}" target="_blank" rel="noopener noreferrer">Source<span class="sr-only"> (opens in new tab)</span></a> &middot;
   <a href="https://github.com/{REPO}/blob/main/LINKEDIN_SETUP.md" target="_blank" rel="noopener noreferrer">Renew LinkedIn token<span class="sr-only"> (opens in new tab)</span></a> &middot;
   <a href="{ACTIONS_URL}" target="_blank" rel="noopener noreferrer">Run workflow<span class="sr-only"> (opens in new tab)</span></a> &middot;
-  <a href="#" onclick="clearPat();return false;" title="Remove stored GitHub token from this browser">Clear stored token</a>
+  <button type="button" class="link-btn" onclick="clearPat()" title="Remove stored GitHub token from this browser">Clear stored token</button>
 </footer>
 
 <!-- Request Changes modal -->
@@ -2470,7 +2501,7 @@ def generate(posts: list[dict]) -> str:
   </div>
 </div>
 
-<div id="toast-container" aria-label="Notifications"></div>
+<div id="toast-container" role="region" aria-label="Notifications" aria-live="polite" aria-atomic="false"></div>
 
 <script>
 var _REPO     = '{REPO}';

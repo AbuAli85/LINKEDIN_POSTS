@@ -197,9 +197,24 @@ BRAND_HASHTAG_CANONICAL = "#SmartPROHub"
 
 
 def _sanitise_hashtags(content: str) -> str:
-    """Replace all brand hashtag variants with the canonical form (case-insensitive)."""
+    """Replace all brand hashtag variants with the canonical form (case-insensitive).
+
+    Also collapses runaway 'Hub' token repetition like #SmartPROHubHubHubHubHub —
+    an LLM degeneration pattern that shows up on the variant + humanizer pipeline.
+    """
     import re
-    # Whole-token match via word-char lookarounds — prevents the canonical
+
+    # First: collapse runaway `Hub` repetition. `#smartpro(?:hub)+` is whole-token
+    # matched and rewritten to the canonical single-Hub form.
+    content = re.sub(
+        r'(?<![A-Za-z0-9_])#smartpro(?:hub)+(?![A-Za-z0-9_])',
+        BRAND_HASHTAG_CANONICAL,
+        content,
+        flags=re.IGNORECASE,
+    )
+
+    # Then: normalize documented case/style variants.
+    # Whole-token match via word-char lookarounds prevents the canonical
     # replacement from re-matching as a substring of its own output.
     sorted_variants = sorted(BRAND_HASHTAG_VARIANTS, key=len, reverse=True)
     pattern = (
@@ -512,6 +527,8 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
         err = _validate(post_text, language)
         if err is None:
             post_text = _apply_humanizer(post_text, pillar, pillar_config.get("tone", ""))
+            # Re-sanitize after humanizer in case it mangled hashtags.
+            post_text = _sanitise_hashtags(post_text)
             return {
                 "pillar": pillar,
                 "topic": topic,
@@ -532,6 +549,8 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
         raise RuntimeError("generate_once was never called — retry loop did not execute")
     post_text, model_used = last_result
     post_text = _apply_humanizer(post_text, pillar, pillar_config.get("tone", ""))
+    # Re-sanitize after humanizer in case it mangled hashtags.
+    post_text = _sanitise_hashtags(post_text)
     print(f"WARNING: publishing despite validation issue: {last_error}")
     return {
         "pillar": pillar,
@@ -767,12 +786,15 @@ def generate_hook_variant(original: dict, pillar_config: dict) -> dict | None:
             return None
 
         variant_text = _sanitize(text_blocks[0].strip())
+        variant_text = _sanitise_hashtags(variant_text)
         err = _validate(variant_text, pillar_config.get("language", "en"))
         if err:
             print(f"hook_variant: SKIP — validation failed: {err}")
             return None
 
         variant_text = _apply_humanizer(variant_text, pillar, tone)
+        # Re-sanitize after humanizer in case it mangled hashtags (LLM token repetition).
+        variant_text = _sanitise_hashtags(variant_text)
         print(f"hook_variant: OK ({len(post_text)} → {len(variant_text)} chars)")
 
         variant = original.copy()

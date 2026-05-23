@@ -55,7 +55,7 @@ def _encode(urn: str) -> str:
 
 
 def _li_get(url: str) -> dict | None:
-    """GET with exponential backoff on 429/5xx. Returns None on 401 (logs and continues)."""
+    """GET with exponential backoff on 429/5xx. Returns None on 401/403 (logs and continues)."""
     for attempt in range(MAX_RETRIES):
         try:
             resp = requests.get(url, headers=_li_headers(), timeout=15)
@@ -68,7 +68,20 @@ def _li_get(url: str) -> dict | None:
         if resp.status_code == 200:
             return resp.json()
         if resp.status_code == 401:
-            print("  WARNING: LinkedIn token expired (401) — skipping.", file=sys.stderr)
+            print("  WARNING: LinkedIn token expired (401) — re-run LINKEDIN_SETUP.md OAuth.",
+                  file=sys.stderr)
+            return None
+        if resp.status_code == 403:
+            # Most common cause: token is missing `r_member_social` scope, which is
+            # gated behind the Community Management API product approval. See
+            # LINKEDIN_SETUP.md — without this scope, /v2/socialActions/.../comments
+            # returns 403 on every call and outreach silently produces zero leads.
+            print(
+                "  WARNING: LinkedIn returned 403 — token is missing `r_member_social` scope.\n"
+                "  Apply for the Community Management API product in the LinkedIn Developer\n"
+                "  Console, then re-OAuth with that scope added. See LINKEDIN_SETUP.md.",
+                file=sys.stderr,
+            )
             return None
         if resp.status_code == 429 or resp.status_code >= 500:
             delay = RETRY_BASE_DELAY * (2 ** attempt)
@@ -76,7 +89,8 @@ def _li_get(url: str) -> dict | None:
                   file=sys.stderr)
             time.sleep(delay)
             continue
-        print(f"  WARNING: LinkedIn API returned {resp.status_code} — skipping.", file=sys.stderr)
+        print(f"  WARNING: LinkedIn API returned {resp.status_code} — skipping. "
+              f"Body: {resp.text[:200]}", file=sys.stderr)
         return None
     return None
 
@@ -319,8 +333,53 @@ def draft_dm_sequence(comment: dict, post_topic: str, qualification: dict) -> li
 # Commands
 # ---------------------------------------------------------------------------
 
+def _preflight_scope_check() -> bool:
+    """Verify the token has `r_member_social` before iterating 20 posts.
+
+    Hits a single sample socialActions endpoint. 403 here means the token is missing
+    the Community Management API scope — known silent-failure mode. Returns True
+    if comment-reading appears to work, False otherwise (with a clear message).
+    """
+    # Pick the most recent published post to probe with.
+    for f in sorted(HISTORY_DIR.glob("*.json"), reverse=True):
+        try:
+            p = json.loads(f.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if not p.get("post_id"):
+            continue
+        url = f"{LI_BASE}/socialActions/{_encode(p['post_id'])}/comments?count=1"
+        try:
+            resp = requests.get(url, headers=_li_headers(), timeout=15)
+        except Exception as exc:
+            print(f"  Preflight network error: {exc}", file=sys.stderr)
+            return True  # don't block on transient network — let the real loop log it
+        if resp.status_code == 200:
+            return True
+        if resp.status_code == 403:
+            print(
+                "\n  ⚠ PREFLIGHT FAILED — token cannot read comments (HTTP 403).\n"
+                "    Cause: missing `r_member_social` scope (Community Management API).\n"
+                "    Fix:   Apply for the product in LinkedIn Developer Console, then\n"
+                "           re-OAuth with `r_member_social` in the scope string. See\n"
+                "           LINKEDIN_SETUP.md. Until then, outreach.fetch will produce\n"
+                "           0 results regardless of how many posts are published.\n",
+                file=sys.stderr,
+            )
+            return False
+        if resp.status_code == 401:
+            print("\n  ⚠ PREFLIGHT FAILED — LinkedIn token expired (401).\n", file=sys.stderr)
+            return False
+        # Any other status — let the main loop handle it normally.
+        return True
+    return True  # no published posts to probe; nothing to do anyway
+
+
 def cmd_fetch() -> None:
     """Fetch all new comments from all published posts."""
+    if not _preflight_scope_check():
+        return
+
     published = []
     for f in sorted(HISTORY_DIR.glob("*.json")):
         try:

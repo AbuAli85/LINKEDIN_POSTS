@@ -3,10 +3,11 @@
 Commands:
   python outreach.py fetch          # fetch all new comments from LinkedIn
   python outreach.py qualify        # run Claude qualification on unscored comments
+  python outreach.py enrich         # enrich qualified leads via Bright Data + Apollo
   python outreach.py draft-replies  # draft replies for qualified leads
   python outreach.py draft-dms      # draft DM sequences for high-intent replied leads
   python outreach.py export         # export leads.csv
-  python outreach.py run-all        # run all steps in sequence
+  python outreach.py run-all        # run all steps in sequence (incl. enrich)
 """
 
 import argparse
@@ -413,6 +414,64 @@ def cmd_qualify() -> None:
     print(f"\nQualified {total} comment(s).")
 
 
+def cmd_enrich() -> None:
+    """Enrich high/medium-intent qualified leads via Bright Data + Apollo.
+
+    Runs after qualify, before draft-replies. Idempotent — leads.csv dedup by
+    linkedin_url means re-running is safe. Silently skips if API keys missing,
+    so the rest of the pipeline keeps working.
+    """
+    if not os.environ.get("BRIGHTDATA_API_KEY") and not os.environ.get("APOLLO_API_KEY"):
+        print("  Skipped — neither BRIGHTDATA_API_KEY nor APOLLO_API_KEY set.")
+        print("  See ENRICH_LEADS.md for setup. (Pipeline continues.)")
+        return
+
+    try:
+        from enrich_leads import enrich_one  # local module
+    except ImportError as exc:
+        print(f"  enrich_leads module unavailable: {exc}", file=sys.stderr)
+        return
+
+    enriched = 0
+    skipped  = 0
+    failed   = 0
+
+    for f in _all_comment_files():
+        try:
+            data = _load_json(f)
+        except Exception:
+            continue
+
+        modified = False
+        for comment in data.get("comments", []):
+            qual = comment.get("qualification") or {}
+            if qual.get("intent", "low") not in ("high", "medium"):
+                continue
+            if comment.get("enriched"):
+                skipped += 1
+                continue
+            li_url = comment.get("commenter_linkedin_url", "").strip()
+            if not li_url:
+                continue
+
+            name = comment.get("commenter_name", "Unknown")
+            print(f"  Enriching: {name} — {li_url}")
+            try:
+                enrich_one(li_url, dry_run=False)
+                comment["enriched"]    = True
+                comment["enriched_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+                enriched += 1
+                modified = True
+            except Exception as exc:
+                print(f"    ERROR: {exc}", file=sys.stderr)
+                failed += 1
+
+        if modified:
+            _save_json(f, data)
+
+    print(f"\nEnriched {enriched}, skipped {skipped} (already done), failed {failed}.")
+
+
 def cmd_draft_replies() -> None:
     """Draft 2 reply options for all high/medium-intent unhandled comments."""
     total = 0
@@ -601,6 +660,7 @@ def cmd_run_all() -> None:
     steps = [
         ("Fetch comments",   cmd_fetch),
         ("Qualify leads",    cmd_qualify),
+        ("Enrich leads",     cmd_enrich),
         ("Draft replies",    cmd_draft_replies),
         ("Export leads.csv", cmd_export),
     ]
@@ -623,6 +683,7 @@ def _cli() -> None:
     sub = parser.add_subparsers(dest="cmd", required=True)
     sub.add_parser("fetch",         help="Fetch all new comments from LinkedIn")
     sub.add_parser("qualify",       help="Run Claude qualification on unscored comments")
+    sub.add_parser("enrich",        help="Enrich qualified leads via Bright Data + Apollo")
     sub.add_parser("draft-replies", help="Draft replies for qualified leads")
     sub.add_parser("draft-dms",     help="Draft DM sequences for high-intent replied leads")
     sub.add_parser("export",        help="Export leads.csv")
@@ -633,6 +694,7 @@ def _cli() -> None:
     dispatch = {
         "fetch":         cmd_fetch,
         "qualify":       cmd_qualify,
+        "enrich":        cmd_enrich,
         "draft-replies": cmd_draft_replies,
         "draft-dms":     cmd_draft_dms,
         "export":        cmd_export,

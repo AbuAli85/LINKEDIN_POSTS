@@ -189,6 +189,12 @@ jobs:
           LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
         run: python outreach.py qualify || echo "qualify completed"
 
+      - name: Enrich qualified leads (Apollo + Bright Data)
+        env:
+          APOLLO_API_KEY: ${{ secrets.APOLLO_API_KEY }}
+          BRIGHTDATA_API_KEY: ${{ secrets.BRIGHTDATA_API_KEY }}
+        run: python outreach.py enrich || echo "enrich completed (errors logged above)"
+
       - name: Draft replies for qualified leads
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}

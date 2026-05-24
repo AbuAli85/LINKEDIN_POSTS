@@ -1,0 +1,35 @@
+name: Empty-slot reminder
+
+# Runs 12 hours before each Mon/Wed/Fri publish window.
+# Sun/Tue/Thu 5pm UTC = 9pm Muscat.
+# If tomorrow's scheduled pillar has no approved draft, sends an alert via
+# the same Resend email + webhook channels used for draft-ready notifications.
+
+on:
+  schedule:
+    - cron: "0 17 * * 0,2,4"
+  workflow_dispatch: {}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Check tomorrow's publish slot
+        env:
+          RESEND_API_KEY:    ${{ secrets.RESEND_API_KEY }}
+          NOTIFY_EMAIL:      ${{ secrets.NOTIFY_EMAIL }}
+          NOTIFY_WEBHOOK_URL: ${{ secrets.NOTIFY_WEBHOOK_URL }}
+          NOTIFY_FROM:       ${{ vars.NOTIFY_FROM }}
+          NOTIFY_ON_DRAFT:   ${{ vars.NOTIFY_ON_DRAFT }}
+          DASHBOARD_URL:     ${{ vars.DASHBOARD_URL }}
+        run: python check_empty_slot.py

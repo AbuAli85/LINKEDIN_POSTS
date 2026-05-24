@@ -1,0 +1,170 @@
+name: Weekly Newsletter
+
+# Two phases, same pattern as auto-post:
+#   Phase 1 — generate draft (Saturday 7am UTC = 11am Muscat): Claude drafts
+#             this week's issue from the last week of LinkedIn posts, then
+#             sends a TEST email to NEWSLETTER_TEST_TO so the owner can proof it.
+#   Phase 2 — broadcast (Monday 7am UTC, manual only by default): sends the
+#             approved issue to the full Resend audience. Auto-broadcast is
+#             opt-in via the NEWSLETTER_AUTO_BROADCAST repo variable.
+#
+# The owner can also dispatch the workflow manually with any action.
+
+on:
+  # Schedule disabled — no email list yet. Re-enable cron when subscribers exist.
+  # schedule:
+  #   - cron: "0 7 * * 6"
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Action to run."
+        required: true
+        default: "generate_and_test"
+        type: choice
+        options:
+          - generate_and_test    # draft a new issue + send test to owner
+          - generate_only        # draft only, no send
+          - test_send            # send most-recent draft to NEWSLETTER_TEST_TO
+          - send_to              # send most-recent draft to a single address
+          - broadcast            # send most-recent draft to full audience
+      issue_number:
+        description: "Issue number to send (blank = most recent draft)."
+        required: false
+        default: ""
+      recipient:
+        description: "Recipient for send_to (single email)."
+        required: false
+        default: ""
+      confirm_broadcast:
+        description: "Required safety flag for broadcast. Type YES to allow."
+        required: false
+        default: ""
+      model:
+        description: "Override Claude model (leave blank for default)."
+        required: false
+        default: ""
+
+jobs:
+  newsletter:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Decide run mode
+        id: mode
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            echo "action=generate_and_test" >> "$GITHUB_OUTPUT"
+          else
+            echo "action=${{ inputs.action }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Generate draft
+        if: steps.mode.outputs.action == 'generate_and_test' || steps.mode.outputs.action == 'generate_only'
+        id: generate
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ANTHROPIC_MODEL: ${{ inputs.model }}
+        run: |
+          MODEL_FLAG=""
+          if [ -n "$ANTHROPIC_MODEL" ]; then MODEL_FLAG="--model $ANTHROPIC_MODEL"; fi
+          python newsletter.py $MODEL_FLAG
+          # Capture the newest issue number for the test-send step
+          LATEST=$(ls -1 newsletter_history/issue_*.json 2>/dev/null | sort | tail -1)
+          if [ -n "$LATEST" ]; then
+            NUM=$(basename "$LATEST" | sed -E 's/issue_0*([0-9]+)_.*/\1/')
+            echo "issue_number=$NUM" >> "$GITHUB_OUTPUT"
+            echo "Generated issue #$NUM"
+          else
+            echo "No issue file found after generation — aborting." >&2
+            exit 1
+          fi
+
+      - name: Resolve issue number for sending
+        id: resolve
+        if: steps.mode.outputs.action != 'generate_only'
+        run: |
+          IN_NUM="${{ inputs.issue_number }}"
+          GEN_NUM="${{ steps.generate.outputs.issue_number }}"
+          if [ -n "$IN_NUM" ]; then
+            echo "issue_number=$IN_NUM" >> "$GITHUB_OUTPUT"
+          elif [ -n "$GEN_NUM" ]; then
+            echo "issue_number=$GEN_NUM" >> "$GITHUB_OUTPUT"
+          else
+            # Default: most recent draft
+            LATEST=$(ls -1 newsletter_history/issue_*.json 2>/dev/null | sort | tail -1)
+            if [ -z "$LATEST" ]; then echo "No issues found." >&2; exit 1; fi
+            NUM=$(basename "$LATEST" | sed -E 's/issue_0*([0-9]+)_.*/\1/')
+            echo "issue_number=$NUM" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Test send to owner
+        if: steps.mode.outputs.action == 'generate_and_test' || steps.mode.outputs.action == 'test_send'
+        continue-on-error: true
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          RESEND_FROM: ${{ secrets.RESEND_FROM }}
+          NEWSLETTER_TEST_TO: ${{ secrets.NEWSLETTER_TEST_TO }}
+        run: |
+          if [ -z "$NEWSLETTER_TEST_TO" ]; then
+            echo "⚠ NEWSLETTER_TEST_TO not set — skipping test send."
+            echo "  Add it: repo → Settings → Secrets → NEWSLETTER_TEST_TO=your-email@example.com"
+            exit 0
+          fi
+          if [ -z "$RESEND_FROM" ]; then
+            echo "⚠ RESEND_FROM not set — skipping test send."
+            echo "  Add it: repo → Settings → Secrets → RESEND_FROM='SmartPro <newsletter@thesmartpro.io>'"
+            echo "  The sender address must be verified in your Resend dashboard first."
+            exit 0
+          fi
+          python newsletter_publisher.py --issue ${{ steps.resolve.outputs.issue_number }} --test \
+            || echo "⚠ Test send failed (see above). The newsletter draft was still saved — verify your Resend sender domain to fix delivery."
+
+      - name: Send to single recipient
+        if: steps.mode.outputs.action == 'send_to'
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          RESEND_FROM: ${{ secrets.RESEND_FROM }}
+        run: |
+          if [ -z "${{ inputs.recipient }}" ]; then
+            echo "send_to requires the 'recipient' input." >&2; exit 1
+          fi
+          python newsletter_publisher.py --issue ${{ steps.resolve.outputs.issue_number }} --to "${{ inputs.recipient }}"
+
+      - name: Broadcast to audience (manual + confirmation only)
+        if: steps.mode.outputs.action == 'broadcast'
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          RESEND_FROM: ${{ secrets.RESEND_FROM }}
+          RESEND_AUDIENCE_ID: ${{ secrets.RESEND_AUDIENCE_ID }}
+        run: |
+          if [ "${{ inputs.confirm_broadcast }}" != "YES" ]; then
+            echo "Broadcast requires confirm_broadcast=YES." >&2
+            echo "This is a safety check — broadcasts go to your entire audience." >&2
+            exit 1
+          fi
+          # The publisher script also asks for YES interactively; bypass via piping.
+          echo "YES" | python newsletter_publisher.py --issue ${{ steps.resolve.outputs.issue_number }} --broadcast
+
+      - name: Commit issue + regenerate dashboard
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add newsletter_history/ 2>/dev/null || true
+          git diff --cached --quiet || git commit -m "newsletter: $(date -u '+%Y-%m-%d %H:%M UTC')"
+          git pull --rebase origin ${GITHUB_REF_NAME} || true
+          python dashboard.py
+          git add docs/
+          git diff --cached --quiet || git commit -m "dashboard: refresh after newsletter $(date -u '+%Y-%m-%d %H:%M UTC')"
+          git push origin HEAD:${GITHUB_REF_NAME} || true

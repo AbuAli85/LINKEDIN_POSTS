@@ -1,0 +1,359 @@
+name: Auto-post to LinkedIn
+
+concurrency:
+  group: git-push-${{ github.ref_name }}
+  cancel-in-progress: false
+
+# Four automated jobs (all times UTC / Muscat +4):
+#   05:00 UTC (09:00 Muscat) — generate-or-publish-posts: generate draft for today's pillar
+#   05:15 UTC (09:15 Muscat) — publish-sweep: publish oldest approved post for today
+#   06:00 UTC (10:00 Muscat) — generate-or-publish-posts: publish-approved backup pass
+#                              outreach-sequence: comments → qualify → replies → leads.csv
+#   06:00 UTC Sunday only    — fetch-metrics: pull LinkedIn engagement for all published posts
+#
+# Full 7-day schedule:
+#   Generate 05:00: Sat→Pain/EN  Sun→Sanad/AR  Mon→Proof/EN  Tue→Sanad/EN
+#                   Wed→Vision/EN  Thu→Tech/EN[C]  Fri→Pain/AR
+#   Publish 05:15:  any approved post whose publish_day == today (pillar-agnostic sweep)
+#   Publish 06:00:  backup pass via hour-detection (publishes if 05:15 missed anything)
+
+on:
+  schedule:
+    # generate draft for today's pillar
+    - cron: "0 5 * * *"
+    # publish sweep — pillar-agnostic, publishes oldest approved post for today
+    - cron: "15 5 * * *"
+    # publish-approved backup pass + outreach pipeline
+    - cron: "0 6 * * *"
+    # weekly engagement metrics fetch (Sunday only)
+    - cron: "0 6 * * 0"
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Action to run."
+        required: true
+        default: "generate_draft"
+        type: choice
+        options:
+          - generate_draft
+          - publish_approved
+          - publish_draft
+          - approve_draft
+          - revise_draft
+          - publish_now
+          - fetch_metrics
+          - fetch_comments
+          - post_reply
+          - run_outreach
+      draft_file:
+        description: "Draft JSON path. Required for approve_draft and publish_draft — e.g. posts_history/20260430_090000_pain.json"
+        required: false
+        default: ""
+      engagement_file:
+        description: "Engagement JSON path for post_reply, e.g. engagement_history/20260430_120000_abc123.json."
+        required: false
+        default: ""
+      revision_notes:
+        description: "Feedback for revise_draft: what to change, improve, or fix in the draft."
+        required: false
+        default: ""
+      pillar:
+        description: "Force a specific pillar (pain/proof/vision/conversion). Leave blank to auto-pick."
+        required: false
+        default: ""
+      dry_run:
+        description: "For publish_now only: generate without publishing"
+        required: false
+        default: "false"
+      confirm_publish_now:
+        description: "Required safety flag for publish_now. Type true to allow immediate generation and publishing."
+        required: false
+        default: "false"
+      model:
+        description: "Override the Claude model (e.g. claude-sonnet-4-6, claude-haiku-4-5-20251001). Leave blank for default."
+        required: false
+        default: ""
+
+jobs:
+  post:
+    name: generate-or-publish-posts
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    # Runs on the 05:00 (generate) and 06:00 (publish backup) crons — NOT the 05:15 sweep.
+    # Hour detection inside the Detect-run-mode step routes to generate_draft or publish_approved.
+    # Also runs on any workflow_dispatch action except run_outreach.
+    if: >
+      (github.event_name == 'schedule' && (github.event.schedule == '0 5 * * *' || github.event.schedule == '0 6 * * *')) ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.action != 'run_outreach')
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Detect run mode
+        id: mode
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            # 5am UTC cron = generate draft; 6am UTC cron = publish approved
+            HOUR=$(date -u +%H)
+            [ "$HOUR" = "06" ] && echo "mode=publish_approved" >> "$GITHUB_OUTPUT" \
+                                || echo "mode=generate_draft"   >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=${{ inputs.action }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Generate draft or publish approved draft
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+          LINKEDIN_AUTHOR_URN: ${{ secrets.LINKEDIN_AUTHOR_URN }}
+          LINKEDIN_PERSON_ID: ${{ secrets.LINKEDIN_PERSON_ID }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          NOTIFY_EMAIL: ${{ secrets.NOTIFY_EMAIL }}
+          NOTIFY_WEBHOOK_URL: ${{ secrets.NOTIFY_WEBHOOK_URL }}
+          NOTIFY_FROM: ${{ vars.NOTIFY_FROM }}
+          NOTIFY_ON_DRAFT: ${{ vars.NOTIFY_ON_DRAFT }}
+          DASHBOARD_URL: ${{ vars.DASHBOARD_URL }}
+          POST_MODE: ${{ steps.mode.outputs.mode }}
+          PUBLISH_DRAFT_PATH: ${{ inputs.draft_file }}
+          ENGAGEMENT_PATH: ${{ inputs.engagement_file }}
+          REVISION_NOTES: ${{ inputs.revision_notes }}
+          FORCE_PILLAR: ${{ inputs.pillar }}
+          DRY_RUN: ${{ inputs.dry_run || 'false' }}
+          CONFIRM_PUBLISH_NOW: ${{ inputs.confirm_publish_now || 'false' }}
+          ANTHROPIC_MODEL: ${{ inputs.model }}
+        run: python main.py
+
+      - name: Commit history and dashboard
+        if: always()
+        env:
+          RUN_MODE:   ${{ steps.mode.outputs.mode }}
+          DRAFT_FILE: ${{ inputs.draft_file }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          # Commit data files first — unique filenames mean no conflicts
+          # Use || true so missing dirs (e.g. engagement_history on generate runs) don't abort
+          git add posts_history/ 2>/dev/null || true
+          git add engagement_history/ 2>/dev/null || true
+          git add company_posts_history/ 2>/dev/null || true
+          if [ "$RUN_MODE" = "approve_draft" ] && [ -n "$DRAFT_FILE" ]; then
+            MSG="approve: $(basename "$DRAFT_FILE")"
+          else
+            MSG="data: update $(date -u '+%Y-%m-%d %H:%M UTC')"
+          fi
+          git diff --cached --quiet || git commit -m "$MSG"
+          # Pull after data commit — avoids docs/index.html conflict
+          git pull --rebase --autostash origin ${GITHUB_REF_NAME}
+          # Regenerate dashboard now that we have the latest remote state
+          python dashboard.py
+          git add docs/
+          git diff --cached --quiet || git commit -m "dashboard: update $(date -u '+%Y-%m-%d %H:%M UTC')"
+          # Retry push up to 3 times in case another job pushed concurrently
+          for _try in 1 2 3; do
+            git push origin HEAD:${GITHUB_REF_NAME} && break
+            [ $_try -eq 3 ] && { echo "Push failed after 3 attempts"; exit 1; }
+            echo "Push attempt $_try rejected — rebasing and retrying…"
+            git pull --rebase --autostash origin ${GITHUB_REF_NAME}
+            python dashboard.py
+            git add docs/
+            git diff --cached --quiet || git commit -m "dashboard: update $(date -u '+%Y-%m-%d %H:%M UTC')"
+          done
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # Outreach Pipeline — runs daily at 06:00 UTC (10:00 Muscat)
+  # Fires from the same "0 6 * * *" cron as the publish step.
+  # Fetches new comments → Claude qualification → reply drafts → leads.csv
+  # ──────────────────────────────────────────────────────────────────────────
+  outreach:
+    name: outreach-sequence
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    if: >
+      (github.event_name == 'schedule' && github.event.schedule == '0 6 * * *') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'run_outreach')
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Fetch new comments
+        # LINKEDIN_READ_TOKEN comes from the second app (Community Management API,
+        # r_member_social scope). outreach.py prefers it; falls back to ACCESS_TOKEN
+        # if READ_TOKEN isn't set (single-app setup, 0 results until READ_TOKEN added).
+        env:
+          LINKEDIN_READ_TOKEN: ${{ secrets.LINKEDIN_READ_TOKEN }}
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+        run: python outreach.py fetch || echo "fetch completed (errors logged above)"
+
+      - name: Qualify leads with Claude
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          LINKEDIN_READ_TOKEN: ${{ secrets.LINKEDIN_READ_TOKEN }}
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+        run: python outreach.py qualify || echo "qualify completed"
+
+      - name: Enrich qualified leads (Apollo + Bright Data)
+        env:
+          APOLLO_API_KEY: ${{ secrets.APOLLO_API_KEY }}
+          BRIGHTDATA_API_KEY: ${{ secrets.BRIGHTDATA_API_KEY }}
+        run: python outreach.py enrich || echo "enrich completed (errors logged above)"
+
+      - name: Draft replies for qualified leads
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python outreach.py draft-replies || echo "draft-replies completed"
+
+      - name: Export leads.csv
+        run: python outreach.py export || echo "export completed"
+
+      - name: Fetch post engagement metrics (aged posts ≥7 days)
+        env:
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python content_feedback.py fetch-aged || echo "⚠ metrics fetch failed, continuing"
+
+      - name: Analyse pillar performance
+        run: python content_feedback.py analyze || echo "⚠ analysis failed, continuing"
+
+      - name: Commit outreach data and dashboard
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          # Commit data files first — unique filenames mean no conflicts
+          git add outreach_history/ leads.csv
+          git add content_analysis.json 2>/dev/null || true
+          DATE=$(date -u '+%Y-%m-%d')
+          NLEADS=$(python -c "import csv; r=list(csv.DictReader(open('leads.csv'))); print(len([x for x in r if x.get('intent') in ('high','medium')]))" 2>/dev/null || echo 0)
+          NREPLIES=$(python -c "import csv; r=list(csv.DictReader(open('leads.csv'))); print(len([x for x in r if x.get('reply_status') in ('drafted','replied')]))" 2>/dev/null || echo 0)
+          git diff --cached --quiet || git commit -m "outreach: ${DATE} — ${NLEADS} leads, ${NREPLIES} replies | metrics updated"
+          # Pull after data commit — avoids docs/index.html conflict
+          git pull --rebase --autostash origin ${GITHUB_REF_NAME}
+          # Regenerate dashboard now that we have the latest remote state
+          python dashboard.py
+          git add docs/index.html
+          git diff --cached --quiet || git commit -m "dashboard: update $(date -u '+%Y-%m-%d %H:%M UTC')"
+          for _try in 1 2 3; do
+            git push origin HEAD:${GITHUB_REF_NAME} && break
+            [ $_try -eq 3 ] && { echo "Push failed after 3 attempts"; exit 1; }
+            echo "Push attempt $_try rejected — rebasing and retrying…"
+            git pull --rebase --autostash origin ${GITHUB_REF_NAME}
+            python dashboard.py
+            git add docs/index.html
+            git diff --cached --quiet || git commit -m "dashboard: update $(date -u '+%Y-%m-%d %H:%M UTC')"
+          done
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # Publish Sweep — runs daily at 05:15 UTC (09:15 Muscat)
+  # Publishes the oldest approved post whose publish_day matches today.
+  # Pillar-agnostic — clears any backlog of approved-but-unpublished posts.
+  # Publishes at most one post per run.
+  # ──────────────────────────────────────────────────────────────────────────
+  sweep:
+    name: publish-sweep
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    if: github.event_name == 'schedule' && github.event.schedule == '15 5 * * *'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Publish approved post for today
+        env:
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+          LINKEDIN_AUTHOR_URN: ${{ secrets.LINKEDIN_AUTHOR_URN }}
+          POST_MODE: publish_approved
+        run: python main.py
+
+      - name: Commit updated post status and dashboard
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add posts_history/ 2>/dev/null || true
+          git diff --cached --quiet || git commit -m "publish: sweep $(date -u '+%Y-%m-%d %H:%M UTC')"
+          git pull --rebase --autostash origin ${GITHUB_REF_NAME}
+          python dashboard.py
+          git add docs/
+          git diff --cached --quiet || git commit -m "dashboard: update $(date -u '+%Y-%m-%d %H:%M UTC')"
+          for _try in 1 2 3; do
+            git push origin HEAD:${GITHUB_REF_NAME} && break
+            [ $_try -eq 3 ] && { echo "Push failed after 3 attempts"; exit 1; }
+            echo "Push attempt $_try rejected — rebasing and retrying…"
+            git pull --rebase --autostash origin ${GITHUB_REF_NAME}
+            python dashboard.py
+            git add docs/
+            git diff --cached --quiet || git commit -m "dashboard: update $(date -u '+%Y-%m-%d %H:%M UTC')"
+          done
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # Weekly Metrics Fetch — runs every Sunday at 06:00 UTC (10:00 Muscat)
+  # Pulls LinkedIn engagement counts for all published posts.
+  # Rebuilds dashboard with updated metrics data.
+  # NOTE: On Sunday the outreach job also fires at 06:00 UTC — both run in
+  # parallel (separate jobs). The outreach job's dashboard commit may race
+  # this one; git pull --rebase handles it cleanly.
+  # ──────────────────────────────────────────────────────────────────────────
+  metrics:
+    name: fetch-engagement-metrics
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    if: github.event_name == 'schedule' && github.event.schedule == '0 6 * * 0'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Fetch LinkedIn engagement for all published posts
+        env:
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+          LINKEDIN_AUTHOR_URN: ${{ secrets.LINKEDIN_AUTHOR_URN }}
+        run: python metrics.py fetch-all || echo "⚠ metrics fetch failed, continuing"
+
+      - name: Rebuild dashboard with updated metrics
+        run: python dashboard.py
+
+      - name: Commit updated metrics and dashboard
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add posts_history/ docs/
+          git diff --cached --quiet || git commit -m "chore: weekly metrics fetch $(date -u '+%Y-%m-%d')"
+          git pull --rebase --autostash origin ${GITHUB_REF_NAME}
+          for _try in 1 2 3; do
+            git push origin HEAD:${GITHUB_REF_NAME} && break
+            [ $_try -eq 3 ] && { echo "Push failed after 3 attempts"; exit 1; }
+            echo "Push attempt $_try rejected — rebasing and retrying…"
+            git pull --rebase --autostash origin ${GITHUB_REF_NAME}
+          done

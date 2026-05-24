@@ -40,9 +40,22 @@ RETRY_BASE_DELAY = 60  # seconds
 # ---------------------------------------------------------------------------
 
 def _li_headers() -> dict:
-    token = (os.environ.get("LINKEDIN_ACCESS_TOKEN") or "").strip()
+    """LinkedIn auth headers — prefers the dedicated read token if present.
+
+    The Community Management API can't co-exist with Share on LinkedIn on the same app
+    (LinkedIn policy), so reads use a separate app + token. We prefer LINKEDIN_READ_TOKEN
+    when set, falling back to LINKEDIN_ACCESS_TOKEN so single-app setups still work.
+    """
+    token = (
+        os.environ.get("LINKEDIN_READ_TOKEN")
+        or os.environ.get("LINKEDIN_ACCESS_TOKEN")
+        or ""
+    ).strip()
     if not token:
-        raise RuntimeError("LINKEDIN_ACCESS_TOKEN not set.")
+        raise RuntimeError(
+            "Neither LINKEDIN_READ_TOKEN nor LINKEDIN_ACCESS_TOKEN is set. "
+            "See LINKEDIN_SETUP.md."
+        )
     return {
         "Authorization": f"Bearer {token}",
         "X-Restli-Protocol-Version": "2.0.0",

@@ -1,0 +1,18 @@
+{
+  "pillar": "proof",
+  "topic": "What happens to payroll when your only HR person resigns on Wednesday and payday is Friday",
+  "format": "Walk through the before and after in precise operational detail — specific hours, specific failures, specific fix",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "Their HR manager resigned on a Wednesday.\n\nPayroll was due Friday.\n\nThe founder spent 11 hours reconstructing a process that lived entirely in one person's head. Three spreadsheets. Two bank formats. A WPS file nobody else knew how to build.\n\nSalaries went out two days late. One employee asked if the company was in trouble.\n\nThe problem wasn't the resignation. The problem was that the entire payroll operation was a single point of failure — and nobody had noticed because it kept working.\n\nAfter moving to SmartPro Hub: payroll runs from any device, by anyone with access. WPS files generate automatically. The bank integration handles submission directly. No tribal knowledge required.\n\nWhen their next HR hire started three months later, payroll onboarding took 40 minutes — not three weeks.\n\nBusiness continuity isn't about backup plans. It's about building systems that don't depend on one person being in the office on a specific day.\n\nWhat would happen to your payroll process if your HR manager resigned tomorrow?\n\nBook a free 20-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=proof-en\nOr WhatsApp +96879665522\n\n#OmanBusiness\n#HRManagement\n#PayrollOman\n#WPS\n#SmartPROHub",
+  "char_count": 1187,
+  "generated_at": "2026-05-25T09:00:00.000000+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": false
+}

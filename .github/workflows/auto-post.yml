@@ -179,13 +179,18 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Fetch new comments
+        # LINKEDIN_READ_TOKEN comes from the second app (Community Management API,
+        # r_member_social scope). outreach.py prefers it; falls back to ACCESS_TOKEN
+        # if READ_TOKEN isn't set (single-app setup, 0 results until READ_TOKEN added).
         env:
+          LINKEDIN_READ_TOKEN: ${{ secrets.LINKEDIN_READ_TOKEN }}
           LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
         run: python outreach.py fetch || echo "fetch completed (errors logged above)"
 
       - name: Qualify leads with Claude
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          LINKEDIN_READ_TOKEN: ${{ secrets.LINKEDIN_READ_TOKEN }}
           LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
         run: python outreach.py qualify || echo "qualify completed"
 

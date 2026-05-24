@@ -1,19 +1,20 @@
 {
   "pillar": "sanad_pro",
-  "topic": "924 Sanad offices. All staffed by Omani nationals. All serving every company in the country. The ones that digitise their operations first will take the market \u2014 the rest will lose clients to them.",
-  "format": "Open with a number that puts the problem in scale \u2014 924 offices, 40 permits, 15 visa renewals, 200 filings per month \u2014 then show what managing that volume without a system actually looks like",
+  "topic": "924 Sanad offices. All staffed by Omani nationals. All serving every company in the country. The ones that digitise their operations first will take the market — the rest will lose clients to them.",
+  "format": "Open with a number that puts the problem in scale — 924 offices, 40 permits, 15 visa renewals, 200 filings per month — then show what managing that volume without a system actually looks like",
   "language": "en",
   "segment": "A",
   "publish_day": "Thursday",
-  "post": "40 work permits. 15 visa renewals. 8 MOL filings due this week.\n\nMultiply that across 20 client companies.\n\nThat's Tuesday. Not a bad week \u2014 just Tuesday.\n\nAnd most of it lives in a WhatsApp group and a shared Excel file that two other people are editing while you're editing it. Someone saves over your version. A renewal slips because the only alert was a sticky note that's now on the floor behind the desk.\n\nA client calls asking for a status update and you're scrolling through 200 messages to find it.\n\nYou're not bad at the job. The tools are just genuinely wrong for it.\n\nThere are 924 licensed Sanad offices in Oman. Every one of them sits between Omani businesses and every government authority \u2014 work permits, residency visas, Civil Status, MOL, ROP clearances, Omanisation certificates. That's a serious operation being run on infrastructure built for something much simpler.\n\nThe offices that get organised first will pick up the clients from the ones that don't. That's just how it goes.\n\nSmartPro Hub was built for exactly this: structured case intake, expiry alerts that actually fire, PRO task assignment, a client portal so companies can check their own requests instead of calling you, and automated invoicing per service.\n\nNot generic HR software. Not a spreadsheet with better colour coding. Something that actually knows how a Sanad office runs.\n\nTry the Sanad AI Assistant free \u2014 instant answers on work permits, visas & government fees: www.thesmartpro.io/sanad/assistant\n\nBook a free 20-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=general\n\nOr WhatsApp +96879665522\n\n#OmanBusiness #SmartPROHub #Omanization #GCCBusiness #HRManagement",
+  "post": "40 work permits. 15 visa renewals. 8 MOL filings due this week.\n\nMultiply that across 20 client companies.\n\nThat's Tuesday. Not a bad week — just Tuesday.\n\nAnd most of it lives in a WhatsApp group and a shared Excel file that two other people are editing while you're editing it. Someone saves over your version. A renewal slips because the only alert was a sticky note that's now on the floor behind the desk.\n\nA client calls asking for a status update and you're scrolling through 200 messages to find it.\n\nYou're not bad at the job. The tools are just genuinely wrong for it.\n\nThere are 924 licensed Sanad offices in Oman. Every one of them sits between Omani businesses and every government authority — work permits, residency visas, Civil Status, MOL, ROP clearances, Omanisation certificates. That's a serious operation being run on infrastructure built for something much simpler.\n\nThe offices that get organised first will pick up the clients from the ones that don't. That's just how it goes.\n\nSmartPro Hub was built for exactly this: structured case intake, expiry alerts that actually fire, PRO task assignment, a client portal so companies can check their own requests instead of calling you, and automated invoicing per service.\n\nNot generic HR software. Not a spreadsheet with better colour coding. Something that actually knows how a Sanad office runs.\n\nTry the Sanad AI Assistant free — instant answers on work permits, visas & government fees: www.thesmartpro.io/sanad/assistant\n\nBook a free 20-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=general\n\nOr WhatsApp +96879665522\n\n#OmanBusiness #SmartPROHub #Omanization #GCCBusiness #HRManagement",
   "char_count": 1709,
   "generated_at": "2026-05-20T07:15:30.787049+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 2,
   "validation_warning": "too long (1581 chars, need <= 1500)",
-  "status": "draft",
+  "status": "deleted",
   "published": false,
   "approved": false,
   "approval_required": true,
-  "dry_run": true
+  "dry_run": true,
+  "deleted_reason": "empty draft — 0 chars, auto-cleaned"
 }

@@ -1,5 +1,9 @@
 name: Auto-post to LinkedIn
 
+concurrency:
+  group: git-push-${{ github.ref_name }}
+  cancel-in-progress: false
+
 # Four automated jobs (all times UTC / Muscat +4):
 #   05:00 UTC (09:00 Muscat) — generate-or-publish-posts: generate draft for today's pillar
 #   05:15 UTC (09:15 Muscat) — publish-sweep: publish oldest approved post for today
@@ -152,7 +156,16 @@ jobs:
           python dashboard.py
           git add docs/
           git diff --cached --quiet || git commit -m "dashboard: update $(date -u '+%Y-%m-%d %H:%M UTC')"
-          git push origin HEAD:${GITHUB_REF_NAME}
+          # Retry push up to 3 times in case another job pushed concurrently
+          for _try in 1 2 3; do
+            git push origin HEAD:${GITHUB_REF_NAME} && break
+            [ $_try -eq 3 ] && { echo "Push failed after 3 attempts"; exit 1; }
+            echo "Push attempt $_try rejected — rebasing and retrying…"
+            git pull --rebase --autostash origin ${GITHUB_REF_NAME}
+            python dashboard.py
+            git add docs/
+            git diff --cached --quiet || git commit -m "dashboard: update $(date -u '+%Y-%m-%d %H:%M UTC')"
+          done
 
   # ──────────────────────────────────────────────────────────────────────────
   # Outreach Pipeline — runs daily at 06:00 UTC (10:00 Muscat)
@@ -235,7 +248,15 @@ jobs:
           python dashboard.py
           git add docs/index.html
           git diff --cached --quiet || git commit -m "dashboard: update $(date -u '+%Y-%m-%d %H:%M UTC')"
-          git push origin HEAD:${GITHUB_REF_NAME}
+          for _try in 1 2 3; do
+            git push origin HEAD:${GITHUB_REF_NAME} && break
+            [ $_try -eq 3 ] && { echo "Push failed after 3 attempts"; exit 1; }
+            echo "Push attempt $_try rejected — rebasing and retrying…"
+            git pull --rebase --autostash origin ${GITHUB_REF_NAME}
+            python dashboard.py
+            git add docs/index.html
+            git diff --cached --quiet || git commit -m "dashboard: update $(date -u '+%Y-%m-%d %H:%M UTC')"
+          done
 
   # ──────────────────────────────────────────────────────────────────────────
   # Publish Sweep — runs daily at 05:15 UTC (09:15 Muscat)
@@ -274,11 +295,19 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add posts_history/ 2>/dev/null || true
           git diff --cached --quiet || git commit -m "publish: sweep $(date -u '+%Y-%m-%d %H:%M UTC')"
-          git pull --rebase origin ${GITHUB_REF_NAME}
+          git pull --rebase --autostash origin ${GITHUB_REF_NAME}
           python dashboard.py
           git add docs/
           git diff --cached --quiet || git commit -m "dashboard: update $(date -u '+%Y-%m-%d %H:%M UTC')"
-          git push origin HEAD:${GITHUB_REF_NAME}
+          for _try in 1 2 3; do
+            git push origin HEAD:${GITHUB_REF_NAME} && break
+            [ $_try -eq 3 ] && { echo "Push failed after 3 attempts"; exit 1; }
+            echo "Push attempt $_try rejected — rebasing and retrying…"
+            git pull --rebase --autostash origin ${GITHUB_REF_NAME}
+            python dashboard.py
+            git add docs/
+            git diff --cached --quiet || git commit -m "dashboard: update $(date -u '+%Y-%m-%d %H:%M UTC')"
+          done
 
   # ──────────────────────────────────────────────────────────────────────────
   # Weekly Metrics Fetch — runs every Sunday at 06:00 UTC (10:00 Muscat)
@@ -321,5 +350,10 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add posts_history/ docs/
           git diff --cached --quiet || git commit -m "chore: weekly metrics fetch $(date -u '+%Y-%m-%d')"
-          git pull --rebase origin ${GITHUB_REF_NAME}
-          git push origin HEAD:${GITHUB_REF_NAME}
+          git pull --rebase --autostash origin ${GITHUB_REF_NAME}
+          for _try in 1 2 3; do
+            git push origin HEAD:${GITHUB_REF_NAME} && break
+            [ $_try -eq 3 ] && { echo "Push failed after 3 attempts"; exit 1; }
+            echo "Push attempt $_try rejected — rebasing and retrying…"
+            git pull --rebase --autostash origin ${GITHUB_REF_NAME}
+          done

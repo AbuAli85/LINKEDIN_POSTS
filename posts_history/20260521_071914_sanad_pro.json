@@ -5,16 +5,15 @@
   "language": "en",
   "segment": "A",
   "publish_day": "Thursday",
-  "post": "One Sanad office in Muscat gave every client company their own portal to track their cases in real time.\n\nNo more \"what's the status?\" calls. No more voice notes at 10pm.\n\nThree months later: zero client churn. Four referrals. Two converted.\n\nThat's what happens when clients stop feeling ignored.\n\n---\n\nHere's the exact moment Excel breaks.\n\nNot at 5 clients. Not even 10.\n\nIt breaks when an MOL filing slips — not because anyone forgot, but because the cell with the deadline was last touched by someone who left three months ago. And the client finds out before you do.\n\nThat's when the trust goes. Not slowly. All at once.\n\n40 work permits, 15 visa renewals, 8 MOL filings across 20 companies — I've seen what that looks like in a shared spreadsheet with no alerts, no audit trail, and no one person who owns it. It's not a workflow. It's a liability waiting to land on a Friday afternoon.\n\nSmartPro Hub was built for the 924 licensed Sanad offices running Oman's government services channel. Automatic expiry alerts. A client portal. MOL filing timelines tracked per company. One place, not twelve tabs.\n\nOMR 12/month to start. 14-day free trial, no card needed.\n\nIf you run a Sanad office — how many deadlines are sitting in a file right now that only one person can see? And what happens when that person is on leave?\n\nTry the Sanad AI Assistant free — instant answers on work permits, visas & government fees: www.thesmartpro.io/sanad/assistant\n\nBook a free 20-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=general\n\nOr WhatsApp +96879665522\n\n#OmanBusiness\n#SmartPROHub\n#Omanization\n#HRManagement\n#GCCBusiness",
-  "char_count": 1666,
+  "post": "One Sanad office in Muscat gave every client their own portal to track cases in real time.\n\nNo more \"what's the status?\" calls. No more voice notes at 10pm.\n\nThree months later: zero client churn. Four referrals. Two converted.\n\nThat's what happens when clients stop feeling ignored.\n\nHere's the exact moment Excel breaks.\n\nNot at 5 clients. Not even 10.\n\nIt breaks when an MOL filing slips — not because anyone forgot, but because the cell with the deadline was last touched by someone who left three months ago. And the client finds out before you do.\n\nThat's when the trust goes. Not slowly. All at once.\n\n40 work permits, 15 visa renewals, 8 MOL filings across 20 companies — in a shared spreadsheet with no alerts, no audit trail, no one person who owns it. Not a workflow. A liability.\n\nSmartPro Hub was built for the 924 licensed Sanad offices running Oman's government services channel. Automatic expiry alerts. A client portal. MOL filing timelines tracked per company. One place, not twelve tabs.\n\nOMR 12/month. 14-day free trial, no card needed.\n\nHow many deadlines are sitting in a file right now that only one person can see?\n\nTry the Sanad AI Assistant free: www.thesmartpro.io/sanad/assistant\nBook a free 20-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=sanad-pro-en\nOr WhatsApp +96879665522\n\n#OmanBusiness\n#SmartPROHub\n#Omanization\n#HRManagement\n#GCCBusiness",
+  "char_count": 1424,
   "generated_at": "2026-05-21T07:19:14.594769+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 2,
   "validation_warning": "too long (1570 chars, need <= 1500)",
-  "status": "deleted",
+  "status": "draft",
   "published": false,
   "approved": false,
   "approval_required": true,
-  "dry_run": true,
-  "deleted_reason": "empty draft — 0 chars, auto-cleaned"
+  "dry_run": true
 }

@@ -1,5 +1,0 @@
-anthropic==0.100.0
-requests==2.33.1
-resend==2.30.0
-python-dotenv==1.2.2
-pillow==12.2.0

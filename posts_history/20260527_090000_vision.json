@@ -14,6 +14,5 @@
   "published": false,
   "approved": true,
   "approval_required": false,
-  "dry_run": false,
-  "approved_at": "2026-05-24T22:07:11.446574+00:00"
+  "dry_run": false
 }

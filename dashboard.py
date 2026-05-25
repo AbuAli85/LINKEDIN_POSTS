@@ -1477,8 +1477,8 @@ def _card(post: dict, idx: int) -> str:
     elif post.get("approved") or status_value == "approved":
         status = _badge("Approved", "approved")
         status_key = "approved"
-    elif status_value == "superseded":
-        status = _badge("Superseded", "superseded")
+    elif status_value in ("superseded", "deleted"):
+        status = _badge("Superseded" if status_value == "superseded" else "Deleted", "superseded")
         status_key = "superseded"
     elif post.get("dry_run"):
         status = _badge("Dry run", "dry-run")
@@ -1548,7 +1548,7 @@ def _card(post: dict, idx: int) -> str:
     needs_review = (
         (post.get("status") == "draft" or post.get("approval_required"))
         and not post.get("published")
-        and status_value != "superseded"
+        and status_value not in ("superseded", "deleted")
         and not post.get("is_variant", False)
     )
     filename      = post.get("_filename", "")
@@ -1934,9 +1934,9 @@ def _outreach_pipeline_section() -> str:
 # Main generator
 # ---------------------------------------------------------------------------
 def generate(posts: list[dict]) -> str:
-    total       = len(posts)
+    total       = sum(1 for p in posts if p.get("status") not in ("deleted", "superseded"))
     n_published = sum(1 for p in posts if p.get("published") or p.get("status") == "published")
-    n_drafts    = sum(1 for p in posts if (p.get("status") == "draft" or p.get("approval_required")) and not p.get("published") and p.get("status") != "superseded")
+    n_drafts    = sum(1 for p in posts if (p.get("status") == "draft" or p.get("approval_required")) and not p.get("published") and p.get("status") not in ("superseded", "deleted") and not p.get("is_variant", False))
     n_approved  = sum(1 for p in posts if (p.get("approved") or p.get("status") == "approved") and not p.get("published"))
     n_failed    = sum(1 for p in posts if p.get("publish_error") or p.get("status") == "failed")
     approved_pillars = {
@@ -1951,7 +1951,7 @@ def generate(posts: list[dict]) -> str:
         avg = round(sum(p["metrics"]["manual_quality_score"] for p in scored_posts) / len(scored_posts), 1)
         avg_score_html = f'<div class="stat"><div class="n">{avg}</div><div class="l">Avg score</div></div>'
 
-    counts = Counter(p.get("pillar", "?") for p in posts)
+    counts = Counter(p.get("pillar", "?") for p in posts if p.get("status") not in ("deleted", "superseded"))
     pillar_pills = "".join(
         f'<span class="pillar-pill" style="border-color:{PILLAR_COLOR.get(p,"#94a3b8")}55;'
         f'color:{PILLAR_COLOR.get(p,"#94a3b8")}">{p} <b>{c}</b></span>'
@@ -2000,7 +2000,7 @@ def generate(posts: list[dict]) -> str:
     runs_html     = "".join(_run_html(r)     for r in next_runs(3))
     pub_runs_html = "".join(_pub_run_html(r) for r in next_publish_runs(3))
 
-    n_variants = sum(1 for p in posts if p.get("is_variant"))
+    n_variants = sum(1 for p in posts if p.get("is_variant") and p.get("status") not in ("deleted", "superseded"))
 
     _chip_defs = [
         ("All",          "all",       total),
@@ -2013,7 +2013,8 @@ def generate(posts: list[dict]) -> str:
     if n_variants:
         _chip_defs.append(("Variants", "variant", n_variants))
     for _p, _c in sorted(counts.items(), key=lambda x: -x[1]):
-        _chip_defs.append((_p.capitalize(), _p, _c))
+        if _c > 0:
+            _chip_defs.append((_p.capitalize(), _p, _c))
 
     # Segment chips (A/B/C) — always rendered; disabled (not hidden) when count == 0
     seg_counts = Counter(p.get("segment", "") for p in posts if p.get("segment"))

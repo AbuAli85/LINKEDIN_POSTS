@@ -1,20 +1,20 @@
-"""Content strategy: SmartPro Hub — enterprise operations platform for Oman & GCC businesses."""
+"""Content strategy: SmartPRO Hub — enterprise operations platform for Oman & GCC businesses."""
 
 import json
 from pathlib import Path
 
 BRAND_URL      = "www.thesmartpro.io"
 # CTA for posts targeting companies (HR managers, business owners, PRO service firms).
-COMPANY_CTA    = "Book a 20-minute demo at www.thesmartpro.io — or WhatsApp +96879665522 to see SmartPro live."
+COMPANY_CTA    = "Book a 20-minute demo at www.thesmartpro.io — or WhatsApp +96879665522 to see SmartPRO Hub live."
 # CTA for Sanad/PRO posts — free AI assistant is the entry point, no login needed.
 SANAD_CTA      = "Try the Sanad AI Assistant free — instant answers on work permits, visas & government fees: www.thesmartpro.io/sanad/assistant"
 SANAD_CTA_AR   = "جرّب مساعد سند الذكي مجاناً — إجابات فورية عن تصاريح العمل والتأشيرات والرسوم الحكومية: www.thesmartpro.io/sanad/assistant"
 # CTA for Arabic posts targeting companies (pain_ar pillar)
-COMPANY_CTA_AR = "احجز عرضاً تجريبياً مجانياً مدته ٢٠ دقيقة على www.thesmartpro.io — أو راسلنا على واتساب +96879665522 لمشاهدة SmartPro مباشرة."
+COMPANY_CTA_AR = "احجز عرضاً تجريبياً مجانياً مدته ٢٠ دقيقة على www.thesmartpro.io — أو راسلنا على واتساب +96879665522 لمشاهدة SmartPRO Hub مباشرة."
 # CTA for posts targeting candidates (job seekers)
 CANDIDATE_CTA  = "Browse open jobs and apply at www.thesmartpro.io"
 # CTA for Segment C (tech/build-in-public posts targeting engineers and SaaS founders)
-TECH_CTA       = "SmartPro Hub is open for early adopters — OMR 12/month, 14-day free trial: www.thesmartpro.io"
+TECH_CTA       = "SmartPRO Hub is open for early adopters — OMR 12/month, 14-day free trial: www.thesmartpro.io"
 # Legacy alias kept so existing code that references DEMO_CTA still works
 DEMO_CTA       = COMPANY_CTA
 
@@ -68,12 +68,12 @@ SEO_KEYWORDS: list[str] = [
     "Omanization compliance software",
     "SME HR platform GCC",
     "payroll automation Muscat",
-    "SmartPro Hub",
+    "SmartPRO Hub",
 ]
 
 _BRAND_CONTEXT = (
-    "BRAND CONTEXT: You are writing on behalf of SmartPro Hub — the enterprise operations platform "
-    "built exclusively for Oman and GCC businesses. SmartPro Hub brings together in one system: "
+    "BRAND CONTEXT: You are writing on behalf of SmartPRO Hub — the enterprise operations platform "
+    "built exclusively for Oman and GCC businesses. SmartPRO Hub brings together in one system: "
     "CRM with deal pipeline and quotations, a white-label client portal, HR and workforce management, "
     "WPS payroll with direct bank integration, SPF (Social Protection Fund) and Omanisation compliance, Ministry of Labour (MOL) "
     "government filings, Sanad office management, PRO services workflow, work permit and visa "
@@ -91,7 +91,7 @@ _BRAND_CONTEXT = (
 )
 
 _BRAND_CONTEXT_CANDIDATES = (
-    "BRAND CONTEXT: You are writing on behalf of SmartPro — a platform that connects job seekers "
+    "BRAND CONTEXT: You are writing on behalf of SmartPRO Hub — a platform that connects job seekers "
     "with companies actively hiring in Oman. Candidates can create a free profile, browse open roles, "
     "apply in seconds, and track their application from applied to hired. "
     f"Website: {BRAND_URL}. "
@@ -99,8 +99,8 @@ _BRAND_CONTEXT_CANDIDATES = (
 )
 
 _BRAND_CONTEXT_AR = (
-    "سياق العلامة التجارية: أنت تكتب نيابةً عن SmartPro Hub — منصة العمليات المتكاملة "
-    "المصممة خصيصاً لشركات عُمان ودول الخليج العربي. تجمع SmartPro Hub في نظام واحد: "
+    "سياق العلامة التجارية: أنت تكتب نيابةً عن SmartPRO Hub — منصة العمليات المتكاملة "
+    "المصممة خصيصاً لشركات عُمان ودول الخليج العربي. تجمع SmartPRO Hub في نظام واحد: "
     "إدارة علاقات العملاء مع خط صفقات وعروض الأسعار، بوابة العملاء الإلكترونية، "
     "إدارة الموارد البشرية والقوى العاملة، رواتب WPS مع تكامل مصرفي مباشر، "
     "الامتثال لصندوق الحماية الاجتماعية (SPF) ونسب التعمين، تسجيلات وزارة العمل، "
@@ -117,7 +117,7 @@ _BRAND_CONTEXT_AR = (
 )
 
 _BRAND_CONTEXT_SANAD_AR = (
-    "سياق العلامة التجارية: أنت تكتب نيابةً عن SmartPro Hub — المنصة المصممة خصيصاً "
+    "سياق العلامة التجارية: أنت تكتب نيابةً عن SmartPRO Hub — المنصة المصممة خصيصاً "
     "لمكاتب سند وشركات خدمات PRO في عُمان. "
     "يوجد ٩٢٤ مكتب سند مرخص في عُمان، ويشترط القانون أن يعمل بها مواطنون عُمانيون حصراً — "
     "وهي قناة التعمين الحكومية الإلزامية. مكاتب سند هي البوابة الرسمية بين كل شركة في عُمان "
@@ -125,7 +125,7 @@ _BRAND_CONTEXT_SANAD_AR = (
     "التأشيرات، بطاقات الهوية، تسجيل الشركات، تخليص وزارة العمل، "
     "معاملات هيئة الوضع المدني، تخليص الشرطة العُمانية، شهادات التعمين، وغيرها. "
     "معظم مكاتب سند تُدير كل هذا اليوم عبر مجموعات واتساب وملفات إكسل مشتركة وسجلات ورقية. "
-    "SmartPro Hub تستبدل ذلك كلياً بـ: استقبال منظّم للقضايا لكل شركة عميل، "
+    "SmartPRO Hub تستبدل ذلك كلياً بـ: استقبال منظّم للقضايا لكل شركة عميل، "
     "كتالوج خدمات بأسعار حية، تنبيهات تلقائية بانتهاء صلاحية تصاريح العمل والتأشيرات، "
     "إسناد المهام لمسؤول PRO، خزينة وثائق رقمية لكل عميل، "
     "بوابة عميل تتيح للشركات تتبع طلباتها دون اتصال، "
@@ -147,7 +147,7 @@ _BRAND_CONTEXT_SANAD_AR = (
 )
 
 _BRAND_CONTEXT_SANAD = (
-    "BRAND CONTEXT: You are writing on behalf of SmartPro Hub — the platform purpose-built for "
+    "BRAND CONTEXT: You are writing on behalf of SmartPRO Hub — the platform purpose-built for "
     "Sanad offices and PRO service firms in Oman. "
     "There are 924 licensed Sanad offices across Oman — and by law, they must be staffed exclusively "
     "by Omani nationals. This is a government-mandated Omanisation channel: Sanad offices are the "
@@ -157,7 +157,7 @@ _BRAND_CONTEXT_SANAD = (
     "clearances, Ministry of Labour (MOL) filings, Civil Status Authority transactions, Royal Oman Police "
     "clearances, Omanisation certificates, and more. "
     "Most Sanad offices today manage all of this through WhatsApp groups, shared Excel files, and "
-    "handwritten registers. SmartPro Hub replaces that entirely with: structured case intake per "
+    "handwritten registers. SmartPRO Hub replaces that entirely with: structured case intake per "
     "client company, service catalog with live pricing, automatic work permit and visa expiry alerts, "
     "PRO officer task assignment, digital document vault per client, a client portal so companies can "
     "track every request themselves without calling, automated invoicing per service delivered, "
@@ -181,7 +181,7 @@ _BRAND_CONTEXT_SANAD = (
 )
 
 _BRAND_CONTEXT_TECH = (
-    "BRAND CONTEXT: You are writing in first person as a technical co-founder of SmartPro Hub — "
+    "BRAND CONTEXT: You are writing in first person as a technical co-founder of SmartPRO Hub — "
     "Oman's first multi-tenant HR intelligence platform. "
     "Stack: tRPC, Drizzle ORM, MySQL, TypeScript, Claude AI. 4,000+ automated tests. "
     "The platform handles WPS payroll with direct bank integration, Ministry of Labour compliance, "
@@ -317,7 +317,7 @@ PILLARS = {
             # Client portal & CRM proof
             "The client portal that cut inbound status-update calls by 80% in the first month",
             "From WhatsApp to a client portal: what the first week of transition looked like for a Muscat service firm",
-            "A quotation built, sent, and accepted in the same afternoon — what that pipeline looks like in SmartPro",
+            "A quotation built, sent, and accepted in the same afternoon — what that pipeline looks like in SmartPRO Hub",
             "How one service firm tracked 25 active client deals without a single spreadsheet",
             "The client who renewed their contract without a single phone call — what made that possible",
             "Before and after: what client communication looked like for a PRO firm running on WhatsApp vs. a portal",
@@ -426,7 +426,7 @@ PILLARS = {
         "formats": [
             "Open with a specific Sanad or PRO failure moment — a visa that expired, a client who found out at the airport, a missed MOL filing — make it so specific the reader stops scrolling",
             "Walk through the exact day-in-the-life of a Sanad office manager handling 20+ client companies with no case tracking system — every painful step in sequence",
-            "Build a sharp before/after: managing government services with WhatsApp and Excel versus SmartPro Hub case tracking and a client portal — show the same week, completely different experience",
+            "Build a sharp before/after: managing government services with WhatsApp and Excel versus SmartPRO Hub case tracking and a client portal — show the same week, completely different experience",
             "Write a numbered list of 5 signs that a Sanad office has outgrown its current setup — make each one precise enough that most readers recognise at least four",
             "Open with a number that puts the problem in scale — 924 offices, 40 permits, 15 visa renewals, 200 filings per month — then show what managing that volume without a system actually looks like",
             "Client trust story: the Sanad office that started giving every client a portal to track their own cases — what happened to client retention and referrals in the first three months",
@@ -478,7 +478,7 @@ PILLARS = {
             # Omani-staffing angle
             "Sanad offices are staffed entirely by Omani nationals — the only sector in Oman where 100% Omanisation is mandatory. Here is what that means for how they operate.",
             "Every Sanad office employee is Omani. That is a strength. But when the operation runs on WhatsApp and Excel, it is also a single point of failure.",
-            "Sanad offices create direct employment for Omani nationals. SmartPro Hub is built to make those jobs more professional, more efficient, and more scalable.",
+            "Sanad offices create direct employment for Omani nationals. SmartPRO Hub is built to make those jobs more professional, more efficient, and more scalable.",
             "Why Sanad offices — 100% Omani-staffed, government-mandated — are the most important B2B channel in Oman that nobody has built software for yet",
             # Sanad AI Assistant angle
             "We built an AI agent that answers any question about Oman government services — work permits, visas, fees, business registration — in Arabic or English. It is free. No login. Try it.",
@@ -507,43 +507,43 @@ PILLARS = {
         "audience":        "business owners and HR managers in Oman who have seen your content, recognise the problem, and are ready to see a solution",
         "brand_context":   _BRAND_CONTEXT,
         "formats": [
-            "Name the exact problem SmartPro solves, then make the specific offer with one clear next step — no buildup needed",
-            "Walk through what a 20-minute SmartPro demo actually shows — what they will see, what questions it answers, what they will know by the end",
-            "List three specific SmartPro features with the exact pain each one eliminates — close with a direct demo invitation",
-            "Open with a qualifying question that identifies the right reader, confirm SmartPro solves it, state the next step clearly",
-            "Lead with a result a SmartPro user achieved — make it specific and real — then invite the reader to see it for themselves",
-            "Before/after: the manual process most Oman businesses run today versus SmartPro — end with a clear 20-minute demo invitation",
+            "Name the exact problem SmartPRO Hub solves, then make the specific offer with one clear next step — no buildup needed",
+            "Walk through what a 20-minute SmartPRO Hub demo actually shows — what they will see, what questions it answers, what they will know by the end",
+            "List three specific SmartPRO Hub features with the exact pain each one eliminates — close with a direct demo invitation",
+            "Open with a qualifying question that identifies the right reader, confirm SmartPRO Hub solves it, state the next step clearly",
+            "Lead with a result a SmartPRO Hub user achieved — make it specific and real — then invite the reader to see it for themselves",
+            "Before/after: the manual process most Oman businesses run today versus SmartPRO Hub — end with a clear 20-minute demo invitation",
         ],
         "topics": [
             # HR / payroll conversion
             "If you run a business in Oman with 10 or more employees — I want to show you something specific",
-            "SmartPro Hub: one platform for HR, payroll, CRM, client portal, and government compliance in Oman",
-            "WPS compliance made fully automatic — what SmartPro Hub does for Oman businesses every month",
-            "What a 20-minute SmartPro Hub demo shows you — and what you will know by the end of it",
-            "Three problems SmartPro Hub solves that most Oman businesses deal with every single month",
+            "SmartPRO Hub: one platform for HR, payroll, CRM, client portal, and government compliance in Oman",
+            "WPS compliance made fully automatic — what SmartPRO Hub does for Oman businesses every month",
+            "What a 20-minute SmartPRO Hub demo shows you — and what you will know by the end of it",
+            "Three problems SmartPRO Hub solves that most Oman businesses deal with every single month",
             "If payroll still takes your team more than four hours — there is a faster and more accurate way",
-            "What SmartPro's direct bank integration means for your WPS submission process",
-            "Built specifically for Oman: what makes SmartPro Hub different from generic HR software",
-            "See SmartPro Hub handle your entire payroll run automatically — free 20-minute demo",
+            "What SmartPRO Hub's direct bank integration means for your WPS submission process",
+            "Built specifically for Oman: what makes SmartPRO Hub different from generic HR software",
+            "See SmartPRO Hub handle your entire payroll run automatically — free 20-minute demo",
             # Client management / CRM conversion
-            "If you manage more than five client companies — SmartPro Hub has a dashboard built for exactly that",
-            "Replace the WhatsApp group and the shared spreadsheet: SmartPro Hub's client portal in 20 minutes",
+            "If you manage more than five client companies — SmartPRO Hub has a dashboard built for exactly that",
+            "Replace the WhatsApp group and the shared spreadsheet: SmartPRO Hub's client portal in 20 minutes",
             "Send a professional quotation, get it signed, deliver the service, generate the invoice — all in one system",
-            "What SmartPro Hub's CRM shows a business owner that a spreadsheet never can",
+            "What SmartPRO Hub's CRM shows a business owner that a spreadsheet never can",
             # PRO / Sanad conversion
             "If you run a PRO service firm or Sanad office in Oman — this 20-minute demo is built for you",
-            "SmartPro Hub tracks every work permit, visa, and MOL filing across all your clients — automatically",
+            "SmartPRO Hub tracks every work permit, visa, and MOL filing across all your clients — automatically",
             "What automatic permit expiry alerts mean for a PRO firm managing 30+ client work permits",
-            "See how Sanad offices use SmartPro Hub to give every client live visibility into their government cases",
+            "See how Sanad offices use SmartPRO Hub to give every client live visibility into their government cases",
             # Contract conversion
-            "Sign contracts digitally, store them centrally, get renewal alerts automatically — SmartPro Hub",
+            "Sign contracts digitally, store them centrally, get renewal alerts automatically — SmartPRO Hub",
             "The e-signature workflow that replaces printing, scanning, and emailing — see it in 20 minutes",
             # Partner programme conversion
-            "SmartPro Hub's growth partner programme: refer clients, track commissions in real time, get paid automatically",
-            "If you know Oman businesses that need better operations — SmartPro Hub's partner programme rewards every referral",
+            "SmartPRO Hub's growth partner programme: refer clients, track commissions in real time, get paid automatically",
+            "If you know Oman businesses that need better operations — SmartPRO Hub's partner programme rewards every referral",
             # Trial CTA
-            "SmartPro Hub: 14-day free trial, no credit card required — starts at OMR 12/month after trial",
-            "Start your SmartPro Hub trial today: HR, payroll, CRM, client portal, and government compliance from OMR 12/month",
+            "SmartPRO Hub: 14-day free trial, no credit card required — starts at OMR 12/month after trial",
+            "Start your SmartPRO Hub trial today: HR, payroll, CRM, client portal, and government compliance from OMR 12/month",
         ],
     },
 
@@ -583,22 +583,22 @@ PILLARS = {
         "generate_weekday": -1,    # manual only: FORCE_PILLAR=recruitment
         "publish_day":      "on demand",
         "generate_day":     "on demand",
-        "tone":             "data-driven, platform-confident, market-aware — show that SmartPro is where Oman hiring is happening right now",
+        "tone":             "data-driven, platform-confident, market-aware — show that SmartPRO Hub is where Oman hiring is happening right now",
         "audience":         "hiring managers, business owners, and HR leads in Oman who want to reach qualified candidates efficiently",
         "brand_context":    _BRAND_CONTEXT,
         "formats": [
-            "Open with a live metric from SmartPro's platform — applications this week, active jobs, companies hiring — then zoom out on what it means for Oman's job market",
+            "Open with a live metric from SmartPRO Hub's platform — applications this week, active jobs, companies hiring — then zoom out on what it means for Oman's job market",
             "Frame the weekly hiring activity as a market signal: what roles are in demand, what companies are growing, what this tells us about where Oman's economy is moving",
             "Build a tight weekly market snapshot: fastest-moving roles, most active industries, candidate-to-job ratio — close with one thing employers should do now",
             "Open with a pattern in the data — then explain why it matters for anyone hiring or being hired in Oman this week",
         ],
         "topics": [
-            "What the most applied-for roles on SmartPro tell us about Oman's job market right now",
+            "What the most applied-for roles on SmartPRO Hub tell us about Oman's job market right now",
             "Hiring velocity this week — which industries are growing fastest and what it signals",
             "The candidate pool is building — what Oman employers need to do to attract the right applications",
             "Jobs posted vs applications received — what the current ratio says about talent competition in Oman",
             "Which locations in Oman are seeing the most hiring activity right now — and what is driving it",
-            "What the fastest-growing job categories on SmartPro reveal about Oman's economy in 2026",
+            "What the fastest-growing job categories on SmartPRO Hub reveal about Oman's economy in 2026",
         ],
     },
 
@@ -669,7 +669,7 @@ PILLARS = {
         "formats": [
             "افتح بلحظة فشل محددة في مكتب سند أو PRO — تأشيرة انتهت صلاحيتها، عميل علم في المطار، تسجيل فات موعده — اجعلها محددة لدرجة توقف القارئ عن التمرير",
             "سِرْ بالتفصيل عبر يوم كامل لمدير مكتب سند يتابع ٢٠+ شركة عميل بدون نظام — كل خطوة مؤلمة بالتسلسل",
-            "ابنِ مقارنة حادة قبل/بعد: إدارة الخدمات الحكومية بواتساب وإكسل مقابل SmartPro Hub — نفس الأسبوع، تجربة مختلفة تماماً",
+            "ابنِ مقارنة حادة قبل/بعد: إدارة الخدمات الحكومية بواتساب وإكسل مقابل SmartPRO Hub — نفس الأسبوع، تجربة مختلفة تماماً",
             "اكتب قائمة مرقّمة من ٥ علامات تدل على أن مكتب السند قد تجاوز طاقته الحالية — كن محدداً بما يكفي ليتعرف معظم القراء على أربع منها",
             "افتح برقم يضع المشكلة في حجمها الحقيقي — ٩٢٤ مكتباً، ٤٠ تصريحاً، ١٥ تأشيرة، ٢٠٠ معاملة شهرياً — ثم أظهر كيف يبدو تتبع هذا الحجم يدوياً",
             "قصة ثقة العميل: مكتب السند الذي بدأ يمنح كل عميل بوابة لتتبع قضاياه بنفسه — ماذا حدث للاحتفاظ بالعملاء والإحالات في أول ثلاثة أشهر",

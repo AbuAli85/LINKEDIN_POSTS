@@ -511,7 +511,7 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
         except Exception:
             pass
 
-    cb = _cta_block(pillar_config)
+    cb = _cta_block({**pillar_config, "name": pillar})
     bb = pillar_config.get("brand_bridge", "")
     if bb:
         bb = f"Brand connection: {bb}\n"

@@ -10,11 +10,15 @@
   "generated_at": "2026-05-19T21:31:40.316181+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 1,
-  "status": "failed",
-  "published": false,
+  "status": "published",
+  "published": true,
   "approved": true,
   "approval_required": false,
   "dry_run": false,
-  "approved_at": "2026-05-19T21:31:40.316525+00:00",
-  "publish_error": "LinkedIn rejected the access token (401). Re-run the OAuth flow in COMPANY_SETUP.md and update the LINKEDIN_ORG_TOKEN secret. Raw response: {\"status\":401,\"serviceErrorCode\":65601,\"code\":\"REVOKED_ACCESS_TOKEN\",\"message\":\"The token used in the request has been revoked by the user\"}"
+  "approved_at": "2026-05-25T08:43:21.622622+00:00",
+  "publish_error": "LinkedIn rejected the access token (401). Re-run the OAuth flow in COMPANY_SETUP.md and update the LINKEDIN_ORG_TOKEN secret. Raw response: {\"status\":401,\"serviceErrorCode\":65601,\"code\":\"REVOKED_ACCESS_TOKEN\",\"message\":\"The token used in the request has been revoked by the user\"}",
+  "post_id": "urn:li:share:7464596967499771904",
+  "published_at": "2026-05-25T08:43:22.946449+00:00",
+  "cta_comment_posted": false,
+  "cta_comment_url": ""
 }

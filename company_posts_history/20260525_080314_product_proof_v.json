@@ -1,0 +1,20 @@
+{
+  "pillar": "product_proof",
+  "topic": "A Sanad office in Muscat moved 40 client work permits off WhatsApp \u2014 no missed renewals in six months",
+  "format": "Tight case study: company profile, problem, what changed, the one number that proves it worked",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "40 work permits. Tracked across WhatsApp threads, forwarded PDFs, and one person's memory.\n\nThat's how a Sanad office in Muscat was running things \u2014 until it wasn't.\n\nSix months later: zero missed renewals.\n\nThey moved every permit, renewal date, and client file into SmartPro Hub. One dashboard. Automated renewal alerts. Clients logging into a white-label portal instead of digging through a chat thread buried under weekend memes.\n\nRenewals flagged 60 days out. Clients stopped calling for status updates because they could just check for themselves. No more \"I thought you were handling that.\"\n\n40 permits. Six months. Zero lapses.\n\nPRO service firms and Sanad offices across Oman are running this same setup now. The ones still on WhatsApp groups are one missed renewal away from losing a client they can't afford to lose.\n\nThat's a bad way to find out your process doesn't scale.\n\nSmartPro Hub was built specifically for this \u2014 the permits, the deadlines, the client communication that currently lives in someone's head or scroll history.\n\nIf you're managing work permits, what does your tracking actually look like right now?\n\nBook a 20-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=general\n\n#SmartPROHub\n#OmanBusiness\n#GCCBusiness\n#SMEOman\n#HRTech",
+  "char_count": 1305,
+  "generated_at": "2026-05-25T08:03:25.325563+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260525_080315_product_proof.json"
+}

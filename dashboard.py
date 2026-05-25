@@ -351,6 +351,10 @@ nav.actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
              padding:7px 16px;border-radius:6px;cursor:pointer;transition:background .15s;
              min-height:32px;font-family:inherit}
 .approve-btn:hover{background:#c9301f}
+.approve-btn.over-limit{background:#b45309;border:1px solid #f59e0b}
+.approve-btn.over-limit:hover{background:#92400e}
+.approve-btn.variant-approve-btn{background:transparent;border:1px solid #e8372a;color:#e8372a}
+.approve-btn.variant-approve-btn:hover{background:rgba(232,55,42,.12)}
 
 /* Metrics row */
 .metrics-row{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-bottom:10px}
@@ -1575,12 +1579,41 @@ def _card(post: dict, idx: int) -> str:
           <button type="button" class="rev-btn rev-recreate" data-path="{draft_path}" data-pillar="{pillar_val}"
                   onclick="showRecreateModal(this)">&#8635; Recreate</button>
         </div>"""
-        approve_btn = (
-            f'<button type="button" class="approve-btn" '
-            f'data-path="{draft_path}" data-preview="{preview_val}" '
-            f'data-publish-day="{publish_day}" '
-            f'onclick="showApproveModal(this)">&#10003; Approve for {publish_day}</button>'
-        )
+        if char_count > 1500:
+            approve_btn = (
+                f'<button type="button" class="approve-btn over-limit" '
+                f'data-path="{draft_path}" data-preview="{preview_val}" '
+                f'data-publish-day="{publish_day}" '
+                f'title="&#9888; Post is {char_count} chars — exceeds 1500-char limit. Shorten before approving." '
+                f'onclick="showApproveModal(this)">&#9888; Approve for {publish_day} ({char_count - 1500}+ over limit)</button>'
+            )
+        else:
+            approve_btn = (
+                f'<button type="button" class="approve-btn" '
+                f'data-path="{draft_path}" data-preview="{preview_val}" '
+                f'data-publish-day="{publish_day}" '
+                f'onclick="showApproveModal(this)">&#10003; Approve for {publish_day}</button>'
+            )
+
+    # Variant posts: allow approving the variant directly as an alternative to the original
+    variant_approve_btn = ""
+    if (is_variant and post.get("approval_required") and not post.get("published")
+            and status_value not in ("superseded", "deleted") and draft_path):
+        if char_count > 1500:
+            variant_approve_btn = (
+                f'<button type="button" class="approve-btn over-limit" '
+                f'data-path="{draft_path}" data-preview="{preview_val}" '
+                f'data-publish-day="{publish_day}" '
+                f'title="&#9888; Variant is {char_count} chars — exceeds 1500-char limit." '
+                f'onclick="showApproveModal(this)">&#9888; Approve variant ({char_count - 1500}+ over limit)</button>'
+            )
+        else:
+            variant_approve_btn = (
+                f'<button type="button" class="approve-btn variant-approve-btn" '
+                f'data-path="{draft_path}" data-preview="{preview_val}" '
+                f'data-publish-day="{publish_day}" '
+                f'onclick="showApproveModal(this)">&#10003; Approve variant for {publish_day}</button>'
+            )
 
     delete_btn = ""
     if not (post.get("published") or status_value == "published") and draft_path:
@@ -1628,7 +1661,7 @@ def _card(post: dict, idx: int) -> str:
         <div class="bar-track" role="presentation"><div class="bar-fill {char_cls}" style="width:{char_pct:.1f}%"></div></div>
         <span class="chars {char_cls}">{char_count} chars</span>
         {attempts_html}
-        {approve_btn}
+        {approve_btn}{variant_approve_btn}
         {li_link}
         {cta_indicator}
         <button type="button" class="icon-btn" id="copy-{idx}" aria-label="Copy post text to clipboard" onclick="copyPost({idx})"><span aria-hidden="true">&#128203;</span> Copy</button>

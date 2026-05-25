@@ -1595,6 +1595,9 @@ def _card(post: dict, idx: int) -> str:
                 f'onclick="showApproveModal(this)">&#10003; Approve for {publish_day}</button>'
             )
 
+    is_variant  = post.get("is_variant", False)
+    has_variant = post.get("has_variant", False)
+
     # Variant posts: allow approving the variant directly as an alternative to the original
     variant_approve_btn = ""
     if (is_variant and post.get("approval_required") and not post.get("published")
@@ -1624,8 +1627,6 @@ def _card(post: dict, idx: int) -> str:
             f'<span aria-hidden="true">&#128465;</span> Delete</button>'
         )
 
-    is_variant  = post.get("is_variant", False)
-    has_variant = post.get("has_variant", False)
     variant_attr = ' data-variant="true"' if is_variant else ""
 
     segment      = post.get("segment", "")

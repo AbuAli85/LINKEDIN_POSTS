@@ -1,7 +1,11 @@
 name: LinkedIn token health check
 
 # Runs every Monday at 8am UTC (12pm Muscat).
-# Calls the LinkedIn /v2/userinfo endpoint — 200 = healthy, 401/403 = expired/revoked.
+# Calls /v2/me (requires r_liteprofile scope, standard for posting tokens).
+# NOTE: /v2/userinfo requires the openid scope (OpenID Connect product) and will
+#       return 403 on standard r_liteprofile+w_member_social tokens — do not use it.
+# 200 = healthy  |  401 = expired/revoked → urgent issue
+# 403 = token valid but missing r_liteprofile scope → permissions issue
 # On failure: creates (or updates) a GitHub Issue tagged [urgent] with re-auth steps.
 
 on:
@@ -24,9 +28,9 @@ jobs:
           STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
             -H "Authorization: Bearer $LINKEDIN_ACCESS_TOKEN" \
             -H "X-Restli-Protocol-Version: 2.0.0" \
-            https://api.linkedin.com/v2/userinfo)
+            https://api.linkedin.com/v2/me)
 
-          echo "LinkedIn /v2/userinfo → HTTP $STATUS"
+          echo "LinkedIn /v2/me → HTTP $STATUS"
 
           if [ "$STATUS" = "200" ]; then
             echo "Token healthy."
@@ -41,20 +45,32 @@ jobs:
             exit 0
           fi
 
+          # Tailor the message: 401 = expired/revoked, 403 = wrong scope
+          if [ "$STATUS" = "401" ]; then
+            REASON="The token has **expired or been revoked**."
+            ACTION="Re-run the OAuth flow to obtain a new 60-day token."
+          else
+            REASON="The token returned **HTTP $STATUS** from \`/v2/me\`. This usually means the app is missing the \`r_liteprofile\` scope."
+            ACTION="Check the app's OAuth scopes in the LinkedIn Developer Portal and re-authorise if needed."
+          fi
+
           echo "Token check FAILED (HTTP $STATUS). Creating/updating issue."
 
-          TITLE="[urgent] LinkedIn access token expired or revoked (HTTP $STATUS)"
+          TITLE="[urgent] LinkedIn access token issue (HTTP $STATUS)"
           BODY="## LinkedIn token health check failed
 
-          The weekly token health check received **HTTP $STATUS** from \`/v2/userinfo\`.
+          The weekly token health check received **HTTP $STATUS** from \`/v2/me\`.
+
+          $REASON
 
           ### Re-auth checklist
 
           1. Go to your LinkedIn Developer App → **Auth** tab.
-          2. Re-run the OAuth flow described in [LINKEDIN_SETUP.md](https://github.com/$REPO/blob/main/LINKEDIN_SETUP.md) (Steps 3–4).
-          3. Copy the new 60-day access token.
-          4. Update the \`LINKEDIN_ACCESS_TOKEN\` secret in [repo Settings → Secrets](https://github.com/$REPO/settings/secrets/actions).
-          5. Trigger this workflow manually to verify the new token.
+          2. $ACTION
+          3. Re-run the OAuth flow described in [LINKEDIN_SETUP.md](https://github.com/$REPO/blob/main/LINKEDIN_SETUP.md) (Steps 3–4).
+          4. Copy the new 60-day access token.
+          5. Update the \`LINKEDIN_ACCESS_TOKEN\` secret in [repo Settings → Secrets](https://github.com/$REPO/settings/secrets/actions).
+          6. Trigger this workflow manually to verify the new token.
 
           > LinkedIn tokens expire after **60 days**. Set a calendar reminder ~50 days after renewal.
 

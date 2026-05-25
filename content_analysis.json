@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-05-24T07:07:48.147403+00:00",
-  "total_posts_analyzed": 8,
+  "generated_at": "2026-05-25T07:35:38.150340+00:00",
+  "total_posts_analyzed": 10,
   "pillar_performance": {
     "leadership": {
       "posts": 2,
@@ -10,7 +10,7 @@
       "avg_engagement_rate": 0.0
     },
     "pain": {
-      "posts": 2,
+      "posts": 3,
       "total_reactions": 0,
       "total_comments": 0,
       "total_shares": 0,
@@ -24,7 +24,7 @@
       "avg_engagement_rate": 0.0
     },
     "proof": {
-      "posts": 3,
+      "posts": 4,
       "total_reactions": 0,
       "total_comments": 0,
       "total_shares": 0,

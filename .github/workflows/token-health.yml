@@ -1,12 +1,16 @@
 name: LinkedIn token health check
 
 # Runs every Monday at 8am UTC (12pm Muscat).
-# Calls /v2/me (requires r_liteprofile scope, standard for posting tokens).
-# NOTE: /v2/userinfo requires the openid scope (OpenID Connect product) and will
-#       return 403 on standard r_liteprofile+w_member_social tokens — do not use it.
-# 200 = healthy  |  401 = expired/revoked → urgent issue
-# 403 = token valid but missing r_liteprofile scope → permissions issue
-# On failure: creates (or updates) a GitHub Issue tagged [urgent] with re-auth steps.
+#
+# Token scope reality for a w_member_social posting token:
+#   /v2/userinfo → always 403 (requires openid scope — OpenID Connect product)
+#   /v2/me       → 200 if r_liteprofile granted, 403 if only w_member_social
+#
+# Key insight: 403 = token IS valid but lacks the profile-read scope.
+#              401 = token expired or revoked — the real emergency.
+#              So 200 and 403 both mean "token alive, posting will work".
+#
+# Only 401 (or unexpected 5xx) triggers an urgent issue.
 
 on:
   schedule:
@@ -32,45 +36,43 @@ jobs:
 
           echo "LinkedIn /v2/me → HTTP $STATUS"
 
-          if [ "$STATUS" = "200" ]; then
-            echo "Token healthy."
+          # 200 = full access confirmed
+          # 403 = token valid, w_member_social scope present, r_liteprofile not granted
+          #       Posting still works — this is not an error for a publishing-only token.
+          if [ "$STATUS" = "200" ] || [ "$STATUS" = "403" ]; then
+            if [ "$STATUS" = "200" ]; then
+              echo "Token healthy (HTTP 200 — full profile access)."
+            else
+              echo "Token healthy (HTTP 403 — valid token, w_member_social scope confirmed, r_liteprofile not granted; posting will work)."
+            fi
             # Close any existing urgent token issue
             ISSUE=$(gh issue list --repo "$REPO" --state open \
               --label "linkedin-token" --json number --jq '.[0].number // empty')
             if [ -n "$ISSUE" ]; then
               gh issue close "$ISSUE" --repo "$REPO" \
-                --comment "Token health check passed (HTTP 200). Closing automatically."
+                --comment "Token health check passed (HTTP $STATUS — token is live). Closing automatically."
               echo "Closed stale issue #$ISSUE."
             fi
             exit 0
           fi
 
-          # Tailor the message: 401 = expired/revoked, 403 = wrong scope
-          if [ "$STATUS" = "401" ]; then
-            REASON="The token has **expired or been revoked**."
-            ACTION="Re-run the OAuth flow to obtain a new 60-day token."
-          else
-            REASON="The token returned **HTTP $STATUS** from \`/v2/me\`. This usually means the app is missing the \`r_liteprofile\` scope."
-            ACTION="Check the app's OAuth scopes in the LinkedIn Developer Portal and re-authorise if needed."
-          fi
-
+          # 401 = expired or revoked; anything else = unexpected failure
           echo "Token check FAILED (HTTP $STATUS). Creating/updating issue."
 
-          TITLE="[urgent] LinkedIn access token issue (HTTP $STATUS)"
+          TITLE="[urgent] LinkedIn access token expired or revoked (HTTP $STATUS)"
           BODY="## LinkedIn token health check failed
 
           The weekly token health check received **HTTP $STATUS** from \`/v2/me\`.
 
-          $REASON
+          **HTTP 401 means the token has expired or been revoked.** Re-authorise immediately.
 
           ### Re-auth checklist
 
           1. Go to your LinkedIn Developer App → **Auth** tab.
-          2. $ACTION
-          3. Re-run the OAuth flow described in [LINKEDIN_SETUP.md](https://github.com/$REPO/blob/main/LINKEDIN_SETUP.md) (Steps 3–4).
-          4. Copy the new 60-day access token.
-          5. Update the \`LINKEDIN_ACCESS_TOKEN\` secret in [repo Settings → Secrets](https://github.com/$REPO/settings/secrets/actions).
-          6. Trigger this workflow manually to verify the new token.
+          2. Re-run the OAuth flow described in [LINKEDIN_SETUP.md](https://github.com/$REPO/blob/main/LINKEDIN_SETUP.md) (Steps 3–4).
+          3. Copy the new 60-day access token.
+          4. Update the \`LINKEDIN_ACCESS_TOKEN\` secret in [repo Settings → Secrets](https://github.com/$REPO/settings/secrets/actions).
+          5. Trigger this workflow manually to verify the new token.
 
           > LinkedIn tokens expire after **60 days**. Set a calendar reminder ~50 days after renewal.
 

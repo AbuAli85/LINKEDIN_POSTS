@@ -1,7 +1,14 @@
 {
-  "generated_at": "2026-05-25T07:35:38.150340+00:00",
-  "total_posts_analyzed": 10,
+  "generated_at": "2026-05-26T07:13:57.488901+00:00",
+  "total_posts_analyzed": 12,
   "pillar_performance": {
+    "pain": {
+      "posts": 4,
+      "total_reactions": 0,
+      "total_comments": 0,
+      "total_shares": 0,
+      "avg_engagement_rate": 0.0
+    },
     "leadership": {
       "posts": 2,
       "total_reactions": 0,
@@ -9,14 +16,14 @@
       "total_shares": 0,
       "avg_engagement_rate": 0.0
     },
-    "pain": {
-      "posts": 3,
+    "marketing": {
+      "posts": 1,
       "total_reactions": 0,
       "total_comments": 0,
       "total_shares": 0,
       "avg_engagement_rate": 0.0
     },
-    "marketing": {
+    "vision": {
       "posts": 1,
       "total_reactions": 0,
       "total_comments": 0,
@@ -32,22 +39,25 @@
     }
   },
   "hook_performance": {
+    "question": 0.0,
     "story": 0.0,
     "bold-statement": 0.0,
     "data-lead": 0.0
   },
   "frequency_multipliers": {
-    "leadership": 1.0,
     "pain": 1.0,
+    "leadership": 1.0,
     "marketing": 1.0,
+    "vision": 1.0,
     "proof": 1.0
   },
-  "best_pillar": "leadership",
-  "best_hook_style": "story",
+  "best_pillar": "pain",
+  "best_hook_style": "question",
   "recommended_emphasis": [
-    "leadership",
     "pain",
+    "leadership",
     "marketing",
+    "vision",
     "proof"
   ],
   "demo_pipeline": {}

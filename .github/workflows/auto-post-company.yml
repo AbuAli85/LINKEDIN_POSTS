@@ -4,28 +4,28 @@ concurrency:
   group: git-push-${{ github.ref_name }}
   cancel-in-progress: false
 
-# Company-page pipeline — mirrors auto-post.yml but with:
-#   - LINKEDIN_AUDIENCE=company set at job level
-#   - LINKEDIN_ORG_TOKEN / LINKEDIN_ORG_URN secrets
-#   - Staggered cron times (06:30 generate, 07:15 publish) so this pipeline
-#     does NOT race the personal pipeline (05:00 generate, 05:15+06:00 publish)
-#   - Reads/writes company_posts_history/ instead of posts_history/
+# Company-page pipeline â mirrors auto-post.yml but with:
+# - LINKEDIN_AUDIENCE=company set at job level
+# - LINKEDIN_ORG_TOKEN / LINKEDIN_ORG_URN secrets
+# - Staggered cron times (06:30 generate, 07:15 publish) so this pipeline
+#   does NOT race the personal pipeline (05:00 generate, 05:15+06:00 publish)
+# - Reads/writes company_posts_history/ instead of posts_history/
 #
 # Schedule (UTC / Muscat +4):
-#   06:30 UTC (10:30 Muscat) — generate draft for today's company pillar
-#   07:15 UTC (11:15 Muscat) — publish-sweep: oldest approved company post for today
+# 06:30 UTC (10:30 Muscat) â generate draft for today's company pillar
+# 07:15 UTC (11:15 Muscat) â publish-sweep: oldest approved company post for today
 #
 # Pillar map (defined in company_content_strategy.py):
-#   Monday    -> product_proof   (generated Saturday)
+#   Monday    -> product_proof     (generated Saturday)
 #   Wednesday -> feature_spotlight (generated Monday)
-#   Friday    -> oman_market     (generated Wednesday)
+#   Friday    -> oman_market       (generated Wednesday)
 #   Manual    -> hiring, partnership (workflow_dispatch only)
 
 on:
   schedule:
     # generate draft for today's company pillar
     - cron: "30 6 * * *"
-    # publish sweep — pillar-agnostic, publishes oldest approved company post for today
+    # publish sweep â pillar-agnostic, publishes oldest approved company post for today
     - cron: "15 7 * * *"
   workflow_dispatch:
     inputs:
@@ -101,34 +101,34 @@ jobs:
 
       - name: Generate or publish (company audience)
         env:
-          ANTHROPIC_API_KEY:      ${{ secrets.ANTHROPIC_API_KEY }}
-          # PERMANENT BY DESIGN — see COMPANY_SETUP.md.
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # PERMANENT BY DESIGN â see COMPANY_SETUP.md.
           # The company pipeline publishes to Fahad's personal feed with company
           # voice and a separate company_posts_history/ folder. We do NOT pursue
           # a real org token because Community Management API is restricted to
           # LinkedIn Marketing Partners (greyed-out in the Developer dashboard).
           # Personal feed outperforms the company page for B2B reach anyway.
-          LINKEDIN_ORG_TOKEN:     ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
-          LINKEDIN_ORG_URN:       ${{ secrets.LINKEDIN_AUTHOR_URN }}
-          RESEND_API_KEY:         ${{ secrets.RESEND_API_KEY }}
-          NOTIFY_EMAIL:           ${{ secrets.NOTIFY_EMAIL }}
-          NOTIFY_WEBHOOK_URL:     ${{ secrets.NOTIFY_WEBHOOK_URL }}
-          NOTIFY_FROM:            ${{ vars.NOTIFY_FROM }}
-          NOTIFY_ON_DRAFT:        ${{ vars.NOTIFY_ON_DRAFT }}
-          DASHBOARD_URL:          ${{ vars.DASHBOARD_URL }}
-          POST_MODE:              ${{ steps.mode.outputs.mode }}
-          PUBLISH_DRAFT_PATH:     ${{ inputs.draft_file }}
-          REVISION_NOTES:         ${{ inputs.revision_notes }}
-          FORCE_PILLAR:           ${{ inputs.pillar }}
-          DRY_RUN:                ${{ inputs.dry_run || 'false' }}
-          CONFIRM_PUBLISH_NOW:    ${{ inputs.confirm_publish_now || 'false' }}
-          ANTHROPIC_MODEL:        ${{ inputs.model }}
+          LINKEDIN_ORG_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+          LINKEDIN_ORG_URN: ${{ secrets.LINKEDIN_AUTHOR_URN }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          NOTIFY_EMAIL: ${{ secrets.NOTIFY_EMAIL }}
+          NOTIFY_WEBHOOK_URL: ${{ secrets.NOTIFY_WEBHOOK_URL }}
+          NOTIFY_FROM: ${{ vars.NOTIFY_FROM }}
+          NOTIFY_ON_DRAFT: ${{ vars.NOTIFY_ON_DRAFT }}
+          DASHBOARD_URL: ${{ vars.DASHBOARD_URL }}
+          POST_MODE: ${{ steps.mode.outputs.mode }}
+          PUBLISH_DRAFT_PATH: ${{ inputs.draft_file }}
+          REVISION_NOTES: ${{ inputs.revision_notes }}
+          FORCE_PILLAR: ${{ inputs.pillar }}
+          DRY_RUN: ${{ inputs.dry_run || 'false' }}
+          CONFIRM_PUBLISH_NOW: ${{ inputs.confirm_publish_now || 'false' }}
+          ANTHROPIC_MODEL: ${{ inputs.model }}
         run: python main.py
 
-      - name: Commit company history
+      - name: Commit company history and dashboard
         if: always()
         env:
-          RUN_MODE:   ${{ steps.mode.outputs.mode }}
+          RUN_MODE: ${{ steps.mode.outputs.mode }}
           DRAFT_FILE: ${{ inputs.draft_file }}
         run: |
           git config user.name "github-actions[bot]"
@@ -141,11 +141,17 @@ jobs:
           fi
           git diff --cached --quiet || git commit -m "$MSG"
           git pull --rebase --autostash origin ${GITHUB_REF_NAME}
+          python dashboard.py
+          git add docs/
+          git diff --cached --quiet || git commit -m "dashboard: update $(date -u '+%Y-%m-%d %H:%M UTC')"
           for _try in 1 2 3; do
             git push origin HEAD:${GITHUB_REF_NAME} && break
             [ $_try -eq 3 ] && { echo "Push failed after 3 attempts"; exit 1; }
-            echo "Push attempt $_try rejected — rebasing and retrying…"
+            echo "Push attempt $_try rejected â rebasing and retryingâ¦"
             git pull --rebase --autostash origin ${GITHUB_REF_NAME}
+            python dashboard.py
+            git add docs/
+            git diff --cached --quiet || git commit -m "dashboard: update $(date -u '+%Y-%m-%d %H:%M UTC')"
           done
 
   sweep:
@@ -169,20 +175,21 @@ jobs:
 
       - name: Publish approved company post for today
         env:
-          # PERMANENT BY DESIGN — same rationale as the `post` job above.
+          # PERMANENT BY DESIGN â same rationale as the `post` job above.
           # See COMPANY_SETUP.md for why we don't pursue a real org token.
           LINKEDIN_ORG_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
-          LINKEDIN_ORG_URN:   ${{ secrets.LINKEDIN_AUTHOR_URN }}
-          ANTHROPIC_API_KEY:  ${{ secrets.ANTHROPIC_API_KEY }}
-          RESEND_API_KEY:     ${{ secrets.RESEND_API_KEY }}
-          NOTIFY_EMAIL:       ${{ secrets.NOTIFY_EMAIL }}
+          LINKEDIN_ORG_URN: ${{ secrets.LINKEDIN_AUTHOR_URN }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          NOTIFY_EMAIL: ${{ secrets.NOTIFY_EMAIL }}
           NOTIFY_WEBHOOK_URL: ${{ secrets.NOTIFY_WEBHOOK_URL }}
-          NOTIFY_FROM:        ${{ vars.NOTIFY_FROM }}
-          DASHBOARD_URL:      ${{ vars.DASHBOARD_URL }}
-          POST_MODE:          publish_approved
+          NOTIFY_FROM: ${{ vars.NOTIFY_FRON }}
+          NOTIFY_ON_DRAFT: ${{ vars.NOTIFY_ON_DRAFT }}
+          DASHBOARD_URL: ${{ vars.DASHBOARD_URL }}
+          POST_MODE: publish_approved
         run: python main.py
 
-      - name: Commit updated company post status
+      - name: Commit updated company post status and dashboard
         if: always()
         run: |
           git config user.name "github-actions[bot]"
@@ -190,9 +197,15 @@ jobs:
           git add company_posts_history/ 2>/dev/null || true
           git diff --cached --quiet || git commit -m "publish (company): sweep $(date -u '+%Y-%m-%d %H:%M UTC')"
           git pull --rebase --autostash origin ${GITHUB_REF_NAME}
+          python dashboard.py
+          git add docs/
+          git diff --cached --quiet || git commit -m "dashboard: update $(date -u '+%Y-%m-%d %H:%M UTC')"
           for _try in 1 2 3; do
             git push origin HEAD:${GITHUB_REF_NAME} && break
             [ $_try -eq 3 ] && { echo "Push failed after 3 attempts"; exit 1; }
-            echo "Push attempt $_try rejected — rebasing and retrying…"
+            echo "Push attempt $_try rejected â rebasing and retryingâ¦"
             git pull --rebase --autostash origin ${GITHUB_REF_NAME}
+            python dashboard.py
+            git add docs/
+            git diff --cached --quiet || git commit -m "dashboard: update $(date -u '+%Y-%m-%d %H:%M UTC')"
           done

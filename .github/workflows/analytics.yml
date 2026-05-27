@@ -1,0 +1,73 @@
+name: LinkedIn Analytics Pull
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'   # Every Monday 06:00 UTC — after weekend posts settle
+  workflow_dispatch:
+    inputs:
+      fetch_mode:
+        description: 'aged = posts 7+ days old only  |  all = every published post'
+        required: false
+        default: 'aged'
+        type: choice
+        options:
+          - aged
+          - all
+
+permissions:
+  contents: write
+
+jobs:
+  analytics:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Fetch LinkedIn engagement metrics
+        env:
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+        run: |
+          MODE="${{ github.event.inputs.fetch_mode || 'aged' }}"
+          if [ "$MODE" = "all" ]; then
+            echo "Fetching metrics for ALL published posts..."
+            python metrics.py fetch-all
+          else
+            echo "Fetching metrics for aged posts (7+ days, 48h cooldown)..."
+            python content_feedback.py fetch-aged
+          fi
+
+      - name: Analyse pillar and hook performance
+        run: python content_feedback.py analyze
+
+      - name: Print performance report
+        run: python content_feedback.py report
+
+      - name: Export analytics to docs for dashboard
+        run: |
+          mkdir -p docs
+          if [ -f content_analysis.json ]; then
+            cp content_analysis.json docs/analytics_summary.json
+            echo "Exported to docs/analytics_summary.json"
+          else
+            echo "No content_analysis.json (need 3+ posts with metrics)"
+          fi
+
+      - name: Commit updated metrics and analytics
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update LinkedIn engagement metrics [skip ci]"
+          file_pattern: "posts_history/*.json content_analysis.json docs/analytics_summary.json"

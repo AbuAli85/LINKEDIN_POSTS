@@ -1,0 +1,19 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "Automated invoicing per service for PRO firms \u2014 billing 30 clients in the time it used to take to bill three",
+  "format": "Lead with a quote or question from a customer, then explain the feature built in response",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "\"We were spending two full days every month just on invoices. By the time we billed client 15, we'd already made errors on clients 1 through 5.\"\n\nThis is what we hear from PRO service firms across Oman and the GCC. A lot.\n\nSo we built automated invoicing per service \u2014 and it genuinely changed how our customers close out their month.\n\nThe problem it solves:\n\nMost PRO firms handle multiple services: visa processing, work permits, Omanization filings, Sanad office management. Each client uses a different mix. Billing manually means cross-referencing notes, chasing approvals, and rebuilding the same invoice logic 30 times over. Every month.\n\nWith SmartPro Hub, each service carries its own billing rule. When work is completed, the invoice generates automatically \u2014 correct fee, correct client, correct service line. No rebuilding from scratch, no hunting through notes.\n\nThe outcome: firms billing 30 clients in the same time it used to take to bill three.\n\nThis sits inside a broader PRO services automation platform \u2014 connected to your client portal, contracts, and compliance workflows. Not a standalone tool bolted on after the fact.\n\nIf your team is still losing days to invoicing every month, that time has better uses.\n\nBook a 20-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#PRO services automation Oman\n#GCCBusiness\n#SMEOman",
+  "char_count": 1435,
+  "generated_at": "2026-05-27T07:51:56.694952+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "has_variant": true
+}

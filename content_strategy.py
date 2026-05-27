@@ -845,7 +845,37 @@ PILLARS = {
 }
 
 
-ALL_PILLARS: list[dict] = [{"name": name, **config} for name, config in PILLARS.items()]
+ALL_PILLARS: list[dict    {
+        "name": "tech",
+        "segment": "C",
+        "language": "en",
+        "publish_day": "Thursday",
+        "tone": "Practical and grounded — a knowledgeable operator, not a tech evangelist. Specific, concrete, and useful.",
+        "audience": "PRO managers, Sanad office owners, HR leads, and operations directors managing government compliance workflows in Oman.",
+        "brand_context": "SmartPRO Hub is the operational backbone for Sanad offices and corporate PRO teams in Oman — MOL portal submissions, work permit tracking, Omanisation dashboards, and client portals in one system.",
+        "brand_bridge": "SmartPRO Hub was built for exactly this workflow — not as a generic HR tool but for Oman's specific PRO and Sanad compliance landscape.",
+        "topics": [
+            "What a structured PRO tech stack looks like for Oman Sanad offices managing 15+ clients",
+            "Why PRO operations hit a wall at 10 client companies without the right tools",
+            "How MOL portal submissions fail quietly — and what a structured system catches instead",
+            "The Omanisation compliance gap hiding in your spreadsheet",
+            "What changes when your PRO team stops managing from WhatsApp",
+            "Five workflow failures that cost Sanad offices clients — all preventable with structure",
+            "How real-time permit expiry tracking changes the economics of Sanad office management",
+            "The difference between reactive PRO management and proactive PRO management — and what it costs",
+            "Why most Sanad offices can't scale past 15 clients without a system change",
+            "What an integrated compliance dashboard catches that manual tracking misses"
+        ],
+        "formats": [
+            "Problem/solution breakdown with tactical tech stack overview",
+            "Before/after operational comparison — manual vs structured workflow",
+            "Specific failure mode analysis with system fix",
+            "Data-led insight with industry context",
+            "Practitioner story — what one PRO manager changed and why",
+            "Numbered process breakdown (no listicle — narrative structure around a numbered insight)"
+        ]
+    },
+] = [{"name": name, **config} for name, config in PILLARS.items()]
 
 
 def get_pillar_weights() -> dict[str, float]:

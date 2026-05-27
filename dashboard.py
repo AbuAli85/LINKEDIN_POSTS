@@ -1554,7 +1554,7 @@ def _card(post: dict, idx: int) -> str:
         and not post.get("published")
         and not post.get("approved", False)
         and not post.get("dry_run", False)
-        and status_value not in ("superseded", "deleted")
+        and status_value not in ("superseded", "deleted", "approved")
         and not post.get("is_variant", False)
     )
     filename      = post.get("_filename", "")
@@ -1604,7 +1604,7 @@ def _card(post: dict, idx: int) -> str:
     variant_approve_btn = ""
     if (is_variant and post.get("approval_required") and not post.get("published")
             and not post.get("approved", False)
-            and status_value not in ("superseded", "deleted") and draft_path):
+            and status_value not in ("superseded", "deleted", "approved") and draft_path):
         if char_count > 1500:
             variant_approve_btn = (
                 f'<button type="button" class="approve-btn over-limit" '

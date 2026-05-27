@@ -4,7 +4,7 @@ concurrency:
   group: git-push-${{ github.ref_name }}
   cancel-in-progress: false
 
-# Company-page pipeline â mirrors auto-post.yml but with:
+# Company-page pipeline -- mirrors auto-post.yml but with:
 # - LINKEDIN_AUDIENCE=company set at job level
 # - LINKEDIN_ORG_TOKEN / LINKEDIN_ORG_URN secrets
 # - Staggered cron times (06:30 generate, 07:15 publish) so this pipeline
@@ -12,8 +12,8 @@ concurrency:
 # - Reads/writes company_posts_history/ instead of posts_history/
 #
 # Schedule (UTC / Muscat +4):
-# 06:30 UTC (10:30 Muscat) â generate draft for today's company pillar
-# 07:15 UTC (11:15 Muscat) â publish-sweep: oldest approved company post for today
+# 06:30 UTC (10:30 Muscat) -- generate draft for today's company pillar
+# 07:15 UTC (11:15 Muscat) -- publish-sweep: oldest approved company post for today
 #
 # Pillar map (defined in company_content_strategy.py):
 #   Monday    -> product_proof     (generated Saturday)
@@ -25,7 +25,7 @@ on:
   schedule:
     # generate draft for today's company pillar
     - cron: "30 6 * * *"
-    # publish sweep â pillar-agnostic, publishes oldest approved company post for today
+    # publish sweep -- pillar-agnostic, publishes oldest approved company post for today
     - cron: "15 7 * * *"
   workflow_dispatch:
     inputs:
@@ -102,7 +102,7 @@ jobs:
       - name: Generate or publish (company audience)
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          # PERMANENT BY DESIGN â see COMPANY_SETUP.md.
+          # PERMANENT BY DESIGN -- see COMPANY_SETUP.md.
           # The company pipeline publishes to Fahad's personal feed with company
           # voice and a separate company_posts_history/ folder. We do NOT pursue
           # a real org token because Community Management API is restricted to
@@ -147,7 +147,7 @@ jobs:
           for _try in 1 2 3; do
             git push origin HEAD:${GITHUB_REF_NAME} && break
             [ $_try -eq 3 ] && { echo "Push failed after 3 attempts"; exit 1; }
-            echo "Push attempt $_try rejected â rebasing and retryingâ¦"
+            echo "Push attempt $_try rejected -- rebasing and retrying..."
             git pull --rebase --autostash origin ${GITHUB_REF_NAME}
             python dashboard.py
             git add docs/
@@ -175,7 +175,7 @@ jobs:
 
       - name: Publish approved company post for today
         env:
-          # PERMANENT BY DESIGN â same rationale as the `post` job above.
+          # PERMANENT BY DESIGN -- same rationale as the `post` job above.
           # See COMPANY_SETUP.md for why we don't pursue a real org token.
           LINKEDIN_ORG_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
           LINKEDIN_ORG_URN: ${{ secrets.LINKEDIN_AUTHOR_URN }}
@@ -203,7 +203,7 @@ jobs:
           for _try in 1 2 3; do
             git push origin HEAD:${GITHUB_REF_NAME} && break
             [ $_try -eq 3 ] && { echo "Push failed after 3 attempts"; exit 1; }
-            echo "Push attempt $_try rejected â rebasing and retryingâ¦"
+            echo "Push attempt $_try rejected -- rebasing and retrying..."
             git pull --rebase --autostash origin ${GITHUB_REF_NAME}
             python dashboard.py
             git add docs/

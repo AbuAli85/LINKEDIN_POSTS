@@ -11,6 +11,7 @@ import json
 import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+import strategy_loader
 
 
 def _is_approved_for(path: Path, pillar: str) -> bool:
@@ -49,7 +50,7 @@ def main() -> int:
 
     print(f"Tomorrow is {publish_date} (weekday={weekday}), scheduled pillar: {todays_pillar}")
 
-    history  = Path(__file__).parent / "posts_history"
+    history  = strategy_loader.history_dir()
     approved = any(
         _is_approved_for(f, todays_pillar)
         for f in sorted(history.glob("*.json"), reverse=True)

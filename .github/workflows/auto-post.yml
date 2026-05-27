@@ -246,7 +246,7 @@ jobs:
           git pull --rebase --autostash origin ${GITHUB_REF_NAME}
           # Regenerate dashboard now that we have the latest remote state
           python dashboard.py
-          git add docs/index.html
+          git add docs/
           git diff --cached --quiet || git commit -m "dashboard: update $(date -u '+%Y-%m-%d %H:%M UTC')"
           for _try in 1 2 3; do
             git push origin HEAD:${GITHUB_REF_NAME} && break
@@ -254,7 +254,7 @@ jobs:
             echo "Push attempt $_try rejected — rebasing and retrying…"
             git pull --rebase --autostash origin ${GITHUB_REF_NAME}
             python dashboard.py
-            git add docs/index.html
+            git add docs/
             git diff --cached --quiet || git commit -m "dashboard: update $(date -u '+%Y-%m-%d %H:%M UTC')"
           done
 
@@ -285,6 +285,14 @@ jobs:
         env:
           LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
           LINKEDIN_AUTHOR_URN: ${{ secrets.LINKEDIN_AUTHOR_URN }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          LINKEDIN_PERSON_ID: ${{ secrets.LINKEDIN_PERSON_ID }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          NOTIFY_EMAIL: ${{ secrets.NOTIFY_EMAIL }}
+          NOTIFY_WEBHOOK_URL: ${{ secrets.NOTIFY_WEBHOOK_URL }}
+          NOTIFY_FROM: ${{ vars.NOTIFY_FROM }}
+          NOTIFY_ON_DRAFT: ${{ vars.NOTIFY_ON_DRAFT }}
+          DASHBOARD_URL: ${{ vars.DASHBOARD_URL }}
           POST_MODE: publish_approved
         run: python main.py
 
@@ -356,4 +364,7 @@ jobs:
             [ $_try -eq 3 ] && { echo "Push failed after 3 attempts"; exit 1; }
             echo "Push attempt $_try rejected — rebasing and retrying…"
             git pull --rebase --autostash origin ${GITHUB_REF_NAME}
+            python dashboard.py
+            git add docs/
+            git diff --cached --quiet || git commit -m "dashboard: update $(date -u '+%Y-%m-%d %H:%M UTC')"
           done

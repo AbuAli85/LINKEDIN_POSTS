@@ -45,36 +45,32 @@ jobs:
 
           # 2. Expiry countdown
           DAYS_UNTIL_EXPIRY=99
-          EXPIRY_MSG="LINKEDIN_TOKEN_RENEWED_DATE not set — cannot compute expiry countdown."
+          EXPIRY_MSG="LINKEDIN_TOKEN_RENEWED_DATE not set - cannot compute expiry countdown."
 
           if [ -n "$LINKEDIN_TOKEN_RENEWED_DATE" ]; then
             RENEWED_TS=$(date -d "$LINKEDIN_TOKEN_RENEWED_DATE" +%s 2>/dev/null || echo "")
-
             if [ -n "$RENEWED_TS" ]; then
               NOW_TS=$(date +%s)
               DAYS_ELAPSED=$(( (NOW_TS - RENEWED_TS) / 86400 ))
               DAYS_UNTIL_EXPIRY=$(( 60 - DAYS_ELAPSED ))
-
               if [ $DAYS_UNTIL_EXPIRY -le 0 ]; then
                 EXPIRY_MSG="Token EXPIRED $((DAYS_UNTIL_EXPIRY * -1)) days ago based on renewal date."
               elif [ $DAYS_UNTIL_EXPIRY -le 7 ]; then
-                EXPIRY_MSG="Token expires in ${DAYS_UNTIL_EXPIRY} days — RENEW NOW."
+                EXPIRY_MSG="Token expires in ${DAYS_UNTIL_EXPIRY} days - RENEW NOW."
               elif [ $DAYS_UNTIL_EXPIRY -le 14 ]; then
-                EXPIRY_MSG="Token expires in ${DAYS_UNTIL_EXPIRY} days — schedule renewal."
+                EXPIRY_MSG="Token expires in ${DAYS_UNTIL_EXPIRY} days - schedule renewal."
               else
                 EXPIRY_MSG="Token valid for ~${DAYS_UNTIL_EXPIRY} more days (renewed: $LINKEDIN_TOKEN_RENEWED_DATE)"
               fi
             else
-              EXPIRY_MSG="Could not parse LINKEDIN_TOKEN_RENEWED_DATE='$LINKEDIN_TOKEN_RENEWED_DATE'. Expected format: YYYY-MM-DD"
+              EXPIRY_MSG="Could not parse LINKEDIN_TOKEN_RENEWED_DATE. Expected format: YYYY-MM-DD"
             fi
           fi
 
           echo "days_until_expiry=$DAYS_UNTIL_EXPIRY" >> $GITHUB_OUTPUT
           echo "expiry_msg=$EXPIRY_MSG"               >> $GITHUB_OUTPUT
-
-          echo "--- Health Report ---"
-          echo "$HEALTH_MSG"
-          echo "$EXPIRY_MSG"
+          echo "Health: $HEALTH_MSG"
+          echo "Expiry: $EXPIRY_MSG"
 
       - name: Create or update alert issue
         if: |
@@ -89,26 +85,22 @@ jobs:
           DAYS="${{ steps.health.outputs.days_until_expiry }}"
 
           if [ "${{ steps.health.outputs.token_alive }}" = "false" ]; then
-            TITLE="LinkedIn token EXPIRED — action required"
+            TITLE="LinkedIn token EXPIRED - action required"
             URGENCY="CRITICAL"
           else
-            TITLE="LinkedIn token expiring in ${DAYS} days — renew now"
+            TITLE="LinkedIn token expiring in ${DAYS} days - renew now"
             URGENCY="WARNING"
           fi
 
-          BODY="## LinkedIn Token Alert — $URGENCY
-
-**Health check:** $HEALTH_MSG
-**Expiry status:** $EXPIRY_MSG
-
-### How to renew
-1. Go to LinkedIn Developer Portal and re-authorise the app
-2. Copy the new access token to Settings > Secrets > LINKEDIN_ACCESS_TOKEN
-3. Update the repo variable Settings > Variables > LINKEDIN_TOKEN_RENEWED_DATE to today (YYYY-MM-DD)
-4. Close this issue
-
-> Token lifetime: LinkedIn OAuth 2.0 access tokens expire after 60 days.
-"
+          BODY="## LinkedIn Token Alert - $URGENCY"$'\n\n'
+          BODY+="**Health check:** $HEALTH_MSG"$'\n'
+          BODY+="**Expiry status:** $EXPIRY_MSG"$'\n\n'
+          BODY+="### How to renew"$'\n'
+          BODY+="1. Go to LinkedIn Developer Portal and re-authorise the app"$'\n'
+          BODY+="2. Copy the new access token to Settings > Secrets > LINKEDIN_ACCESS_TOKEN"$'\n'
+          BODY+="3. Update Settings > Variables > LINKEDIN_TOKEN_RENEWED_DATE to today (YYYY-MM-DD)"$'\n'
+          BODY+="4. Close this issue"$'\n\n'
+          BODY+="> Token lifetime: LinkedIn OAuth 2.0 access tokens expire after 60 days."
 
           EXISTING=$(gh issue list \
             --repo "$REPO" \
@@ -119,20 +111,12 @@ jobs:
 
           if [ -n "$EXISTING" ] && [ "$EXISTING" != "null" ]; then
             echo "Updating existing issue #$EXISTING"
-            gh issue edit "$EXISTING" \
-              --repo "$REPO" \
-              --title "$TITLE" \
-              --body "$BODY"
-            gh issue comment "$EXISTING" \
-              --repo "$REPO" \
+            gh issue edit "$EXISTING" --repo "$REPO" --title "$TITLE" --body "$BODY"
+            gh issue comment "$EXISTING" --repo "$REPO" \
               --body "Re-checked $(date -u +'%Y-%m-%d %H:%M UTC'): $HEALTH_MSG | $EXPIRY_MSG"
           else
             echo "Creating new alert issue"
-            gh issue create \
-              --repo "$REPO" \
-              --title "$TITLE" \
-              --body "$BODY" \
-              --label "linkedin-token"
+            gh issue create --repo "$REPO" --title "$TITLE" --body "$BODY" --label "linkedin-token"
           fi
 
       - name: Close resolved issue
@@ -151,10 +135,9 @@ jobs:
             --jq '.[0].number' 2>/dev/null || echo "")
 
           if [ -n "$EXISTING" ] && [ "$EXISTING" != "null" ]; then
-            echo "Token healthy — closing issue #$EXISTING"
-            gh issue close "$EXISTING" \
-              --repo "$REPO" \
-              --comment "Token health confirmed $(date -u +'%Y-%m-%d %H:%M UTC'). ${{ steps.health.outputs.expiry_msg }} — closing."
+            echo "Token healthy - closing issue #$EXISTING"
+            gh issue close "$EXISTING" --repo "$REPO" \
+              --comment "Token health confirmed $(date -u +'%Y-%m-%d %H:%M UTC'). ${{ steps.health.outputs.expiry_msg }} - closing."
           else
             echo "No open token issue to close."
           fi

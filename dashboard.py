@@ -1553,7 +1553,7 @@ def _card(post: dict, idx: int) -> str:
         (post.get("status") == "draft" or post.get("approval_required"))
         and not post.get("published")
         and not post.get("approved", False)
-        and not post.get("dry_run", False)
+        and not (post.get("dry_run", False) and not post.get("approval_required", False))
         and status_value not in ("superseded", "deleted", "approved")
         and not post.get("is_variant", False)
     )

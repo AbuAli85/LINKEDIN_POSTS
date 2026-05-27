@@ -1,0 +1,20 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "Direct bank integration for WPS submission \u2014 what disappears from the HR team's monthly checklist",
+  "format": "Lead with a quote or question from a customer, then explain the feature built in response",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "\"Half a day. Every month. Just to confirm payroll actually landed.\"\n\nReal customer. And I've heard some version of it from dozens of businesses across Oman and the GCC.\n\nWPS payroll is technically \"automated\" for most of them. But the process around it isn't.\n\nSomeone still exports the file. Uploads it to the bank portal. Waits. Takes a screenshot. Sends it to finance. Files it somewhere nobody will find in six months when the auditors show up.\n\nThat's not automation. That's the same manual work in a different outfit.\n\nSmartPro Hub connects directly to the bank. Once payroll is approved inside the platform, the submission goes through \u2014 no file exports, no portal switching, no follow-up email asking \"did it go through yet?\"\n\nWhat disappears: the back-and-forth, the waiting, the confirmation chase.\n\nWhat stays: a clean audit trail that HR, finance, and management can all actually see, in one place.\n\nFor companies running WPS payroll at scale in Oman, that's real hours back every month. Multiply that by 12.\n\nWhat's the most time-consuming step in your current payroll process?\n\nBook a 20-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#WPS\n#PayrollOman\n#HRTech\n#OmanBusiness",
+  "char_count": 1269,
+  "generated_at": "2026-05-27T20:31:51.296543+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260527_203142_feature_spotlight.json"
+}

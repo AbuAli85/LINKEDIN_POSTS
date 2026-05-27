@@ -70,8 +70,10 @@ BANNED — never use:
 - Feature lists: never write "it does X, Y, and Z" — one sentence on the benefit to the reader, not a spec sheet
 
 FORMAT
-- 800-1500 characters total (spaces and line breaks count).
+- 800-1500 characters total (spaces and line breaks count). Do NOT exceed 1500.
 - 3-5 hashtags at the bottom, each on its own line.
+- Brand hashtag: always #SmartPROHub — no spaces, no variants (#SmartPro, #smartpro, #SmartPro_Hub, etc.).
+- CTA: if a CTA URL is provided in [CTA], it MUST appear in the post body — exact URL, no paraphrasing.
 - No markdown, no code fences, no preamble. Output the post text only."""
 
 def _build_system_prompt_ar() -> str:
@@ -131,6 +133,7 @@ AUDIENCE: {audience}
 OPENING STYLE: {fmt}
 {brand_context}
 {cta_override}{brand_bridge}{hashtag_block}{seo_block}{metrics_block}PROCESS (do this in your head — output only the final post):
+RULE: If a CTA URL is provided above, you MUST include it verbatim in the post body.
 1. Draft 3 opening lines that follow the OPENING STYLE above. Make them specific and concrete.
 2. Pick the one that would stop a busy professional mid-scroll.
 3. Build the post around it. Short paragraphs. One concrete detail or data point. One clear takeaway.
@@ -149,6 +152,7 @@ USER_TEMPLATE_AR = """اكتب منشور LinkedIn لمحور {pillar}.
 أسلوب الافتتاح: {fmt}
 {brand_context}
 {cta_override}{brand_bridge}{hashtag_block}{seo_block}{metrics_block}العملية (نفّذ في ذهنك — أخرج المنشور النهائي فقط):
+قاعدة: إذا كان رابط CTA مذكوراً أعلاه، يجب تضمينه في نص المنشور كما هو بالضبط.
 ١. اكتب ٣ سطور افتتاحية مختلفة تماماً — كل واحدة تتبع أسلوب الافتتاح، ومحددة وملموسة وتحمل ثقل الخبرة.
 ٢. اختر السطر الذي سيوقف مدير موارد بشرية أو صاحب مكتب سند أو مسؤول PRO عن التمرير فوراً.
 ٣. ابنِ المنشور حوله — فقرات قصيرة، رقم واحد حقيقي أو مشهد واحد ملموس، فكرة واحدة واضحة لا أكثر.
@@ -818,7 +822,13 @@ def generate_hook_variant(original: dict, pillar_config: dict) -> dict | None:
 
     except Exception as exc:
         print(f"hook_variant: SKIP — {exc}")
-        return None
+        # Brand hashtag enforcement — must contain canonical form
+    if "#SmartPROHub" not in post:
+        import re
+        if re.search(r"#[Ss]mart[Pp]ro", post):
+            return "contains non-canonical SmartPro hashtag variant — must be #SmartPROHub"
+
+    return None
 
 
 def save_post(post_data: dict) -> Path:

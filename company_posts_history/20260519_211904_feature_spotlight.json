@@ -10,12 +10,16 @@
   "generated_at": "2026-05-19T21:19:04.769543+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 1,
-  "status": "approved",
-  "published": false,
+  "status": "published",
+  "published": true,
   "approved": true,
   "approval_required": false,
   "dry_run": false,
-  "approved_at": "2026-05-20T08:26:14.411031+00:00",
+  "approved_at": "2026-05-27T08:31:27.509922+00:00",
   "publish_reset_at": "2026-05-22T16:30:00+00:00",
-  "publish_reset_reason": "workflow env vars were missing in sweep job \u2014 see auto-post-company.yml fix"
+  "publish_reset_reason": "workflow env vars were missing in sweep job \u2014 see auto-post-company.yml fix",
+  "post_id": "urn:li:share:7465318748716027904",
+  "published_at": "2026-05-27T08:31:29.305216+00:00",
+  "cta_comment_posted": false,
+  "cta_comment_url": ""
 }

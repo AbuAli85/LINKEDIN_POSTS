@@ -18,5 +18,8 @@
   "approved_at": "2026-05-28T15:54:29.372252+00:00",
   "publish_date": "2026-06-04",
   "publish_time": "09:00 GST",
-  "_scheduled_at": "2026-05-28T18:27:07.850492"
+  "_scheduled_at": "2026-05-28T18:27:07.850492",
+  "hook": "story",
+  "score": 7.8,
+  "scored_at": "2026-05-28"
 }

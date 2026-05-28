@@ -1,0 +1,15 @@
+{
+  "pillar": "pain",
+  "segment": "hr_managers",
+  "hook": "story",
+  "hook_text": "The MOL inspector arrived at 9am. The HR file was ready at 9:02am. Here's how.",
+  "body": "Unannounced inspection. Muscat establishment. 94 employees.\n\nThe inspector asked for:\n- Full employee register\n- WPS records — last 6 months\n- Leave balance summary\n- Sanad registration certificates\n- 3 specific employee contracts (selected on the spot)\n\nOld process: 2-3 hours of frantic searching. Print runs. Possible gaps discovered under pressure.\n\nNew process with SmartPRO Hub: HR manager opened the inspection report module.\n\nEmployee register: generated in 18 seconds.\nWPS records (6 months): exported as PDF in 34 seconds.\nLeave balance summary: 12 seconds.\nSanad certificates: pulled from employee records in 9 seconds each.\n3 contracts: located by employee name search, printed in 2 minutes.\n\nTotal time: under 3 minutes from request to handed over.\n\nInspector's note: \"Best-organized establishment I've visited this quarter.\"\n\nNo fines. No follow-up required.\n\n---\n\nIf an MOL inspector walked in tomorrow, how long would it take your team to pull those 5 documents?",
+  "cta": "Comment \"INSPECTION\" for the full inspection readiness checklist.",
+  "score": 8.3,
+  "scored_at": "2026-05-28",
+  "status": "scheduled",
+  "publish_date": "2026-07-02",
+  "publish_time": "09:00 GST",
+  "lang": "en",
+  "notes": "Q3 batch generated 2026-05-28"
+}

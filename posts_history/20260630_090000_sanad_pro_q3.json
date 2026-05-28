@@ -1,0 +1,15 @@
+{
+  "pillar": "sanad_pro",
+  "segment": "hr_managers",
+  "hook": "numbered-list",
+  "hook_text": "7 Sanad compliance checks every Omani employer should run this month.",
+  "body": "Most Sanad issues aren't discovered at the audit. They're discovered at the worst possible moment.\n\nHere's the monthly checklist we give every SmartPRO Hub client:\n\n1. Verify active worker count matches Ministry records\nDiscrepancies of more than 5% trigger automatic review flags.\n\n2. Check visa expiry dates — 60 days forward\nAny expiry inside 60 days needs action initiated now.\n\n3. Confirm profession codes match actual job roles\nMismatched codes are a top-3 cause of Sanad violations.\n\n4. Audit your Omanization ratio against your establishment category\nRequirements differ by sector and workforce size.\n\n5. Validate all transfer documentation is uploaded\nAny employee transfer without documentation is a pending fine.\n\n6. Review any employees on LWOP (leave without pay)\nLWOP status must be reported; unreported LWOP is flagged.\n\n7. Confirm your contact details at MOL are current\nInspection notices go to the registered address. Old email = missed notice.\n\nMost companies do 2-3 of these. The ones that do all 7 don't get surprised.\n\n---\n\nWhich of these does your team actually run monthly? Be honest below.",
+  "cta": "DM \"CHECKLIST\" for the full 20-point version in PDF.",
+  "score": 7.7,
+  "scored_at": "2026-05-28",
+  "status": "scheduled",
+  "publish_date": "2026-06-30",
+  "publish_time": "09:00 GST",
+  "lang": "en",
+  "notes": "Q3 batch generated 2026-05-28"
+}

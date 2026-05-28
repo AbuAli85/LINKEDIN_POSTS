@@ -1,0 +1,15 @@
+{
+  "pillar": "tech",
+  "segment": "founders",
+  "hook": "data-lead",
+  "hook_text": "We process 14,000+ payroll records per month. Here's what the data tells us about Omani HR.",
+  "body": "Aggregated, anonymized insights from SmartPRO Hub's active client base:\n\nLeave patterns:\nAverage annual leave utilization rate: 67% (employees take only 2/3 of entitled leave)\nPeak leave requests: first two weeks of July and December\nSick leave spikes: February and August (consistent across 3 consecutive years)\n\nWPS timing:\n78% of WPS submissions happen in the final 3 working days before the deadline\nAverage submission hour: 2:47 PM\nMost common rejection cause: IBAN field formatting (39% of all rejections)\n\nEnd-of-service:\n42% of disputes involved calculation of partial-year entitlement\nAverage resolution time with documentation: 3.2 days\nWithout documentation: 18.6 days\n\nSanad:\nAverage company has 3.1 employee records with mismatched profession codes\nCompanies that audit quarterly have 0.4 issues per audit\nCompanies that don't audit: 4.7 issues discovered at first audit\n\nData doesn't lie. But it requires volume to be useful.\n\n---\n\nWhat metric from your own HR operation would you most want to benchmark against industry?",
+  "cta": "",
+  "score": 7.5,
+  "scored_at": "2026-05-28",
+  "status": "scheduled",
+  "publish_date": "2026-07-05",
+  "publish_time": "09:00 GST",
+  "lang": "en",
+  "notes": "Q3 batch generated 2026-05-28"
+}

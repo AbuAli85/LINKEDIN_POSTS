@@ -1,0 +1,15 @@
+{
+  "pillar": "proof",
+  "segment": "hr_managers",
+  "hook": "data-lead",
+  "hook_text": "3 Omani companies. 1 WPS rejection between them in 12 months. Here's what they have in common.",
+  "body": "Selected from our active client base — anonymized but real:\n\nCompany A: Logistics. 87 employees. 3 nationalities.\nCompany B: Retail. 142 employees. 6 nationalities.\nCompany C: Construction. 61 employees. Subcontractor mix.\n\nCombined WPS submissions in 2025: 36.\nTotal rejections: 1 (Company B, February — IBAN format error, resubmitted same day).\n\nIndustry average WPS rejection rate in Oman: ~18% per submission cycle.\n\nWhat they share:\n- All three validated IBAN fields against bank formatting rules before export\n- All three had MOL-reference numbers auto-verified at payroll lock\n- All three ran a pre-submission checklist flagging the 7 most common rejection causes\n- All three exported directly from SmartPRO Hub — no reformatting, no copy-paste\n\nOne rejection in 36 submissions. 97.2% first-pass success.\n\nThe industry isn't bad at payroll. It's bad at the last 10 minutes before submission.\n\n---\n\nWhat's your WPS first-pass rate? Drop a number in the comments.",
+  "cta": "",
+  "score": 8.3,
+  "scored_at": "2026-05-28",
+  "status": "scheduled",
+  "publish_date": "2026-06-28",
+  "publish_time": "09:00 GST",
+  "lang": "en",
+  "notes": "Q3 batch generated 2026-05-28"
+}

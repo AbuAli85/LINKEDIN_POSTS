@@ -1,0 +1,20 @@
+{
+  "pillar": "product_proof",
+  "topic": "A PRO services firm scaled from 15 to 60 client companies without adding admin headcount",
+  "format": "Tight case study: company profile, problem, what changed, the one number that proves it worked",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "4x the clients. Same admin team. No new hires.\n\nNot a fluke \u2014 they just stopped running their business on WhatsApp threads and spreadsheets.\n\nHere's what the before looked like: document requests bouncing around on WhatsApp, work permit renewals tracked manually, WPS payroll and Ministry of Labour filings in separate tools that never talked to each other. Nothing flagged as overdue until it was already late.\n\nSmartPro Hub put it in one place. PRO services automation, work permit tracking, government filings, WPS payroll with direct bank integration, and a white-label client portal so clients could check their own status instead of calling.\n\nThe team didn't change. The headcount didn't change. The capacity did \u2014 4x.\n\nThere's a version of growth where every new client adds another layer of admin pressure, and eventually you're hiring just to keep up with the paperwork. That's not a people problem. That's what happens when your ops stack was never built for scale.\n\nIf you run a PRO services firm or Sanad office in Oman and onboarding a new client means a week of manual setup \u2014 worth taking a hard look at where that time actually goes.\n\nWhat's the one workflow that slows everything down when a new client comes on board?\n\nBook a 20-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#OmanBusiness\n#PRO services automation Oman\n#WPS\n#GCCBusiness",
+  "char_count": 1432,
+  "generated_at": "2026-05-28T07:51:17.486260+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260528_075105_product_proof.json"
+}

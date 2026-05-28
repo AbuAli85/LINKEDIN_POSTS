@@ -1,333 +1,311 @@
-{
-  "prospects": [
-    {
-      "id": "OA-001",
-      "name": "Ahmed Al-Balushi",
-      "company": "Al-Balushi Sanad Services",
-      "title": "Sanad Office Manager",
-      "segment": "A",
-      "linkedin_url": "https://www.linkedin.com/search/results/people/?keywords=sanad+office+manager+oman",
-      "location": "Muscat, Oman",
-      "notes": "Sanad office managing ~20 client companies. Likely on WhatsApp-based tracking.",
-      "started_at": null,
-      "current_step": 0,
-      "status": "pending",
-      "tags": ["sanad", "muscat", "priority-1"],
-      "pain_point": "Multi-client work permit tracking across MOL and ROP",
-      "outreach_language": "ar"
-    },
-    {
-      "id": "OA-002",
-      "name": "Khalid Al-Rashdi",
-      "company": "Al-Rashdi PRO Services",
-      "title": "Director, PRO Office",
-      "segment": "A",
-      "linkedin_url": "https://www.linkedin.com/search/results/people/?keywords=pro+services+director+oman",
-      "location": "Muscat, Oman",
-      "notes": "PRO service provider handling government filings for multiple SMEs.",
-      "started_at": null,
-      "current_step": 0,
-      "status": "pending",
-      "tags": ["pro-services", "muscat", "priority-1"],
-      "pain_point": "MOL submissions done manually across 15+ clients",
-      "outreach_language": "ar"
-    },
-    {
-      "id": "OA-003",
-      "name": "Fatma Al-Hinai",
-      "company": "Muscat Business Services LLC",
-      "title": "HR Manager",
-      "segment": "A",
-      "linkedin_url": "https://www.linkedin.com/search/results/people/?keywords=HR+manager+muscat+oman",
-      "location": "Muscat, Oman",
-      "notes": "HR manager at an SME with 50-200 staff. Managing WPS manually.",
-      "started_at": null,
-      "current_step": 0,
-      "status": "pending",
-      "tags": ["hr-manager", "sme", "priority-1"],
-      "pain_point": "WPS payroll file building takes 2+ days every month",
-      "outreach_language": "en"
-    },
-    {
-      "id": "OA-004",
-      "name": "Mohammed Al-Mamari",
-      "company": "Al-Mamari Trading & Services",
-      "title": "CEO",
-      "segment": "A",
-      "linkedin_url": "https://www.linkedin.com/search/results/people/?keywords=CEO+trading+oman+sme",
-      "location": "Muscat, Oman",
-      "notes": "SME owner with 30-80 employees. Frustrated by payroll admin eating into founder time.",
-      "started_at": null,
-      "current_step": 0,
-      "status": "pending",
-      "tags": ["ceo", "sme", "trading", "priority-1"],
-      "pain_point": "Spending 3+ hours every Monday on HR admin instead of business",
-      "outreach_language": "en"
-    },
-    {
-      "id": "OA-005",
-      "name": "Salim Al-Habsi",
-      "company": "Habsi Sanad Center",
-      "title": "Sanad Office Owner",
-      "segment": "A",
-      "linkedin_url": "https://www.linkedin.com/search/results/people/?keywords=sanad+center+oman",
-      "location": "Nizwa, Oman",
-      "notes": "Sanad office outside Muscat. Interior Oman offices are underserved by tech.",
-      "started_at": null,
-      "current_step": 0,
-      "status": "pending",
-      "tags": ["sanad", "nizwa", "priority-2"],
-      "pain_point": "Managing 10-15 clients from Excel — no expiry alerts",
-      "outreach_language": "ar"
-    },
-    {
-      "id": "OA-006",
-      "name": "Sara Al-Lawati",
-      "company": "Gulf Star Business Solutions",
-      "title": "HR & Admin Director",
-      "segment": "A",
-      "linkedin_url": "https://www.linkedin.com/search/results/people/?keywords=HR+director+gulf+oman",
-      "location": "Muscat, Oman",
-      "notes": "HR director managing Omanisation compliance for a growing company.",
-      "started_at": null,
-      "current_step": 0,
-      "status": "pending",
-      "tags": ["hr-director", "omanisation", "priority-1"],
-      "pain_point": "Omanisation ratios tracked in spreadsheet — no real-time visibility",
-      "outreach_language": "en"
-    },
-    {
-      "id": "OA-007",
-      "name": "Hamad Al-Siyabi",
-      "company": "Siyabi Consulting & PRO",
-      "title": "Managing Director",
-      "segment": "A",
-      "linkedin_url": "https://www.linkedin.com/search/results/people/?keywords=consulting+PRO+managing+director+oman",
-      "location": "Muscat, Oman",
-      "notes": "Consulting firm offering PRO services. Scale bottleneck = manual ops.",
-      "started_at": null,
-      "current_step": 0,
-      "status": "pending",
-      "tags": ["consulting", "pro", "priority-1"],
-      "pain_point": "Cannot grow past 20 clients without hiring another PRO officer",
-      "outreach_language": "ar"
-    },
-    {
-      "id": "OA-008",
-      "name": "Nadia Al-Tobi",
-      "company": "Tobi HR Consultancy",
-      "title": "Founder",
-      "segment": "A",
-      "linkedin_url": "https://www.linkedin.com/search/results/people/?keywords=HR+consultancy+founder+oman",
-      "location": "Muscat, Oman",
-      "notes": "Independent HR consultant managing multiple client companies.",
-      "started_at": null,
-      "current_step": 0,
-      "status": "pending",
-      "tags": ["hr-consultant", "founder", "priority-1"],
-      "pain_point": "Client status updates going out via WhatsApp — clients feeling abandoned",
-      "outreach_language": "en"
-    },
-    {
-      "id": "OA-009",
-      "name": "Yusuf Al-Kindi",
-      "company": "Kindi Group Oman",
-      "title": "CFO",
-      "segment": "A",
-      "linkedin_url": "https://www.linkedin.com/search/results/people/?keywords=CFO+group+oman+muscat",
-      "location": "Muscat, Oman",
-      "notes": "CFO at a mid-size Omani group. Payroll accuracy and WPS compliance are finance priorities.",
-      "started_at": null,
-      "current_step": 0,
-      "status": "pending",
-      "tags": ["cfo", "finance", "priority-2"],
-      "pain_point": "Payroll errors causing employee disputes — trust issue",
-      "outreach_language": "en"
-    },
-    {
-      "id": "OA-010",
-      "name": "Mariam Al-Zadjali",
-      "company": "Zadjali Services Est.",
-      "title": "Business Owner",
-      "segment": "A",
-      "linkedin_url": "https://www.linkedin.com/search/results/people/?keywords=business+owner+services+oman+woman",
-      "location": "Muscat, Oman",
-      "notes": "Female entrepreneur running a services business in Muscat. Growing team.",
-      "started_at": null,
-      "current_step": 0,
-      "status": "pending",
-      "tags": ["owner", "female-entrepreneur", "priority-2"],
-      "pain_point": "Single HR person managing everything — single point of failure",
-      "outreach_language": "en"
-    },
-    {
-      "id": "OA-011",
-      "name": "Ibrahim Al-Rawahi",
-      "company": "Rawahi Sanad Office",
-      "title": "Sanad Operations Manager",
-      "segment": "A",
-      "linkedin_url": "https://www.linkedin.com/search/results/people/?keywords=sanad+operations+oman",
-      "location": "Sohar, Oman",
-      "notes": "Sanad office in Sohar — serving industrial zone businesses.",
-      "started_at": null,
-      "current_step": 0,
-      "status": "pending",
-      "tags": ["sanad", "sohar", "industrial", "priority-2"],
-      "pain_point": "High-volume permit renewals for industrial client companies",
-      "outreach_language": "ar"
-    },
-    {
-      "id": "OA-012",
-      "name": "Ali Al-Ghafri",
-      "company": "Muscat Contracting Co.",
-      "title": "HR Manager",
-      "segment": "A",
-      "linkedin_url": "https://www.linkedin.com/search/results/people/?keywords=HR+manager+contracting+oman",
-      "location": "Muscat, Oman",
-      "notes": "HR manager at a construction/contracting company. High expat workforce.",
-      "started_at": null,
-      "current_step": 0,
-      "status": "pending",
-      "tags": ["hr-manager", "contracting", "expat-heavy", "priority-1"],
-      "pain_point": "Tracking 80+ expat work permits and visa renewals manually",
-      "outreach_language": "en"
-    },
-    {
-      "id": "OA-013",
-      "name": "Bader Al-Maqbali",
-      "company": "Vision Business Group",
-      "title": "CEO",
-      "segment": "A",
-      "linkedin_url": "https://www.linkedin.com/search/results/people/?keywords=CEO+vision+business+oman",
-      "location": "Muscat, Oman",
-      "notes": "Growth-stage CEO. LinkedIn active. Posts about business and leadership.",
-      "started_at": null,
-      "current_step": 0,
-      "status": "pending",
-      "tags": ["ceo", "growth-stage", "linkedin-active", "priority-1"],
-      "pain_point": "Month-end data is weeks old — decisions made blind",
-      "outreach_language": "en"
-    },
-    {
-      "id": "OA-014",
-      "name": "Huda Al-Barwani",
-      "company": "Barwani HR Solutions",
-      "title": "HR Specialist",
-      "segment": "A",
-      "linkedin_url": "https://www.linkedin.com/search/results/people/?keywords=HR+specialist+solutions+oman",
-      "location": "Muscat, Oman",
-      "notes": "HR specialist who also handles PRO tasks for her company.",
-      "started_at": null,
-      "current_step": 0,
-      "status": "pending",
-      "tags": ["hr-specialist", "pro-tasks", "priority-2"],
-      "pain_point": "Wearing both HR and PRO hats — too much manual admin",
-      "outreach_language": "en"
-    },
-    {
-      "id": "OA-015",
-      "name": "Tariq Al-Busaidi",
-      "company": "Busaidi Family Office",
-      "title": "Investment Director",
-      "segment": "B",
-      "linkedin_url": "https://www.linkedin.com/search/results/people/?keywords=investment+director+family+office+oman",
-      "location": "Muscat, Oman",
-      "notes": "Family office in Oman. Looking at local SaaS opportunities.",
-      "started_at": null,
-      "current_step": 0,
-      "status": "pending",
-      "tags": ["investor", "family-office", "oman", "priority-1"],
-      "pain_point": "N/A — investor pitch angle: 924 Sanad offices TAM, Vision 2040 compliance wave",
-      "outreach_language": "en"
-    },
-    {
-      "id": "OA-016",
-      "name": "Reem Al-Mahrouqi",
-      "company": "Oman Technology Fund",
-      "title": "Investment Associate",
-      "segment": "B",
-      "linkedin_url": "https://www.linkedin.com/search/results/people/?keywords=investment+associate+technology+oman",
-      "location": "Muscat, Oman",
-      "notes": "Tech fund focused on Oman digital economy. SmartPRO Hub fits their thesis.",
-      "started_at": null,
-      "current_step": 0,
-      "status": "pending",
-      "tags": ["investor", "tech-fund", "priority-1"],
-      "pain_point": "N/A — investor pitch: first-mover in Oman SME HR tech, recurring revenue",
-      "outreach_language": "en"
-    },
-    {
-      "id": "OA-017",
-      "name": "Zaid Al-Amri",
-      "company": "GCC SaaS Ventures",
-      "title": "Partner",
-      "segment": "B",
-      "linkedin_url": "https://www.linkedin.com/search/results/people/?keywords=partner+saas+ventures+GCC",
-      "location": "Dubai, UAE",
-      "notes": "GCC-focused VC. Has portfolio in HR Tech and govtech.",
-      "started_at": null,
-      "current_step": 0,
-      "status": "pending",
-      "tags": ["investor", "vc", "gcc", "priority-1"],
-      "pain_point": "N/A — investor pitch: Oman market entry, Sanad model, GCC expansion path",
-      "outreach_language": "en"
-    },
-    {
-      "id": "OA-018",
-      "name": "Omar Al-Ismaili",
-      "company": "Ismaili Tech Ventures",
-      "title": "Founder & CTO",
-      "segment": "C",
-      "linkedin_url": "https://www.linkedin.com/search/results/people/?keywords=CTO+founder+tech+oman+saas",
-      "location": "Muscat, Oman",
-      "notes": "Omani tech founder. Posts about SaaS and building in Oman. Peer conversation.",
-      "started_at": null,
-      "current_step": 0,
-      "status": "pending",
-      "tags": ["tech-founder", "cto", "peer", "priority-2"],
-      "pain_point": "N/A — peer angle: multi-tenant architecture for GCC compliance",
-      "outreach_language": "en"
-    },
-    {
-      "id": "OA-019",
-      "name": "Layla Al-Nabhani",
-      "company": "Nabhani Digital",
-      "title": "Founder",
-      "segment": "C",
-      "linkedin_url": "https://www.linkedin.com/search/results/people/?keywords=digital+founder+oman+tech",
-      "location": "Muscat, Oman",
-      "notes": "Digital product founder in Oman. Potential integration partner or peer.",
-      "started_at": null,
-      "current_step": 0,
-      "status": "pending",
-      "tags": ["tech-founder", "female", "peer", "priority-3"],
-      "pain_point": "N/A — peer/partnership angle",
-      "outreach_language": "en"
-    },
-    {
-      "id": "OA-020",
-      "name": "Faisal Al-Hosni",
-      "company": "Hosni Group LLC",
-      "title": "Managing Director",
-      "segment": "A",
-      "linkedin_url": "https://www.linkedin.com/search/results/people/?keywords=managing+director+group+oman+sme",
-      "location": "Muscat, Oman",
-      "notes": "MD of a diversified group. Multiple entities = complex HR/PRO needs.",
-      "started_at": null,
-      "current_step": 0,
-      "status": "pending",
-      "tags": ["md", "group", "multi-entity", "priority-1"],
-      "pain_point": "Managing HR and PRO across multiple companies — no unified view",
-      "outreach_language": "en"
-    }
-  ],
-  "meta": {
-    "created": "2026-05-28",
-    "total": 20,
-    "segment_counts": { "A": 16, "B": 3, "C": 2 },
-    "active": 0,
-    "converted": 0,
-    "weekly_target_new": 50,
-    "weekly_target_dms": 20
+[
+  {
+    "id": "OA-001",
+    "name": "Ahmed Al-Balushi",
+    "company": "Al-Balushi Sanad Services",
+    "segment": "A",
+    "started_at": "2026-05-27",
+    "current_step": 0,
+    "status": "active",
+    "notes": "Sanad office ~20 clients WhatsApp-based | Title: Sanad Office Manager | Location: Muscat | Pain: Multi-client work permit tracking | Lang: ar",
+    "tags": [
+      "sanad",
+      "muscat",
+      "priority-1"
+    ]
+  },
+  {
+    "id": "OA-002",
+    "name": "Khalid Al-Rashdi",
+    "company": "Al-Rashdi PRO Services",
+    "segment": "A",
+    "started_at": "2026-05-27",
+    "current_step": 0,
+    "status": "active",
+    "notes": "PRO service provider MOL filings multiple SMEs | Title: Director PRO Office | Location: Muscat | Pain: MOL submissions manual 15+ clients | Lang: ar",
+    "tags": [
+      "pro-services",
+      "muscat",
+      "priority-1"
+    ]
+  },
+  {
+    "id": "OA-003",
+    "name": "Fatma Al-Hinai",
+    "company": "Muscat Business Services LLC",
+    "segment": "A",
+    "started_at": "2026-05-27",
+    "current_step": 0,
+    "status": "active",
+    "notes": "HR manager SME 50-200 staff WPS manual | Title: HR Manager | Location: Muscat | Pain: WPS payroll file 2+ days every month | Lang: en",
+    "tags": [
+      "hr-manager",
+      "sme",
+      "priority-1"
+    ]
+  },
+  {
+    "id": "OA-004",
+    "name": "Mohammed Al-Mamari",
+    "company": "Al-Mamari Trading & Services",
+    "segment": "A",
+    "started_at": "2026-05-27",
+    "current_step": 0,
+    "status": "active",
+    "notes": "SME owner 30-80 employees payroll admin | Title: CEO | Location: Muscat | Pain: 3+ hrs Monday HR admin | Lang: en",
+    "tags": [
+      "ceo",
+      "sme",
+      "trading",
+      "priority-1"
+    ]
+  },
+  {
+    "id": "OA-005",
+    "name": "Salim Al-Habsi",
+    "company": "Habsi Sanad Center",
+    "segment": "A",
+    "started_at": "2026-05-27",
+    "current_step": 0,
+    "status": "active",
+    "notes": "Sanad office Nizwa interior Oman | Title: Sanad Office Owner | Location: Nizwa | Pain: 10-15 clients Excel no expiry alerts | Lang: ar",
+    "tags": [
+      "sanad",
+      "nizwa",
+      "priority-2"
+    ]
+  },
+  {
+    "id": "OA-006",
+    "name": "Sara Al-Lawati",
+    "company": "Gulf Star Business Solutions",
+    "segment": "A",
+    "started_at": "2026-05-27",
+    "current_step": 0,
+    "status": "active",
+    "notes": "HR director Omanisation compliance | Title: HR & Admin Director | Location: Muscat | Pain: Omanisation ratios spreadsheet no real-time | Lang: en",
+    "tags": [
+      "hr-director",
+      "omanisation",
+      "priority-1"
+    ]
+  },
+  {
+    "id": "OA-007",
+    "name": "Hamad Al-Siyabi",
+    "company": "Siyabi Consulting & PRO",
+    "segment": "A",
+    "started_at": "2026-05-27",
+    "current_step": 0,
+    "status": "active",
+    "notes": "Consulting PRO services scale bottleneck | Title: Managing Director | Location: Muscat | Pain: Cannot grow past 20 clients without hiring | Lang: ar",
+    "tags": [
+      "consulting",
+      "pro",
+      "priority-1"
+    ]
+  },
+  {
+    "id": "OA-008",
+    "name": "Nadia Al-Tobi",
+    "company": "Tobi HR Consultancy",
+    "segment": "A",
+    "started_at": "2026-05-27",
+    "current_step": 0,
+    "status": "active",
+    "notes": "Independent HR consultant multiple clients | Title: Founder | Location: Muscat | Pain: Client updates via WhatsApp clients feeling abandoned | Lang: en",
+    "tags": [
+      "hr-consultant",
+      "founder",
+      "priority-1"
+    ]
+  },
+  {
+    "id": "OA-009",
+    "name": "Yusuf Al-Kindi",
+    "company": "Kindi Group Oman",
+    "segment": "A",
+    "started_at": "2026-05-27",
+    "current_step": 0,
+    "status": "active",
+    "notes": "CFO mid-size group WPS compliance | Title: CFO | Location: Muscat | Pain: Payroll errors employee disputes | Lang: en",
+    "tags": [
+      "cfo",
+      "finance",
+      "priority-2"
+    ]
+  },
+  {
+    "id": "OA-010",
+    "name": "Mariam Al-Zadjali",
+    "company": "Zadjali Services Est.",
+    "segment": "A",
+    "started_at": "2026-05-27",
+    "current_step": 0,
+    "status": "active",
+    "notes": "Female entrepreneur services Muscat | Title: Business Owner | Location: Muscat | Pain: Single HR person single point of failure | Lang: en",
+    "tags": [
+      "owner",
+      "female-entrepreneur",
+      "priority-2"
+    ]
+  },
+  {
+    "id": "OA-011",
+    "name": "Ibrahim Al-Rawahi",
+    "company": "Rawahi Sanad Office",
+    "segment": "A",
+    "started_at": "2026-05-27",
+    "current_step": 0,
+    "status": "active",
+    "notes": "Sanad office Sohar industrial zone | Title: Sanad Operations Manager | Location: Sohar | Pain: High-volume permit renewals industrial clients | Lang: ar",
+    "tags": [
+      "sanad",
+      "sohar",
+      "industrial",
+      "priority-2"
+    ]
+  },
+  {
+    "id": "OA-012",
+    "name": "Ali Al-Ghafri",
+    "company": "Muscat Contracting Co.",
+    "segment": "A",
+    "started_at": "2026-05-27",
+    "current_step": 0,
+    "status": "active",
+    "notes": "HR manager contracting high expat workforce | Title: HR Manager | Location: Muscat | Pain: Tracking 80+ expat work permits manually | Lang: en",
+    "tags": [
+      "hr-manager",
+      "contracting",
+      "expat-heavy",
+      "priority-1"
+    ]
+  },
+  {
+    "id": "OA-013",
+    "name": "Bader Al-Maqbali",
+    "company": "Vision Business Group",
+    "segment": "A",
+    "started_at": "2026-05-27",
+    "current_step": 0,
+    "status": "active",
+    "notes": "Growth-stage CEO LinkedIn active | Title: CEO | Location: Muscat | Pain: Month-end data weeks old decisions blind | Lang: en",
+    "tags": [
+      "ceo",
+      "growth-stage",
+      "linkedin-active",
+      "priority-1"
+    ]
+  },
+  {
+    "id": "OA-014",
+    "name": "Huda Al-Barwani",
+    "company": "Barwani HR Solutions",
+    "segment": "A",
+    "started_at": "2026-05-27",
+    "current_step": 0,
+    "status": "active",
+    "notes": "HR specialist PRO tasks double role | Title: HR Specialist | Location: Muscat | Pain: HR and PRO hats too much manual admin | Lang: en",
+    "tags": [
+      "hr-specialist",
+      "pro-tasks",
+      "priority-2"
+    ]
+  },
+  {
+    "id": "OA-015",
+    "name": "Tariq Al-Busaidi",
+    "company": "Busaidi Family Office",
+    "segment": "B",
+    "started_at": "2026-05-27",
+    "current_step": 0,
+    "status": "active",
+    "notes": "Family office local SaaS opportunities | Title: Investment Director | Location: Muscat | Pain: Investor pitch 924 Sanad TAM Vision 2040 | Lang: en",
+    "tags": [
+      "investor",
+      "family-office",
+      "oman",
+      "priority-1"
+    ]
+  },
+  {
+    "id": "OA-016",
+    "name": "Reem Al-Mahrouqi",
+    "company": "Oman Technology Fund",
+    "segment": "B",
+    "started_at": "2026-05-27",
+    "current_step": 0,
+    "status": "active",
+    "notes": "Tech fund Oman digital economy | Title: Investment Associate | Location: Muscat | Pain: Investor first-mover Oman SME HR tech | Lang: en",
+    "tags": [
+      "investor",
+      "tech-fund",
+      "priority-1"
+    ]
+  },
+  {
+    "id": "OA-017",
+    "name": "Zaid Al-Amri",
+    "company": "GCC SaaS Ventures",
+    "segment": "B",
+    "started_at": "2026-05-27",
+    "current_step": 0,
+    "status": "active",
+    "notes": "GCC-focused VC HR Tech govtech portfolio | Title: Partner | Location: Dubai | Pain: Investor Oman market entry GCC expansion | Lang: en",
+    "tags": [
+      "investor",
+      "vc",
+      "gcc",
+      "priority-1"
+    ]
+  },
+  {
+    "id": "OA-018",
+    "name": "Omar Al-Ismaili",
+    "company": "Ismaili Tech Ventures",
+    "segment": "C",
+    "started_at": "2026-05-27",
+    "current_step": 0,
+    "status": "active",
+    "notes": "Omani tech founder SaaS build-in-public | Title: Founder & CTO | Location: Muscat | Pain: Peer multi-tenant GCC compliance | Lang: en",
+    "tags": [
+      "tech-founder",
+      "cto",
+      "peer",
+      "priority-2"
+    ]
+  },
+  {
+    "id": "OA-019",
+    "name": "Layla Al-Nabhani",
+    "company": "Nabhani Digital",
+    "segment": "C",
+    "started_at": "2026-05-27",
+    "current_step": 0,
+    "status": "active",
+    "notes": "Digital product founder partnership potential | Title: Founder | Location: Muscat | Pain: Peer/partnership angle | Lang: en",
+    "tags": [
+      "tech-founder",
+      "female",
+      "peer",
+      "priority-3"
+    ]
+  },
+  {
+    "id": "OA-020",
+    "name": "Faisal Al-Hosni",
+    "company": "Hosni Group LLC",
+    "segment": "A",
+    "started_at": "2026-05-27",
+    "current_step": 0,
+    "status": "active",
+    "notes": "MD diversified group multi-entity HR | Title: Managing Director | Location: Muscat | Pain: HR PRO across multiple companies no unified view | Lang: en",
+    "tags": [
+      "md",
+      "group",
+      "multi-entity",
+      "priority-1"
+    ]
   }
-}
+]

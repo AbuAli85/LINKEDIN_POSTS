@@ -1,0 +1,68 @@
+{
+  "generated": "2026-05-28T18:27:07.858656",
+  "schedule": [
+    {
+      "date": "2026-05-29",
+      "time": "09:00 GST",
+      "file": "20260525_090000_proof.json",
+      "pillar": "proof",
+      "hook": "story",
+      "score": 9,
+      "preview": "Their HR manager resigned on a Wednesday.\n\nPayroll was"
+    },
+    {
+      "date": "2026-05-30",
+      "time": "09:00 GST",
+      "file": "20260526_090000_sanad_pro.json",
+      "pillar": "sanad_pro",
+      "hook": "numbered-list",
+      "score": 8,
+      "preview": "The ROP clearance your client assumed you were chasing"
+    },
+    {
+      "date": "2026-05-31",
+      "time": "09:00 GST",
+      "file": "20260527_090000_vision.json",
+      "pillar": "vision",
+      "hook": "bold-statement",
+      "score": 8,
+      "preview": "Most Oman businesses are making Vision 2040 decisions o"
+    },
+    {
+      "date": "2026-06-01",
+      "time": "09:00 GST",
+      "file": "fixed_20260526_071417_sanad_pro.json",
+      "pillar": "sanad_pro",
+      "hook": "story",
+      "score": 8,
+      "preview": "One Sanad office gave every client a portal to track th"
+    },
+    {
+      "date": "2026-06-02",
+      "time": "09:00 GST",
+      "file": "new_20260526_194946_tech.json",
+      "pillar": "tech",
+      "hook": "story",
+      "score": 8,
+      "preview": "Most Oman PRO managers are running government submissio"
+    },
+    {
+      "date": "2026-06-03",
+      "time": "09:00 GST",
+      "file": "new_20260526_194946_vision.json",
+      "pillar": "vision",
+      "hook": "bold-statement",
+      "score": 7,
+      "preview": "Oman's Sanad office market is growing faster than the t"
+    },
+    {
+      "date": "2026-06-04",
+      "time": "09:00 GST",
+      "file": "20260528_072217_tech.json",
+      "pillar": "tech",
+      "hook": "?",
+      "score": "?",
+      "preview": "Payroll ran at 23:58 Oman time. The job thought it was"
+    }
+  ]
+}

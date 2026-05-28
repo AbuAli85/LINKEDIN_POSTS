@@ -1,0 +1,13 @@
+{
+  "pillar": "tech",
+  "segment": "C",
+  "status": "draft",
+  "generated_at": "2026-05-28T18:16:28+04:00",
+  "model": "sonnet-4-6",
+  "hook": "story",
+  "score": "",
+  "notes": "Build-in-public: technical story of integrating with Omani banks for WPS. The undocumented edge cases nobody warns you about.",
+  "title": "Building WPS payroll integration with Oman's banking system — the undocumented parts",
+  "brief": "Build-in-public: technical story of integrating with Omani banks for WPS. The undocumented edge cases nobody warns you about.",
+  "body": "Nobody told us the WPS file format changes by bank.\n\nSame Ministry of Manpower specification. Same WPS standard. But BankMuscat wants the employee record fields in a different order than National Bank of Oman. And both reject files with a trailing newline in a specific column without telling you which column.\n\nWe found this out the hard way — through a customer's payroll rejection at 11:47pm on the last working day of the month.\n\nHere's what building a real WPS integration actually involves, if you're doing it for Oman:\n\n**The spec is a starting point, not a spec.**\nThe Ministry of Manpower publishes the WPS technical standard. It is correct. It is also incomplete. Each bank has its own quirks — field lengths, encoding expectations, timestamp formats — that you discover through trial and rejection.\n\n**Validation must happen before submission.**\nA rejected file doesn't just fail. It triggers a Ministry of Manpower non-compliance flag against the employer. The flag can affect work permit renewals. We rebuilt our entire validation pipeline after our first production rejection to catch bank-specific issues before the file leaves our system.\n\n**IBAN validation is a separate problem.**\nOman IBANs are 23 characters. We found three different formats in customer data — with space separators, without, and one mystery format from a legacy system that turned out to be a Saudi IBAN from a previous entity. WPS silently fails on wrong IBANs in some banks. It errors loudly in others.\n\n**The end-of-month clustering problem.**\nWhen you're running payroll for 200 companies, every one of them submits in the same 48-hour window. API rate limits are not documented. You find them when your scheduler starts dropping requests.\n\nWe now run per-tenant isolated payroll jobs with explicit timezone context, staged over a 6-hour window, with validation, retry logic, and bank-specific format adapters.\n\nNone of this is clever. All of it was expensive to learn.\n\nIf you're building anything that touches WPS in Oman — DM me. Happy to share what we know.\n\n#BuildInPublic #SaaS #GCCTech #TypeScript #SmartPROHub"
+}

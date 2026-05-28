@@ -10,7 +10,7 @@
   "generated_at": "2026-05-26T19:49:46.000000+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 1,
-  "status": "approved",
+  "status": "scheduled",
   "published": false,
   "approved": true,
   "approval_required": true,
@@ -21,5 +21,14 @@
   "score": 7,
   "hook": "bold-statement",
   "notes": "Vision 2040 infrastructure gap - good positioning",
-  "scored_at": "2026-05-28"
+  "scored_at": "2026-05-28",
+  "metrics": {
+    "manual_quality_score": 7,
+    "hook_style": "bold-statement",
+    "review_notes": "Vision 2040 infra gap - good positioning",
+    "updated_at": "2026-05-28T18:11:33.502033+00:00"
+  },
+  "publish_date": "2026-06-03",
+  "publish_time": "09:00 GST",
+  "_scheduled_at": "2026-05-28T18:27:07.848229"
 }

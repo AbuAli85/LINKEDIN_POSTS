@@ -1,8 +1,8 @@
 {
   "pillar": "pain",
   "topic": "Why HR data stored in Excel is a liability, not just an inconvenience",
-  "format": "Write a numbered list of 4-5 warning signs — make them specific enough that most readers recognise at least three of them",
-  "post": "You recognise at least 3 of these. Be honest.\n\n1. Your leave balances live in a spreadsheet only one person knows how to open.\n2. Payroll takes 2+ days because someone is still manually cross-referencing attendance.\n3. An employee asked about their end-of-service — and you had to say \"let me check.\"\n4. You've sent a WPS file with a formatting error you only caught after submission.\n5. If that one HR person goes on leave, payroll week becomes a crisis.\n\nThis isn't an efficiency problem. It's a liability.\n\nEvery month that data sits in Excel, you're one corrupted file, one resignation, or one Ministry audit away from a serious problem.\n\nEmployee records with no audit trail. Leave calculations no one can verify. Payroll logic locked inside someone's head.\n\nIn Oman, where WPS compliance and Ministry of Manpower reporting are non-negotiable, \"we use Excel\" is not a neutral answer anymore.\n\nSmartPro gives HR, payroll, and compliance one home — with direct WPS bank integration and Ministry of Manpower connectivity built in.\n\nWhich one of those 5 hit closest to home?\n\nDM me or WhatsApp +96879665522 to book a free 20-minute demo. thesmartpro.io\n\n#HROman\n#PayrollManagement\n#SmallBusinessOman\n#WPSOman\n#SmartPro",
+  "format": "Write a numbered list of 4-5 warning signs \u2014 make them specific enough that most readers recognise at least three of them",
+  "post": "You recognise at least 3 of these. Be honest.\n\n1. Your leave balances live in a spreadsheet only one person knows how to open.\n2. Payroll takes 2+ days because someone is still manually cross-referencing attendance.\n3. An employee asked about their end-of-service \u2014 and you had to say \"let me check.\"\n4. You've sent a WPS file with a formatting error you only caught after submission.\n5. If that one HR person goes on leave, payroll week becomes a crisis.\n\nThis isn't an efficiency problem. It's a liability.\n\nEvery month that data sits in Excel, you're one corrupted file, one resignation, or one Ministry audit away from a serious problem.\n\nEmployee records with no audit trail. Leave calculations no one can verify. Payroll logic locked inside someone's head.\n\nIn Oman, where WPS compliance and Ministry of Manpower reporting are non-negotiable, \"we use Excel\" is not a neutral answer anymore.\n\nSmartPro gives HR, payroll, and compliance one home \u2014 with direct WPS bank integration and Ministry of Manpower connectivity built in.\n\nWhich one of those 5 hit closest to home?\n\nDM me or WhatsApp +96879665522 to book a free 20-minute demo. thesmartpro.io\n\n#HROman\n#PayrollManagement\n#SmallBusinessOman\n#WPSOman\n#SmartPro",
   "char_count": 1219,
   "generated_at": "2026-05-10T13:28:27.576140+00:00",
   "model": "claude-sonnet-4-6",
@@ -18,5 +18,11 @@
   "score": 6,
   "hook": "question",
   "notes": "WhatsApp leave requests - good pain but CTA missing",
-  "scored_at": "2026-05-28"
+  "scored_at": "2026-05-28",
+  "metrics": {
+    "manual_quality_score": 6,
+    "hook_style": "question",
+    "review_notes": "WhatsApp leave requests - CTA missing",
+    "updated_at": "2026-05-28T18:11:29.721305+00:00"
+  }
 }

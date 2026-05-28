@@ -1,11 +1,11 @@
 {
   "pillar": "sanad_pro",
-  "topic": "There are 924 Sanad offices in Oman — staffed entirely by Omani nationals, handling every company's government paperwork. Most are still managing 30+ clients on WhatsApp. Here is what that looks like on a busy Tuesday.",
-  "format": "Write a numbered list of 5 signs that a Sanad office has outgrown its current setup — make each one precise enough that most readers recognise at least four",
+  "topic": "There are 924 Sanad offices in Oman \u2014 staffed entirely by Omani nationals, handling every company's government paperwork. Most are still managing 30+ clients on WhatsApp. Here is what that looks like on a busy Tuesday.",
+  "format": "Write a numbered list of 5 signs that a Sanad office has outgrown its current setup \u2014 make each one precise enough that most readers recognise at least four",
   "language": "en",
   "segment": "A",
   "publish_day": "Thursday",
-  "post": "5 signs your Sanad office has outgrown WhatsApp and Excel:\n\n1. You know a work permit is expiring soon — but you can't say whose, or exactly when.\n2. A client calls about their visa renewal. You spend four minutes scrolling through a thread to find the answer.\n3. You've sent an invoice twice because the first one disappeared into a group chat.\n4. A new PRO officer joins and the handover takes a week because nothing is written down anywhere.\n5. You're managing 30+ companies and your \"system\" is a pinned message and hope.\n\nMost Sanad offices in Oman run exactly like this.\n\n924 licensed offices. Staffed entirely by Omani nationals. Handling work permits, residency visas, MOL filings, Civil Status transactions, ROP clearances — for dozens of companies each.\n\nAll tracked on WhatsApp.\n\nThat's not a criticism. The tools just ran out.\n\nSmartPro Hub was built for this gap — structured client cases, automatic expiry alerts, PRO task assignment, digital document vault, client self-service portal, automated invoicing per service.\n\nIf four of those five signs felt familiar, next Tuesday is already going to be worse than last Tuesday.\n\nTry the Sanad AI Assistant free — instant answers on work permits, visas & government fees: www.thesmartpro.io/sanad/assistant\n\nBook a free 20-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=general\nOr WhatsApp +96879665522\n\n#OmanBusiness\n#SmartPROHub\n#Omanization\n#HRManagement\n#GCCBusiness",
+  "post": "5 signs your Sanad office has outgrown WhatsApp and Excel:\n\n1. You know a work permit is expiring soon \u2014 but you can't say whose, or exactly when.\n2. A client calls about their visa renewal. You spend four minutes scrolling through a thread to find the answer.\n3. You've sent an invoice twice because the first one disappeared into a group chat.\n4. A new PRO officer joins and the handover takes a week because nothing is written down anywhere.\n5. You're managing 30+ companies and your \"system\" is a pinned message and hope.\n\nMost Sanad offices in Oman run exactly like this.\n\n924 licensed offices. Staffed entirely by Omani nationals. Handling work permits, residency visas, MOL filings, Civil Status transactions, ROP clearances \u2014 for dozens of companies each.\n\nAll tracked on WhatsApp.\n\nThat's not a criticism. The tools just ran out.\n\nSmartPro Hub was built for this gap \u2014 structured client cases, automatic expiry alerts, PRO task assignment, digital document vault, client self-service portal, automated invoicing per service.\n\nIf four of those five signs felt familiar, next Tuesday is already going to be worse than last Tuesday.\n\nTry the Sanad AI Assistant free \u2014 instant answers on work permits, visas & government fees: www.thesmartpro.io/sanad/assistant\n\nBook a free 20-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=general\nOr WhatsApp +96879665522\n\n#OmanBusiness\n#SmartPROHub\n#Omanization\n#HRManagement\n#GCCBusiness",
   "char_count": 1479,
   "generated_at": "2026-05-19T07:14:59.472421+00:00",
   "model": "claude-sonnet-4-6",
@@ -23,5 +23,11 @@
   "score": 8,
   "hook": "story",
   "notes": "ROP clearance WhatsApp gap - trust story format works great",
-  "scored_at": "2026-05-28"
+  "scored_at": "2026-05-28",
+  "metrics": {
+    "manual_quality_score": 8,
+    "hook_style": "story",
+    "review_notes": "ROP clearance WhatsApp gap trust story",
+    "updated_at": "2026-05-28T18:11:31.988759+00:00"
+  }
 }

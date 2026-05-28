@@ -1,11 +1,11 @@
 {
   "pillar": "proof",
   "topic": "End-of-service calculations done in seconds instead of spreadsheet hours",
-  "format": "Walk through the before and after in precise detail — same task, completely different experience from start to finish",
+  "format": "Walk through the before and after in precise detail \u2014 same task, completely different experience from start to finish",
   "language": "en",
   "segment": "A",
   "publish_day": "Wednesday",
-  "post": "2.5 hours to calculate one end-of-service payment. That's what it was costing one HR manager in Muscat — every single time someone left.\n\nThe old process: open the spreadsheet, find the hire date, calculate exact tenure, apply the Oman Labour Law gratuity bands, pull the last three months' basic salary, account for unpaid leave deductions, then check it all again because a wrong formula can cost you thousands. She told us it took 2.5 hours. Every time.\n\nWith SmartPro Hub, the contract start date, salary history, and leave records are already in the system. The end-of-service calculation runs in under 90 seconds. The breakdown is itemised, audit-ready, and exportable.\n\nSame employee. Same Oman Labour Law. Completely different afternoon.\n\nAt 20 staff the time saving is real but manageable. At 50 or 100+ it starts to compound — especially when you're handling WPS payroll, SPF contributions, and Omanisation ratios in the same place.\n\nNo spreadsheet. No second-guessing. No Friday ruined.\n\nHow long does your current end-of-service process take — and when did you last feel fully confident the number was right?\n\nBook a free 20-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=general\nOr WhatsApp +96879665522\n\n#OmanBusiness\n#HRManagement\n#PayrollOman\n#WPS\n#SmartPROHub",
+  "post": "2.5 hours to calculate one end-of-service payment. That's what it was costing one HR manager in Muscat \u2014 every single time someone left.\n\nThe old process: open the spreadsheet, find the hire date, calculate exact tenure, apply the Oman Labour Law gratuity bands, pull the last three months' basic salary, account for unpaid leave deductions, then check it all again because a wrong formula can cost you thousands. She told us it took 2.5 hours. Every time.\n\nWith SmartPro Hub, the contract start date, salary history, and leave records are already in the system. The end-of-service calculation runs in under 90 seconds. The breakdown is itemised, audit-ready, and exportable.\n\nSame employee. Same Oman Labour Law. Completely different afternoon.\n\nAt 20 staff the time saving is real but manageable. At 50 or 100+ it starts to compound \u2014 especially when you're handling WPS payroll, SPF contributions, and Omanisation ratios in the same place.\n\nNo spreadsheet. No second-guessing. No Friday ruined.\n\nHow long does your current end-of-service process take \u2014 and when did you last feel fully confident the number was right?\n\nBook a free 20-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=general\nOr WhatsApp +96879665522\n\n#OmanBusiness\n#HRManagement\n#PayrollOman\n#WPS\n#SmartPROHub",
   "char_count": 1325,
   "generated_at": "2026-05-18T07:25:14.176823+00:00",
   "model": "claude-sonnet-4-6",
@@ -17,9 +17,15 @@
   "dry_run": true,
   "is_variant": true,
   "variant_of": "20260518_072505_proof.json",
-  "deleted_reason": "empty draft — 0 chars, auto-cleaned",
+  "deleted_reason": "empty draft \u2014 0 chars, auto-cleaned",
   "score": 9,
   "hook": "data-lead",
   "notes": "2.5 hours end-of-service - specific number is excellent hook",
-  "scored_at": "2026-05-28"
+  "scored_at": "2026-05-28",
+  "metrics": {
+    "manual_quality_score": 9,
+    "hook_style": "data-lead",
+    "review_notes": "2.5 hours end-of-service specific number",
+    "updated_at": "2026-05-28T18:11:31.798490+00:00"
+  }
 }

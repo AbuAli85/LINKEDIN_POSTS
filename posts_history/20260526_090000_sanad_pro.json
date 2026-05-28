@@ -10,7 +10,7 @@
   "generated_at": "2026-05-26T09:00:00.000000+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 1,
-  "status": "approved",
+  "status": "scheduled",
   "published": false,
   "approved": true,
   "approval_required": false,
@@ -18,5 +18,14 @@
   "score": 8,
   "hook": "numbered-list",
   "notes": "5 signs Sanad outgrown WhatsApp - list format very strong",
-  "scored_at": "2026-05-28"
+  "scored_at": "2026-05-28",
+  "metrics": {
+    "manual_quality_score": 8,
+    "hook_style": "numbered-list",
+    "review_notes": "5 signs outgrown WhatsApp - very strong",
+    "updated_at": "2026-05-28T18:11:32.725509+00:00"
+  },
+  "publish_date": "2026-05-30",
+  "publish_time": "09:00 GST",
+  "_scheduled_at": "2026-05-28T18:27:07.838184"
 }

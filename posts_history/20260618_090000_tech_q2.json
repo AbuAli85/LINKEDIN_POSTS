@@ -1,0 +1,14 @@
+{
+  "pillar": "tech",
+  "segment": "C",
+  "hook": "story",
+  "score": 7.7,
+  "publish_date": "2026-06-18",
+  "topic": "Building multi-tenant leave management for GCC labour law",
+  "post": "Leave management sounds simple until you build it for GCC labour law.\n\nAnnual leave accrual in Oman: 30 calendar days after one year, pro-rated for partial years, with a specific rule about whether weekends during leave count.\n\nSick leave: 10 days full pay, 20 days half pay, 30 days no pay — but the entitlement resets annually and the clock runs differently during probation.\n\nMaternity: 50 days fully paid. Paternity: 6 days. Emergency leave: no statutory minimum, handled by employer policy.\n\nNow multiply this by a multi-tenant setup where each client company has slightly different policies layered on top of the statutory minimums.\n\nThe naive approach: store leave rules per tenant as configuration. This works until a company changes their policy mid-year and you need to recalculate historical accruals.\n\nThe right approach: version-controlled policy objects with effective dates. Every leave transaction references the policy version active on that date. Changes are prospective, not retroactive — unless explicitly overridden.\n\nWe built this wrong the first time. The recalculation problem hit us 4 months in when our first client updated their annual leave policy.\n\nBuild the version history from day one. Retrofitting it is painful.\n\n#BuildInPublic #SaaS #HRTech #GCC #SmartPROHub",
+  "status": "scheduled",
+  "publish_time": "09:00 GST",
+  "generated_at": "2026-05-28",
+  "scored_at": "2026-05-28",
+  "model": "claude-sonnet-4-6"
+}

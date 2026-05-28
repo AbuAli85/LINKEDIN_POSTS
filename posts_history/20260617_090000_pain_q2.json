@@ -1,0 +1,14 @@
+{
+  "pillar": "pain",
+  "segment": "A",
+  "hook": "question",
+  "score": 7.6,
+  "publish_date": "2026-06-17",
+  "topic": "How many hours does payroll actually take your team",
+  "post": "Honest question for Oman HR managers:\n\nHow many hours does payroll actually take your team each month — start to finish?\n\nNot the payroll run itself. The full process:\n— Collecting and verifying attendance data\n— Reconciling leave balances\n— Updating the WPS file with any employee changes\n— Validating against bank requirements\n— Submission and waiting for confirmation\n— Handling any rejections and resubmissions\n— Distributing payslips\n— Answering employee questions about deductions\n\nMost HR managers I speak to say \"a few hours.\" When we map the actual steps, it's usually 12–18 hours for a 50-person company. Often more.\n\nThe gap between perceived time and actual time is where burnout lives. It's also where the case for automation becomes obvious.\n\nDrop your honest number in the comments. I'm building a benchmark for Oman businesses — the data will be anonymised and shared back here.\n\n#OmanHR #Payroll #WPS #HRTech #SmartPROHub",
+  "status": "scheduled",
+  "publish_time": "09:00 GST",
+  "generated_at": "2026-05-28",
+  "scored_at": "2026-05-28",
+  "model": "claude-sonnet-4-6"
+}

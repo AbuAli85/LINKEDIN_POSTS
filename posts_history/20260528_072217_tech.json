@@ -1,0 +1,18 @@
+{
+  "pillar": "tech",
+  "topic": "How we handle timezone complexity when payroll runs at midnight across GCC offices",
+  "format": "A sprint retrospective: what shipped, what slipped, what surprised you \u2014 honest, specific, no PR spin",
+  "language": "en",
+  "segment": "C",
+  "publish_day": "Saturday",
+  "post": "Payroll ran at 23:58 Oman time. The job thought it was tomorrow in UTC. WPS submission landed on the wrong date.\n\nThat one bug rewired how we think about every timestamp in the system.\n\nGCC payroll is unforgiving here. Oman, UAE, Saudi \u2014 all UTC+4. But midnight isn't just a time. It's a business event with legal consequences. WPS submissions get date-stamped by the Central Bank. Miss the date by a minute and you're not a minute late \u2014 you're a day late, with Ministry of Labour implications attached.\n\nThe fix wasn't clever. Just deliberate.\n\nWe stopped treating \"run at midnight\" as a UTC cron. Every payroll schedule now carries an explicit timezone context. Jobs fire on wall-clock time for the tenant's jurisdiction. Drizzle ORM still stores the canonical UTC timestamp, but all business logic reads from the local offset first.\n\nTradeoff we took on: multi-tenant jobs can't batch under a single cron sweep anymore. Each tenant's payroll runs as its own isolated scheduled event. More overhead. Still worth it.\n\nThe part that genuinely surprised us \u2014 end-of-service gratuity calculations in Oman have the same exposure. Termination date math that crosses midnight can shift accrual by a full day. One day is real money, not a rounding error.\n\nIf you're building HR software for Oman, treat every date as wrong until you've proven otherwise.\n\nSee SmartPRO Hub in action \u2014 book a free 20-min demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}\n\n#BuildInPublic\n#SaaS\n#GCCTech\n#TypeScript\n#SmartPROHub",
+  "char_count": 1553,
+  "generated_at": "2026-05-28T07:22:17.210727+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true
+}

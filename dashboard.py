@@ -1481,6 +1481,10 @@ def _card(post: dict, idx: int) -> str:
     elif post.get("approved") or status_value == "approved":
         status = _badge("Approved", "approved")
         status_key = "approved"
+    elif status_value == "scheduled":
+        pub_date_disp = post.get("publish_date", "")
+        status = _badge(f"&#128197; {pub_date_disp}" if pub_date_disp else "Scheduled", "approved")
+        status_key = "approved"
     elif status_value in ("superseded", "deleted"):
         status = _badge("Superseded" if status_value == "superseded" else "Deleted", "superseded")
         status_key = "superseded"
@@ -1491,23 +1495,28 @@ def _card(post: dict, idx: int) -> str:
         status = _badge("Needs review", "draft")
         status_key = "draft"
 
-    raw_date = post.get("published_at") or post.get("generated_at", "")
+    # Date: prefer published_at, then generated_at, then publish_date, then scored_at
+    raw_date = (post.get("published_at") or post.get("generated_at")
+                or post.get("publish_date") or post.get("scored_at", ""))
     try:
         dt       = datetime.fromisoformat(raw_date.replace("Z", "+00:00"))
         date_str = _to_muscat(dt)
     except Exception:
-        date_str = raw_date[:10]
+        date_str = raw_date[:10] if raw_date else ""
 
     model_short = post.get("model", "unknown").replace("claude-", "").split(":")[0]
     attempts    = post.get("attempts", 1)
-    char_count  = post.get("char_count", 0)
+    # char_count: prefer stored value, fall back to length of body/post content
+    body_text   = post.get("post", "") or post.get("body", "")
+    char_count  = post.get("char_count", 0) or len(body_text)
     char_pct    = min(100, (char_count / 1500) * 100)
     char_ok     = 800 <= char_count <= 1500
     char_cls    = "ok" if char_ok else "warn"
 
-    topic     = html.escape(post.get("topic", ""))
+    # topic: prefer stored 'topic', fall back to 'hook_text'
+    topic     = html.escape(post.get("topic", "") or post.get("hook_text", ""))
     fmt       = html.escape(post.get("format", ""))
-    post_text = html.escape(post.get("post", ""))
+    post_text = html.escape(body_text)
 
     alerts = ""
     if w := post.get("validation_warning"):
@@ -1517,15 +1526,26 @@ def _card(post: dict, idx: int) -> str:
 
     metrics      = post.get("metrics") or {}
     metrics_html = ""
-    if metrics:
-        parts = []
-        if (r := metrics.get("reactions"))            is not None: parts.append(f'<span class="metric-item">&#128077; {r}</span>')
-        if (c := metrics.get("comments"))             is not None: parts.append(f'<span class="metric-item">&#128172; {c}</span>')
-        if (s := metrics.get("shares"))               is not None: parts.append(f'<span class="metric-item">&#8635; {s}</span>')
-        if (q := metrics.get("manual_quality_score")) is not None: parts.append(f'<span class="quality-score">&#9733; {q}/10</span>')
-        if hs := metrics.get("hook_style"):                        parts.append(f'<span class="hook-tag">{html.escape(hs)}</span>')
-        if parts:
-            metrics_html = '<div class="metrics-row">' + "".join(parts) + "</div>"
+    # Always build metrics row: top-level score/hook + engagement metrics
+    parts = []
+    # Score: top-level 'score' (float like 8.2) takes priority over metrics.manual_quality_score
+    top_score = post.get("score")
+    if top_score is not None:
+        parts.append(f'<span class="quality-score">&#9733; {top_score}</span>')
+    elif (q := metrics.get("manual_quality_score")) is not None:
+        parts.append(f'<span class="quality-score">&#9733; {q}/10</span>')
+    # Hook type from top-level 'hook' field
+    if hook_type := (post.get("hook") or metrics.get("hook_style", "")):
+        parts.append(f'<span class="hook-tag">{html.escape(hook_type)}</span>')
+    # Publish time
+    if pt := post.get("publish_time", ""):
+        parts.append(f'<span class="metric-item">&#128337; {html.escape(pt)}</span>')
+    # Engagement metrics
+    if (r := metrics.get("reactions"))  is not None: parts.append(f'<span class="metric-item">&#128077; {r}</span>')
+    if (c := metrics.get("comments"))   is not None: parts.append(f'<span class="metric-item">&#128172; {c}</span>')
+    if (s := metrics.get("shares"))     is not None: parts.append(f'<span class="metric-item">&#8635; {s}</span>')
+    if parts:
+        metrics_html = '<div class="metrics-row">' + "".join(parts) + "</div>"
 
     li_link = ""
     if post_id := post.get("post_id", ""):
@@ -1773,52 +1793,155 @@ def _js_str(text: str) -> str:
 
 
 def _outreach_pipeline_section() -> str:
-    """Generate the Outreach Pipeline HTML block from outreach_history/ and leads.csv."""
+    """Generate the Outreach Pipeline HTML block.
+
+    Primary source: outreach_tracker.json (prospect CRM).
+    Secondary source: outreach_history/ comment files (auto-populated by workflow).
+    """
+    # ── Load outreach_tracker.json ──────────────────────────────────────────
+    tracker_path = Path(__file__).parent / "outreach_tracker.json"
+    prospects: list[dict] = []
+    if tracker_path.exists():
+        try:
+            prospects = json.loads(tracker_path.read_text(encoding="utf-8"))
+        except Exception:
+            prospects = []
+
+    # ── Load outreach_history/ comment files (may be empty) ─────────────────
     outreach_dir = Path(__file__).parent / "outreach_history"
-    if not outreach_dir.exists():
+    all_comments: list[dict] = []
+    if outreach_dir.exists():
+        for f in sorted(outreach_dir.glob("*_comments.json"), reverse=True):
+            try:
+                data = json.loads(f.read_text(encoding="utf-8"))
+                for c in data.get("comments", []):
+                    c["_file_path"]  = f"outreach_history/{f.name}"
+                    c["_post_topic"] = data.get("post_topic", "")
+                    c["_post_id"]    = data.get("post_id", "")
+                    all_comments.append(c)
+            except Exception:
+                continue
+
+    # If both sources are empty, bail
+    if not prospects and not all_comments:
         return ""
 
-    # ── Load all comment files ──────────────────────────────────────────────
-    all_comments: list[dict] = []
-    for f in sorted(outreach_dir.glob("*_comments.json"), reverse=True):
+    # ── Tracker-based stats ─────────────────────────────────────────────────
+    today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    total_prospects = len(prospects)
+    active    = [p for p in prospects if p.get("status") == "active"]
+    converted = [p for p in prospects if p.get("status") == "converted"]
+    seg_counts = Counter(p.get("segment", "?") for p in prospects)
+
+    # Steps 1–5: track how far each prospect is
+    step_totals = Counter(p.get("current_step", 1) for p in active)
+    max_step    = max(step_totals.keys(), default=1)
+
+    # Prospects that need action today (started_at + current_step - 1 days ≈ today)
+    due_today = 0
+    for p in active:
         try:
-            data = json.loads(f.read_text(encoding="utf-8"))
-            for c in data.get("comments", []):
-                c["_file_path"]  = f"outreach_history/{f.name}"
-                c["_post_topic"] = data.get("post_topic", "")
-                c["_post_id"]    = data.get("post_id", "")
-                all_comments.append(c)
+            start = datetime.strptime(p.get("started_at", ""), "%Y-%m-%d")
+            action_day = start + timedelta(days=p.get("current_step", 1) - 1)
+            if action_day.strftime("%Y-%m-%d") <= today_str:
+                due_today += 1
         except Exception:
-            continue
+            pass
 
-    # ── Stats ───────────────────────────────────────────────────────────────
-    qualified     = [c for c in all_comments
-                     if (c.get("qualification") or {}).get("intent") in ("high", "medium")]
+    # ── Comment-based stats ─────────────────────────────────────────────────
+    qualified       = [c for c in all_comments
+                       if (c.get("qualification") or {}).get("intent") in ("high", "medium")]
     replies_drafted = len([c for c in qualified if c.get("reply_drafts")])
-    dms_queued    = sum(1 for _ in outreach_dir.glob("*_dm_sequence.json"))
-    n_unscored    = len([c for c in all_comments if not c.get("qualification")])
+    dms_queued      = sum(1 for _ in outreach_dir.glob("*_dm_sequence.json")) if outreach_dir.exists() else 0
 
+    # ── Stats bar HTML ──────────────────────────────────────────────────────
     stats_html = f"""
 <div class="outreach-statsbar">
-  <span class="outreach-lbl">Outreach</span>
-  <div class="stat"><div class="n">{len(all_comments)}</div><div class="l">Comments</div></div>
-  <div class="stat amber"><div class="n">{len(qualified)}</div><div class="l">Qualified</div></div>
-  <div class="stat blue"><div class="n">{replies_drafted}</div><div class="l">Replies drafted</div></div>
-  <div class="stat"><div class="n">{dms_queued}</div><div class="l">DMs queued</div></div>
-  <div class="stat green"><div class="n">{len(qualified) - n_unscored if n_unscored < len(qualified) else len(qualified)}</div><div class="l">In pipeline</div></div>
+  <span class="outreach-lbl">Outreach Pipeline</span>
+  <div class="stat blue"><div class="n">{total_prospects}</div><div class="l">Prospects</div></div>
+  <div class="stat amber"><div class="n">{len(active)}</div><div class="l">Active</div></div>
+  <div class="stat red"><div class="n">{due_today}</div><div class="l">Due Today</div></div>
+  <div class="stat green"><div class="n">{len(converted)}</div><div class="l">Converted</div></div>
+  <div class="stat"><div class="n">Step {max_step}</div><div class="l">Furthest</div></div>
+  {''.join(f'<div class="stat"><div class="n">{seg_counts.get(s,0)}</div><div class="l">Seg {s}</div></div>' for s in ["A","B","C"])}
+</div>"""
+
+    # ── Prospects table (from outreach_tracker.json) ────────────────────────
+    STEP_LABELS = {
+        1: "Connection sent",
+        2: "Follow-up / comment",
+        3: "DM sent",
+        4: "Demo proposed",
+        5: "Converted",
+    }
+    SEG_COLOR = {"A": "#2e7de0", "B": "#818cf8", "C": "#06b6d4"}
+
+    prospect_rows = ""
+    for p in sorted(prospects, key=lambda x: (x.get("segment","Z"), x.get("id",""))):
+        pid    = html.escape(p.get("id", ""))
+        name   = html.escape(p.get("name", "Unknown"))
+        co     = html.escape(p.get("company", ""))
+        seg    = p.get("segment", "?")
+        step   = p.get("current_step", 1)
+        status = p.get("status", "active")
+        notes  = html.escape((p.get("notes", "")[:90] + "…") if len(p.get("notes","")) > 90 else p.get("notes",""))
+        seg_col = SEG_COLOR.get(seg, "#94a3b8")
+        step_lbl = STEP_LABELS.get(step, f"Step {step}")
+        status_cls = "green" if status == "converted" else ("amber" if status == "active" else "")
+        status_badge = f'<span class="badge {"published" if status=="converted" else "approved" if status=="active" else "draft"}">{status}</span>'
+
+        # Compute if due
+        due_badge = ""
+        try:
+            start = datetime.strptime(p.get("started_at", ""), "%Y-%m-%d")
+            action_day = start + timedelta(days=step - 1)
+            if action_day.strftime("%Y-%m-%d") <= today_str:
+                due_badge = '<span class="badge draft" style="background:#e8372a22;color:#e8372a;border:1px solid #e8372a44">⏰ Due</span>'
+        except Exception:
+            pass
+
+        prospect_rows += f"""
+    <tr>
+      <td style="font-size:11px;color:rgba(255,255,255,.4);font-family:'DM Mono',monospace">{pid}</td>
+      <td style="font-weight:600;font-size:13px">{name}</td>
+      <td style="font-size:12px;color:rgba(255,255,255,.55)">{co}</td>
+      <td><span style="color:{seg_col};font-weight:700;font-size:12px">Seg {seg}</span></td>
+      <td><span style="font-size:12px;color:#d4840a">{step_lbl}</span> {due_badge}</td>
+      <td>{status_badge}</td>
+      <td style="font-size:11px;color:rgba(255,255,255,.4);max-width:220px">{notes}</td>
+    </tr>"""
+
+    prospects_table = f"""
+<div class="content" style="margin-top:0;padding-top:18px">
+  <h2 class="section-lbl">Prospect Tracker — {total_prospects} contacts</h2>
+  <div style="overflow-x:auto;margin-top:12px">
+  <table style="width:100%;border-collapse:collapse;font-size:13px">
+    <thead>
+      <tr style="border-bottom:1px solid rgba(255,255,255,.1);text-align:left">
+        <th style="padding:8px 10px;font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.35);font-weight:500">ID</th>
+        <th style="padding:8px 10px;font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.35);font-weight:500">Name</th>
+        <th style="padding:8px 10px;font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.35);font-weight:500">Company</th>
+        <th style="padding:8px 10px;font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.35);font-weight:500">Seg</th>
+        <th style="padding:8px 10px;font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.35);font-weight:500">Step</th>
+        <th style="padding:8px 10px;font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.35);font-weight:500">Status</th>
+        <th style="padding:8px 10px;font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.35);font-weight:500">Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      {prospect_rows if prospect_rows else '<tr><td colspan="7" style="padding:20px;color:rgba(255,255,255,.3)">No prospects loaded</td></tr>'}
+    </tbody>
+  </table>
+  </div>
 </div>"""
 
     if not all_comments:
-        body = (
-            '<div class="empty" style="padding:24px">'
-            'No comments fetched yet. The daily outreach workflow runs automatically &mdash; '
-            f'or <a href="{ACTIONS_URL}" target="_blank" rel="noopener noreferrer">trigger it now</a>.'
-            '</div>'
-        )
         return f"""{stats_html}
-<div class="content" style="margin-top:0;padding-top:18px">
-  <h2 class="section-lbl">Outreach Pipeline</h2>
-  {body}
+{prospects_table}
+<div class="content" style="padding-top:4px">
+  <div class="empty" style="padding:16px">
+    Comment-based leads will appear here once the daily outreach workflow runs &mdash;
+    <a href="{ACTIONS_URL}" target="_blank" rel="noopener noreferrer" style="color:#38bdf8">trigger it now</a>.
+  </div>
 </div>"""
 
     # ── Leads table ─────────────────────────────────────────────────────────
@@ -1959,11 +2082,114 @@ def _outreach_pipeline_section() -> str:
 
     return f"""
 {stats_html}
+{prospects_table}
 <div class="content" style="margin-top:0;padding-top:18px">
   <h2 class="section-lbl">Outreach Pipeline &mdash; Qualified Leads ({len(qualified)})</h2>
   {leads_section}
   <h2 class="section-lbl" style="margin-top:28px">Pending Replies ({len(pending)})</h2>
   {pending_cards_html}
+</div>"""
+
+
+# ---------------------------------------------------------------------------
+# Publish Calendar
+# ---------------------------------------------------------------------------
+def _publish_calendar_section(posts: list[dict]) -> str:
+    """Render a visual 44-day publish calendar (May 29 → Jul 11) colour-coded by pillar."""
+    scheduled = [
+        p for p in posts
+        if p.get("publish_date") and p.get("status") in ("scheduled", "approved", "draft")
+    ]
+    if not scheduled:
+        return ""
+
+    # Build date → list[post] lookup
+    from collections import defaultdict
+    by_date: dict[str, list[dict]] = defaultdict(list)
+    for p in scheduled:
+        by_date[p["publish_date"]].append(p)
+
+    # Date range
+    try:
+        all_dates = sorted(by_date.keys())
+        start_dt  = datetime.strptime(all_dates[0],  "%Y-%m-%d")
+        end_dt    = datetime.strptime(all_dates[-1], "%Y-%m-%d")
+    except Exception:
+        return ""
+
+    # Build calendar grid
+    day_cells = ""
+    cur = start_dt
+    while cur <= end_dt:
+        ds   = cur.strftime("%Y-%m-%d")
+        day_posts = by_date.get(ds, [])
+        label = cur.strftime("%b %d")
+        weekday = cur.strftime("%a")
+        is_today = ds == datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+        if day_posts:
+            pip = day_posts[0]
+            pillar    = pip.get("pillar", "?")
+            color     = PILLAR_COLOR.get(pillar, "#94a3b8")
+            seg       = pip.get("segment", "")
+            hook      = pip.get("hook", "")
+            score     = pip.get("score", "")
+            score_str = f"★{score}" if score else ""
+            seg_str   = f"Seg {seg}" if seg else ""
+            hook_title = html.escape((pip.get("hook_text") or "")[:80])
+            pillar_esc = html.escape(pillar)
+            hook_esc   = html.escape(hook) if hook else ""
+            sep        = " · " if seg_str and score_str else ""
+            more_html  = f'<div style="font-size:9px;color:rgba(255,255,255,.3)">+{len(day_posts)-1} more</div>' if len(day_posts) > 1 else ""
+            cell_inner = (
+                f'<div class="cal-pill" style="background:{color}22;border:1px solid {color}55;'
+                f'border-radius:6px;padding:4px 6px;font-size:10px;color:{color};'
+                f'white-space:nowrap;overflow:hidden;text-overflow:ellipsis" '
+                f'title="{hook_title}">'
+                f'{pillar_esc}'
+                + (f' · {hook_esc}' if hook_esc else "")
+                + '</div>'
+                f'<div style="font-size:9px;color:rgba(255,255,255,.35);margin-top:2px">'
+                f'{seg_str}{sep}{score_str}'
+                f'</div>'
+                + more_html
+            )
+        else:
+            cell_inner = '<div style="height:38px"></div>'
+
+        today_ring  = "box-shadow:0 0 0 2px #e8372a;" if is_today else ""
+        today_badge = '<span style="color:#e8372a;font-size:9px;margin-left:4px">TODAY</span>' if is_today else ""
+        day_cells += (
+            f'<div class="cal-day" style="background:#161618;border:1px solid rgba(255,255,255,.07);'
+            f'border-radius:8px;padding:6px 8px;min-width:0;{today_ring}">'
+            f'<div style="font-size:10px;color:rgba(255,255,255,.35);margin-bottom:4px">'
+            f'<span style="color:rgba(255,255,255,.5)">{weekday}</span> {label}'
+            + today_badge
+            + '</div>'
+            + cell_inner
+            + '</div>'
+        )
+        cur += timedelta(days=1)
+
+    # Legend
+    legend = "".join(
+        f'<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;'
+        f'color:{c};padding:2px 8px;border-radius:20px;'
+        f'background:{c}18;border:1px solid {c}40">{p}</span>'
+        for p, c in PILLAR_COLOR.items()
+    )
+
+    total_cal = (end_dt - start_dt).days + 1
+    return f"""
+<div class="content" style="padding-top:24px">
+  <h2 class="section-lbl">Publish Calendar &mdash; {len(scheduled)} posts · {total_cal} days</h2>
+  <div style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 16px">
+    {legend}
+  </div>
+  <div class="cal-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));
+       gap:6px;margin-top:4px">
+    {day_cells}
+  </div>
 </div>"""
 
 
@@ -2169,6 +2395,7 @@ def generate(posts: list[dict]) -> str:
     now_muscat        = _to_muscat(datetime.now(timezone.utc))
     engagement_html   = _engagement_sections()
     outreach_html     = _outreach_pipeline_section()
+    calendar_html     = _publish_calendar_section(posts)
     try:
         from newsletter_section import newsletter_dashboard_section
         newsletter_html = newsletter_dashboard_section()
@@ -2312,6 +2539,8 @@ def generate(posts: list[dict]) -> str:
   <h2 class="section-lbl">Post history ({total})</h2>
   {cards}
 </div>
+
+{calendar_html}
 
 {engagement_html}
 
@@ -2544,6 +2773,18 @@ def generate(posts: list[dict]) -> str:
 <script>
 var _REPO     = '{REPO}';
 var _WORKFLOW = '{WORKFLOW_FILE}';
+var _BRANCH   = '{branch}';
+{JS_BODY}
+</script>
+</body>
+</html>"""
+
+
+if __name__ == "__main__":
+    posts = load_posts()
+    out   = DOCS_DIR / "index.html"
+    out.write_text(generate(posts), encoding="utf-8")
+;
 var _BRANCH   = '{branch}';
 {JS_BODY}
 </script>

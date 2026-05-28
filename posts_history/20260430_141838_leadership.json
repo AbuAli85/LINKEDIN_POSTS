@@ -1,8 +1,8 @@
 {
   "pillar": "leadership",
   "topic": "How to have the salary conversation before your best person asks",
-  "format": "Write a numbered list of 3-5 items \u2014 put the most counterintuitive or surprising one last",
-  "post": "Signs you're about to lose a great employee:\n\n1. They stop pushing back in meetings\n2. They start finishing early and going quiet\n3. They update their LinkedIn profile\n4. You find out their market rate \u2014 and you're embarrassed by the gap\n\nThat last one is the one managers never talk about.\n\nI had a senior engineer on my team two years ago. Sharp, low-drama, the kind of person who made everyone around them better.\n\nI knew the market had moved. I kept meaning to bring it up.\n\nShe brought it up first \u2014 with a competing offer in hand.\n\nWe matched it. But something shifted. The trust didn't fully come back. She left eight months later anyway.\n\nThe conversation I avoided for six months cost me a person I'd spent two years building.\n\nNow I run a simple quarterly check: look at what this role pays externally, compare it honestly, and if there's a gap \u2014 address it before they discover it themselves.\n\nNot because it's generous. Because it's the only way to stay ahead of the moment when loyalty stops being enough.\n\nThe best retention tool isn't perks or titles.\n\nIt's making sure your best people never have to wonder if they're being undervalued.\n\nWhen did you last check \u2014 really check \u2014 if your team is paid fairly?\n\n#Leadership\n#Management\n#Retention\n#Founders\n#BuildingTeams",
+  "format": "Write a numbered list of 3-5 items — put the most counterintuitive or surprising one last",
+  "post": "Signs you're about to lose a great employee:\n\n1. They stop pushing back in meetings\n2. They start finishing early and going quiet\n3. They update their LinkedIn profile\n4. You find out their market rate — and you're embarrassed by the gap\n\nThat last one is the one managers never talk about.\n\nI had a senior engineer on my team two years ago. Sharp, low-drama, the kind of person who made everyone around them better.\n\nI knew the market had moved. I kept meaning to bring it up.\n\nShe brought it up first — with a competing offer in hand.\n\nWe matched it. But something shifted. The trust didn't fully come back. She left eight months later anyway.\n\nThe conversation I avoided for six months cost me a person I'd spent two years building.\n\nNow I run a simple quarterly check: look at what this role pays externally, compare it honestly, and if there's a gap — address it before they discover it themselves.\n\nNot because it's generous. Because it's the only way to stay ahead of the moment when loyalty stops being enough.\n\nThe best retention tool isn't perks or titles.\n\nIt's making sure your best people never have to wonder if they're being undervalued.\n\nWhen did you last check — really check — if your team is paid fairly?\n\n#Leadership\n#Management\n#Retention\n#Founders\n#BuildingTeams",
   "char_count": 1284,
   "generated_at": "2026-04-30T14:18:38.511172+00:00",
   "model": "claude-sonnet-4-6",
@@ -14,5 +14,9 @@
   "dry_run": false,
   "approved_at": "2026-04-30T14:20:24.979151+00:00",
   "post_id": "urn:li:share:7455622091032215552",
-  "published_at": "2026-04-30T14:20:25.472485+00:00"
+  "published_at": "2026-04-30T14:20:25.472485+00:00",
+  "score": 8,
+  "hook": "numbered-list",
+  "notes": "Salary conversation topic - high share potential among managers",
+  "scored_at": "2026-05-28"
 }

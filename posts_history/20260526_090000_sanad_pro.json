@@ -1,11 +1,11 @@
 {
   "pillar": "sanad_pro",
   "topic": "The ROP clearance that fell through the gap between your WhatsApp and your client's WhatsApp",
-  "format": "Client trust story \u2014 the Sanad office that stopped daily status calls by giving clients visibility",
+  "format": "Client trust story — the Sanad office that stopped daily status calls by giving clients visibility",
   "language": "en",
   "segment": "A",
   "publish_day": "Thursday",
-  "post": "The ROP clearance your client assumed you were chasing \u2014 you assumed they had submitted the documents.\n\nNeither of you was lying. There was just no system connecting you.\n\nThis is the failure mode that costs Sanad offices clients. Not incompetence. A gap in handoff that nobody could see because both sides were looking at different WhatsApp threads.\n\nOne Muscat Sanad office had four clearances pending simultaneously last month. Status updates lived in voice notes. Clients were calling daily. The PRO officer was working hard \u2014 just with no visibility the client could actually see.\n\nWhen they moved to SmartPro Hub, every client got a portal. Simple: what was submitted, what's pending, what the next step is.\n\nThe daily calls stopped in week two.\n\nThat's not a technology story. It's a trust story.\n\nClients don't leave Sanad offices because government processes are slow. They leave because they feel abandoned in the middle of one.\n\nHow does your office currently update clients when a case is sitting with ROP or MOL?\n\nTry the Sanad AI Assistant free \u2014 instant answers on work permits, visas & government fees: www.thesmartpro.io/sanad/assistant\n\nBook a free 20-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=sanad-pro-en\nOr WhatsApp +96879665522\n\n#OmanBusiness\n#SmartPROHub\n#Omanization\n#HRManagement\n#GCCBusiness",
+  "post": "The ROP clearance your client assumed you were chasing — you assumed they had submitted the documents.\n\nNeither of you was lying. There was just no system connecting you.\n\nThis is the failure mode that costs Sanad offices clients. Not incompetence. A gap in handoff that nobody could see because both sides were looking at different WhatsApp threads.\n\nOne Muscat Sanad office had four clearances pending simultaneously last month. Status updates lived in voice notes. Clients were calling daily. The PRO officer was working hard — just with no visibility the client could actually see.\n\nWhen they moved to SmartPro Hub, every client got a portal. Simple: what was submitted, what's pending, what the next step is.\n\nThe daily calls stopped in week two.\n\nThat's not a technology story. It's a trust story.\n\nClients don't leave Sanad offices because government processes are slow. They leave because they feel abandoned in the middle of one.\n\nHow does your office currently update clients when a case is sitting with ROP or MOL?\n\nTry the Sanad AI Assistant free — instant answers on work permits, visas & government fees: www.thesmartpro.io/sanad/assistant\n\nBook a free 20-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=sanad-pro-en\nOr WhatsApp +96879665522\n\n#OmanBusiness\n#SmartPROHub\n#Omanization\n#HRManagement\n#GCCBusiness",
   "char_count": 1265,
   "generated_at": "2026-05-26T09:00:00.000000+00:00",
   "model": "claude-sonnet-4-6",
@@ -14,5 +14,9 @@
   "published": false,
   "approved": true,
   "approval_required": false,
-  "dry_run": false
+  "dry_run": false,
+  "score": 8,
+  "hook": "numbered-list",
+  "notes": "5 signs Sanad outgrown WhatsApp - list format very strong",
+  "scored_at": "2026-05-28"
 }

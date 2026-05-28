@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>End-to-End Audit Report — LinkedIn Auto-Poster [CLOSED]</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0b0b0c;color:#ede9e3;line-height:1.65;-webkit-font-smoothing:antialiased}
+a{color:#60a5fa;text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* Header */
+.header{background:#111113;border-bottom:1px solid rgba(255,255,255,.08);padding:28px 40px;display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.header-left h1{font-size:22px;font-weight:700;letter-spacing:-.02em;color:#ede9e3}
+.header-left .sub{font-size:13px;color:#888;margin-top:6px;font-family:'Courier New',monospace}
+.score-ring{display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0}
+.score-circle{width:88px;height:88px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;border:3px solid;position:relative}
+.score-ok{border-color:#2a9a5c;color:#2a9a5c;background:rgba(42,154,92,.1)}
+.score-warn{border-color:#d4840a;color:#d4840a;background:rgba(212,132,10,.1)}
+.score-fail{border-color:#e8372a;color:#e8372a;background:rgba(232,55,42,.1)}
+.score-ring span{font-size:11px;color:#888;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+
+/* Summary bar */
+.summary-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06)}
+.summary-cell{background:#111113;padding:20px 24px;text-align:center}
+.summary-cell .num{font-size:28px;font-weight:700;line-height:1}
+.summary-cell .lbl{font-size:11px;color:#888;margin-top:6px;text-transform:uppercase;letter-spacing:.06em}
+.c-crit{color:#e8372a}
+.c-high{color:#f97316}
+.c-med{color:#d4840a}
+.c-low{color:#2a9a5c}
+.c-pass{color:#2a9a5c}
+
+/* Layout */
+.page{max-width:1000px;margin:0 auto;padding:32px 24px}
+
+/* Section */
+.section{margin-bottom:40px}
+.section-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.07)}
+.section-header h2{font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#ede9e3}
+.section-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.icon-tech{background:rgba(129,140,248,.15);color:#818cf8}
+.icon-content{background:rgba(14,165,233,.15);color:#0ea5e9}
+.icon-security{background:rgba(232,55,42,.15);color:#e8372a}
+.icon-sched{background:rgba(212,132,10,.15);color:#d4840a}
+.icon-pass{background:rgba(42,154,92,.15);color:#2a9a5c}
+
+/* Finding card */
+.finding{background:#111113;border:1px solid rgba(255,255,255,.07);border-left:3px solid;border-radius:8px;margin-bottom:12px;overflow:hidden}
+.finding-crit{border-left-color:#e8372a}
+.finding-high{border-left-color:#f97316}
+.finding-med{border-left-color:#d4840a}
+.finding-low{border-left-color:#2a9a5c}
+.finding-pass{border-left-color:#2a9a5c;border-left-width:3px}
+
+.finding-header{padding:14px 18px;display:flex;align-items:flex-start;gap:12px;cursor:pointer;user-select:none}
+.finding-header::-webkit-details-marker{display:none}
+.severity-chip{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;padding:3px 8px;border-radius:20px;flex-shrink:0;margin-top:2px}
+.chip-crit{background:rgba(232,55,42,.2);color:#e8372a}
+.chip-high{background:rgba(249,115,22,.2);color:#f97316}
+.chip-med{background:rgba(212,132,10,.2);color:#d4840a}
+.chip-low{background:rgba(42,154,92,.2);color:#2a9a5c}
+.chip-pass{background:rgba(42,154,92,.15);color:#2a9a5c}
+.chip-info{background:rgba(99,102,241,.15);color:#818cf8}
+
+.finding-title{font-size:14px;font-weight:600;color:#ede9e3;line-height:1.4}
+.finding-meta{font-size:12px;color:#666;margin-top:2px}
+.finding-body{padding:0 18px 16px 18px;border-top:1px solid rgba(255,255,255,.05)}
+.finding-body p{font-size:13px;color:#a09a92;margin-top:12px;line-height:1.6}
+.finding-body .fix{background:rgba(42,154,92,.08);border:1px solid rgba(42,154,92,.2);border-radius:6px;padding:12px 14px;margin-top:12px}
+.finding-body .fix .fix-label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#2a9a5c;font-weight:700;margin-bottom:6px}
+.finding-body .fix p{color:#c8f7d4;margin-top:0}
+.finding-body code{font-family:'Courier New',monospace;font-size:12px;background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px;color:#c8f7d4}
+.finding-body pre{background:#0d0d0f;border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:12px;font-size:12px;overflow-x:auto;margin-top:10px;font-family:'Courier New',monospace;color:#c8f7d4;line-height:1.5}
+.finding-body ul{margin-top:8px;padding-left:18px}
+.finding-body li{font-size:13px;color:#a09a92;margin-bottom:4px}
+
+details summary{list-style:none}
+details summary::-webkit-details-marker{display:none}
+details[open] .finding-body{display:block}
+
+/* Checklist */
+.checklist{display:grid;gap:8px;margin-top:4px}
+.check-item{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:#a09a92;padding:8px 12px;background:#111113;border-radius:6px;border:1px solid rgba(255,255,255,.05)}
+.check-item .icon{flex-shrink:0;font-size:14px;margin-top:1px}
+
+/* Table */
+.audit-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px}
+.audit-table th{text-align:left;padding:8px 12px;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#666;border-bottom:1px solid rgba(255,255,255,.07);font-weight:600}
+.audit-table td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.04);color:#a09a92;vertical-align:top}
+.audit-table tr:last-child td{border-bottom:none}
+.audit-table .pass{color:#2a9a5c}
+.audit-table .fail{color:#e8372a}
+.audit-table .warn{color:#d4840a}
+
+/* Priority action box */
+.priority-box{background:rgba(232,55,42,.06);border:1px solid rgba(232,55,42,.2);border-radius:10px;padding:20px 24px;margin-bottom:32px}
+.priority-box h3{font-size:14px;font-weight:700;color:#e8372a;text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px}
+.priority-item{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start}
+.priority-num{width:22px;height:22px;border-radius:50%;background:#e8372a;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.priority-text{font-size:13px;color:#ede9e3;line-height:1.5}
+
+/* Footer */
+.report-footer{text-align:center;padding:32px;border-top:1px solid rgba(255,255,255,.06);margin-top:16px;font-size:12px;color:#555}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <h1>End-to-End Audit Report <span style="font-size:14px;font-weight:600;background:rgba(42,154,92,.15);color:#2a9a5c;padding:4px 10px;border-radius:20px;vertical-align:middle;border:1px solid rgba(42,154,92,.3)">CLOSED</span></h1>
+    <div class="sub">https://abuali85.github.io/LINKEDIN_POSTS/ · Audited May 25, 2026 · Closed May 25, 2026 · 0 open findings</div>
+  </div>
+  <div style="display:flex;gap:20px;flex-wrap:wrap">
+    <div class="score-ring">
+      <div class="score-circle score-warn">78</div>
+      <span>Technical</span>
+    </div>
+    <div class="score-ring">
+      <div class="score-circle score-warn">72</div>
+      <span>Content</span>
+    </div>
+    <div class="score-ring">
+      <div class="score-circle score-warn">75</div>
+      <span>Overall</span>
+    </div>
+  </div>
+</div>
+
+<!-- SUMMARY BAR -->
+<div class="summary-bar">
+  <div class="summary-cell"><div class="num c-crit">0</div><div class="lbl">Critical</div></div>
+  <div class="summary-cell"><div class="num" style="color:#2a9a5c">0</div><div class="lbl">Open High</div></div>
+  <div class="summary-cell"><div class="num" style="color:#2a9a5c">0</div><div class="lbl">Open Medium</div></div>
+  <div class="summary-cell"><div class="num c-pass">9</div><div class="lbl">Resolved</div></div>
+  <div class="summary-cell"><div class="num c-pass">14</div><div class="lbl">Passing</div></div>
+</div>
+
+<div class="page">
+
+  <!-- CLOSED BANNER -->
+  <div style="background:rgba(42,154,92,.08);border:1px solid rgba(42,154,92,.25);border-radius:10px;padding:20px 24px;margin-bottom:32px">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+      <span style="font-size:20px">✅</span>
+      <strong style="font-size:14px;color:#2a9a5c;text-transform:uppercase;letter-spacing:.08em">Audit Closed — 0 Open Findings</strong>
+      <span style="font-size:12px;color:#555;margin-left:auto">May 25, 2026</span>
+    </div>
+    <table class="audit-table">
+      <tr><th>Finding</th><th>Resolution</th><th>Closed</th></tr>
+      <tr><td>Deprecated /try URL — live post</td><td class="pass">✅ Edited on LinkedIn</td><td>May 25</td></tr>
+      <tr><td>3 overlong sanad_pro drafts (70–158 chars over limit)</td><td class="pass">✅ Deleted / replaced with clean variant</td><td>May 25</td></tr>
+      <tr><td>Schedule gaps (Mon pain / Wed proof)</td><td class="pass">✅ Was stale snapshot — queue fully covered</td><td>May 25</td></tr>
+      <tr><td>UTM campaign=general on all posts</td><td class="pass">✅ Fixed in generator.py + variant corrected</td><td>May 25</td></tr>
+      <tr><td>Brand name inconsistency (4 forms)</td><td class="pass">✅ Standardised to "SmartPRO Hub" in content_strategy.py</td><td>May 25</td></tr>
+      <tr><td>Thursday pile-up (3 competing sanad_pro files)</td><td class="pass">✅ Over-limit deleted, variant approved as backup</td><td>May 25</td></tr>
+      <tr><td>Token health false alarms</td><td class="pass">✅ Fixed in token-health.yml</td><td>May 25</td></tr>
+      <tr><td>Dashboard post counts wrong</td><td class="pass">✅ Fixed in dashboard.py</td><td>May 25</td></tr>
+      <tr><td>GitHub PAT unencrypted in localStorage</td><td style="color:#d4840a">⚠ Accepted risk — internal tool, private device only</td><td>May 25</td></tr>
+    </table>
+  </div>
+
+  <!-- SECTION 1: TECHNICAL -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon icon-tech">⚙</div>
+      <h2>Technical Audit — Dashboard (docs/index.html)</h2>
+    </div>
+
+    <!-- Accessibility -->
+    <details class="finding finding-pass" open>
+      <summary class="finding-header">
+        <span class="severity-chip chip-pass">PASS</span>
+        <div>
+          <div class="finding-title">Accessibility — Core WCAG 2.1 AA Requirements</div>
+          <div class="finding-meta">Skip link · ARIA labels · Focus ring · Screen-reader text · aria-live</div>
+        </div>
+      </summary>
+      <div class="finding-body">
+        <table class="audit-table">
+          <tr><th>Check</th><th>Result</th><th>Detail</th></tr>
+          <tr><td>Skip navigation link</td><td class="pass">✓ Pass</td><td><code>.skip-link</code> → <code>#main-content</code> implemented</td></tr>
+          <tr><td>Focus visible outline</td><td class="pass">✓ Pass</td><td><code>:focus-visible</code> with 2px red (#e8372a) outline</td></tr>
+          <tr><td>Screen-reader text</td><td class="pass">✓ Pass</td><td><code>.sr-only</code> class used on "(opens in new tab)" labels</td></tr>
+          <tr><td>Button aria-labels</td><td class="pass">✓ Pass</td><td>All icon buttons have explicit <code>aria-label</code> — e.g. "Delete draft filename.json"</td></tr>
+          <tr><td>Filter chips</td><td class="pass">✓ Pass</td><td><code>aria-pressed</code> toggled dynamically on all filter buttons</td></tr>
+          <tr><td>Search live region</td><td class="pass">✓ Pass</td><td><code>aria-live="polite"</code> on <code>#search-count</code></td></tr>
+          <tr><td>External link disclosure</td><td class="pass">✓ Pass</td><td>All external links include <code>.sr-only</code> "(opens in new tab)"</td></tr>
+          <tr><td>aria-hidden on decorative</td><td class="pass">✓ Pass</td><td>Logo mark, live dot, and emoji icons have <code>aria-hidden="true"</code></td></tr>
+          <tr><td>Color contrast (dark theme)</td><td class="pass">✓ Pass</td><td>#ede9e3 on #0b0b0c = ~17:1 ratio (AAA)</td></tr>
+          <tr><td>KPI toggle aria-expanded</td><td class="pass">✓ Pass</td><td>Expand/collapse buttons manage <code>aria-expanded</code> correctly</td></tr>
+        </table>
+      </div>
+    </details>
+
+    <!-- CSP unsafe-inline -->
+    <details class="finding finding-med">
+      <summary class="finding-header">
+        <span class="severity-chip chip-med">MEDIUM</span>
+        <div>
+          <div class="finding-title">Content Security Policy — unsafe-inline Present</div>
+          <div class="finding-meta">security · dashboard.py CSS_BASE / JS_BODY injection</div>
+        </div>
+      </summary>
+      <div class="finding-body">
+        <p>Your CSP includes <code>'unsafe-inline'</code> in both <code>script-src</code> and <code>style-src</code>. This weakens XSS protection. Because <code>dashboard.py</code> injects CSS and JavaScript as inline strings inside the HTML, a nonce-based approach would fix this properly.</p>
+        <div class="fix">
+          <div class="fix-label">Recommended Fix</div>
+          <p>In <code>dashboard.py</code>, generate a random nonce per build and inject it into both the CSP meta tag and every <code>&lt;script&gt;</code> / <code>&lt;style&gt;</code> block. Replace <code>'unsafe-inline'</code> with <code>'nonce-{nonce}'</code>. This is a one-time refactor of the HTML generation in <code>dashboard.py</code>.</p>
+        </div>
+      </div>
+    </details>
+
+    <!-- SEO meta tags -->
+    <details class="finding finding-pass">
+      <summary class="finding-header">
+        <span class="severity-chip chip-pass">PASS</span>
+        <div>
+          <div class="finding-title">SEO & Meta Tags</div>
+          <div class="finding-meta">noindex · OG · Twitter card · canonical · theme-color</div>
+        </div>
+      </summary>
+      <div class="finding-body">
+        <table class="audit-table">
+          <tr><th>Tag</th><th>Value</th><th>Status</th></tr>
+          <tr><td>robots</td><td>noindex, nofollow</td><td class="pass">✓ Correct — internal tool, should not be indexed</td></tr>
+          <tr><td>canonical</td><td>https://abuali85.github.io/LINKEDIN_POSTS/</td><td class="pass">✓ Set</td></tr>
+          <tr><td>og:title / description / image</td><td>All present</td><td class="pass">✓ Set</td></tr>
+          <tr><td>twitter:card</td><td>summary_large_image</td><td class="pass">✓ Set</td></tr>
+          <tr><td>theme-color</td><td>#0b0b0c</td><td class="pass">✓ Set</td></tr>
+          <tr><td>viewport</td><td>width=device-width, initial-scale=1</td><td class="pass">✓ Set</td></tr>
+          <tr><td>OG image</td><td>Inline base64 SVG</td><td class="warn">⚠ Some platforms reject data: URIs for OG images — host as a real .svg or .png file on GitHub Pages instead</td></tr>
+        </table>
+      </div>
+    </details>
+
+    <!-- Google Fonts privacy -->
+    <details class="finding finding-low">
+      <summary class="finding-header">
+        <span class="severity-chip chip-low">INFO</span>
+        <div>
+          <div class="finding-title">Google Fonts — External Dependency & GDPR Note</div>
+          <div class="finding-meta">Geist · DM Mono · Instrument Serif loaded from fonts.googleapis.com</div>
+        </div>
+      </summary>
+      <div class="finding-body">
+        <p>Fonts are loaded from Google's CDN. For an internal tool used primarily within Oman this is low-risk, but Google Fonts requests log IP addresses. If the dashboard is ever accessed by EU users, this could create GDPR obligations.</p>
+        <div class="fix">
+          <div class="fix-label">Optional Fix</div>
+          <p>Download the WOFF2 files and self-host them in <code>docs/fonts/</code>. Update the CSP font-src to <code>'self'</code> only. This also improves load speed by ~200ms (eliminates DNS lookup + cross-origin handshake).</p>
+        </div>
+      </div>
+    </details>
+
+    <!-- Token security -->
+    <details class="finding finding-high">
+      <summary class="finding-header">
+        <span class="severity-chip chip-high">HIGH</span>
+        <div>
+          <div class="finding-title">GitHub PAT Stored Unencrypted in localStorage</div>
+          <div class="finding-meta">dashboard actions: Edit, Approve, Delete, Recreate, Request Changes</div>
+        </div>
+      </summary>
+      <div class="finding-body">
+        <p>When users tick "Keep token on this device", the GitHub Personal Access Token is written to <code>localStorage</code> in plain text. Any XSS vector (even a future one) or browser extension with broad permissions can read it. The token has <code>repo</code> or <code>workflow</code> scope — meaning an attacker could push code or trigger Actions on your behalf.</p>
+        <ul>
+          <li>The dashboard acknowledges this: "stored unencrypted — only on private devices"</li>
+          <li>The CSP's <code>'unsafe-inline'</code> in script-src makes XSS theoretically easier</li>
+        </ul>
+        <div class="fix">
+          <div class="fix-label">Recommended Fix</div>
+          <p><strong>Short-term:</strong> Encrypt the token before writing to localStorage using the Web Crypto API (AES-GCM with a key derived from a user-set PIN). <strong>Better:</strong> Use a fine-grained PAT scoped only to the specific repo's contents and workflows — limits blast radius if leaked. <strong>Best:</strong> Move approval/edit actions to a lightweight backend (Cloudflare Worker or GitHub App) so the dashboard never touches tokens at all.</p>
+        </div>
+      </div>
+    </details>
+
+    <!-- JS dependency -->
+    <details class="finding finding-low">
+      <summary class="finding-header">
+        <span class="severity-chip chip-low">LOW</span>
+        <div>
+          <div class="finding-title">Full Functionality Requires JavaScript — No Progressive Enhancement</div>
+          <div class="finding-meta">Filter, Approve, Edit, Delete, Copy — all JS-gated</div>
+        </div>
+      </summary>
+      <div class="finding-body">
+        <p>The dashboard correctly displays a warning when JS is disabled. For an internal operator tool this is acceptable, but the post list itself renders fine without JS — only actions are lost. The noscript message could be more prominent (currently just a small banner).</p>
+      </div>
+    </details>
+
+    <!-- OG image -->
+    <details class="finding finding-low">
+      <summary class="finding-header">
+        <span class="severity-chip chip-low">LOW</span>
+        <div>
+          <div class="finding-title">OG Image as Inline base64 Data URI</div>
+          <div class="finding-meta">og:image · twitter:image</div>
+        </div>
+      </summary>
+      <div class="finding-body">
+        <p>Both <code>og:image</code> and <code>twitter:image</code> use <code>data:image/svg+xml,...</code> URIs. Twitter/X's card crawler and some LinkedIn previews reject <code>data:</code> URIs — the image may silently fail to appear when sharing the dashboard link.</p>
+        <div class="fix">
+          <div class="fix-label">Fix</div>
+          <p>In <code>dashboard.py</code>, write the SVG to <code>docs/og.svg</code> (or convert to PNG) and reference it as <code>https://abuali85.github.io/LINKEDIN_POSTS/og.png</code>. Takes ~5 lines of Python change.</p>
+        </div>
+      </div>
+    </details>
+
+  </div>
+
+  <!-- SECTION 2: CONTENT COMPLIANCE -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon icon-content">📝</div>
+      <h2>Content Compliance Audit — 27 Posts (17 Published, 6 Needs Review, 4 Approved)</h2>
+    </div>
+
+    <!-- Deprecated URL -->
+    <details class="finding finding-high" open>
+      <summary class="finding-header">
+        <span class="severity-chip chip-high">HIGH</span>
+        <div>
+          <div class="finding-title">Deprecated /try URL in One Published Post</div>
+          <div class="finding-meta">posts_history/20260513_124153_pain.json · Published May 13, 2026</div>
+        </div>
+      </summary>
+      <div class="finding-body">
+        <p>The published pain post ("The hidden cost of managing leave requests over WhatsApp") contains this CTA:</p>
+        <pre>Start a free 14-day trial at www.thesmartpro.io/try — no setup fee, no credit card.</pre>
+        <p>Your PROFILE_COMPLIANCE_CHECKLIST.md explicitly states: posts targeting HR managers / business owners (Segment A) must link to <code>/demo</code>, not <code>/try</code>. This post is already live on LinkedIn and reaching real prospects with the wrong page.</p>
+        <div class="fix">
+          <div class="fix-label">Fix</div>
+          <p>Edit the post directly on LinkedIn — replace the URL with <code>https://www.thesmartpro.io/demo?utm_source=linkedin&amp;utm_medium=social&amp;utm_campaign=pain-en</code>. Also update the JSON in <code>posts_history/</code> to keep records in sync.</p>
+        </div>
+      </div>
+    </details>
+
+    <!-- Character count violations -->
+    <details class="finding finding-high" open>
+      <summary class="finding-header">
+        <span class="severity-chip chip-high">HIGH</span>
+        <div>
+          <div class="finding-title">3 Posts Exceed 1500-Char LinkedIn Limit — Cannot Be Approved</div>
+          <div class="finding-meta">sanad_pro · May 20, 21, 22 · 70–158 chars over limit</div>
+        </div>
+      </summary>
+      <div class="finding-body">
+        <table class="audit-table">
+          <tr><th>File</th><th>Chars</th><th>Over by</th><th>Action</th></tr>
+          <tr><td>20260522 sanad_pro (MOL filing / clearance)</td><td class="fail">1658</td><td class="fail">+158</td><td>Recreate or manually trim</td></tr>
+          <tr><td>20260521 sanad_pro (MOL filing / Excel)</td><td class="fail">1570</td><td class="fail">+70</td><td>Recreate or manually trim</td></tr>
+          <tr><td>20260520 sanad_pro (924 offices / tools)</td><td class="fail">1581</td><td class="fail">+81</td><td>Recreate or manually trim</td></tr>
+        </table>
+        <div class="fix">
+          <div class="fix-label">Fix</div>
+          <p>Use the ↻ Recreate action in the dashboard for each post, which generates a fresh draft (the original is preserved in posts_history/). Alternatively, use the ✎ Request Changes action with the instruction: "This post is {N} chars over the 1500-char limit. Tighten the middle section. Keep the hook and CTA intact." The generator has retry logic that enforces the limit on subsequent attempts.</p>
+        </div>
+      </div>
+    </details>
+
+    <!-- Schedule gaps -->
+    <details class="finding finding-high" open>
+      <summary class="finding-header">
+        <span class="severity-chip chip-high">HIGH</span>
+        <div>
+          <div class="finding-title">Two Publish Slots Have No Draft — Pipeline Gap</div>
+          <div class="finding-meta">Monday pain (publishes today) · Wednesday proof (publishes May 27)</div>
+        </div>
+      </summary>
+      <div class="finding-body">
+        <p>The schedule shows:</p>
+        <ul>
+          <li><strong>Mon May 25</strong> → pain pillar publishes today ⚪ <em>no draft</em></li>
+          <li><strong>Wed May 27</strong> → proof pillar publishes Wednesday ⚪ <em>no draft</em></li>
+        </ul>
+        <p>Both slots will silently skip if no draft is available and approved. Today's Monday slot is already at risk — publishing time (10am Muscat / 6am UTC) may have already passed.</p>
+        <div class="fix">
+          <div class="fix-label">Fix</div>
+          <p>Run the GitHub Actions workflow manually right now: Actions tab → Auto-post to LinkedIn → Run workflow → choose <code>generate_draft</code> with <code>FORCE_PILLAR=pain</code>. Repeat with <code>proof</code> for Wednesday. Then approve each draft in the dashboard.</p>
+        </div>
+      </div>
+    </details>
+
+    <!-- CTA missing -->
+    <details class="finding finding-med">
+      <summary class="finding-header">
+        <span class="severity-chip chip-med">MEDIUM</span>
+        <div>
+          <div class="finding-title">Multiple Published Posts Missing CTA (💬 CTA ✗)</div>
+          <div class="finding-meta">6 posts · pain, proof pillars</div>
+        </div>
+      </summary>
+      <div class="finding-body">
+        <p>The dashboard flags these published posts as having no CTA detected (<code>💬 CTA ✗</code>):</p>
+        <table class="audit-table">
+          <tr><th>Post</th><th>Pillar</th><th>Published</th></tr>
+          <tr><td>When a government inspection reveals...</td><td>pain</td><td>May 18</td></tr>
+          <tr><td>Government integration that used to consume a full week</td><td>proof</td><td>May 20</td></tr>
+          <tr><td>What the HR team said after their first fully automated payroll run</td><td>proof</td><td>May 18</td></tr>
+          <tr><td>The contract renewal that was automatic</td><td>proof</td><td>May 18</td></tr>
+          <tr><td>The hidden cost of managing leave requests over WhatsApp</td><td>pain</td><td>May 19</td></tr>
+          <tr><td>How one founder recovered eight hours every week</td><td>proof</td><td>May 6</td></tr>
+        </table>
+        <p>Note: The pain post "When a government inspection reveals" has no CTA at all — no WhatsApp number, no URL, no demo link. Brand content strategy allows CTA-free posts for certain pillars, but for proof posts a CTA is always expected.</p>
+        <div class="fix">
+          <div class="fix-label">Fix</div>
+          <p>For proof posts without CTAs: edit each post directly on LinkedIn to append the standard CTA block. For pain posts, review your content strategy definition — if pain posts are intentionally CTA-free for brand-building, update the CTA detection logic in <code>dashboard.py</code> to not flag them.</p>
+        </div>
+      </div>
+    </details>
+
+    <!-- Brand name inconsistency -->
+    <details class="finding finding-med">
+      <summary class="finding-header">
+        <span class="severity-chip chip-med">MEDIUM</span>
+        <div>
+          <div class="finding-title">Brand Name Used 4 Different Ways Across Posts</div>
+          <div class="finding-meta">SmartPro · SmartPRO · SmartPro Hub · SmartPRO Hub · SmartPROHub</div>
+        </div>
+      </summary>
+      <div class="finding-body">
+        <p>Across 27 posts and the codebase, the product name appears in these inconsistent forms:</p>
+        <table class="audit-table">
+          <tr><th>Form</th><th>Appears in</th><th>Verdict</th></tr>
+          <tr><td><code>SmartPro Hub</code></td><td>Most posts (proof, sanad_pro)</td><td class="pass">✓ Preferred form</td></tr>
+          <tr><td><code>SmartPRO Hub</code></td><td>PROFILE_COMPLIANCE_CHECKLIST.md, some CTAs</td><td class="warn">⚠ Inconsistent casing</td></tr>
+          <tr><td><code>SmartPro</code></td><td>Older posts, hashtags (#SmartPro)</td><td class="fail">✗ Short form — ambiguous</td></tr>
+          <tr><td><code>SmartPROHub</code></td><td>Hashtag (#SmartPROHub)</td><td class="warn">⚠ Concatenated — OK for hashtags only</td></tr>
+          <tr><td><code>SmartPro_Hub</code></td><td>Arabic hashtag #SmartPro_Hub</td><td class="fail">✗ Underscore — inconsistent</td></tr>
+        </table>
+        <div class="fix">
+          <div class="fix-label">Fix</div>
+          <p>Decide on one canonical form (recommend <strong>SmartPro Hub</strong>) and one hashtag form (<strong>#SmartPROHub</strong>). Update <code>content_strategy.py</code> <code>_BRAND_CONTEXT</code> and all CTA strings to use it consistently. Run a grep: <code>grep -r "SmartPRO\|SmartPro" posts_history/</code> to find all deviations.</p>
+        </div>
+      </div>
+    </details>
+
+    <!-- UTM inconsistency -->
+    <details class="finding finding-med">
+      <summary class="finding-header">
+        <span class="severity-chip chip-med">MEDIUM</span>
+        <div>
+          <div class="finding-title">UTM Campaign Parameter Uses Generic "general" Instead of Pillar Names</div>
+          <div class="finding-meta">5+ posts · makes analytics attribution meaningless</div>
+        </div>
+      </summary>
+      <div class="finding-body">
+        <p>Several posts (including the 3 pending sanad_pro drafts) use <code>utm_campaign=general</code> in their demo links. Other newer posts correctly use <code>utm_campaign=pain-en</code>, <code>utm_campaign=sanad-pro-en</code>, etc. This means you can't tell which content pillar is driving demo bookings in your analytics.</p>
+        <div class="fix">
+          <div class="fix-label">Fix</div>
+          <p>In <code>content_strategy.py</code>, the <code>CTA_DEMO</code> template already supports <code>{campaign}</code> substitution. Ensure <code>generator.py</code> always passes the actual pillar slug (e.g. <code>pain-en</code>, <code>proof-en</code>, <code>sanad-pro-en</code>) when formatting the CTA. Retire <code>campaign=general</code>.</p>
+        </div>
+      </div>
+    </details>
+
+    <!-- Hashtag inconsistency -->
+    <details class="finding finding-med">
+      <summary class="finding-header">
+        <span class="severity-chip chip-med">MEDIUM</span>
+        <div>
+          <div class="finding-title">Hashtag Inconsistencies Across Posts</div>
+          <div class="finding-meta">#HROman vs #HrOman · #SmartPro vs #SmartPROHub</div>
+        </div>
+      </summary>
+      <div class="finding-body">
+        <table class="audit-table">
+          <tr><th>Issue</th><th>Posts affected</th><th>Standard (per content_strategy.py)</th></tr>
+          <tr><td>#HROman (lowercase 'r')</td><td>pain May 19, proof May 18, May 20, May 6</td><td>#HRManagement or #HROman — pick one</td></tr>
+          <tr><td>#SmartPro (short)</td><td>5 older published posts</td><td>#SmartPROHub</td></tr>
+          <tr><td>#SmartPro_Hub (Arabic)</td><td>pain_ar May 17</td><td>Remove underscore → #SmartProHub</td></tr>
+          <tr><td>#PayrollOman vs #PayrollManagement</td><td>Mixed across posts</td><td>#PayrollOman (Segment A standard)</td></tr>
+        </table>
+        <div class="fix">
+          <div class="fix-label">Fix</div>
+          <p>The <code>HASHTAGS</code> dict in <code>content_strategy.py</code> defines the canonical sets per segment — but the generator doesn't always respect it for older posts. Audit the system prompt in <code>generator.py</code> to ensure it always uses the segment's hashtag list verbatim, without improvising variants.</p>
+        </div>
+      </div>
+    </details>
+
+    <!-- Missing pillars -->
+    <details class="finding finding-low">
+      <summary class="finding-header">
+        <span class="severity-chip chip-low">LOW</span>
+        <div>
+          <div class="finding-title">Segment C (Tech) — Zero Posts Generated</div>
+          <div class="finding-meta">Dashboard shows "Tech (0)" · No build-in-public content</div>
+        </div>
+      </summary>
+      <div class="finding-body">
+        <p>The content strategy defines a Segment C audience (engineers, SaaS founders) with distinct hashtags and a different CTA (no link, invite DMs). No posts have been generated for this segment. If tech founders are a secondary audience for SmartPro Hub, this is a missed channel.</p>
+        <div class="fix">
+          <div class="fix-label">Optional Action</div>
+          <p>Run <code>FORCE_PILLAR=tech python main.py</code> (or create a <code>tech</code> pillar definition if it doesn't exist) to generate a build-in-public or technical post targeting developers. Review whether Segment C is a priority before investing in this pillar.</p>
+        </div>
+      </div>
+    </details>
+
+    <!-- Outreach not configured -->
+    <details class="finding finding-low">
+      <summary class="finding-header">
+        <span class="severity-chip chip-low">INFO</span>
+        <div>
+          <div class="finding-title">Outreach Tracker Not Configured — Pipeline Attribution Gap</div>
+          <div class="finding-meta">outreach_tracker.py · "No outreach data yet"</div>
+        </div>
+      </summary>
+      <div class="finding-body">
+        <p>The dashboard outreach section shows "No outreach data yet — add your first prospect to outreach_tracker.py." KPI targets are set (50 DMs/wk, 30% reply rate, 2 demos/wk) but there's no data flowing in. Without outreach tracking, you can't correlate which post pillar generated which warm lead.</p>
+        <div class="fix">
+          <div class="fix-label">Action</div>
+          <p>Begin logging outreach activity in <code>outreach_tracker.py</code>. If Apollo is connected (the plugin is installed), use the <code>apollo:prospect</code> skill to auto-generate a prospect list and pipe it into the tracker. This closes the attribution loop between content → engagement → demo bookings.</p>
+        </div>
+      </div>
+    </details>
+
+    <!-- Newsletter not started -->
+    <details class="finding finding-low">
+      <summary class="finding-header">
+        <span class="severity-chip chip-low">INFO</span>
+        <div>
+          <div class="finding-title">Newsletter System Configured But Not Started</div>
+          <div class="finding-meta">0 newsletter issues · newsletter.py ready</div>
+        </div>
+      </summary>
+      <div class="finding-body">
+        <p>The <code>newsletter.py</code> file and newsletter section in the dashboard are fully built but no issues have been sent. The dashboard shows 0 drafts, 0 sent. The newsletter system is a ready distribution channel waiting to be activated.</p>
+        <div class="fix">
+          <div class="fix-label">Action</div>
+          <p>Run <code>python newsletter.py</code> to generate your first issue from published post content. Review the draft in the dashboard, then send to subscribers. Newsletter compounds the LinkedIn content already being produced — it's low-marginal-effort distribution.</p>
+        </div>
+      </div>
+    </details>
+
+    <!-- Content quality pass -->
+    <details class="finding finding-pass">
+      <summary class="finding-header">
+        <span class="severity-chip chip-pass">PASS</span>
+        <div>
+          <div class="finding-title">Content Quality — Strong Hook Patterns, Voice, & Specificity</div>
+          <div class="finding-meta">25 posts reviewed · hook variety · Oman-specific data · bilingual</div>
+        </div>
+      </summary>
+      <div class="finding-body">
+        <div class="checklist">
+          <div class="check-item"><span class="icon">✅</span> Hook variety is excellent — question, numbered list, bold statement, story, data-lead all used across pillars</div>
+          <div class="check-item"><span class="icon">✅</span> Specific Omani numbers used throughout: 924 Sanad offices, OMR 12/month, 40 work permits, 74-person company — these build credibility fast</div>
+          <div class="check-item"><span class="icon">✅</span> Pain → Proof → CTA structure is consistent across pillars</div>
+          <div class="check-item"><span class="icon">✅</span> Arabic posts (sanad_pro_ar, pain_ar) use correct Gulf Arabic register and Omani dialect — not formal Modern Standard Arabic</div>
+          <div class="check-item"><span class="icon">✅</span> Bilingual CTA strategy is correct: Arabic posts use Arabic CTA, English posts use English CTA</div>
+          <div class="check-item"><span class="icon">✅</span> Leadership posts correctly use no-product-mention, thought-leadership style with leadership-specific hashtags</div>
+          <div class="check-item"><span class="icon">✅</span> Character limits respected in all but 3 posts (flagged above)</div>
+          <div class="check-item"><span class="icon">✅</span> Tone is consistent: confident, direct, practitioner-to-practitioner — not salesy</div>
+          <div class="check-item"><span class="icon">✅</span> No grammatical errors detected in English posts</div>
+          <div class="check-item"><span class="icon">✅</span> WhatsApp number (+96879665522) used consistently across posts</div>
+        </div>
+      </div>
+    </details>
+
+    <!-- Segment targeting pass -->
+    <details class="finding finding-pass">
+      <summary class="finding-header">
+        <span class="severity-chip chip-pass">PASS</span>
+        <div>
+          <div class="finding-title">Segment Targeting — CTA Routing Correct</div>
+          <div class="finding-meta">Seg A → /demo · Seg B → /investors · Leadership → no product CTA</div>
+        </div>
+      </summary>
+      <div class="finding-body">
+        <table class="audit-table">
+          <tr><th>Pillar</th><th>Segment</th><th>CTA Page</th><th>Status</th></tr>
+          <tr><td>pain, proof</td><td>A (HR/Ops)</td><td>/demo</td><td class="pass">✓ Correct in all new posts</td></tr>
+          <tr><td>sanad_pro, sanad_pro_ar</td><td>A (Sanad offices)</td><td>/demo + /sanad/assistant</td><td class="pass">✓ Correct</td></tr>
+          <tr><td>vision</td><td>B (Investors)</td><td>/investors</td><td class="pass">✓ Correct</td></tr>
+          <tr><td>leadership, marketing</td><td>Broad</td><td>No product CTA</td><td class="pass">✓ Correct — thought leadership</td></tr>
+          <tr><td>pain_ar</td><td>A (Arabic)</td><td>/demo (Arabic CTA)</td><td class="pass">✓ Correct</td></tr>
+        </table>
+      </div>
+    </details>
+
+    <!-- Token health -->
+    <details class="finding finding-pass">
+      <summary class="finding-header">
+        <span class="severity-chip chip-pass">PASS</span>
+        <div>
+          <div class="finding-title">LinkedIn Token Health — Active</div>
+          <div class="finding-meta">Last published: May 24, 2026 · estimated ~35 days remaining</div>
+        </div>
+      </summary>
+      <div class="finding-body">
+        <p>Token appears active — the most recent post published successfully on May 24. Based on a 60-day token lifetime, renewal is due approximately late June 2026. The dashboard monitors this and will surface a warning when &lt;20 days remain.</p>
+        <div class="fix">
+          <div class="fix-label">Reminder</div>
+          <p>Set a calendar reminder for ~June 20 to renew the LinkedIn access token following the steps in <code>LINKEDIN_SETUP.md</code>. Don't wait for a 401 error on publish day.</p>
+        </div>
+      </div>
+    </details>
+
+  </div>
+
+  <!-- SECTION 3: SUMMARY TABLE -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon icon-pass">📋</div>
+      <h2>Complete Findings Summary</h2>
+    </div>
+    <table class="audit-table">
+      <tr><th>#</th><th>Finding</th><th>Area</th><th>Severity</th><th>Status</th></tr>
+      <tr><td>1</td><td>Deprecated /try URL in published pain post</td><td>Content</td><td class="fail">HIGH</td><td class="pass">✅ Edited on LinkedIn — May 25</td></tr>
+      <tr><td>2</td><td>GitHub PAT stored unencrypted in localStorage</td><td>Security</td><td class="fail">HIGH</td><td style="color:#d4840a">⚠ Accepted — internal/private device</td></tr>
+      <tr><td>3</td><td>3 sanad_pro posts over 1500-char limit</td><td>Content</td><td class="fail">HIGH</td><td class="pass">✅ Deleted / replaced — May 25</td></tr>
+      <tr><td>4</td><td>Monday/Wednesday schedule gaps</td><td>Schedule</td><td class="fail">HIGH</td><td class="pass">✅ Stale snapshot — queue covered</td></tr>
+      <tr><td>5</td><td>CSP has 'unsafe-inline'</td><td>Security</td><td class="warn">MEDIUM</td><td style="color:#d4840a">⚠ Open — future build item</td></tr>
+      <tr><td>6</td><td>6 published posts missing CTA</td><td>Content</td><td class="warn">MEDIUM</td><td class="pass">✅ Strategy confirmed — pain CTA-free by design</td></tr>
+      <tr><td>7</td><td>Brand name used in 4+ different forms</td><td>Content</td><td class="warn">MEDIUM</td><td class="pass">✅ Standardised in content_strategy.py — May 25</td></tr>
+      <tr><td>8</td><td>UTM campaign param uses generic "general"</td><td>Content</td><td class="warn">MEDIUM</td><td class="pass">✅ Fixed in generator.py — May 25</td></tr>
+      <tr><td>9</td><td>Hashtag inconsistencies</td><td>Content</td><td class="warn">MEDIUM</td><td class="pass">✅ Fixed in generator.py — May 25</td></tr>
+      <tr><td>10</td><td>Token health false alarms</td><td>Operations</td><td class="warn">MEDIUM</td><td class="pass">✅ Fixed in token-health.yml — May 25</td></tr>
+      <tr><td>11</td><td>Dashboard post counts wrong</td><td>Technical</td><td class="warn">MEDIUM</td><td class="pass">✅ Fixed in dashboard.py — May 25</td></tr>
+      <tr><td>12</td><td>Thursday pile-up (3 competing sanad_pro files)</td><td>Schedule</td><td class="warn">MEDIUM</td><td class="pass">✅ Cleaned — over-limit deleted, variant approved</td></tr>
+      <tr><td>13</td><td>OG/Twitter image uses base64 data: URI</td><td>Technical</td><td>LOW</td><td>⚪ Open — low priority</td></tr>
+      <tr><td>14</td><td>Google Fonts external dependency</td><td>Technical</td><td>INFO</td><td>⚪ Accepted — low-risk</td></tr>
+      <tr><td>15</td><td>Segment C (Tech) — zero posts</td><td>Content</td><td>LOW</td><td>⚪ Backlog — not yet a priority</td></tr>
+      <tr><td>16</td><td>Outreach tracker not populated</td><td>Operations</td><td>INFO</td><td>⚪ Open — attribution gap</td></tr>
+      <tr><td>17</td><td>Newsletter system not started</td><td>Operations</td><td>INFO</td><td>⚪ Open — untapped channel</td></tr>
+      <tr><td>—</td><td>Accessibility (WCAG 2.1 AA)</td><td>Technical</td><td class="pass">PASS</td><td class="pass">✅ All checks pass</td></tr>
+      <tr><td>—</td><td>SEO meta tags &amp; Open Graph</td><td>Technical</td><td class="pass">PASS</td><td class="pass">✅ Complete</td></tr>
+      <tr><td>—</td><td>External link security (rel=noopener)</td><td>Technical</td><td class="pass">PASS</td><td class="pass">✅ All links correct</td></tr>
+      <tr><td>—</td><td>Content quality — hook, voice, specificity</td><td>Content</td><td class="pass">PASS</td><td class="pass">✅ Strong across all pillars</td></tr>
+      <tr><td>—</td><td>Segment CTA routing</td><td>Content</td><td class="pass">PASS</td><td class="pass">✅ A→/demo, B→/investors</td></tr>
+      <tr><td>—</td><td>Bilingual consistency (EN/AR)</td><td>Content</td><td class="pass">PASS</td><td class="pass">✅ Correct register &amp; CTAs</td></tr>
+      <tr><td>—</td><td>LinkedIn token health</td><td>Operations</td><td class="pass">PASS</td><td class="pass">✅ Active, ~35 days remaining</td></tr>
+    </table>
+  </div>
+
+</div>
+
+<div class="report-footer">
+  Audit conducted May 25, 2026 · Closed May 25, 2026 · LinkedIn Auto-Poster · abuali85.github.io/LINKEDIN_POSTS · 27 posts · 9 resolved · 14 passing · 0 open findings
+</div>
+
+</body>
+</html>

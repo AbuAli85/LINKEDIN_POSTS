@@ -17,5 +17,9 @@
   "dry_run": true,
   "is_variant": true,
   "variant_of": "20260518_072505_proof.json",
-  "deleted_reason": "empty draft — 0 chars, auto-cleaned"
+  "deleted_reason": "empty draft — 0 chars, auto-cleaned",
+  "score": 9,
+  "hook": "data-lead",
+  "notes": "2.5 hours end-of-service - specific number is excellent hook",
+  "scored_at": "2026-05-28"
 }

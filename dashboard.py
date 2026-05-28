@@ -1484,7 +1484,7 @@ def _card(post: dict, idx: int) -> str:
     elif status_value == "scheduled":
         pub_date_disp = post.get("publish_date", "")
         status = _badge(f"&#128197; {pub_date_disp}" if pub_date_disp else "Scheduled", "approved")
-        status_key = "approved"
+        status_key = "scheduled"  # data-status must be "scheduled" so JS filter works
     elif status_value in ("superseded", "deleted"):
         status = _badge("Superseded" if status_value == "superseded" else "Deleted", "superseded")
         status_key = "superseded"

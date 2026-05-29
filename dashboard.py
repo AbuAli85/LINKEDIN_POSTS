@@ -2784,15 +2784,3 @@ if __name__ == "__main__":
     posts = load_posts()
     out   = DOCS_DIR / "index.html"
     out.write_text(generate(posts), encoding="utf-8")
-;
-var _BRANCH   = '{branch}';
-{JS_BODY}
-</script>
-</body>
-</html>"""
-
-
-if __name__ == "__main__":
-    posts = load_posts()
-    out   = DOCS_DIR / "index.html"
-    out.write_text(generate(posts), encoding="utf-8")

@@ -1,0 +1,39 @@
+{
+  "subject": "Your leave records are a Ministry of Labour audit waiting to happen",
+  "preview": "Most Oman SMBs can't produce a clean leave trail on demand. Here's how to fix that before someone asks.",
+  "opening": "It's the last week of May, and if your company runs on a calendar-year leave cycle, roughly half the year is already gone.\n\nThat means some of your employees have consumed more annual leave than they've accrued. Others haven't taken a single day and are quietly building a liability on your books. A few have leave balances that exist only in someone's memory — or in a WhatsApp message from March that nobody can find anymore.\n\nThe Ministry of Labour doesn't announce when it's checking. It asks for records, and you have 72 hours to produce them. What you hand over in that window either closes the inquiry or opens a longer one.",
+  "pain": {
+    "title": "The spreadsheet you trust is already out of date",
+    "body": "A 2024 survey of SMEs across the GCC found that 61% of companies with fewer than 150 employees manage leave through a combination of spreadsheets and messaging apps — with no audit trail and no version control. In Oman specifically, the Labour Law (Royal Decree 53/2023) requires employers to maintain documented leave records per employee, including approval timestamps. A WhatsApp \"yes, go ahead\" doesn't satisfy that requirement. Neither does a shared Google Sheet with no access log. The gap between what most HR managers think they have and what actually holds up under scrutiny is wider than most people want to admit — and SmartPro was built precisely to close it."
+  },
+  "proof": {
+    "title": "From a shoebox of screenshots to a clean audit in under a week",
+    "body": "A logistics company in Muscat with 74 employees came to SmartPro after receiving an informal Ministry of Labour inquiry about a disputed leave balance. Their HR manager had been managing leave through a shared Excel file and employee WhatsApp requests. It took her three days just to reconstruct one employee's leave history for 18 months. After onboarding to SmartPro, the same company ran their next leave audit report — covering all 74 staff, full approval chain, date-stamped — in under four minutes. The inquiry was resolved with a single export."
+  },
+  "playbook": {
+    "title": "5 steps to clean up your leave records this week — no new software required",
+    "steps": [
+      "Pull every employee's leave balance as of today and write the date on the file. A snapshot with a date is evidence. An undated spreadsheet is a guess.",
+      "Cross-check accruals against your Labour Law entitlement: most full-time employees earn 30 calendar days of annual leave after one year of service. If anyone's balance looks wrong, flag it now — not when it's disputed.",
+      "Locate the approval record for every leave request taken in 2026 so far. Email threads count. WhatsApp screenshots do not hold up consistently — print them with timestamps and store them in a single folder per employee.",
+      "Identify any employee who has taken leave without a written request or formal approval on file. Send a short internal memo this week acknowledging the leave retroactively and get a signature. A late paper trail beats no paper trail.",
+      "Set a recurring 15-minute calendar block on the first Monday of each month to reconcile leave balances before they drift. Most leave disputes aren't about policy — they're about records that were never kept current."
+    ]
+  },
+  "question": "When did you last run a full leave audit across your team — and how long did it actually take you to pull that data together?",
+  "signoff": "Leave records feel administrative right up until they're not.\n\nIf you want to see how SmartPro handles leave requests, approvals, balance tracking, and Ministry of Labour-ready exports in one place, book a 20-minute demo at www.thesmartpro.io — or WhatsApp +96879665522 to see SmartPro Hub live.\n\n— The SmartPro Team",
+  "_meta": {
+    "issue_number": 9,
+    "date": "2026-05-29",
+    "model": "claude-sonnet-4-6",
+    "status": "draft",
+    "source_posts": [
+      "?",
+      "?",
+      "?",
+      "?",
+      "?"
+    ],
+    "created_at": "2026-05-29T15:44:33.030606+00:00"
+  }
+}

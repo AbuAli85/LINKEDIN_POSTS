@@ -1,0 +1,18 @@
+{
+  "pillar": "tech",
+  "topic": "How we handle timezone complexity when payroll runs at midnight across GCC offices",
+  "format": "Describe a technical problem that took longer than it should have \u2014 what made it hard, what fixed it, what you'd do differently",
+  "language": "en",
+  "segment": "C",
+  "publish_day": "Saturday",
+  "post": "Payroll ran at 12:00 AM. Three offices. Three timezones. One wrong assumption in our scheduler.\n\nWe stored \"midnight\" as a UTC timestamp and applied it uniformly across our GCC clients. Oman (UTC+4), Saudi (UTC+3), UAE (UTC+4 \u2014 but not always, DST edge cases exist). Simple math, right?\n\nIt wasn't.\n\nThe real problem wasn't the offset. WPS payroll Oman submissions have a hard bank cut-off tied to local midnight \u2014 not server time. One miscalculated run means a failed WPS file, a delayed salary transfer, and a compliance flag with the Ministry of Labour Oman. That's not a bug ticket. That's someone's salary arriving late.\n\nWhat fixed it: we stopped storing time and started storing intent. Each tenant declares their payroll timezone explicitly. The scheduler resolves execution time per-tenant at runtime using Luxon \u2014 not at write time. MySQL stores UTC. The application layer owns the conversion. No assumptions baked in anywhere.\n\nThe tradeoff is real: more complexity per query, a heavier test surface. We decided it was worth it. We're at 4,000+ automated tests now, and timezone edge cases have their own suite.\n\nWhat I'd do differently: model this on day one. Not after the first client goes live.\n\nIf you're building multi-tenant payroll for the GCC, \"it's just an offset\" will bite you. Usually at midnight.\n\nSee SmartPRO Hub in action \u2014 book a free 20-min demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}\n\n#BuildInPublic\n#SaaS\n#GCCTech\n#TypeScript\n#SmartPROHub",
+  "char_count": 1526,
+  "generated_at": "2026-06-01T07:47:40.149154+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 2,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true
+}

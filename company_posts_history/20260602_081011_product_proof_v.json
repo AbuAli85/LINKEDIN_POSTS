@@ -1,0 +1,20 @@
+{
+  "pillar": "product_proof",
+  "topic": "How a multi-branch operation manages payroll for four locations from one screen",
+  "format": "Open with a SmartPro Hub product capability, then show the real-world business outcome it enables",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "Four separate payroll runs. Four WPS submissions. Four chances to miss a deadline \u2014 all handled by one finance manager, from a single screen.\n\nNot a pitch. That's what SmartPro Hub customers running multi-location operations in Oman actually do every month.\n\nHere's how it works in practice:\n\nEach branch carries its own employee roster, leave balances, and WPS submission. Without the right setup, that's four spreadsheets, four bank files, and four deadlines to track manually.\n\nWith SmartPro Hub, the finance manager moves between locations inside the same dashboard. One payroll cycle. Direct bank integration. WPS submissions go out from the same screen where she approved leave requests that morning.\n\nNo consolidation step. No file transfers. No calls to branch admin asking \"did you send me the hours?\"\n\nWe built this because multi-branch businesses in Oman weren't struggling with payroll math \u2014 they were drowning in coordination. Different problem. Different fix.\n\nStarts at OMR 25/month. 14-day free trial, no credit card required.\n\nIf you're managing more than one location and still reconciling payroll by hand \u2014 how many hours does that eat up each month?\n\nBook a 20-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#WPS\n#PayrollOman\n#OmanBusiness\n#GCCBusiness",
+  "char_count": 1350,
+  "generated_at": "2026-06-02T08:10:22.394305+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260602_081012_product_proof.json"
+}

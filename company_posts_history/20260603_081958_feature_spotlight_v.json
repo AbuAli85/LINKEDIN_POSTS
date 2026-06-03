@@ -1,0 +1,20 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "Bilingual (Arabic/English) interface \u2014 why a single-language HR system fails Oman businesses",
+  "format": "Walk through a feature in 4-5 steps: what triggers it, what it does, what it prevents, who saves time",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "Dozens of HR conversations a month exist for one reason: employees can't read their own payslips.\n\nIt keeps happening in single-language HR systems across Oman, and the cost is almost always invisible until it isn't.\n\nHere's how it usually plays out:\n\nA new hire joins. Onboarding documents are English-only. He signs forms he doesn't fully understand. Wrong data, missed fields, compliance gaps \u2014 all of it surfaces later, and someone in HR spends hours cleaning up something that never needed to happen.\n\nPayroll runs. The WPS file goes out, but the employee-facing summary means nothing to half the workforce. Disputes pile up. Trust erodes quietly.\n\nSmartPro Hub cuts this off before it starts.\n\nIt runs fully bilingual \u2014 Arabic and English, side by side. Employees see their contracts, payslips, and leave requests in the language they actually work in. HR managers toggle between both. No translation layer. No workaround.\n\nCustomers report fewer payroll queries after switching. Not because employees stopped caring \u2014 because they can finally read what they're being paid.\n\nFor HR managers running WPS payroll across Oman, this matters. A workforce that can read the system trusts it. One that can't, doesn't.\n\nBook a 20-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\nWhich language do your employees actually prefer for HR documents?\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#PayrollOman\n#Omanization",
+  "char_count": 1471,
+  "generated_at": "2026-06-03T08:20:13.791525+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260603_081959_feature_spotlight.json"
+}

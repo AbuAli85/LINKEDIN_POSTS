@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-06-02T07:40:09.591125+00:00",
-  "total_posts_analyzed": 22,
+  "generated_at": "2026-06-03T07:43:28.808060+00:00",
+  "total_posts_analyzed": 24,
   "pillar_performance": {
     "pain": {
       "posts": 5,
@@ -17,7 +17,7 @@
       "avg_engagement_rate": 0.0
     },
     "proof": {
-      "posts": 5,
+      "posts": 7,
       "total_reactions": 0,
       "total_comments": 0,
       "total_shares": 0,
@@ -61,9 +61,9 @@
   },
   "hook_performance": {
     "question": 0.0,
+    "story": 0.0,
     "numbered-list": 0.0,
     "data-lead": 0.0,
-    "story": 0.0,
     "bold-statement": 0.0,
     "contrast": 0.0,
     "observation": 0.0

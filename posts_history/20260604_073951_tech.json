@@ -1,0 +1,19 @@
+{
+  "pillar": "tech",
+  "topic": "Type safety end-to-end in a multi-tenant SaaS: what tRPC + Drizzle actually buys you",
+  "format": "Describe a technical problem that took longer than it should have \u2014 what made it hard, what fixed it, what you'd do differently",
+  "language": "en",
+  "segment": "C",
+  "publish_day": "Saturday",
+  "post": "A runtime error caught a tenant ID mismatch in production. Four hours to trace it down.\n\nThat was the day I stopped treating type safety as a preference and started treating it as infrastructure.\n\nWhat we changed: tRPC wired end-to-end so the API contract and frontend share the same TypeScript types. No manual syncing. No drift. Drizzle ORM extends that guarantee down to the database layer \u2014 if a schema column changes, the compiler tells you before MySQL does.\n\nIn a multi-tenant SaaS like SmartPRO Hub, where one misconfigured query by tenant context could expose WPS payroll data or end-of-service gratuity calculations across organizations, that's not optional. That's the whole point.\n\nThe tradeoff worth being honest about: tRPC tightens frontend-backend coupling. If you own both sides, that's fine. If you ever want a public API, that coupling becomes real friction, real fast. We knew going in. We made the call.\n\n4,000+ automated tests later, the type chain from HTTP input to Drizzle query to UI component catches around 60% of logic errors before a human reviewer sees them. Not perfect. Worth it.\n\nIf you're building Ministry of Labour Oman compliance logic or payroll flows with direct bank integration \u2014 systems where a wrong answer isn't recoverable \u2014 compile-time errors are worth the coupling cost. Runtime surprises in payroll aren't debugging problems. They're trust problems.\n\nWhat's your threshold for \"good enough\" type safety before you ship to production?\n\nSee SmartPRO Hub in action \u2014 book a free 20-min demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}\n\n#BuildInPublic\n#SaaS\n#GCCTech\n#TypeScript\n#SmartPROHub",
+  "char_count": 1688,
+  "generated_at": "2026-06-04T07:39:51.072536+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 2,
+  "validation_warning": "too long (1639 chars, need <= 1500)",
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true
+}

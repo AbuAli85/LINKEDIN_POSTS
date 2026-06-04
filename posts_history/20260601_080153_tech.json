@@ -11,9 +11,10 @@
   "model": "claude-sonnet-4-6",
   "attempts": 2,
   "validation_warning": "too long (1547 chars, need <= 1500)",
-  "status": "draft",
+  "status": "approved",
   "published": false,
-  "approved": false,
-  "approval_required": true,
-  "dry_run": true
+  "approved": true,
+  "approval_required": false,
+  "dry_run": false,
+  "approved_at": "2026-06-04T21:12:47.011283+00:00"
 }

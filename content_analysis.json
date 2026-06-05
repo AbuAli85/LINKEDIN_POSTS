@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-06-04T07:39:28.055112+00:00",
-  "total_posts_analyzed": 24,
+  "generated_at": "2026-06-05T07:30:56.255199+00:00",
+  "total_posts_analyzed": 25,
   "pillar_performance": {
     "pain": {
       "posts": 5,
@@ -30,6 +30,13 @@
       "total_shares": 0,
       "avg_engagement_rate": 0.0
     },
+    "vision": {
+      "posts": 2,
+      "total_reactions": 0,
+      "total_comments": 0,
+      "total_shares": 0,
+      "avg_engagement_rate": 0.0
+    },
     "leadership": {
       "posts": 2,
       "total_reactions": 0,
@@ -38,13 +45,6 @@
       "avg_engagement_rate": 0.0
     },
     "pain_ar": {
-      "posts": 1,
-      "total_reactions": 0,
-      "total_comments": 0,
-      "total_shares": 0,
-      "avg_engagement_rate": 0.0
-    },
-    "vision": {
       "posts": 1,
       "total_reactions": 0,
       "total_comments": 0,
@@ -73,9 +73,9 @@
     "sanad_pro_ar": 1.0,
     "proof": 1.0,
     "sanad_pro": 1.0,
+    "vision": 1.0,
     "leadership": 1.0,
     "pain_ar": 1.0,
-    "vision": 1.0,
     "marketing": 1.0
   },
   "best_pillar": "pain",
@@ -85,9 +85,9 @@
     "sanad_pro_ar",
     "proof",
     "sanad_pro",
+    "vision",
     "leadership",
     "pain_ar",
-    "vision",
     "marketing"
   ],
   "demo_pipeline": {}

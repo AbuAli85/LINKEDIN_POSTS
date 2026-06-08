@@ -77,17 +77,20 @@ a{color:inherit;text-decoration:none}
 .action-item{background:#161618;border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:10px 12px;display:flex;align-items:flex-start;gap:10px;cursor:default}
 .action-item.urgent{border-left:3px solid #e8372a}
 .action-item.due{border-left:3px solid #d4840a}
+.action-item.ok{border-left:3px solid rgba(34,197,94,.4)}
 .action-seg{width:28px;height:28px;border-radius:6px;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'DM Mono',monospace}
 .seg-a{background:rgba(34,197,94,.15);color:#22c55e}
 .seg-b{background:rgba(129,140,248,.15);color:#818cf8}
 .seg-c{background:rgba(56,189,248,.15);color:#38bdf8}
 .action-body{flex:1;min-width:0}
-.action-name{font-size:13px;font-weight:500;color:#ede9e3}
+.action-name{font-size:13px;font-weight:500;color:#ede9e3;display:flex;align-items:center;gap:4px}
 .action-task{font-size:11px;color:rgba(255,255,255,.45);margin-top:2px;line-height:1.4}
 .action-meta{font-size:10px;color:rgba(255,255,255,.25);font-family:'DM Mono',monospace;margin-top:3px}
 .action-right{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:4px}
 .overdue-badge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;background:rgba(232,55,42,.15);color:#e8372a;font-family:'DM Mono',monospace;white-space:nowrap}
 .step-badge{font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.4);font-family:'DM Mono',monospace}
+.li-link{font-size:10px;color:#7dd3fc;opacity:.65;text-decoration:none;flex-shrink:0;transition:opacity .15s}
+.li-link:hover{opacity:1}
 
 /* ── PIPELINE TABLE ── */
 .table-wrap{width:100%;overflow-x:auto}
@@ -99,7 +102,7 @@ td{padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.05);vertical-align
 tr:hover td{background:rgba(255,255,255,.02)}
 tr.converted td{opacity:.45}
 .td-id{font-family:'DM Mono',monospace;font-size:10px;color:rgba(255,255,255,.3)}
-.td-name{font-weight:500;color:#ede9e3;white-space:nowrap}
+.td-name{font-weight:500;color:#ede9e3;white-space:nowrap;cursor:help}
 .td-co{font-size:11px;color:rgba(255,255,255,.4);white-space:nowrap;max-width:160px;overflow:hidden;text-overflow:ellipsis}
 .seg-pill{display:inline-flex;align-items:center;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;font-family:'DM Mono',monospace}
 .sp-a{background:rgba(34,197,94,.1);color:#22c55e}
@@ -112,11 +115,13 @@ tr.converted td{opacity:.45}
 .overdue-txt{font-size:10px;color:#e8372a;font-family:'DM Mono',monospace}
 .due-txt{font-size:10px;color:#d4840a;font-family:'DM Mono',monospace}
 .ok-txt{font-size:10px;color:#22c55e;font-family:'DM Mono',monospace}
-.row-actions{display:flex;gap:5px;align-items:center}
-.mini-btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.55);font-size:10px;padding:3px 8px;border-radius:4px;cursor:pointer;transition:all .15s;font-family:inherit;white-space:nowrap}
+.row-actions{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+.mini-btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.55);font-size:10px;padding:3px 8px;border-radius:4px;cursor:pointer;transition:all .15s;font-family:inherit;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center}
 .mini-btn:hover{background:rgba(255,255,255,.08);color:#ede9e3}
 .mini-btn.convert{background:rgba(34,197,94,.08);border-color:rgba(34,197,94,.2);color:#4ade80}
 .mini-btn.convert:hover{background:rgba(34,197,94,.15)}
+.mini-btn.linkedin{background:rgba(10,102,194,.08);border-color:rgba(10,102,194,.25);color:#7dd3fc}
+.mini-btn.linkedin:hover{background:rgba(10,102,194,.18);color:#bae6fd}
 
 /* ── FILTER BAR ── */
 .filter-bar{padding:10px 16px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
@@ -124,7 +129,9 @@ tr.converted td{opacity:.45}
 .filter-input:focus{border-color:rgba(34,197,94,.4)}
 .filter-chip{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.5);font-size:11px;padding:4px 11px;border-radius:20px;cursor:pointer;transition:all .15s;font-family:inherit}
 .filter-chip:hover,.filter-chip.active{background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.3);color:#4ade80}
-.filter-count{font-size:11px;color:rgba(255,255,255,.3);margin-left:auto;font-family:'DM Mono',monospace}
+.filter-count{font-size:11px;color:rgba(255,255,255,.3);font-family:'DM Mono',monospace}
+.export-btn{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.4);font-size:11px;padding:4px 11px;border-radius:6px;cursor:pointer;transition:all .15s;font-family:inherit;display:inline-flex;align-items:center;gap:4px;margin-left:auto}
+.export-btn:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.7)}
 
 /* ── MODAL ── */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:center;justify-content:center;backdrop-filter:blur(2px)}
@@ -177,6 +184,13 @@ footer a:hover{color:rgba(255,255,255,.7)}
 .toast.success{border-left:3px solid #22c55e}
 .toast.error{border-left:3px solid #e8372a}
 @keyframes slidein{from{transform:translateX(20px);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* ── SHOW MORE BTN ── */
+.show-more-btn{width:100%;margin-top:6px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.4);font-size:11px;padding:8px;border-radius:6px;cursor:pointer;font-family:inherit;transition:all .15s;display:block}
+.show-more-btn:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.7)}
+
+/* ── STEP PROGRESS BAR ── */
+.step-pct{font-size:9px;color:rgba(255,255,255,.25);font-family:'DM Mono',monospace;margin-top:1px}
 </style>
 </head>
 <body>
@@ -194,7 +208,7 @@ footer a:hover{color:rgba(255,255,255,.7)}
     <span id="last-refresh" style="font-size:11px;color:rgba(255,255,255,.35);font-family:'DM Mono',monospace"></span>
     <a href="index.html" class="tb-btn">← Dashboard</a>
     <button class="tb-btn" onclick="openCaptureModal()" style="background:rgba(56,189,248,.1);color:#7dd3fc;border-color:rgba(56,189,248,.25)">&#xFF0B; Capture Lead</button>
-    <a href="https://github.com/AbuAli85/LINKEDIN_POSTS/actions/workflows/auto-post.yml" target="_blank" rel="noopener" class="tb-btn primary">&#9654; Run Outreach</a>
+    <a href="https://github.com/AbuAli85/LINKEDIN_POSTS/actions/workflows/outreach.yml" target="_blank" rel="noopener" class="tb-btn primary">&#9654; Run Outreach</a>
   </div>
 </div>
 
@@ -218,18 +232,12 @@ footer a:hover{color:rgba(255,255,255,.7)}
 <!-- ══ MAIN ══ -->
 <div class="main">
 
-  <!-- Setup guidance -->
+  <!-- Setup guidance — populated dynamically by renderSetupBanner() -->
   <div class="setup-banner" id="setup-banner">
-    <strong>🚀 Getting leads into the pipeline — what's working and what needs action</strong>
-    <ol>
-      <li><strong>23 posts published</strong> on LinkedIn. CTA comments failing (need LINKEDIN_COMMENT_TOKEN with Community Management API scope).</li>
-      <li><strong>20 leads captured</strong> from LinkedIn engagement — all seeded into outreach_tracker.json.</li>
-      <li><strong>Outreach is overdue:</strong> all 20 leads started May 27. Run the GitHub Actions workflow now to advance sequences.</li>
-      <li><strong>To fix CTA comments:</strong> add <code style="font-family:'DM Mono',monospace;font-size:11px;color:#818cf8">LINKEDIN_COMMENT_TOKEN</code> secret with Community Management API + w_member_social scope.</li>
-    </ol>
+    <strong>🚀 Loading pipeline status…</strong>
   </div>
 
-  <!-- Funnel + Today's Actions side by side -->
+  <!-- Funnel + Revenue side by side -->
   <div class="grid2">
 
     <!-- Sales Funnel -->
@@ -287,12 +295,13 @@ footer a:hover{color:rgba(255,255,255,.7)}
       <span class="panel-badge" id="pipeline-count" style="background:rgba(56,189,248,.1);color:#38bdf8"></span>
     </div>
     <div class="filter-bar">
-      <input type="text" class="filter-input" id="search-input" placeholder="Search name or company…" oninput="renderTable()">
+      <input type="text" class="filter-input" id="search-input" placeholder="Search name or company… (press /)" oninput="renderTable()">
       <button class="filter-chip active" data-seg="all" onclick="setSeg(this)">All</button>
       <button class="filter-chip" data-seg="A" onclick="setSeg(this)">Seg A · HR</button>
       <button class="filter-chip" data-seg="B" onclick="setSeg(this)">Seg B · Investors</button>
       <button class="filter-chip" data-seg="C" onclick="setSeg(this)">Seg C · Tech</button>
       <span class="filter-count" id="table-count"></span>
+      <button class="export-btn" onclick="exportCSV()" title="Download as CSV">⬇ Export CSV</button>
     </div>
     <div class="table-wrap">
       <table>
@@ -315,7 +324,7 @@ footer a:hover{color:rgba(255,255,255,.7)}
     </div>
   </div>
 
-  <!-- Segment Breakdown -->
+  <!-- Segment Breakdown + System Health -->
   <div class="grid2">
     <div class="panel">
       <div class="panel-head"><span class="panel-title">Segment Breakdown</span></div>
@@ -393,13 +402,13 @@ footer a:hover{color:rgba(255,255,255,.7)}
 <div id="toast-container"></div>
 
 <script>
-const REPO   = 'AbuAli85/LINKEDIN_POSTS';
-const BRANCH = 'claude/linkedin-post-automation-lQiJZ';
-const WORKFLOW = 'auto-post.yml';
-const RAW = `https://raw.githubusercontent.com/${REPO}/${BRANCH}`;
-const API = `https://api.github.com/repos/${REPO}`;
+const REPO     = 'AbuAli85/LINKEDIN_POSTS';
+const BRANCH   = 'claude/linkedin-post-automation-lQiJZ';
+const WORKFLOW = 'outreach.yml';          // ← fixed: was auto-post.yml
+const RAW      = `https://raw.githubusercontent.com/${REPO}/${BRANCH}`;
+const API      = `https://api.github.com/repos/${REPO}`;
 const AVG_DEAL = 2400; // OMR/year
-const TODAY = new Date('2026-06-09');
+const TODAY    = new Date();              // ← fixed: was hardcoded '2026-06-09'
 
 // Step sequences per segment
 const SEQ = {
@@ -432,9 +441,17 @@ const SEQ = {
 };
 
 let prospects = [];
-let sortKey = 'overdue';
-let sortDir = -1; // -1 = desc
 let segFilter = 'all';
+let actionsExpanded = false;
+const ACTIONS_MAX = 8;
+let _postCount = 0; // set by renderAll, used by renderSysHealth
+
+// ── HELPERS ──
+function initials(name) {
+  const parts = (name || '?').trim().split(/\s+/);
+  if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  return (name || '?').slice(0, 2).toUpperCase();
+}
 
 function daysSince(dateStr) {
   const d = new Date(dateStr);
@@ -445,7 +462,7 @@ function getOverdueDays(p) {
   const elapsed = daysSince(p.started_at);
   const seq = SEQ[p.segment];
   if (!seq) return 0;
-  const stepIdx = (p.current_step || 1) - 1; // 0-indexed
+  const stepIdx = (p.current_step || 1) - 1;
   const stepDueDay = Math.floor((seq.days / seq.total) * stepIdx);
   return Math.max(0, elapsed - stepDueDay);
 }
@@ -458,7 +475,7 @@ function getNextAction(p) {
 }
 
 function getStepTotal(p) {
-  return (SEQ[p.segment] || {total: 3}).total;
+  return (SEQ[p.segment] || { total: 3 }).total;
 }
 
 // ── LOAD DATA ──
@@ -473,7 +490,7 @@ async function loadData() {
       prospects = await trackerRes.value.json();
     }
 
-    let postCount = 23;
+    let postCount = 0;
     if (postsRes.status === 'fulfilled' && postsRes.value.ok) {
       try {
         const analytics = await postsRes.value.json();
@@ -483,7 +500,7 @@ async function loadData() {
 
     renderAll(postCount);
     document.getElementById('last-refresh').textContent = 'Updated ' + new Date().toLocaleTimeString();
-    document.getElementById('footer-ts').textContent = 'Data from: ' + BRANCH.slice(0,30) + '…';
+    document.getElementById('footer-ts').textContent = 'Branch: ' + BRANCH.slice(0, 35) + '…';
   } catch(e) {
     document.getElementById('alert-bar').style.display = 'flex';
     document.getElementById('alert-msg').textContent = 'Could not load pipeline data: ' + e.message;
@@ -492,21 +509,23 @@ async function loadData() {
 }
 
 function renderAll(postCount) {
-  const active   = prospects.filter(p => p.status === 'active').length;
+  _postCount = postCount;
+  const active    = prospects.filter(p => p.status === 'active').length;
   const converted = prospects.filter(p => p.converted_at).length;
-  const pipeline = (active - converted) * AVG_DEAL;
-  const overdue  = prospects.filter(p => getOverdueDays(p) > 0);
+  const pipeline  = (active - converted) * AVG_DEAL;
+  const overdue   = prospects.filter(p => !p.converted_at && getOverdueDays(p) > 0);
 
   // KPIs
-  document.getElementById('kpi-posts').textContent = postCount;
+  document.getElementById('kpi-posts').textContent = postCount || '–';
   document.getElementById('kpi-leads').textContent = prospects.length;
   document.getElementById('kpi-active').textContent = active;
   document.getElementById('kpi-converted').textContent = converted;
   document.getElementById('kpi-arr').textContent = pipeline.toLocaleString();
 
-  // Alert
+  // Alert banner
   const alertBar = document.getElementById('alert-bar');
   if (overdue.length > 0) {
+    alertBar.className = 'alert-bar urgent';
     alertBar.style.display = 'flex';
     const maxOverdue = Math.max(...overdue.map(p => getOverdueDays(p)));
     document.getElementById('alert-msg').textContent =
@@ -518,6 +537,7 @@ function renderAll(postCount) {
     alertBar.style.display = 'flex';
   }
 
+  renderSetupBanner(postCount, overdue.length, prospects.length);
   renderFunnel(postCount, prospects.length, converted);
   updateRevModel(document.getElementById('cvr-slider').value);
   renderActions();
@@ -526,40 +546,73 @@ function renderAll(postCount) {
   renderSysHealth();
 }
 
+// ── SETUP BANNER (dynamic) ──
+function renderSetupBanner(postCount, overdueCnt, total) {
+  const banner = document.getElementById('setup-banner');
+  if (!banner) return;
+  const dateStr = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  const overdueItem = overdueCnt > 0
+    ? `<strong>Outreach overdue:</strong> ${overdueCnt} of ${total} leads waiting on next touch. Click <em>Trigger Outreach Bot</em> to advance sequences.`
+    : `<strong>All sequences on track</strong> — no overdue outreach. Next cron will auto-advance when steps are due.`;
+  const postsItem = postCount > 0
+    ? `<strong>${postCount} posts live</strong> on LinkedIn.`
+    : `<strong>No posts yet</strong> — publish LinkedIn content to start capturing leads.`;
+  banner.innerHTML = `
+    <strong>🚀 Pipeline status as of ${dateStr}</strong>
+    <ol>
+      <li>${postsItem} CTA comments need LINKEDIN_COMMENT_TOKEN with Community Management API scope.</li>
+      <li><strong>${total} real leads</strong> in the pipeline — Segment A HR managers &amp; CEOs from Oman LinkedIn research.</li>
+      <li>${overdueItem}</li>
+      <li><strong>To fix CTA comments:</strong> add <code style="font-family:'DM Mono',monospace;font-size:11px;color:#818cf8">LINKEDIN_COMMENT_TOKEN</code> secret with Community Management API + w_member_social scope.</li>
+    </ol>`;
+}
+
+// ── FALLBACK (no fake data) ──
 function renderFallback() {
-  prospects = Array.from({length:20}, (_,i) => ({
-    id:`OA-${String(i+1).padStart(3,'0')}`,
-    name:'–', company:'–', segment: i<15?'A':i<18?'B':'C',
-    started_at:'2026-05-27', status:'active', current_step:1, notes:''
-  }));
-  renderAll(23);
+  prospects = [];
+  document.getElementById('kpi-posts').textContent = '–';
+  document.getElementById('kpi-leads').textContent = '0';
+  document.getElementById('kpi-active').textContent = '0';
+  document.getElementById('kpi-converted').textContent = '0';
+  document.getElementById('kpi-arr').textContent = '0';
+  const banner = document.getElementById('setup-banner');
+  if (banner) banner.innerHTML = '<strong style="color:#f87171">⚠ Could not load outreach_tracker.json from GitHub.</strong> Check the branch name and raw URL are correct.';
+  document.getElementById('action-list').innerHTML =
+    '<div class="empty">No pipeline data — verify GitHub raw URL and branch</div>';
+  document.getElementById('pipeline-tbody').innerHTML =
+    '<tr><td colspan="8" class="empty">No data loaded — check console for errors</td></tr>';
+  document.getElementById('funnel-chart').innerHTML = '';
+  document.getElementById('seg-breakdown').innerHTML =
+    '<div class="empty">No segment data</div>';
+  renderSysHealth();
 }
 
 // ── FUNNEL ──
 function renderFunnel(posts, leads, converted) {
+  const inDMs = prospects.filter(p => p.current_step > 1).length;
   const stages = [
-    { label:'Posts', n: posts, color:'#38bdf8' },
-    { label:'~Impressions', n: Math.round(posts*100), color:'#818cf8' },
-    { label:'~Comments', n: Math.round(posts*2), color:'#a78bfa' },
-    { label:'Leads', n: leads, color:'#22d3ee' },
-    { label:'In DMs', n: prospects.filter(p=>p.current_step>1).length, color:'#f59e0b' },
-    { label:'Demos', n: 0, color:'#f97316' },
-    { label:'Customers', n: converted, color:'#22c55e' },
+    { label: 'Posts',         n: posts,                color: '#38bdf8' },
+    { label: '~Impressions',  n: Math.round(posts*100), color: '#818cf8' },
+    { label: '~Comments',     n: Math.round(posts*2),   color: '#a78bfa' },
+    { label: 'Leads',         n: leads,                 color: '#22d3ee' },
+    { label: 'In DMs',        n: inDMs,                 color: '#f59e0b' },
+    { label: 'Demos',         n: 0,                     color: '#f97316' },
+    { label: 'Customers',     n: converted,             color: '#22c55e' },
   ];
-  const max = Math.max(...stages.map(s=>s.n), 1);
-  const html = stages.map(s => {
+  const max = Math.max(...stages.map(s => s.n), 1);
+  const html = stages.map((s, i) => {
     const pct = Math.max(8, Math.round((s.n / max) * 100));
-    const prevN = stages[stages.indexOf(s)-1];
-    const cvr = prevN && prevN.n > 0 ? (s.n/prevN.n*100).toFixed(0)+'%' : '';
+    const prev = stages[i - 1];
+    const cvr = prev && prev.n > 0 ? (s.n / prev.n * 100).toFixed(0) + '%' : '';
     return `<div class="funnel-bar-wrap">
-      <div class="funnel-n">${s.n >= 1000 ? (s.n/1000).toFixed(1)+'k' : s.n}</div>
+      <div class="funnel-n">${s.n >= 1000 ? (s.n / 1000).toFixed(1) + 'k' : s.n}</div>
       <div class="funnel-bar" style="height:${pct}px;background:${s.color};opacity:.8" title="${s.label}: ${s.n}"></div>
       <div class="funnel-l">${s.label}</div>
       ${cvr ? `<div class="funnel-pct">${cvr}</div>` : '<div class="funnel-pct"></div>'}
     </div>`;
   }).join('');
   document.getElementById('funnel-chart').innerHTML = html;
-  const postToCustomer = posts > 0 ? (converted/posts*100).toFixed(2) : '0.00';
+  const postToCustomer = posts > 0 ? (converted / posts * 100).toFixed(2) : '0.00';
   document.getElementById('funnel-cvr').textContent = `Post→Customer: ${postToCustomer}%`;
 }
 
@@ -577,41 +630,61 @@ function updateRevModel(pct) {
   document.getElementById('kpi-arr').textContent = pipeline.toLocaleString();
 }
 
-// ── TODAY'S ACTIONS ──
+// ── TODAY'S ACTIONS (all overdue, with show more/fewer) ──
 function renderActions() {
-  const sorted = [...prospects]
+  const allActive = [...prospects]
     .filter(p => !p.converted_at && p.status === 'active')
-    .sort((a,b) => getOverdueDays(b) - getOverdueDays(a))
-    .slice(0, 8);
+    .sort((a, b) => getOverdueDays(b) - getOverdueDays(a));
 
-  if (!sorted.length) {
-    document.getElementById('action-list').innerHTML = '<div class="empty">No active prospects</div>';
+  if (!allActive.length) {
+    document.getElementById('action-list').innerHTML = '<div class="empty">No active prospects in pipeline</div>';
     document.getElementById('actions-badge').textContent = '0 actions';
     return;
   }
 
-  const totalDue = prospects.filter(p => !p.converted_at && getOverdueDays(p) > 0).length;
+  const totalDue = allActive.filter(p => getOverdueDays(p) > 0).length;
   document.getElementById('actions-badge').textContent = totalDue + ' overdue';
 
-  document.getElementById('action-list').innerHTML = sorted.map(p => {
+  const visible = actionsExpanded ? allActive : allActive.slice(0, ACTIONS_MAX);
+  const remaining = allActive.length - ACTIONS_MAX;
+
+  const items = visible.map(p => {
     const od = getOverdueDays(p);
     const isUrgent = od > 7;
+    const urgClass = od > 0 ? (isUrgent ? 'urgent' : 'due') : 'ok';
     const segClass = 'seg-' + p.segment.toLowerCase();
     const nextAction = getNextAction(p);
     const stepTotal = getStepTotal(p);
-    return `<div class="action-item ${isUrgent?'urgent':'due'}">
-      <div class="action-seg ${segClass}">S${p.segment}</div>
+    const ini = initials(p.name);
+    const liLink = p.linkedin_url
+      ? `<a href="${p.linkedin_url}" target="_blank" rel="noopener" class="li-link" title="Open LinkedIn profile">↗</a>`
+      : '';
+    const odBadge = od > 0
+      ? `<span class="overdue-badge">${od}d overdue</span>`
+      : `<span class="step-badge" style="color:#4ade80;background:rgba(34,197,94,.1)">on track</span>`;
+    return `<div class="action-item ${urgClass}">
+      <div class="action-seg ${segClass}">${ini}</div>
       <div class="action-body">
-        <div class="action-name">${p.name}</div>
+        <div class="action-name">${p.name}${liLink}</div>
         <div class="action-task">${nextAction}</div>
-        <div class="action-meta">${p.company} · Step ${p.current_step}/${stepTotal}</div>
+        <div class="action-meta">${p.company || '–'} · Step ${p.current_step}/${stepTotal}</div>
       </div>
       <div class="action-right">
-        <span class="overdue-badge">${od}d overdue</span>
+        ${odBadge}
         <span class="step-badge">Step ${p.current_step}</span>
       </div>
     </div>`;
   }).join('');
+
+  let showBtn = '';
+  if (allActive.length > ACTIONS_MAX) {
+    const label = actionsExpanded
+      ? '▲ Show fewer'
+      : `▼ Show all ${allActive.length} leads (${remaining} more)`;
+    showBtn = `<button class="show-more-btn" onclick="actionsExpanded=!actionsExpanded;renderActions()">${label}</button>`;
+  }
+
+  document.getElementById('action-list').innerHTML = items + showBtn;
 }
 
 // ── PIPELINE TABLE ──
@@ -636,7 +709,7 @@ function renderTable() {
 
   if (segFilter !== 'all') rows = rows.filter(p => p.segment === segFilter);
   if (q) rows = rows.filter(p =>
-    p.name.toLowerCase().includes(q) || p.company.toLowerCase().includes(q)
+    (p.name || '').toLowerCase().includes(q) || (p.company || '').toLowerCase().includes(q)
   );
 
   rows.sort((a, b) => {
@@ -646,8 +719,8 @@ function renderTable() {
     } else if (_sortCol === 'current_step') {
       av = a.current_step; bv = b.current_step;
     } else {
-      av = (a[_sortCol]||'').toString().toLowerCase();
-      bv = (b[_sortCol]||'').toString().toLowerCase();
+      av = (a[_sortCol] || '').toString().toLowerCase();
+      bv = (b[_sortCol] || '').toString().toLowerCase();
     }
     return av < bv ? _sortDir : av > bv ? -_sortDir : 0;
   });
@@ -665,75 +738,123 @@ function renderTable() {
     const od = getOverdueDays(p);
     const segClass = p.segment === 'A' ? 'sp-a' : p.segment === 'B' ? 'sp-b' : 'sp-c';
     const stepTotal = getStepTotal(p);
-    const dots = Array.from({length:stepTotal},(_,i) =>
-      `<span class="step-dot ${i < p.current_step-1 ? 'done' : i === p.current_step-1 ? 'current' : ''}"></span>`
+    const stepPct = Math.round(((p.current_step - 1) / (stepTotal - 1 || 1)) * 100);
+    const dots = Array.from({ length: stepTotal }, (_, i) =>
+      `<span class="step-dot ${i < p.current_step - 1 ? 'done' : i === p.current_step - 1 ? 'current' : ''}"></span>`
     ).join('');
     const overdueCell = od > 0
       ? `<span class="overdue-txt">⚠ ${od}d overdue</span>`
       : `<span class="ok-txt">on track</span>`;
-    const nextAction = getNextAction(p).slice(0,42) + (getNextAction(p).length > 42 ? '…' : '');
+    const nextActionFull = getNextAction(p);
+    const nextActionShort = nextActionFull.length > 46 ? nextActionFull.slice(0, 46) + '…' : nextActionFull;
     const isConverted = !!p.converted_at;
-    return `<tr class="${isConverted?'converted':''}">
+    const notesTitle = (p.notes || '').replace(/"/g, "'");
+    const liBtn = p.linkedin_url
+      ? `<a href="${p.linkedin_url}" target="_blank" rel="noopener" class="mini-btn linkedin" title="Open LinkedIn profile">in ↗</a>`
+      : '';
+    return `<tr class="${isConverted ? 'converted' : ''}">
       <td class="td-id">${p.id}</td>
-      <td class="td-name">${p.name}</td>
-      <td class="td-co" title="${p.company}">${p.company}</td>
+      <td class="td-name" title="${notesTitle || 'No notes'}">${p.name}</td>
+      <td class="td-co" title="${p.company}">${p.company || '–'}</td>
       <td><span class="seg-pill ${segClass}">Seg ${p.segment}</span></td>
       <td>
         <div class="step-ring">${dots}</div>
-        <div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:2px;font-family:'DM Mono',monospace">Step ${p.current_step}/${stepTotal}</div>
+        <div class="step-pct">Step ${p.current_step}/${stepTotal} · ${stepPct}%</div>
       </td>
       <td>${overdueCell}</td>
-      <td style="font-size:11px;color:rgba(255,255,255,.4);max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${nextAction}</td>
+      <td style="font-size:11px;color:rgba(255,255,255,.4);max-width:190px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${nextActionFull}">${nextActionShort}</td>
       <td>
         <div class="row-actions">
+          ${liBtn}
           <button class="mini-btn" onclick="openRunModal()" title="Trigger outreach bot">▶ Run</button>
-          ${!isConverted ? `<button class="mini-btn convert" onclick="openConvertModal('${p.id}','${p.name.replace(/'/g,"\\'")}')">✓ Won</button>` : '<span style="font-size:10px;color:#22c55e">Converted ✓</span>'}
+          ${!isConverted
+            ? `<button class="mini-btn convert" onclick="openConvertModal('${p.id}','${p.name.replace(/'/g, "\\'")}')">✓ Won</button>`
+            : '<span style="font-size:10px;color:#22c55e">Converted ✓</span>'}
         </div>
       </td>
     </tr>`;
   }).join('');
 }
 
+// ── EXPORT CSV ──
+function exportCSV() {
+  const headers = ['ID', 'Name', 'Company', 'Segment', 'Step', 'Started', 'Status', 'Overdue Days', 'Next Action', 'LinkedIn URL', 'Notes'];
+  const rows = prospects.map(p => [
+    p.id,
+    `"${(p.name || '').replace(/"/g, '""')}"`,
+    `"${(p.company || '').replace(/"/g, '""')}"`,
+    p.segment,
+    p.current_step,
+    p.started_at,
+    p.status,
+    getOverdueDays(p),
+    `"${getNextAction(p).replace(/"/g, '""')}"`,
+    p.linkedin_url || '',
+    `"${(p.notes || '').replace(/"/g, '""')}"`
+  ].join(','));
+  const csv = [headers.join(','), ...rows].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `smartpro-pipeline-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Pipeline exported to CSV', 'success');
+}
+
 // ── SEGMENT BREAKDOWN ──
 function renderSegBreakdown() {
-  const segs = {A:{label:'Seg A · HR & Business',color:'#22c55e',count:0,converted:0},
-                B:{label:'Seg B · Investors & Gov',color:'#818cf8',count:0,converted:0},
-                C:{label:'Seg C · Tech Founders',color:'#38bdf8',count:0,converted:0}};
+  const segs = {
+    A: { label: 'Seg A · HR & Business',  color: '#22c55e', count: 0, converted: 0 },
+    B: { label: 'Seg B · Investors & Gov', color: '#818cf8', count: 0, converted: 0 },
+    C: { label: 'Seg C · Tech Founders',  color: '#38bdf8', count: 0, converted: 0 }
+  };
   prospects.forEach(p => {
     if (segs[p.segment]) {
       segs[p.segment].count++;
       if (p.converted_at) segs[p.segment].converted++;
     }
   });
-  document.getElementById('seg-breakdown').innerHTML = Object.entries(segs).map(([k,v]) => {
-    const pct = v.count > 0 ? Math.round((v.converted/v.count)*100) : 0;
+  document.getElementById('seg-breakdown').innerHTML = Object.entries(segs).map(([k, v]) => {
+    const pct = v.count > 0 ? Math.round((v.converted / v.count) * 100) : 0;
     return `<div style="margin-bottom:12px">
       <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
         <span style="color:${v.color};font-weight:500">${v.label}</span>
-        <span style="font-family:'DM Mono',monospace;font-size:10px;color:rgba(255,255,255,.4)">${v.converted}/${v.count} (${pct}%)</span>
+        <span style="font-family:'DM Mono',monospace;font-size:10px;color:rgba(255,255,255,.4)">${v.converted}/${v.count} converted (${pct}%)</span>
       </div>
       <div style="height:5px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden">
-        <div style="width:${Math.max(pct,2)}%;height:100%;background:${v.color};border-radius:3px"></div>
+        <div style="width:${Math.max(pct, v.count > 0 ? 2 : 0)}%;height:100%;background:${v.color};border-radius:3px"></div>
       </div>
     </div>`;
   }).join('');
 }
 
-// ── SYSTEM HEALTH ──
+// ── SYSTEM HEALTH (dynamic) ──
 function renderSysHealth() {
+  const total = prospects.length;
+  const overdueCnt = prospects.filter(p => !p.converted_at && getOverdueDays(p) > 0).length;
   const checks = [
-    { label:'LinkedIn Access Token',  ok: true,  note:'Publishing works (23 posts live)' },
-    { label:'CTA Comment Token',      ok: false, note:'Set LINKEDIN_COMMENT_TOKEN (Community API needed)' },
-    { label:'LinkedIn Read Token',    ok: false, note:'Missing r_member_social scope — metrics = 0' },
-    { label:'Outreach Pipeline',      ok: false, note:'20 leads overdue — run outreach workflow' },
-    { label:'leads.csv',              ok: true,  note:'20 leads seeded from outreach_tracker.json' },
-    { label:'GitHub Actions',         ok: true,  note:'Workflow configured and running' },
+    { label: 'LinkedIn Access Token',  ok: true,
+      note: _postCount > 0 ? `Publishing works (${_postCount} posts live)` : 'Token active — no posts yet' },
+    { label: 'CTA Comment Token',      ok: false,
+      note: 'Set LINKEDIN_COMMENT_TOKEN (Community API needed)' },
+    { label: 'LinkedIn Read Token',    ok: false,
+      note: 'Missing r_member_social scope — engagement metrics = 0' },
+    { label: 'Outreach Pipeline',      ok: overdueCnt === 0,
+      note: overdueCnt > 0
+        ? `${overdueCnt} of ${total} leads overdue — run outreach workflow`
+        : total > 0 ? `All ${total} sequences on track` : 'No leads in pipeline' },
+    { label: 'leads.csv',              ok: total > 0,
+      note: total > 0 ? `${total} leads seeded from outreach_tracker.json` : 'No leads loaded' },
+    { label: 'GitHub Actions',         ok: true,
+      note: 'Workflow configured and running' },
   ];
   document.getElementById('sys-health').innerHTML = checks.map(c => `
     <div style="display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)">
-      <span style="flex-shrink:0;width:16px;height:16px;border-radius:50%;background:${c.ok?'rgba(34,197,94,.15)':'rgba(232,55,42,.12)'};color:${c.ok?'#22c55e':'#e8372a'};display:flex;align-items:center;justify-content:center;font-size:9px;margin-top:1px">${c.ok?'✓':'✗'}</span>
+      <span style="flex-shrink:0;width:16px;height:16px;border-radius:50%;background:${c.ok ? 'rgba(34,197,94,.15)' : 'rgba(232,55,42,.12)'};color:${c.ok ? '#22c55e' : '#e8372a'};display:flex;align-items:center;justify-content:center;font-size:9px;margin-top:1px">${c.ok ? '✓' : '✗'}</span>
       <div>
-        <div style="font-size:12px;font-weight:500;color:${c.ok?'#ede9e3':'rgba(255,255,255,.6)'}">${c.label}</div>
+        <div style="font-size:12px;font-weight:500;color:${c.ok ? '#ede9e3' : 'rgba(255,255,255,.6)'}">${c.label}</div>
         <div style="font-size:11px;color:rgba(255,255,255,.3);margin-top:1px">${c.note}</div>
       </div>
     </div>`).join('');
@@ -747,23 +868,23 @@ function openRunModal() {
   btn.textContent = '▶ Dispatch Workflow'; btn.disabled = false;
   setTimeout(() => document.getElementById('run-pat').focus(), 50);
 }
-function closeRunModal() {
-  document.getElementById('run-modal').classList.remove('open');
-}
-document.getElementById('run-modal').addEventListener('click', e => { if(e.target===e.currentTarget) closeRunModal(); });
+function closeRunModal() { document.getElementById('run-modal').classList.remove('open'); }
+document.getElementById('run-modal').addEventListener('click', e => { if (e.target === e.currentTarget) closeRunModal(); });
 
 async function confirmRun() {
   const pat = document.getElementById('run-pat').value.trim();
   const st  = document.getElementById('run-status');
   const btn = document.getElementById('run-confirm-btn');
-  if (!pat) { st.style.color='#e8372a'; st.textContent='Enter your GitHub PAT (workflow scope).'; return; }
+  if (!pat) { st.style.color = '#e8372a'; st.textContent = 'Enter your GitHub PAT (workflow scope).'; return; }
   btn.textContent = 'Dispatching…'; btn.disabled = true; st.textContent = '';
   try {
     const resp = await fetch(
       `${API}/actions/workflows/${WORKFLOW}/dispatches`,
-      { method: 'POST',
+      {
+        method: 'POST',
         headers: { 'Authorization': `Bearer ${pat}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ref: BRANCH, inputs: { action: 'fetch_comments' } }) }
+        body: JSON.stringify({ ref: BRANCH, inputs: { action: 'fetch_comments' } })
+      }
     );
     if (resp.status === 204) {
       closeRunModal();
@@ -775,8 +896,8 @@ async function confirmRun() {
       btn.textContent = '▶ Dispatch Workflow'; btn.disabled = false;
     }
   } catch(e) {
-    st.style.color='#e8372a'; st.textContent='Network error: '+e.message;
-    btn.textContent='▶ Dispatch Workflow'; btn.disabled=false;
+    st.style.color = '#e8372a'; st.textContent = 'Network error: ' + e.message;
+    btn.textContent = '▶ Dispatch Workflow'; btn.disabled = false;
   }
 }
 
@@ -784,17 +905,15 @@ async function confirmRun() {
 function openConvertModal(id, name) {
   document.getElementById('convert-prospect-id').value = id;
   document.getElementById('convert-prospect-name').textContent = name;
-  document.getElementById('convert-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('convert-date').value = new Date().toISOString().slice(0, 10);
   document.getElementById('convert-status').textContent = '';
   const btn = document.getElementById('convert-confirm-btn');
   btn.textContent = '🎉 Mark Converted'; btn.disabled = false;
   document.getElementById('convert-modal').classList.add('open');
   setTimeout(() => document.getElementById('convert-value').focus(), 50);
 }
-function closeConvertModal() {
-  document.getElementById('convert-modal').classList.remove('open');
-}
-document.getElementById('convert-modal').addEventListener('click', e => { if(e.target===e.currentTarget) closeConvertModal(); });
+function closeConvertModal() { document.getElementById('convert-modal').classList.remove('open'); }
+document.getElementById('convert-modal').addEventListener('click', e => { if (e.target === e.currentTarget) closeConvertModal(); });
 
 async function confirmConvert() {
   const id   = document.getElementById('convert-prospect-id').value;
@@ -803,47 +922,47 @@ async function confirmConvert() {
   const date = document.getElementById('convert-date').value;
   const st   = document.getElementById('convert-status');
   const btn  = document.getElementById('convert-confirm-btn');
-  if (!pat) { st.style.color='#e8372a'; st.textContent='Enter your GitHub PAT (repo scope).'; return; }
-  btn.textContent='Saving…'; btn.disabled=true; st.textContent='';
+  if (!pat) { st.style.color = '#e8372a'; st.textContent = 'Enter your GitHub PAT (repo scope).'; return; }
+  btn.textContent = 'Saving…'; btn.disabled = true; st.textContent = '';
   try {
-    // Fetch current file
     const metaResp = await fetch(
       `${API}/contents/outreach_tracker.json?ref=${encodeURIComponent(BRANCH)}`,
       { headers: { 'Authorization': `Bearer ${pat}`, 'Accept': 'application/vnd.github.v3+json' } }
     );
     if (!metaResp.ok) throw new Error('Could not read outreach_tracker.json');
     const meta = await metaResp.json();
-    let data = JSON.parse(atob(meta.content.replace(/\n/g,'')));
+    let data = JSON.parse(atob(meta.content.replace(/\n/g, '')));
     const idx = data.findIndex(p => p.id === id);
     if (idx === -1) throw new Error('Prospect ' + id + ' not found in tracker');
     data[idx].converted_at = date;
     data[idx].status = 'converted';
-    data[idx].deal_value_omr = parseInt(val)||AVG_DEAL;
+    data[idx].deal_value_omr = parseInt(val) || AVG_DEAL;
     const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
     const putResp = await fetch(
       `${API}/contents/outreach_tracker.json`,
-      { method: 'PUT',
+      {
+        method: 'PUT',
         headers: { 'Authorization': `Bearer ${pat}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: `convert: ${id} ${data[idx].name} — OMR ${val}/yr`, content: newContent, sha: meta.sha, branch: BRANCH }) }
+        body: JSON.stringify({ message: `convert: ${id} ${data[idx].name} — OMR ${val}/yr`, content: newContent, sha: meta.sha, branch: BRANCH })
+      }
     );
     if (putResp.status === 200 || putResp.status === 201) {
       closeConvertModal();
       toast(`🎉 ${data[idx].name} marked as converted — OMR ${val}/yr ARR!`, 'success');
-      // Update local data
       prospects = data;
-      renderAll(parseInt(document.getElementById('kpi-posts').textContent)||23);
+      renderAll(parseInt(document.getElementById('kpi-posts').textContent) || 0);
     } else {
-      const e2 = await putResp.json().catch(()=>({}));
-      throw new Error(`HTTP ${putResp.status}: ${e2.message||'check PAT scope'}`);
+      const e2 = await putResp.json().catch(() => ({}));
+      throw new Error(`HTTP ${putResp.status}: ${e2.message || 'check PAT scope'}`);
     }
   } catch(e) {
-    st.style.color='#e8372a'; st.textContent='Error: '+e.message;
-    btn.textContent='🎉 Mark Converted'; btn.disabled=false;
+    st.style.color = '#e8372a'; st.textContent = 'Error: ' + e.message;
+    btn.textContent = '🎉 Mark Converted'; btn.disabled = false;
   }
 }
 
 // ── TOAST ──
-function toast(msg, type='success') {
+function toast(msg, type = 'success') {
   const el = document.createElement('div');
   el.className = `toast ${type}`;
   el.textContent = msg;
@@ -851,10 +970,16 @@ function toast(msg, type='success') {
   setTimeout(() => el.remove(), 4000);
 }
 
-// ── KEYBOARD ──
+// ── KEYBOARD SHORTCUTS ──
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
-    closeRunModal(); closeConvertModal();
+    closeRunModal(); closeConvertModal(); closeCaptureModal();
+  }
+  // Press / to focus search (when not already in an input)
+  if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+    e.preventDefault();
+    const s = document.getElementById('search-input');
+    s.focus(); s.select();
   }
 });
 
@@ -862,8 +987,8 @@ document.addEventListener('keydown', e => {
 loadData();
 
 // ── CAPTURE LEAD MODAL ──────────────────────────────────────────────────────
-const SEG_B_KW = ['investor','investment','fund','venture','capital','vc','angel'];
-const SEG_C_KW = ['cto','tech','developer','engineer','saas','digital','software'];
+const SEG_B_KW = ['investor', 'investment', 'fund', 'venture', 'capital', 'vc', 'angel'];
+const SEG_C_KW = ['cto', 'tech', 'developer', 'engineer', 'saas', 'digital', 'software'];
 const PAIN_MAP = {
   'sanad':             'Multi-client work permit tracking',
   'pro':               'MOL submissions manual 15+ clients',
@@ -879,14 +1004,14 @@ const PAIN_MAP = {
   'cto':               'Multi-tenant GCC compliance peer angle',
 };
 function detectSegment(title) {
-  const t = (title||'').toLowerCase();
+  const t = (title || '').toLowerCase();
   if (SEG_B_KW.some(k => t.includes(k))) return 'B';
   if (SEG_C_KW.some(k => t.includes(k))) return 'C';
   return 'A';
 }
 function detectPain(title) {
-  const t = (title||'').toLowerCase();
-  for (const [k,v] of Object.entries(PAIN_MAP)) { if (t.includes(k)) return v; }
+  const t = (title || '').toLowerCase();
+  for (const [k, v] of Object.entries(PAIN_MAP)) { if (t.includes(k)) return v; }
   return 'Manual HR/payroll admin taking too long';
 }
 function openCaptureModal() {
@@ -895,7 +1020,7 @@ function openCaptureModal() {
 }
 function closeCaptureModal() {
   document.getElementById('capture-modal').classList.remove('open');
-  ['cap-url','cap-name','cap-title','cap-company','cap-note'].forEach(id => {
+  ['cap-url', 'cap-name', 'cap-title', 'cap-company', 'cap-note'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
@@ -905,13 +1030,13 @@ function closeCaptureModal() {
   document.getElementById('cap-btn').disabled = true;
 }
 function validateCaptureForm() {
-  const url  = (document.getElementById('cap-url').value||'').trim();
-  const name = (document.getElementById('cap-name').value||'').trim();
+  const url  = (document.getElementById('cap-url').value || '').trim();
+  const name = (document.getElementById('cap-name').value || '').trim();
   const valid = url.includes('linkedin.com/in/') && name.length > 1;
   document.getElementById('cap-btn').disabled = !valid;
 }
 async function confirmCapture() {
-  const url     = document.getElementById('cap-url').value.trim().replace(/\/+$/,'');
+  const url     = document.getElementById('cap-url').value.trim().replace(/\/+$/, '');
   const name    = document.getElementById('cap-name').value.trim();
   const title   = document.getElementById('cap-title').value.trim() || 'HR Manager';
   const company = document.getElementById('cap-company').value.trim() || 'Unknown Company';
@@ -925,45 +1050,45 @@ async function confirmCapture() {
   status.textContent = 'Loading current tracker…';
 
   const pat = localStorage.getItem('gh_pat') || prompt('Enter your GitHub PAT (needs repo scope) to save:');
-  if (!pat) { status.style.color='#f87171'; status.textContent='Cancelled — PAT required.'; btn.disabled=false; return; }
+  if (!pat) { status.style.color = '#f87171'; status.textContent = 'Cancelled — PAT required.'; btn.disabled = false; return; }
   localStorage.setItem('gh_pat', pat);
 
   const apiUrl = `https://api.github.com/repos/${REPO}/contents/outreach_tracker.json?ref=${BRANCH}`;
   let file, tracker;
   try {
-    const r = await fetch(apiUrl, { headers: { Authorization: `token ${pat}`, Accept: 'application/vnd.github+json' }});
+    const r = await fetch(apiUrl, { headers: { Authorization: `token ${pat}`, Accept: 'application/vnd.github+json' } });
     if (!r.ok) throw new Error(`GitHub API ${r.status}`);
     file = await r.json();
-    tracker = JSON.parse(atob(file.content.replace(/\n/g,'')));
+    tracker = JSON.parse(atob(file.content.replace(/\n/g, '')));
   } catch(e) {
-    status.style.color='#f87171'; status.textContent=`Failed to load tracker: ${e.message}`;
-    btn.disabled=false; return;
+    status.style.color = '#f87171'; status.textContent = `Failed to load tracker: ${e.message}`;
+    btn.disabled = false; return;
   }
 
   // Duplicate check
-  if (tracker.some(p => (p.linkedin_url||'').replace(/\/+$/,'') === url)) {
-    status.style.color='#fbbf24'; status.textContent='Already in pipeline — duplicate skipped.';
+  if (tracker.some(p => (p.linkedin_url || '').replace(/\/+$/, '') === url)) {
+    status.style.color = '#fbbf24'; status.textContent = 'Already in pipeline — duplicate skipped.';
     setTimeout(closeCaptureModal, 2000); return;
   }
 
   // Build new entry
-  const nums = tracker.map(p => parseInt((p.id||'').replace('OA-',''))||0);
-  const newId = `OA-${String(Math.max(...nums,20)+1).padStart(3,'0')}`;
+  const nums = tracker.map(p => parseInt((p.id || '').replace('OA-', '')) || 0);
+  const newId = `OA-${String(Math.max(...nums, 20) + 1).padStart(3, '0')}`;
   const seg   = detectSegment(title);
   const pain  = detectPain(title);
-  const today = new Date().toISOString().slice(0,10);
+  const today = new Date().toISOString().slice(0, 10);
 
   tracker.push({
     id: newId, name, linkedin_url: url, company, segment: seg,
     started_at: today, status: 'active', current_step: 1,
-    notes: `Manually captured via Sales CMD | Title: ${title} | Location: ${city} | Pain: ${pain}${note?' | Note: '+note:''}`,
+    notes: `Manually captured via Sales CMD | Title: ${title} | Location: ${city} | Pain: ${pain}${note ? ' | Note: ' + note : ''}`,
     tags: ['manual-capture', city.toLowerCase(), 'priority-1'],
     converted_at: '',
   });
 
   status.textContent = 'Saving to GitHub…';
   try {
-    const res = await fetch(apiUrl.replace(`?ref=${BRANCH}`,''), {
+    const res = await fetch(apiUrl.replace(`?ref=${BRANCH}`, ''), {
       method: 'PUT',
       headers: { Authorization: `token ${pat}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -972,19 +1097,20 @@ async function confirmCapture() {
         sha: file.sha, branch: BRANCH,
       }),
     });
-    if (!res.ok) { const e = await res.json(); throw new Error(e.message||res.status); }
-    status.style.color='#4ade80';
+    if (!res.ok) { const e = await res.json(); throw new Error(e.message || res.status); }
+    status.style.color = '#4ade80';
     status.textContent = `✓ ${newId} ${name} added to pipeline (Seg ${seg})`;
     setTimeout(() => { closeCaptureModal(); loadData(); }, 1800);
   } catch(e) {
-    status.style.color='#f87171'; status.textContent=`Save failed: ${e.message}`;
-    btn.disabled=false;
+    status.style.color = '#f87171'; status.textContent = `Save failed: ${e.message}`;
+    btn.disabled = false;
   }
 }
 document.getElementById('capture-modal').addEventListener('click', e => {
   if (e.target === e.currentTarget) closeCaptureModal();
 });
 </script>
+
 <!-- ══ CAPTURE LEAD MODAL ══ -->
 <div class="modal-overlay" id="capture-modal">
   <div class="modal-box">

@@ -242,4 +242,26 @@ def publish_post(text: str, pillar: str = "", attach_image: bool = True) -> dict
         if response.status_code in RETRY_CODES:
             if attempt == MAX_RETRIES:
                 raise LinkedInError(
-                    f"LinkedIn API {response.status_code} after 
+                    f"LinkedIn API {response.status_code} after {MAX_RETRIES} attempts: {response.text}"
+                )
+            wait = 2 ** attempt
+            logger.warning("LinkedIn %s on attempt %d/%d - retrying in %ds", response.status_code, attempt, MAX_RETRIES, wait)
+            time.sleep(wait)
+            continue
+
+        if response.status_code not in (200, 201):
+            raise LinkedInError(f"LinkedIn API error {response.status_code}: {response.text}")
+
+        post_id = response.headers.get("x-restli-id") or response.json().get("id")
+        logger.info("Published post_id=%s chars=%d elapsed=%.2fs attempt=%d image=%s",
+                    post_id, len(text), elapsed, attempt, image_path)
+        cta_posted = post_cta_comment(post_id, pillar, token)
+        return {
+            "post_id":            post_id,
+            "status":             response.status_code,
+            "elapsed_s":          round(elapsed, 2),
+            "attempts":           attempt,
+            "image_path":         image_path,
+            "cta_comment_posted": cta_posted,
+            "cta_comment_url":    CTA_URL if cta_posted else "",
+        }

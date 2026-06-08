@@ -1,0 +1,20 @@
+{
+  "pillar": "proof",
+  "topic": "How accurate labour cost data changed the way one owner made pricing decisions",
+  "format": "Open with a data point about Oman businesses and explain the root cause behind it",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "A business owner in Muscat thought he was running a 22% margin. His real number was 6%.\n\nHe'd been quoting projects the same way for three years \u2014 materials cost, rough time estimate, add a margin. It felt like pricing. It wasn't.\n\nWhen he finally connected his WPS payroll data with actual hours worked per job, the number was uncomfortable. His margin on mid-size contracts wasn't 22%. It was 6%.\n\nHe wasn't growing. He was subsidising his clients.\n\nThe problem wasn't carelessness. His data was spread across spreadsheets, WhatsApp threads, and payroll files that never talked to each other. Nobody sees the real picture when the numbers live in five different places.\n\nOnce payroll, workforce hours, and project costs were in one system \u2014 HR software built for Oman's WPS requirements \u2014 he repriced within a week. Three months later, margin was back above 19%. Same team. Same clients. Just accurate numbers.\n\nThe software didn't fix his business. Knowing the truth did.\n\nIf you're still estimating labour costs from memory or last month's payroll summary, you're pricing blind. And the gap between what you think you're making and what you're actually making tends to be a lot wider than people expect.\n\nWhat would change if you knew your real cost per employee, per project, per month?\n\nBook a free 20-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=proof\nOr WhatsApp +96879665522\n\n#OmanBusiness\n#HRManagement\n#PayrollOman\n#WPS\n#SmartPROHub",
+  "char_count": 1494,
+  "generated_at": "2026-06-08T07:44:14.126833+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260608_074403_proof.json"
+}

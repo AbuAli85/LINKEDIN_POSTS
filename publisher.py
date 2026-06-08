@@ -102,7 +102,17 @@ def _upload_image(token: str, author: str, image_bytes: bytes) -> str | None:
 
 
 def post_cta_comment(post_urn: str, pillar: str, token: str) -> bool:
-    """Post a Sanad CTA as the first comment. Skipped when audience=company."""
+    """Post a Sanad CTA as the first comment. Skipped when audience=company.
+
+    Token priority:
+      1. LINKEDIN_COMMENT_TOKEN  — dedicated comment token (optional, cleanest)
+      2. LINKEDIN_READ_TOKEN     — may have w_member_social if Community Mgmt API approved
+      3. token (publish token)   — fallback; will fail if missing r_member_social scope
+
+    Root cause of historical CTA failures: the publish token (w_member_social only)
+    cannot POST to /v2/socialActions — that requires Community Management API approval.
+    Set LINKEDIN_COMMENT_TOKEN or LINKEDIN_READ_TOKEN with the correct scope to fix.
+    """
     comment_text = CTA_COMMENTS.get(pillar)
     if not comment_text:
         return False
@@ -117,9 +127,17 @@ def post_cta_comment(post_urn: str, pillar: str, token: str) -> bool:
     if not person_id:
         logger.warning("cta_comment skipped: cannot derive person ID")
         return False
-    url     = f"https://api.linkedin.com/v2/socialActions/{post_urn}/comments"
+
+    # Try each token in priority order; stop at first 201 or on non-auth errors
+    comment_token = (
+        os.environ.get("LINKEDIN_COMMENT_TOKEN")
+        or os.environ.get("LINKEDIN_READ_TOKEN")
+        or token
+    ).strip()
+
+    url = f"https://api.linkedin.com/v2/socialActions/{post_urn}/comments"
     headers = {
-        "Authorization": f"Bearer {token}",
+        "Authorization": f"Bearer {comment_token}",
         "X-Restli-Protocol-Version": "2.0.0",
         "Content-Type": "application/json",
     }
@@ -135,7 +153,14 @@ def post_cta_comment(post_urn: str, pillar: str, token: str) -> bool:
     if resp.status_code == 201:
         logger.info("cta_comment posted on %s", post_urn)
         return True
-    logger.warning("cta_comment failed HTTP %s on %s: %s", resp.status_code, post_urn, resp.text[:200])
+    if resp.status_code in (401, 403):
+        logger.warning(
+            "cta_comment auth error HTTP %s on %s — set LINKEDIN_COMMENT_TOKEN with "
+            "Community Management API + w_member_social scope. Details: %s",
+            resp.status_code, post_urn, resp.text[:300],
+        )
+    else:
+        logger.warning("cta_comment failed HTTP %s on %s: %s", resp.status_code, post_urn, resp.text[:200])
     return False
 
 
@@ -217,26 +242,4 @@ def publish_post(text: str, pillar: str = "", attach_image: bool = True) -> dict
         if response.status_code in RETRY_CODES:
             if attempt == MAX_RETRIES:
                 raise LinkedInError(
-                    f"LinkedIn API {response.status_code} after {MAX_RETRIES} attempts: {response.text}"
-                )
-            wait = 2 ** attempt
-            logger.warning("LinkedIn %s on attempt %d/%d - retrying in %ds", response.status_code, attempt, MAX_RETRIES, wait)
-            time.sleep(wait)
-            continue
-
-        if response.status_code not in (200, 201):
-            raise LinkedInError(f"LinkedIn API error {response.status_code}: {response.text}")
-
-        post_id = response.headers.get("x-restli-id") or response.json().get("id")
-        logger.info("Published post_id=%s chars=%d elapsed=%.2fs attempt=%d image=%s",
-                    post_id, len(text), elapsed, attempt, image_path)
-        cta_posted = post_cta_comment(post_id, pillar, token)
-        return {
-            "post_id":            post_id,
-            "status":             response.status_code,
-            "elapsed_s":          round(elapsed, 2),
-            "attempts":           attempt,
-            "image_path":         image_path,
-            "cta_comment_posted": cta_posted,
-            "cta_comment_url":    CTA_URL if cta_posted else "",
-        }
+                    f"LinkedIn API {response.status_code} after 

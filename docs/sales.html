@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SmartPro Hub · Sales Command Center</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0b0b0c">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2322c55e'/%3E%3Ctext x='16' y='22' font-family='system-ui' font-size='14' font-weight='700' text-anchor='middle' fill='%23fff'%3E%24%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Geist',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0b0b0c;color:#ede9e3;min-height:100vh;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid #22c55e;outline-offset:2px;border-radius:4px}
+
+/* ── TOPBAR ── */
+.topbar{background:#111113;border-bottom:1px solid rgba(255,255,255,.07);padding:0 24px;display:flex;align-items:center;height:52px;gap:12px;position:sticky;top:0;z-index:50}
+.logo{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:500}
+.logo-mark{width:26px;height:26px;border-radius:7px;background:#22c55e;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff}
+.logo-sep{color:rgba(255,255,255,.2);margin:0 6px}
+.logo-sub{color:rgba(255,255,255,.5);font-weight:400}
+.topbar-right{display:flex;align-items:center;gap:8px;margin-left:auto}
+.tb-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:6px;font-size:12px;font-weight:500;border:1px solid rgba(255,255,255,.1);cursor:pointer;background:rgba(255,255,255,.04);color:rgba(255,255,255,.7);transition:all .15s;min-height:32px;font-family:inherit;white-space:nowrap}
+.tb-btn:hover{background:rgba(255,255,255,.08);color:#ede9e3;border-color:rgba(255,255,255,.16)}
+.tb-btn.primary{background:#22c55e;color:#0b0b0c;border-color:transparent;font-weight:600}
+.tb-btn.primary:hover{background:#1eaf55}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#22c55e;animation:pulse 2.5s ease-in-out infinite;flex-shrink:0}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ── ALERT BANNER ── */
+.alert-bar{padding:10px 24px;font-size:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.alert-bar.urgent{background:rgba(232,55,42,.08);border-bottom:1px solid rgba(232,55,42,.2);color:#f87171}
+.alert-bar.ok{background:rgba(34,197,94,.06);border-bottom:1px solid rgba(34,197,94,.15);color:#4ade80;display:none}
+.alert-bar button{margin-left:auto;background:rgba(232,55,42,.2);border:1px solid rgba(232,55,42,.4);color:#f87171;padding:4px 12px;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit}
+.alert-bar button:hover{background:rgba(232,55,42,.35)}
+
+/* ── KPI STRIP ── */
+.kpi-strip{background:#111113;border-bottom:1px solid rgba(255,255,255,.07);padding:16px 24px;display:flex;flex-wrap:wrap;gap:10px}
+.kpi{background:#161618;border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:12px 16px;text-align:center;min-width:80px;flex:1;transition:border-color .15s}
+.kpi:hover{border-color:rgba(255,255,255,.14)}
+.kpi .n{font-size:22px;font-weight:600;letter-spacing:-.03em;line-height:1}
+.kpi .l{font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.07em;margin-top:4px}
+.kpi.green .n{color:#22c55e}
+.kpi.amber .n{color:#d4840a}
+.kpi.red   .n{color:#e8372a}
+.kpi.blue  .n{color:#38bdf8}
+.kpi.indigo .n{color:#818cf8}
+.kpi.white .n{color:#ede9e3}
+
+/* ── MAIN LAYOUT ── */
+.main{max-width:1100px;margin:0 auto;padding:24px 24px 60px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+@media(max-width:720px){.grid2{grid-template-columns:1fr}}
+
+/* ── PANEL ── */
+.panel{background:#111113;border:1px solid rgba(255,255,255,.07);border-radius:12px;overflow:hidden}
+.panel-head{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:8px}
+.panel-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.45)}
+.panel-badge{font-size:10px;padding:2px 7px;border-radius:4px;font-family:'DM Mono',monospace;font-weight:600}
+.panel-body{padding:16px}
+
+/* ── FUNNEL ── */
+.funnel{display:flex;align-items:flex-end;gap:4px;height:120px;padding:0 16px 16px}
+.funnel-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.funnel-bar{width:100%;border-radius:4px 4px 0 0;transition:opacity .2s;cursor:default}
+.funnel-bar:hover{opacity:.8}
+.funnel-n{font-size:13px;font-weight:600;letter-spacing:-.02em}
+.funnel-l{font-size:9px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.06em;text-align:center;line-height:1.3}
+.funnel-pct{font-size:9px;color:rgba(255,255,255,.25);font-family:'DM Mono',monospace}
+
+/* ── TODAY'S ACTIONS ── */
+.action-list{display:flex;flex-direction:column;gap:8px;padding:12px 16px}
+.action-item{background:#161618;border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:10px 12px;display:flex;align-items:flex-start;gap:10px;cursor:default}
+.action-item.urgent{border-left:3px solid #e8372a}
+.action-item.due{border-left:3px solid #d4840a}
+.action-seg{width:28px;height:28px;border-radius:6px;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'DM Mono',monospace}
+.seg-a{background:rgba(34,197,94,.15);color:#22c55e}
+.seg-b{background:rgba(129,140,248,.15);color:#818cf8}
+.seg-c{background:rgba(56,189,248,.15);color:#38bdf8}
+.action-body{flex:1;min-width:0}
+.action-name{font-size:13px;font-weight:500;color:#ede9e3}
+.action-task{font-size:11px;color:rgba(255,255,255,.45);margin-top:2px;line-height:1.4}
+.action-meta{font-size:10px;color:rgba(255,255,255,.25);font-family:'DM Mono',monospace;margin-top:3px}
+.action-right{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.overdue-badge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;background:rgba(232,55,42,.15);color:#e8372a;font-family:'DM Mono',monospace;white-space:nowrap}
+.step-badge{font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.4);font-family:'DM Mono',monospace}
+
+/* ── PIPELINE TABLE ── */
+.table-wrap{width:100%;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{padding:8px 12px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.3);font-weight:600;border-bottom:1px solid rgba(255,255,255,.08);white-space:nowrap;cursor:pointer;user-select:none}
+th:hover{color:rgba(255,255,255,.6)}
+th .sort-icon{margin-left:4px;opacity:.4}
+td{padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.05);vertical-align:middle;color:rgba(255,255,255,.7)}
+tr:hover td{background:rgba(255,255,255,.02)}
+tr.converted td{opacity:.45}
+.td-id{font-family:'DM Mono',monospace;font-size:10px;color:rgba(255,255,255,.3)}
+.td-name{font-weight:500;color:#ede9e3;white-space:nowrap}
+.td-co{font-size:11px;color:rgba(255,255,255,.4);white-space:nowrap;max-width:160px;overflow:hidden;text-overflow:ellipsis}
+.seg-pill{display:inline-flex;align-items:center;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;font-family:'DM Mono',monospace}
+.sp-a{background:rgba(34,197,94,.1);color:#22c55e}
+.sp-b{background:rgba(129,140,248,.1);color:#818cf8}
+.sp-c{background:rgba(56,189,248,.1);color:#38bdf8}
+.step-ring{display:inline-flex;align-items:center;gap:4px}
+.step-dot{width:7px;height:7px;border-radius:50%;border:1.5px solid rgba(255,255,255,.15)}
+.step-dot.done{background:#22c55e;border-color:#22c55e}
+.step-dot.current{background:#d4840a;border-color:#d4840a}
+.overdue-txt{font-size:10px;color:#e8372a;font-family:'DM Mono',monospace}
+.due-txt{font-size:10px;color:#d4840a;font-family:'DM Mono',monospace}
+.ok-txt{font-size:10px;color:#22c55e;font-family:'DM Mono',monospace}
+.row-actions{display:flex;gap:5px;align-items:center}
+.mini-btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.55);font-size:10px;padding:3px 8px;border-radius:4px;cursor:pointer;transition:all .15s;font-family:inherit;white-space:nowrap}
+.mini-btn:hover{background:rgba(255,255,255,.08);color:#ede9e3}
+.mini-btn.convert{background:rgba(34,197,94,.08);border-color:rgba(34,197,94,.2);color:#4ade80}
+.mini-btn.convert:hover{background:rgba(34,197,94,.15)}
+
+/* ── FILTER BAR ── */
+.filter-bar{padding:10px 16px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.filter-input{background:#161618;border:1px solid rgba(255,255,255,.1);color:#ede9e3;padding:5px 10px;border-radius:6px;font-size:12px;font-family:inherit;min-width:160px;outline:none}
+.filter-input:focus{border-color:rgba(34,197,94,.4)}
+.filter-chip{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.5);font-size:11px;padding:4px 11px;border-radius:20px;cursor:pointer;transition:all .15s;font-family:inherit}
+.filter-chip:hover,.filter-chip.active{background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.3);color:#4ade80}
+.filter-count{font-size:11px;color:rgba(255,255,255,.3);margin-left:auto;font-family:'DM Mono',monospace}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:center;justify-content:center;backdrop-filter:blur(2px)}
+.modal-overlay.open{display:flex}
+.modal-box{background:#161618;border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:24px;width:min(480px,92vw);max-height:88vh;overflow-y:auto}
+.modal-box h3{font-size:15px;font-weight:600;margin-bottom:16px;color:#ede9e3}
+.modal-field{margin-bottom:14px}
+.modal-label{font-size:11px;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;display:block}
+.modal-input{width:100%;background:#111113;border:1px solid rgba(255,255,255,.1);color:#ede9e3;padding:8px 12px;border-radius:7px;font-size:13px;font-family:inherit;outline:none}
+.modal-input:focus{border-color:rgba(34,197,94,.4)}
+.modal-status{font-size:12px;min-height:18px;margin-bottom:12px}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end}
+.modal-confirm{background:#22c55e;color:#0b0b0c;border:none;padding:8px 18px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s}
+.modal-confirm:hover{background:#1eaf55}
+.modal-confirm:disabled{opacity:.5;cursor:not-allowed}
+.modal-cancel{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.6);padding:8px 16px;border-radius:7px;font-size:13px;cursor:pointer;font-family:inherit}
+.modal-cancel:hover{background:rgba(255,255,255,.08)}
+.modal-info{background:rgba(56,189,248,.07);border:1px solid rgba(56,189,248,.15);border-radius:7px;padding:10px 12px;font-size:12px;color:#7dd3fc;line-height:1.5;margin-bottom:14px}
+.modal-warning{background:rgba(212,132,10,.08);border:1px solid rgba(212,132,10,.2);border-radius:7px;padding:10px 12px;font-size:12px;color:#fbbf24;line-height:1.5;margin-bottom:14px}
+
+/* ── REVENUE MODEL ── */
+.rev-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding:16px}
+.rev-card{background:#161618;border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:12px;text-align:center}
+.rev-card .n{font-size:18px;font-weight:600;color:#22c55e;letter-spacing:-.02em}
+.rev-card .l{font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.07em;margin-top:3px}
+.slider-wrap{padding:0 16px 16px}
+.slider-wrap label{font-size:11px;color:rgba(255,255,255,.4);display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.slider-wrap input[type=range]{width:100%;accent-color:#22c55e;height:4px}
+
+/* ── EMPTY STATE ── */
+.empty{text-align:center;padding:32px 16px;color:rgba(255,255,255,.25);font-size:13px}
+
+/* ── SECTION LABEL ── */
+.section-lbl{font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.1em;font-weight:600;margin-bottom:12px}
+
+/* ── FOOTER ── */
+footer{background:#111113;border-top:1px solid rgba(255,255,255,.06);padding:14px 24px;font-size:11px;color:rgba(255,255,255,.3);display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+footer a{color:rgba(255,255,255,.4)}
+footer a:hover{color:rgba(255,255,255,.7)}
+
+/* ── SETUP BANNER ── */
+.setup-banner{background:#0e1a1a;border:1px solid rgba(34,197,94,.15);border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:12px;color:rgba(255,255,255,.5);line-height:1.7}
+.setup-banner strong{color:#4ade80}
+.setup-banner ol{margin:8px 0 0 16px}
+.setup-banner li{margin-bottom:4px}
+
+/* ── TOAST ── */
+#toast-container{position:fixed;bottom:20px;right:20px;z-index:300;display:flex;flex-direction:column;gap:8px}
+.toast{background:#1a1d23;border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:10px 14px;font-size:12px;color:#ede9e3;animation:slidein .2s ease;max-width:320px}
+.toast.success{border-left:3px solid #22c55e}
+.toast.error{border-left:3px solid #e8372a}
+@keyframes slidein{from{transform:translateX(20px);opacity:0}to{transform:translateX(0);opacity:1}}
+</style>
+</head>
+<body>
+
+<!-- ══ TOPBAR ══ -->
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-mark">$</div>
+    <span>SmartPro Hub</span>
+    <span style="color:rgba(255,255,255,.2)">·</span>
+    <span class="logo-sub">Sales Command Center</span>
+  </div>
+  <div class="topbar-right">
+    <span class="live-dot"></span>
+    <span id="last-refresh" style="font-size:11px;color:rgba(255,255,255,.35);font-family:'DM Mono',monospace"></span>
+    <a href="index.html" class="tb-btn">← Dashboard</a>
+    <a href="https://github.com/AbuAli85/LINKEDIN_POSTS/actions/workflows/auto-post.yml" target="_blank" rel="noopener" class="tb-btn primary">▶ Run Outreach</a>
+  </div>
+</div>
+
+<!-- ══ ALERT BANNER ══ -->
+<div id="alert-bar" class="alert-bar urgent" style="display:none">
+  <span>⚠️</span>
+  <span id="alert-msg">Loading pipeline data…</span>
+  <button onclick="openRunModal()">Run Today's Outreach →</button>
+</div>
+
+<!-- ══ KPI STRIP ══ -->
+<div class="kpi-strip">
+  <div class="kpi white"><div class="n" id="kpi-posts">–</div><div class="l">Posts Live</div></div>
+  <div class="kpi blue"><div class="n" id="kpi-leads">–</div><div class="l">Leads Captured</div></div>
+  <div class="kpi amber"><div class="n" id="kpi-active">–</div><div class="l">Active Outreach</div></div>
+  <div class="kpi indigo"><div class="n" id="kpi-demos">0</div><div class="l">Demos Booked</div></div>
+  <div class="kpi green"><div class="n" id="kpi-converted">0</div><div class="l">Converted</div></div>
+  <div class="kpi green"><div class="n" id="kpi-arr">–</div><div class="l">Pipeline Value (OMR)</div></div>
+</div>
+
+<!-- ══ MAIN ══ -->
+<div class="main">
+
+  <!-- Setup guidance -->
+  <div class="setup-banner" id="setup-banner">
+    <strong>🚀 Getting leads into the pipeline — what's working and what needs action</strong>
+    <ol>
+      <li><strong>23 posts published</strong> on LinkedIn. CTA comments failing (need LINKEDIN_COMMENT_TOKEN with Community Management API scope).</li>
+      <li><strong>20 leads captured</strong> from LinkedIn engagement — all seeded into outreach_tracker.json.</li>
+      <li><strong>Outreach is overdue:</strong> all 20 leads started May 27. Run the GitHub Actions workflow now to advance sequences.</li>
+      <li><strong>To fix CTA comments:</strong> add <code style="font-family:'DM Mono',monospace;font-size:11px;color:#818cf8">LINKEDIN_COMMENT_TOKEN</code> secret with Community Management API + w_member_social scope.</li>
+    </ol>
+  </div>
+
+  <!-- Funnel + Today's Actions side by side -->
+  <div class="grid2">
+
+    <!-- Sales Funnel -->
+    <div class="panel">
+      <div class="panel-head">
+        <span class="panel-title">Conversion Funnel</span>
+        <span class="panel-badge" style="background:rgba(255,255,255,.05);color:rgba(255,255,255,.3)">live</span>
+      </div>
+      <div style="padding:16px 16px 0">
+        <div id="funnel-chart" class="funnel"></div>
+      </div>
+      <div style="padding:0 16px 16px;display:flex;justify-content:space-between">
+        <div style="font-size:11px;color:rgba(255,255,255,.3)">Posts → Customers</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.3)" id="funnel-cvr">CVR: –</div>
+      </div>
+    </div>
+
+    <!-- Revenue Model -->
+    <div class="panel">
+      <div class="panel-head">
+        <span class="panel-title">Revenue Model</span>
+        <span class="panel-badge" style="background:rgba(34,197,94,.1);color:#4ade80">SmartPro Hub</span>
+      </div>
+      <div class="rev-grid" id="rev-grid">
+        <div class="rev-card"><div class="n" id="rv-pipeline">–</div><div class="l">Pipeline Value</div></div>
+        <div class="rev-card"><div class="n" id="rv-exp">–</div><div class="l">Expected ARR</div></div>
+        <div class="rev-card"><div class="n" id="rv-won">OMR 0</div><div class="l">Won ARR</div></div>
+      </div>
+      <div class="slider-wrap">
+        <label>Conversion Rate: <strong id="cvr-label">5%</strong></label>
+        <input type="range" min="1" max="30" value="5" id="cvr-slider" oninput="updateRevModel(this.value)">
+        <div style="font-size:10px;color:rgba(255,255,255,.25);margin-top:6px;font-family:'DM Mono',monospace">
+          Avg deal: OMR 2,400/yr (OMR 200/mo) · <span id="rv-deals">–</span> deals needed to hit OMR 10,000 ARR
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Today's Priority Actions -->
+  <div class="panel" style="margin-bottom:20px">
+    <div class="panel-head">
+      <span class="panel-title">Today's Priority Actions</span>
+      <span class="panel-badge" id="actions-badge" style="background:rgba(232,55,42,.1);color:#e8372a"></span>
+      <button class="tb-btn primary" style="margin-left:auto;font-size:11px;padding:4px 10px;min-height:28px" onclick="openRunModal()">▶ Trigger Outreach Bot</button>
+    </div>
+    <div id="action-list" class="action-list">
+      <div class="empty">Loading actions…</div>
+    </div>
+  </div>
+
+  <!-- Full Pipeline Table -->
+  <div class="panel" style="margin-bottom:20px">
+    <div class="panel-head">
+      <span class="panel-title">Lead Pipeline</span>
+      <span class="panel-badge" id="pipeline-count" style="background:rgba(56,189,248,.1);color:#38bdf8"></span>
+    </div>
+    <div class="filter-bar">
+      <input type="text" class="filter-input" id="search-input" placeholder="Search name or company…" oninput="renderTable()">
+      <button class="filter-chip active" data-seg="all" onclick="setSeg(this)">All</button>
+      <button class="filter-chip" data-seg="A" onclick="setSeg(this)">Seg A · HR</button>
+      <button class="filter-chip" data-seg="B" onclick="setSeg(this)">Seg B · Investors</button>
+      <button class="filter-chip" data-seg="C" onclick="setSeg(this)">Seg C · Tech</button>
+      <span class="filter-count" id="table-count"></span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th onclick="sortBy('id')">ID <span class="sort-icon">↕</span></th>
+            <th onclick="sortBy('name')">Name <span class="sort-icon">↕</span></th>
+            <th>Company</th>
+            <th onclick="sortBy('segment')">Seg <span class="sort-icon">↕</span></th>
+            <th onclick="sortBy('current_step')">Step <span class="sort-icon">↕</span></th>
+            <th onclick="sortBy('overdue')">Overdue <span class="sort-icon">↕</span></th>
+            <th>Next Action</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="pipeline-tbody">
+          <tr><td colspan="8" class="empty">Loading pipeline…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Segment Breakdown -->
+  <div class="grid2">
+    <div class="panel">
+      <div class="panel-head"><span class="panel-title">Segment Breakdown</span></div>
+      <div id="seg-breakdown" style="padding:16px"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><span class="panel-title">System Health</span></div>
+      <div id="sys-health" style="padding:16px;display:flex;flex-direction:column;gap:8px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <span>SmartPro Hub · Sales Command Center</span>
+  <a href="https://github.com/AbuAli85/LINKEDIN_POSTS" target="_blank" rel="noopener">Source ↗</a>
+  <a href="https://github.com/AbuAli85/LINKEDIN_POSTS/blob/main/LINKEDIN_SETUP.md" target="_blank" rel="noopener">Renew LinkedIn Token ↗</a>
+  <a href="https://www.thesmartpro.io/sanad/assistant" target="_blank" rel="noopener">Sanad AI ↗</a>
+  <span style="margin-left:auto;font-family:'DM Mono',monospace" id="footer-ts"></span>
+</footer>
+
+<!-- ══ RUN OUTREACH MODAL ══ -->
+<div class="modal-overlay" id="run-modal">
+  <div class="modal-box">
+    <h3>▶ Trigger Outreach Workflow</h3>
+    <div class="modal-info">
+      This dispatches the GitHub Actions workflow which runs <code style="font-family:'DM Mono',monospace">outreach.py</code> — advancing each lead's touch sequence and sending the next message.
+    </div>
+    <div class="modal-warning" id="run-overdue-info"></div>
+    <div class="modal-field">
+      <label class="modal-label" for="run-pat">GitHub Personal Access Token (workflow scope)</label>
+      <input class="modal-input" id="run-pat" type="password" placeholder="ghp_…" autocomplete="off">
+      <div style="font-size:11px;color:rgba(255,255,255,.3);margin-top:5px">
+        Needs <strong style="color:rgba(255,255,255,.5)">workflow</strong> scope. Token is held only for this tab session.
+        <a href="https://github.com/settings/tokens/new?scopes=workflow&description=SmartPro+Outreach" target="_blank" rel="noopener" style="color:#38bdf8;text-decoration:underline;margin-left:4px">Generate one ↗</a>
+      </div>
+    </div>
+    <div class="modal-status" id="run-status"></div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeRunModal()">Cancel</button>
+      <button class="modal-confirm" id="run-confirm-btn" onclick="confirmRun()">▶ Dispatch Workflow</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CONVERT MODAL ══ -->
+<div class="modal-overlay" id="convert-modal">
+  <div class="modal-box">
+    <h3>🎉 Mark as Converted</h3>
+    <input type="hidden" id="convert-prospect-id">
+    <div class="modal-field">
+      <label class="modal-label">Prospect</label>
+      <div id="convert-prospect-name" style="font-size:14px;font-weight:500;color:#ede9e3"></div>
+    </div>
+    <div class="modal-field">
+      <label class="modal-label" for="convert-value">Deal Value (OMR/year)</label>
+      <input class="modal-input" id="convert-value" type="number" min="0" step="100" value="2400" placeholder="2400">
+    </div>
+    <div class="modal-field">
+      <label class="modal-label" for="convert-date">Close Date</label>
+      <input class="modal-input" id="convert-date" type="date">
+    </div>
+    <div class="modal-field">
+      <label class="modal-label" for="convert-pat">GitHub PAT (repo scope)</label>
+      <input class="modal-input" id="convert-pat" type="password" placeholder="ghp_…" autocomplete="off">
+    </div>
+    <div class="modal-status" id="convert-status"></div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeConvertModal()">Cancel</button>
+      <button class="modal-confirm" id="convert-confirm-btn" onclick="confirmConvert()">🎉 Mark Converted</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<script>
+const REPO   = 'AbuAli85/LINKEDIN_POSTS';
+const BRANCH = 'claude/linkedin-post-automation-lQiJZ';
+const WORKFLOW = 'auto-post.yml';
+const RAW = `https://raw.githubusercontent.com/${REPO}/${BRANCH}`;
+const API = `https://api.github.com/repos/${REPO}`;
+const AVG_DEAL = 2400; // OMR/year
+const TODAY = new Date('2026-06-09');
+
+// Step sequences per segment
+const SEQ = {
+  A: {
+    total: 5, days: 14,
+    steps: [
+      'Send LinkedIn connection request (WPS/payroll compliance note)',
+      'Send value message (payroll pain + SmartPro ROI)',
+      'Share case study / social proof',
+      'Offer free 15-min demo call',
+      'Final follow-up / close'
+    ]
+  },
+  B: {
+    total: 3, days: 8,
+    steps: [
+      'Connection + investment angle (Oman HR tech market)',
+      'Market data & revenue metrics deck',
+      'Due diligence ask / intro call request'
+    ]
+  },
+  C: {
+    total: 3, days: 5,
+    steps: [
+      'Tech peer connection (API-first, integrations)',
+      'Partnership / white-label pitch',
+      'Pilot program offer'
+    ]
+  }
+};
+
+let prospects = [];
+let sortKey = 'overdue';
+let sortDir = -1; // -1 = desc
+let segFilter = 'all';
+
+function daysSince(dateStr) {
+  const d = new Date(dateStr);
+  return Math.floor((TODAY - d) / 86400000);
+}
+
+function getOverdueDays(p) {
+  const elapsed = daysSince(p.started_at);
+  const seq = SEQ[p.segment];
+  if (!seq) return 0;
+  const stepIdx = (p.current_step || 1) - 1; // 0-indexed
+  const stepDueDay = Math.floor((seq.days / seq.total) * stepIdx);
+  return Math.max(0, elapsed - stepDueDay);
+}
+
+function getNextAction(p) {
+  const seq = SEQ[p.segment];
+  if (!seq) return 'Unknown';
+  const stepIdx = Math.min((p.current_step || 1) - 1, seq.steps.length - 1);
+  return seq.steps[stepIdx];
+}
+
+function getStepTotal(p) {
+  return (SEQ[p.segment] || {total: 3}).total;
+}
+
+// ── LOAD DATA ──
+async function loadData() {
+  try {
+    const [trackerRes, postsRes] = await Promise.allSettled([
+      fetch(`${RAW}/outreach_tracker.json`),
+      fetch(`${RAW}/docs/analytics_summary.json`)
+    ]);
+
+    if (trackerRes.status === 'fulfilled' && trackerRes.value.ok) {
+      prospects = await trackerRes.value.json();
+    }
+
+    let postCount = 23;
+    if (postsRes.status === 'fulfilled' && postsRes.value.ok) {
+      try {
+        const analytics = await postsRes.value.json();
+        if (analytics.total_published) postCount = analytics.total_published;
+      } catch(e) {}
+    }
+
+    renderAll(postCount);
+    document.getElementById('last-refresh').textContent = 'Updated ' + new Date().toLocaleTimeString();
+    document.getElementById('footer-ts').textContent = 'Data from: ' + BRANCH.slice(0,30) + '…';
+  } catch(e) {
+    document.getElementById('alert-bar').style.display = 'flex';
+    document.getElementById('alert-msg').textContent = 'Could not load pipeline data: ' + e.message;
+    renderFallback();
+  }
+}
+
+function renderAll(postCount) {
+  const active   = prospects.filter(p => p.status === 'active').length;
+  const converted = prospects.filter(p => p.converted_at).length;
+  const pipeline = (active - converted) * AVG_DEAL;
+  const overdue  = prospects.filter(p => getOverdueDays(p) > 0);
+
+  // KPIs
+  document.getElementById('kpi-posts').textContent = postCount;
+  document.getElementById('kpi-leads').textContent = prospects.length;
+  document.getElementById('kpi-active').textContent = active;
+  document.getElementById('kpi-converted').textContent = converted;
+  document.getElementById('kpi-arr').textContent = pipeline.toLocaleString();
+
+  // Alert
+  const alertBar = document.getElementById('alert-bar');
+  if (overdue.length > 0) {
+    alertBar.style.display = 'flex';
+    const maxOverdue = Math.max(...overdue.map(p => getOverdueDays(p)));
+    document.getElementById('alert-msg').textContent =
+      `${overdue.length} leads overdue for outreach — oldest is ${maxOverdue} days without follow-up. Take action now.`;
+    document.getElementById('run-overdue-info').textContent =
+      `${overdue.length} prospects are overdue. The bot will advance each sequence and send the next scheduled message.`;
+  } else {
+    alertBar.className = 'alert-bar ok';
+    alertBar.style.display = 'flex';
+  }
+
+  renderFunnel(postCount, prospects.length, converted);
+  updateRevModel(document.getElementById('cvr-slider').value);
+  renderActions();
+  renderTable();
+  renderSegBreakdown();
+  renderSysHealth();
+}
+
+function renderFallback() {
+  prospects = Array.from({length:20}, (_,i) => ({
+    id:`OA-${String(i+1).padStart(3,'0')}`,
+    name:'–', company:'–', segment: i<15?'A':i<18?'B':'C',
+    started_at:'2026-05-27', status:'active', current_step:1, notes:''
+  }));
+  renderAll(23);
+}
+
+// ── FUNNEL ──
+function renderFunnel(posts, leads, converted) {
+  const stages = [
+    { label:'Posts', n: posts, color:'#38bdf8' },
+    { label:'~Impressions', n: Math.round(posts*100), color:'#818cf8' },
+    { label:'~Comments', n: Math.round(posts*2), color:'#a78bfa' },
+    { label:'Leads', n: leads, color:'#22d3ee' },
+    { label:'In DMs', n: prospects.filter(p=>p.current_step>1).length, color:'#f59e0b' },
+    { label:'Demos', n: 0, color:'#f97316' },
+    { label:'Customers', n: converted, color:'#22c55e' },
+  ];
+  const max = Math.max(...stages.map(s=>s.n), 1);
+  const html = stages.map(s => {
+    const pct = Math.max(8, Math.round((s.n / max) * 100));
+    const prevN = stages[stages.indexOf(s)-1];
+    const cvr = prevN && prevN.n > 0 ? (s.n/prevN.n*100).toFixed(0)+'%' : '';
+    return `<div class="funnel-bar-wrap">
+      <div class="funnel-n">${s.n >= 1000 ? (s.n/1000).toFixed(1)+'k' : s.n}</div>
+      <div class="funnel-bar" style="height:${pct}px;background:${s.color};opacity:.8" title="${s.label}: ${s.n}"></div>
+      <div class="funnel-l">${s.label}</div>
+      ${cvr ? `<div class="funnel-pct">${cvr}</div>` : '<div class="funnel-pct"></div>'}
+    </div>`;
+  }).join('');
+  document.getElementById('funnel-chart').innerHTML = html;
+  const postToCustomer = posts > 0 ? (converted/posts*100).toFixed(2) : '0.00';
+  document.getElementById('funnel-cvr').textContent = `Post→Customer: ${postToCustomer}%`;
+}
+
+// ── REVENUE MODEL ──
+function updateRevModel(pct) {
+  pct = parseInt(pct);
+  document.getElementById('cvr-label').textContent = pct + '%';
+  const active = prospects.filter(p => !p.converted_at).length;
+  const pipeline = active * AVG_DEAL;
+  const expected = Math.round(pipeline * pct / 100);
+  const dealsNeeded = Math.ceil(10000 / AVG_DEAL);
+  document.getElementById('rv-pipeline').textContent = 'OMR ' + pipeline.toLocaleString();
+  document.getElementById('rv-exp').textContent = 'OMR ' + expected.toLocaleString();
+  document.getElementById('rv-deals').textContent = dealsNeeded;
+  document.getElementById('kpi-arr').textContent = pipeline.toLocaleString();
+}
+
+// ── TODAY'S ACTIONS ──
+function renderActions() {
+  const sorted = [...prospects]
+    .filter(p => !p.converted_at && p.status === 'active')
+    .sort((a,b) => getOverdueDays(b) - getOverdueDays(a))
+    .slice(0, 8);
+
+  if (!sorted.length) {
+    document.getElementById('action-list').innerHTML = '<div class="empty">No active prospects</div>';
+    document.getElementById('actions-badge').textContent = '0 actions';
+    return;
+  }
+
+  const totalDue = prospects.filter(p => !p.converted_at && getOverdueDays(p) > 0).length;
+  document.getElementById('actions-badge').textContent = totalDue + ' overdue';
+
+  document.getElementById('action-list').innerHTML = sorted.map(p => {
+    const od = getOverdueDays(p);
+    const isUrgent = od > 7;
+    const segClass = 'seg-' + p.segment.toLowerCase();
+    const nextAction = getNextAction(p);
+    const stepTotal = getStepTotal(p);
+    return `<div class="action-item ${isUrgent?'urgent':'due'}">
+      <div class="action-seg ${segClass}">S${p.segment}</div>
+      <div class="action-body">
+        <div class="action-name">${p.name}</div>
+        <div class="action-task">${nextAction}</div>
+        <div class="action-meta">${p.company} · Step ${p.current_step}/${stepTotal}</div>
+      </div>
+      <div class="action-right">
+        <span class="overdue-badge">${od}d overdue</span>
+        <span class="step-badge">Step ${p.current_step}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── PIPELINE TABLE ──
+let _sortCol = 'overdue', _sortDir = -1;
+
+function sortBy(col) {
+  if (_sortCol === col) _sortDir *= -1;
+  else { _sortCol = col; _sortDir = -1; }
+  renderTable();
+}
+
+function setSeg(btn) {
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  segFilter = btn.dataset.seg;
+  renderTable();
+}
+
+function renderTable() {
+  const q = document.getElementById('search-input').value.toLowerCase().trim();
+  let rows = [...prospects];
+
+  if (segFilter !== 'all') rows = rows.filter(p => p.segment === segFilter);
+  if (q) rows = rows.filter(p =>
+    p.name.toLowerCase().includes(q) || p.company.toLowerCase().includes(q)
+  );
+
+  rows.sort((a, b) => {
+    let av, bv;
+    if (_sortCol === 'overdue') {
+      av = getOverdueDays(a); bv = getOverdueDays(b);
+    } else if (_sortCol === 'current_step') {
+      av = a.current_step; bv = b.current_step;
+    } else {
+      av = (a[_sortCol]||'').toString().toLowerCase();
+      bv = (b[_sortCol]||'').toString().toLowerCase();
+    }
+    return av < bv ? _sortDir : av > bv ? -_sortDir : 0;
+  });
+
+  document.getElementById('table-count').textContent = rows.length + ' prospects';
+  document.getElementById('pipeline-count').textContent = prospects.length + ' total';
+
+  if (!rows.length) {
+    document.getElementById('pipeline-tbody').innerHTML =
+      '<tr><td colspan="8" class="empty">No results</td></tr>';
+    return;
+  }
+
+  document.getElementById('pipeline-tbody').innerHTML = rows.map(p => {
+    const od = getOverdueDays(p);
+    const segClass = p.segment === 'A' ? 'sp-a' : p.segment === 'B' ? 'sp-b' : 'sp-c';
+    const stepTotal = getStepTotal(p);
+    const dots = Array.from({length:stepTotal},(_,i) =>
+      `<span class="step-dot ${i < p.current_step-1 ? 'done' : i === p.current_step-1 ? 'current' : ''}"></span>`
+    ).join('');
+    const overdueCell = od > 0
+      ? `<span class="overdue-txt">⚠ ${od}d overdue</span>`
+      : `<span class="ok-txt">on track</span>`;
+    const nextAction = getNextAction(p).slice(0,42) + (getNextAction(p).length > 42 ? '…' : '');
+    const isConverted = !!p.converted_at;
+    return `<tr class="${isConverted?'converted':''}">
+      <td class="td-id">${p.id}</td>
+      <td class="td-name">${p.name}</td>
+      <td class="td-co" title="${p.company}">${p.company}</td>
+      <td><span class="seg-pill ${segClass}">Seg ${p.segment}</span></td>
+      <td>
+        <div class="step-ring">${dots}</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:2px;font-family:'DM Mono',monospace">Step ${p.current_step}/${stepTotal}</div>
+      </td>
+      <td>${overdueCell}</td>
+      <td style="font-size:11px;color:rgba(255,255,255,.4);max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${nextAction}</td>
+      <td>
+        <div class="row-actions">
+          <button class="mini-btn" onclick="openRunModal()" title="Trigger outreach bot">▶ Run</button>
+          ${!isConverted ? `<button class="mini-btn convert" onclick="openConvertModal('${p.id}','${p.name.replace(/'/g,"\\'")}')">✓ Won</button>` : '<span style="font-size:10px;color:#22c55e">Converted ✓</span>'}
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// ── SEGMENT BREAKDOWN ──
+function renderSegBreakdown() {
+  const segs = {A:{label:'Seg A · HR & Business',color:'#22c55e',count:0,converted:0},
+                B:{label:'Seg B · Investors & Gov',color:'#818cf8',count:0,converted:0},
+                C:{label:'Seg C · Tech Founders',color:'#38bdf8',count:0,converted:0}};
+  prospects.forEach(p => {
+    if (segs[p.segment]) {
+      segs[p.segment].count++;
+      if (p.converted_at) segs[p.segment].converted++;
+    }
+  });
+  document.getElementById('seg-breakdown').innerHTML = Object.entries(segs).map(([k,v]) => {
+    const pct = v.count > 0 ? Math.round((v.converted/v.count)*100) : 0;
+    return `<div style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
+        <span style="color:${v.color};font-weight:500">${v.label}</span>
+        <span style="font-family:'DM Mono',monospace;font-size:10px;color:rgba(255,255,255,.4)">${v.converted}/${v.count} (${pct}%)</span>
+      </div>
+      <div style="height:5px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden">
+        <div style="width:${Math.max(pct,2)}%;height:100%;background:${v.color};border-radius:3px"></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── SYSTEM HEALTH ──
+function renderSysHealth() {
+  const checks = [
+    { label:'LinkedIn Access Token',  ok: true,  note:'Publishing works (23 posts live)' },
+    { label:'CTA Comment Token',      ok: false, note:'Set LINKEDIN_COMMENT_TOKEN (Community API needed)' },
+    { label:'LinkedIn Read Token',    ok: false, note:'Missing r_member_social scope — metrics = 0' },
+    { label:'Outreach Pipeline',      ok: false, note:'20 leads overdue — run outreach workflow' },
+    { label:'leads.csv',              ok: true,  note:'20 leads seeded from outreach_tracker.json' },
+    { label:'GitHub Actions',         ok: true,  note:'Workflow configured and running' },
+  ];
+  document.getElementById('sys-health').innerHTML = checks.map(c => `
+    <div style="display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)">
+      <span style="flex-shrink:0;width:16px;height:16px;border-radius:50%;background:${c.ok?'rgba(34,197,94,.15)':'rgba(232,55,42,.12)'};color:${c.ok?'#22c55e':'#e8372a'};display:flex;align-items:center;justify-content:center;font-size:9px;margin-top:1px">${c.ok?'✓':'✗'}</span>
+      <div>
+        <div style="font-size:12px;font-weight:500;color:${c.ok?'#ede9e3':'rgba(255,255,255,.6)'}">${c.label}</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.3);margin-top:1px">${c.note}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ── MODAL: RUN OUTREACH ──
+function openRunModal() {
+  document.getElementById('run-modal').classList.add('open');
+  document.getElementById('run-status').textContent = '';
+  const btn = document.getElementById('run-confirm-btn');
+  btn.textContent = '▶ Dispatch Workflow'; btn.disabled = false;
+  setTimeout(() => document.getElementById('run-pat').focus(), 50);
+}
+function closeRunModal() {
+  document.getElementById('run-modal').classList.remove('open');
+}
+document.getElementById('run-modal').addEventListener('click', e => { if(e.target===e.currentTarget) closeRunModal(); });
+
+async function confirmRun() {
+  const pat = document.getElementById('run-pat').value.trim();
+  const st  = document.getElementById('run-status');
+  const btn = document.getElementById('run-confirm-btn');
+  if (!pat) { st.style.color='#e8372a'; st.textContent='Enter your GitHub PAT (workflow scope).'; return; }
+  btn.textContent = 'Dispatching…'; btn.disabled = true; st.textContent = '';
+  try {
+    const resp = await fetch(
+      `${API}/actions/workflows/${WORKFLOW}/dispatches`,
+      { method: 'POST',
+        headers: { 'Authorization': `Bearer ${pat}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ref: BRANCH, inputs: { action: 'fetch_comments' } }) }
+    );
+    if (resp.status === 204) {
+      closeRunModal();
+      toast('Outreach workflow dispatched — check GitHub Actions for progress.', 'success');
+    } else {
+      const e = await resp.json().catch(() => ({}));
+      st.style.color = '#e8372a';
+      st.textContent = `Error ${resp.status}: ${e.message || 'check PAT has workflow scope'}`;
+      btn.textContent = '▶ Dispatch Workflow'; btn.disabled = false;
+    }
+  } catch(e) {
+    st.style.color='#e8372a'; st.textContent='Network error: '+e.message;
+    btn.textContent='▶ Dispatch Workflow'; btn.disabled=false;
+  }
+}
+
+// ── MODAL: CONVERT ──
+function openConvertModal(id, name) {
+  document.getElementById('convert-prospect-id').value = id;
+  document.getElementById('convert-prospect-name').textContent = name;
+  document.getElementById('convert-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('convert-status').textContent = '';
+  const btn = document.getElementById('convert-confirm-btn');
+  btn.textContent = '🎉 Mark Converted'; btn.disabled = false;
+  document.getElementById('convert-modal').classList.add('open');
+  setTimeout(() => document.getElementById('convert-value').focus(), 50);
+}
+function closeConvertModal() {
+  document.getElementById('convert-modal').classList.remove('open');
+}
+document.getElementById('convert-modal').addEventListener('click', e => { if(e.target===e.currentTarget) closeConvertModal(); });
+
+async function confirmConvert() {
+  const id   = document.getElementById('convert-prospect-id').value;
+  const pat  = document.getElementById('convert-pat').value.trim();
+  const val  = document.getElementById('convert-value').value;
+  const date = document.getElementById('convert-date').value;
+  const st   = document.getElementById('convert-status');
+  const btn  = document.getElementById('convert-confirm-btn');
+  if (!pat) { st.style.color='#e8372a'; st.textContent='Enter your GitHub PAT (repo scope).'; return; }
+  btn.textContent='Saving…'; btn.disabled=true; st.textContent='';
+  try {
+    // Fetch current file
+    const metaResp = await fetch(
+      `${API}/contents/outreach_tracker.json?ref=${encodeURIComponent(BRANCH)}`,
+      { headers: { 'Authorization': `Bearer ${pat}`, 'Accept': 'application/vnd.github.v3+json' } }
+    );
+    if (!metaResp.ok) throw new Error('Could not read outreach_tracker.json');
+    const meta = await metaResp.json();
+    let data = JSON.parse(atob(meta.content.replace(/\n/g,'')));
+    const idx = data.findIndex(p => p.id === id);
+    if (idx === -1) throw new Error('Prospect ' + id + ' not found in tracker');
+    data[idx].converted_at = date;
+    data[idx].status = 'converted';
+    data[idx].deal_value_omr = parseInt(val)||AVG_DEAL;
+    const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
+    const putResp = await fetch(
+      `${API}/contents/outreach_tracker.json`,
+      { method: 'PUT',
+        headers: { 'Authorization': `Bearer ${pat}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: `convert: ${id} ${data[idx].name} — OMR ${val}/yr`, content: newContent, sha: meta.sha, branch: BRANCH }) }
+    );
+    if (putResp.status === 200 || putResp.status === 201) {
+      closeConvertModal();
+      toast(`🎉 ${data[idx].name} marked as converted — OMR ${val}/yr ARR!`, 'success');
+      // Update local data
+      prospects = data;
+      renderAll(parseInt(document.getElementById('kpi-posts').textContent)||23);
+    } else {
+      const e2 = await putResp.json().catch(()=>({}));
+      throw new Error(`HTTP ${putResp.status}: ${e2.message||'check PAT scope'}`);
+    }
+  } catch(e) {
+    st.style.color='#e8372a'; st.textContent='Error: '+e.message;
+    btn.textContent='🎉 Mark Converted'; btn.disabled=false;
+  }
+}
+
+// ── TOAST ──
+function toast(msg, type='success') {
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.textContent = msg;
+  document.getElementById('toast-container').appendChild(el);
+  setTimeout(() => el.remove(), 4000);
+}
+
+// ── KEYBOARD ──
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeRunModal(); closeConvertModal();
+  }
+});
+
+// ── INIT ──
+loadData();
+</script>
+</body>
+</html>

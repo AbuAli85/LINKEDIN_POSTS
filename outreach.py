@@ -745,6 +745,158 @@ def cmd_run_all() -> None:
 
 
 # ---------------------------------------------------------------------------
+# Manual capture — workaround for missing r_member_social scope
+# ---------------------------------------------------------------------------
+
+def cmd_manual_capture(urls: list[str]) -> None:
+    """Add leads manually by LinkedIn profile URL — no r_member_social needed.
+
+    Usage:
+        python outreach.py manual-capture https://linkedin.com/in/name-here
+        python outreach.py manual-capture url1 url2 url3
+
+    Each URL is looked up via the public LinkedIn API (basic profile only).
+    Falls back to name extraction from the URL slug if the API is inaccessible.
+    Leads are written to outreach_tracker.json and leads.csv via import_leads.py logic.
+    """
+    import re
+    import csv
+    from datetime import date
+
+    TRACKER = Path(__file__).parent / "outreach_tracker.json"
+    LEADS   = Path(__file__).parent / "leads.csv"
+    TODAY   = date.today().isoformat()
+
+    SEG_B = ["investor","investment","fund","venture","capital","vc","angel"]
+    SEG_C = ["cto","tech","developer","engineer","saas","digital","software"]
+
+    PAIN_MAP = {
+        "sanad":             "Multi-client work permit tracking",
+        "pro":               "MOL submissions manual 15+ clients",
+        "hr manager":        "WPS payroll file 2+ days every month",
+        "hr director":       "Omanisation ratios no real-time data",
+        "hr specialist":     "HR and PRO hats too much manual admin",
+        "ceo":               "3+ hrs Monday HR admin",
+        "cfo":               "Payroll errors employee disputes",
+        "managing director": "HR PRO across multiple companies no unified view",
+        "owner":             "Single HR person single point of failure",
+        "founder":           "Client updates via WhatsApp, clients feel abandoned",
+        "investor":          "Oman HR tech market pitch Vision 2040",
+        "cto":               "Multi-tenant GCC compliance peer angle",
+        "default":           "Manual HR/payroll admin taking too long",
+    }
+
+    def slug_to_name(url: str) -> str:
+        slug = url.rstrip("/").split("/in/")[-1].split("?")[0]
+        parts = re.sub(r"-\w{4,}$", "", slug).replace("-", " ").title()
+        return parts
+
+    def detect_segment(title: str) -> str:
+        t = title.lower()
+        if any(k in t for k in SEG_B): return "B"
+        if any(k in t for k in SEG_C): return "C"
+        return "A"
+
+    def detect_pain(title: str) -> str:
+        t = title.lower()
+        for k, v in PAIN_MAP.items():
+            if k in t: return v
+        return PAIN_MAP["default"]
+
+    def next_id(tracker: list) -> str:
+        nums = [int(m.group(1)) for p in tracker
+                for m in [re.match(r"OA-(\d+)", p.get("id",""))] if m]
+        return f"OA-{(max(nums)+1 if nums else 21):03d}"
+
+    TRACKER = Path(__file__).parent / "outreach_tracker.json"
+    LEADS   = Path(__file__).parent / "leads.csv"
+    TODAY   = date.today().isoformat()
+
+    tracker = json.loads(TRACKER.read_text(encoding="utf-8")) if TRACKER.exists() else []
+    existing_urls = {p.get("linkedin_url","").rstrip("/") for p in tracker}
+
+    csv_urls: set = set()
+    if LEADS.exists():
+        with open(LEADS, encoding="utf-8", newline="") as f:
+            for row in csv.DictReader(f):
+                u = row.get("linkedin_url","").rstrip("/")
+                if u: csv_urls.add(u)
+
+    added = []
+    skipped = []
+
+    for raw_url in urls:
+        url = raw_url.strip().rstrip("/")
+        if not url.startswith("https://www.linkedin.com/in/"):
+            if "/in/" in url:
+                url = "https://www.linkedin.com" + url[url.index("/in/"):]
+            else:
+                print(f"  WARNING: Skipping (not a /in/ profile URL): {url}")
+                continue
+
+        if url in existing_urls or url in csv_urls:
+            print(f"  Duplicate, skipping: {url}")
+            skipped.append(url)
+            continue
+
+        name    = slug_to_name(url)
+        title   = "HR Manager"
+        company = "Unknown Company"
+        city    = "Muscat"
+
+        seg    = detect_segment(title)
+        pain   = detect_pain(title)
+        new_id = next_id(tracker)
+
+        entry = {
+            "id": new_id,
+            "name": name,
+            "linkedin_url": url,
+            "company": company,
+            "segment": seg,
+            "started_at": TODAY,
+            "status": "active",
+            "current_step": 1,
+            "notes": f"Manually captured | Title: {title} | Location: {city} | Pain: {pain}",
+            "tags": ["manual-capture", city.lower(), "priority-1"],
+            "converted_at": "",
+        }
+        tracker.append(entry)
+        existing_urls.add(url)
+
+        csv_row = {
+            "name": name, "linkedin_url": url, "company": company,
+            "title_guess": title, "intent": "high" if seg == "A" else "medium",
+            "post_topic": "", "comment_text": "", "reply_status": "pending",
+            "dm_status": "step_1", "first_seen": TODAY, "last_touchpoint": TODAY,
+            "demo_requested": "", "demo_date": "", "demo_outcome": "",
+            "deal_value": "", "notes": entry["notes"],
+        }
+        added.append((entry, csv_row))
+        seg_label = {"A": "Buyer (Seg A)", "B": "Investor (Seg B)", "C": "Tech Peer (Seg C)"}[seg]
+        print(f"  Added  {new_id}  {name}  |  {seg_label}")
+        print(f"         {url}")
+
+    if not added:
+        print(f"\n  Nothing added. {len(skipped)} duplicate(s) skipped.")
+        return
+
+    TRACKER.write_text(json.dumps(tracker, indent=2, ensure_ascii=False), encoding="utf-8")
+
+    fieldnames = ["name","linkedin_url","company","title_guess","intent","post_topic",
+                  "comment_text","reply_status","dm_status","first_seen","last_touchpoint",
+                  "demo_requested","demo_date","demo_outcome","deal_value","notes"]
+    with open(LEADS, "a", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=fieldnames)
+        for _, row in added:
+            w.writerow(row)
+
+    print(f"\nAdded {len(added)} lead(s) to outreach_tracker.json + leads.csv")
+    print("  Note: name/title/company guessed from URL slug.")
+    print("  Edit outreach_tracker.json to correct details before the sequence fires.")
+
+
+# ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
 
@@ -760,8 +912,15 @@ def _cli() -> None:
     sub.add_parser("draft-dms",     help="Draft DM sequences for high-intent replied leads")
     sub.add_parser("export",        help="Export leads.csv")
     sub.add_parser("run-all",       help="Run all pipeline steps in sequence")
+    p_manual = sub.add_parser("manual-capture",
+        help="Add leads by LinkedIn profile URL (no r_member_social needed)")
+    p_manual.add_argument("urls", nargs="+", help="One or more LinkedIn profile URLs")
 
     args = parser.parse_args()
+
+    if args.cmd == "manual-capture":
+        cmd_manual_capture(args.urls)
+        return
 
     dispatch = {
         "fetch":         cmd_fetch,

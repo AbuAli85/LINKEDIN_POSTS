@@ -193,7 +193,8 @@ footer a:hover{color:rgba(255,255,255,.7)}
     <span class="live-dot"></span>
     <span id="last-refresh" style="font-size:11px;color:rgba(255,255,255,.35);font-family:'DM Mono',monospace"></span>
     <a href="index.html" class="tb-btn">← Dashboard</a>
-    <a href="https://github.com/AbuAli85/LINKEDIN_POSTS/actions/workflows/auto-post.yml" target="_blank" rel="noopener" class="tb-btn primary">▶ Run Outreach</a>
+    <button class="tb-btn" onclick="openCaptureModal()" style="background:rgba(56,189,248,.1);color:#7dd3fc;border-color:rgba(56,189,248,.25)">&#xFF0B; Capture Lead</button>
+    <a href="https://github.com/AbuAli85/LINKEDIN_POSTS/actions/workflows/auto-post.yml" target="_blank" rel="noopener" class="tb-btn primary">&#9654; Run Outreach</a>
   </div>
 </div>
 
@@ -859,6 +860,176 @@ document.addEventListener('keydown', e => {
 
 // ── INIT ──
 loadData();
+
+// ── CAPTURE LEAD MODAL ──────────────────────────────────────────────────────
+const SEG_B_KW = ['investor','investment','fund','venture','capital','vc','angel'];
+const SEG_C_KW = ['cto','tech','developer','engineer','saas','digital','software'];
+const PAIN_MAP = {
+  'sanad':             'Multi-client work permit tracking',
+  'pro':               'MOL submissions manual 15+ clients',
+  'hr manager':        'WPS payroll file 2+ days every month',
+  'hr director':       'Omanisation ratios no real-time data',
+  'hr specialist':     'HR and PRO hats — too much manual admin',
+  'ceo':               '3+ hrs Monday HR admin',
+  'cfo':               'Payroll errors & employee disputes',
+  'managing director': 'HR/PRO across multiple companies, no unified view',
+  'owner':             'Single HR person — single point of failure',
+  'founder':           'Client updates via WhatsApp, clients feel abandoned',
+  'investor':          'Oman HR tech market pitch — Vision 2040',
+  'cto':               'Multi-tenant GCC compliance peer angle',
+};
+function detectSegment(title) {
+  const t = (title||'').toLowerCase();
+  if (SEG_B_KW.some(k => t.includes(k))) return 'B';
+  if (SEG_C_KW.some(k => t.includes(k))) return 'C';
+  return 'A';
+}
+function detectPain(title) {
+  const t = (title||'').toLowerCase();
+  for (const [k,v] of Object.entries(PAIN_MAP)) { if (t.includes(k)) return v; }
+  return 'Manual HR/payroll admin taking too long';
+}
+function openCaptureModal() {
+  document.getElementById('capture-modal').classList.add('open');
+  document.getElementById('cap-url').focus();
+}
+function closeCaptureModal() {
+  document.getElementById('capture-modal').classList.remove('open');
+  ['cap-url','cap-name','cap-title','cap-company','cap-note'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  const city = document.getElementById('cap-city');
+  if (city) city.value = 'Muscat';
+  document.getElementById('cap-status').textContent = '';
+  document.getElementById('cap-btn').disabled = true;
+}
+function validateCaptureForm() {
+  const url  = (document.getElementById('cap-url').value||'').trim();
+  const name = (document.getElementById('cap-name').value||'').trim();
+  const valid = url.includes('linkedin.com/in/') && name.length > 1;
+  document.getElementById('cap-btn').disabled = !valid;
+}
+async function confirmCapture() {
+  const url     = document.getElementById('cap-url').value.trim().replace(/\/+$/,'');
+  const name    = document.getElementById('cap-name').value.trim();
+  const title   = document.getElementById('cap-title').value.trim() || 'HR Manager';
+  const company = document.getElementById('cap-company').value.trim() || 'Unknown Company';
+  const city    = document.getElementById('cap-city').value.trim() || 'Muscat';
+  const note    = document.getElementById('cap-note').value.trim();
+  const btn     = document.getElementById('cap-btn');
+  const status  = document.getElementById('cap-status');
+
+  btn.disabled = true;
+  status.style.color = '#7dd3fc';
+  status.textContent = 'Loading current tracker…';
+
+  const pat = localStorage.getItem('gh_pat') || prompt('Enter your GitHub PAT (needs repo scope) to save:');
+  if (!pat) { status.style.color='#f87171'; status.textContent='Cancelled — PAT required.'; btn.disabled=false; return; }
+  localStorage.setItem('gh_pat', pat);
+
+  const apiUrl = `https://api.github.com/repos/${REPO}/contents/outreach_tracker.json?ref=${BRANCH}`;
+  let file, tracker;
+  try {
+    const r = await fetch(apiUrl, { headers: { Authorization: `token ${pat}`, Accept: 'application/vnd.github+json' }});
+    if (!r.ok) throw new Error(`GitHub API ${r.status}`);
+    file = await r.json();
+    tracker = JSON.parse(atob(file.content.replace(/\n/g,'')));
+  } catch(e) {
+    status.style.color='#f87171'; status.textContent=`Failed to load tracker: ${e.message}`;
+    btn.disabled=false; return;
+  }
+
+  // Duplicate check
+  if (tracker.some(p => (p.linkedin_url||'').replace(/\/+$/,'') === url)) {
+    status.style.color='#fbbf24'; status.textContent='Already in pipeline — duplicate skipped.';
+    setTimeout(closeCaptureModal, 2000); return;
+  }
+
+  // Build new entry
+  const nums = tracker.map(p => parseInt((p.id||'').replace('OA-',''))||0);
+  const newId = `OA-${String(Math.max(...nums,20)+1).padStart(3,'0')}`;
+  const seg   = detectSegment(title);
+  const pain  = detectPain(title);
+  const today = new Date().toISOString().slice(0,10);
+
+  tracker.push({
+    id: newId, name, linkedin_url: url, company, segment: seg,
+    started_at: today, status: 'active', current_step: 1,
+    notes: `Manually captured via Sales CMD | Title: ${title} | Location: ${city} | Pain: ${pain}${note?' | Note: '+note:''}`,
+    tags: ['manual-capture', city.toLowerCase(), 'priority-1'],
+    converted_at: '',
+  });
+
+  status.textContent = 'Saving to GitHub…';
+  try {
+    const res = await fetch(apiUrl.replace(`?ref=${BRANCH}`,''), {
+      method: 'PUT',
+      headers: { Authorization: `token ${pat}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: `feat: manual lead capture — ${name} (${newId})`,
+        content: btoa(unescape(encodeURIComponent(JSON.stringify(tracker, null, 2)))),
+        sha: file.sha, branch: BRANCH,
+      }),
+    });
+    if (!res.ok) { const e = await res.json(); throw new Error(e.message||res.status); }
+    status.style.color='#4ade80';
+    status.textContent = `✓ ${newId} ${name} added to pipeline (Seg ${seg})`;
+    setTimeout(() => { closeCaptureModal(); loadData(); }, 1800);
+  } catch(e) {
+    status.style.color='#f87171'; status.textContent=`Save failed: ${e.message}`;
+    btn.disabled=false;
+  }
+}
+document.getElementById('capture-modal').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeCaptureModal();
+});
 </script>
+<!-- ══ CAPTURE LEAD MODAL ══ -->
+<div class="modal-overlay" id="capture-modal">
+  <div class="modal-box">
+    <h3>&#xFF0B; Capture Lead Manually</h3>
+    <div class="modal-info">
+      Use this when <strong>r_member_social</strong> is blocked and you can see commenters on LinkedIn.com but the system can&#39;t read them automatically.
+    </div>
+    <div class="modal-field">
+      <label class="modal-label">LinkedIn Profile URL *</label>
+      <input class="modal-input" id="cap-url" type="url"
+        placeholder="https://www.linkedin.com/in/name-here/"
+        oninput="validateCaptureForm()">
+    </div>
+    <div class="modal-field">
+      <label class="modal-label">Full Name *</label>
+      <input class="modal-input" id="cap-name" type="text"
+        placeholder="e.g. Ahmed Al-Balushi"
+        oninput="validateCaptureForm()">
+    </div>
+    <div class="modal-field">
+      <label class="modal-label">Job Title</label>
+      <input class="modal-input" id="cap-title" type="text"
+        placeholder="e.g. HR Manager, CEO, Sanad Office Owner">
+    </div>
+    <div class="modal-field">
+      <label class="modal-label">Company</label>
+      <input class="modal-input" id="cap-company" type="text"
+        placeholder="e.g. Al-Balushi Trading LLC">
+    </div>
+    <div class="modal-field">
+      <label class="modal-label">City</label>
+      <input class="modal-input" id="cap-city" type="text"
+        placeholder="e.g. Muscat" value="Muscat">
+    </div>
+    <div class="modal-field">
+      <label class="modal-label">Note (optional)</label>
+      <input class="modal-input" id="cap-note" type="text"
+        placeholder="e.g. Commented on payroll post, high intent">
+    </div>
+    <div id="cap-status" class="modal-status"></div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeCaptureModal()">Cancel</button>
+      <button class="modal-confirm" id="cap-btn" onclick="confirmCapture()" disabled>Add to Pipeline</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>

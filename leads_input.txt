@@ -1,15 +1,16 @@
-# LEADS INPUT FILE
+# BATCH 2 — Real Omani HR Managers & SME CEOs
 # Format: URL | Full Name | Job Title | Company Name | City
 # -----------------------------------------------------------------------
-https://www.linkedin.com/in/rashid-al-hinai-a5358836/ | Rashid Al Hinai | HR & Admin Manager | Vanguard Engineering & Oilfield Services | Muscat
-https://www.linkedin.com/in/mahmood-al-jabri/ | Mahmood Al Jabri | HR Manager | Jabal Asset Management | Muscat
-https://www.linkedin.com/in/mohammed-al-balushi-09654328/ | Mohammed Al Balushi | HR & OD Manager | Muscat Overseas | Muscat
-https://www.linkedin.com/in/khalida-khalil-allah-akram-mba-822b823b/ | Khalida Khalil Akram | Country HR & Admin Manager | NOMAC OMAN | Muscat
-https://www.linkedin.com/in/said-al-hasani-799709317/ | Said Al Hasani | HR Manager | Oman Sugar Refinery Company | Muscat
-https://www.linkedin.com/in/basim-al-hasani-a15b05135/ | Basim Al Hasani | HR Director | IHG Hotels Oman | Muscat
-https://www.linkedin.com/in/houssam-masri-2b118133/ | Houssam Masri | HR Manager | Averda Oman | Muscat
-https://www.linkedin.com/in/jihad-jamal-56613534/ | Jihad Jamal | Regional HR & Payroll Manager | Saud Bahwan Group | Muscat
-https://www.linkedin.com/in/nabeel-al-balushi-19b8854b/ | Nabeel Al Balushi | Founder & CEO | Smartrade Investment | Muscat
-https://www.linkedin.com/in/sadiq-al-matwani-al-lawati-784b5313/ | Sadiq Al Lawati | CEO | Sharikah Fanniyah Omaniyah | Muscat
-https://www.linkedin.com/in/mohammed-al-basami-bb5246128/ | Mohammed Al-Basami | CEO | Muscat Marshall | Muscat
-https://www.linkedin.com/in/al-shifa-al-harthi-730223196/ | Al Shifa Al-Harthi | SME Development Manager | Oman | Muscat
+https://www.linkedin.com/in/abdullah-alfarsi/ | Abdullah Al Farsi | Country HR Manager | NOV Oman | Muscat
+https://www.linkedin.com/in/hamed-al-yaqoobi-311a1822/ | Hamed Al Yaqoobi | HR & Administration Manager | Alsafa ETS | Muscat
+https://www.linkedin.com/in/mohammed-al-harrasi-5174a14b/ | Mohammed Al-Harrasi | HR Manager | Diamond Developers Oman | Muscat
+https://www.linkedin.com/in/humaid-al-kharusi-15093130/ | Humaid Al Kharusi | Group HR Manager | Composite Pipes Industry | Muscat
+https://www.linkedin.com/in/khamis-said-al-ghafri-50130696/ | Khamis Al Ghafri | HR & Omanisation Manager | Sterling International | Muscat
+https://www.linkedin.com/in/salim-al-harthy-490b623b/ | Salim Al Harthy | Senior HR Manager | Weatherford Oman | Muscat
+https://www.linkedin.com/in/nasreen-al-balushi-8b694a24/ | Nasreen Al Balushi | HR Manager | ABAQ AL EBDAA Trading | Muscat
+https://www.linkedin.com/in/rashid-al-hashmi-648592295/ | Rashid Al Hashmi | HR General Manager | Oman | Muscat
+https://www.linkedin.com/in/saeed-al-madany-almadany-967a4831/ | Saeed Al Madany | HR & Payroll Manager | Al-Mutawaa Group | Muscat
+https://www.linkedin.com/in/faisal-al-mamari-37091971/ | Faisal Al-Mamari | Chief People Officer | Oman | Muscat
+https://www.linkedin.com/in/ahmed-alshanfari-9207986b/ | Ahmed Al-Shanfari | CEO & Managing Director | Muscat International Bitumen | Muscat
+https://www.linkedin.com/in/ahmedajmi/ | Ahmed Al Ajmi | CEO & Managing Director | Oman Metal Industries & Contracting | Muscat
+https://www.linkedin.com/in/ghasan-al-maamari-5610a33a/ | Ghasan Al Maamari | CEO & Founder | Zawad Development & Consultancy | Muscat

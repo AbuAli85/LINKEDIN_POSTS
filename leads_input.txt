@@ -1,0 +1,18 @@
+# leads_input.txt — paste real LinkedIn profile URLs here
+#
+# Format (one lead per line, pipe-separated):
+#   URL | Full Name | Job Title | Company | City
+#
+# Examples:
+#   https://www.linkedin.com/in/ahmed-al-balushi-123/ | Ahmed Al-Balushi | HR Manager | Gulf Star LLC | Muscat
+#   https://www.linkedin.com/in/sara-al-lawati/ | Sara Al-Lawati | Sanad Office Owner | Al-Lawati PRO Services | Muscat
+#
+# Segment is auto-assigned:
+#   A → HR / Sanad / PRO titles  (direct buyers — highest priority)
+#   B → CEO / Owner / MD         (decision maker, slightly longer sales cycle)
+#   C → CTO / Tech / Founder     (peer / partnership angle)
+#
+# After editing this file, run:
+#   python import_leads.py
+#
+# ── PASTE REAL LEADS BELOW THIS LINE ─────────────────────────────────────

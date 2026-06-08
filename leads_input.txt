@@ -1,18 +1,20 @@
-# leads_input.txt — paste real LinkedIn profile URLs here
-#
-# Format (one lead per line, pipe-separated):
-#   URL | Full Name | Job Title | Company | City
+# LEADS INPUT FILE
+# Paste real LinkedIn profile URLs below the dashed line.
+# Format (one per line):
+#   URL | Full Name | Job Title | Company Name | City
 #
 # Examples:
-#   https://www.linkedin.com/in/ahmed-al-balushi-123/ | Ahmed Al-Balushi | HR Manager | Gulf Star LLC | Muscat
-#   https://www.linkedin.com/in/sara-al-lawati/ | Sara Al-Lawati | Sanad Office Owner | Al-Lawati PRO Services | Muscat
+#   https://www.linkedin.com/in/ahmed-al-balushi-123/ | Ahmed Al-Balushi | HR Manager | Al-Balushi Trading LLC | Muscat
+#   https://www.linkedin.com/in/fatma-hinai/ | Fatma Al-Hinai | Sanad Office Owner | Hinai Services | Sohar
 #
-# Segment is auto-assigned:
-#   A → HR / Sanad / PRO titles  (direct buyers — highest priority)
-#   B → CEO / Owner / MD         (decision maker, slightly longer sales cycle)
-#   C → CTO / Tech / Founder     (peer / partnership angle)
+# SEGMENT AUTO-DETECTION (title keywords):
+#   Segment A (buyer)    → HR, Sanad, PRO, WPS, Payroll, Admin, Operations, CFO, Managing Director, CEO, Owner, Founder
+#   Segment B (investor) → Investor, Investment, Fund, Venture, Capital, Partner (VC context)
+#   Segment C (tech peer)→ CTO, Tech, Developer, Engineer, SaaS, Digital, Software
 #
-# After editing this file, run:
-#   python import_leads.py
+# City detection: Muscat, Sohar, Salalah, Nizwa, Sur, Ibri → Oman
+#                 Dubai, Abu Dhabi, Riyadh, Kuwait → GCC
 #
-# ── PASTE REAL LEADS BELOW THIS LINE ─────────────────────────────────────
+# Script skips duplicate URLs automatically.
+# New IDs continue from OA-021 onward.
+# -----------------------------------------------------------------------

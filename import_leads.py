@@ -1,287 +1,283 @@
 #!/usr/bin/env python3
 """
-import_leads.py — Add real LinkedIn profiles to outreach_tracker.json
+import_leads.py — Import real LinkedIn leads into outreach_tracker.json + leads.csv
 
-Usage
------
-1. Create leads_input.txt with one lead per line in this format:
-       URL | Name | Title | Company | Location
-   Example:
-       https://www.linkedin.com/in/ahmed-al-balushi-123/ | Ahmed Al-Balushi | HR Manager | Gulf Star LLC | Muscat
+Usage:
+    python import_leads.py                  # reads leads_input.txt
+    python import_leads.py --dry-run        # preview without writing
+    python import_leads.py --file my.txt    # use a different input file
 
-2. Run:
-       python import_leads.py
-   (reads leads_input.txt by default)
-
-   Or pipe directly:
-       python import_leads.py --file my_leads.txt
-
-   Or pass raw text as argument (one line per lead, semicolon-separated):
-       python import_leads.py --inline "URL1|Name1|Title1|Company1|City1;URL2|..."
-
-Output
-------
-- Appends new entries to outreach_tracker.json (preserves existing mock data)
-- Appends new rows to leads.csv
-- Prints a summary table
+Format of input file (one lead per line, skip # comments and blank lines):
+    URL | Full Name | Job Title | Company Name | City
 """
 
-from __future__ import annotations
-
-import argparse
-import csv
 import json
+import csv
+import argparse
 import re
 import sys
 from datetime import date
 from pathlib import Path
 
-TRACKER_FILE = Path(__file__).parent / "outreach_tracker.json"
-LEADS_CSV    = Path(__file__).parent / "leads.csv"
-INPUT_FILE   = Path(__file__).parent / "leads_input.txt"
-
+BASE = Path(__file__).parent
+TRACKER_FILE = BASE / "outreach_tracker.json"
+LEADS_FILE   = BASE / "leads.csv"
+DEFAULT_INPUT = BASE / "leads_input.txt"
 TODAY = date.today().isoformat()
 
-# ── Segment classification ─────────────────────────────────────────────────
-_SEG_A_TITLE = re.compile(
-    r"\b(hr|human resources|sanad|pro\b|payroll|labour|labor|wps|"
-    r"manpower|recruitment|admin(?:istration)?|personnel|omanisation|"
-    r"visa|permit|compliance officer)\b",
-    re.I,
-)
-_SEG_A_COMPANY = re.compile(r"\b(sanad|pro services|hr solutions|manpower|staffing)\b", re.I)
-_SEG_C_TITLE   = re.compile(r"\b(cto|chief technology|tech lead|engineer|developer|software|digital|it manager)\b", re.I)
+# ── Segment detection ─────────────────────────────────────────────────────────
+SEG_B_KEYWORDS = ["investor", "investment", "fund", "venture", "capital", "vc", "angel"]
+SEG_C_KEYWORDS = ["cto", "tech", "developer", "engineer", "saas", "digital", "software", "product manager"]
+SEG_A_KEYWORDS = ["hr", "sanad", "pro ", "wps", "payroll", "admin", "operations", "cfo",
+                  "managing director", "ceo", "owner", "founder", "director", "manager", "specialist"]
 
-
-def _segment(title: str, company: str) -> str:
-    if _SEG_A_TITLE.search(title) or _SEG_A_COMPANY.search(company):
-        return "A"
-    if _SEG_C_TITLE.search(title):
-        return "C"
-    return "B"  # CEO / Owner / MD / Investor default
-
-
-# ── Pain point by segment ──────────────────────────────────────────────────
-_PAIN: dict[str, str] = {
-    "A": "Manual WPS / permit tracking / MOL submissions across multiple clients",
-    "B": "Month-end HR admin, payroll errors, multi-entity compliance overhead",
-    "C": "GCC labour-law compliance at scale, multi-tenant HR edge cases",
+PAIN_MAP = {
+    "sanad":             "Multi-client work permit tracking | Lang: ar",
+    "pro":               "MOL submissions manual 15+ clients | Lang: ar",
+    "hr manager":        "WPS payroll file 2+ days every month | Lang: en",
+    "hr director":       "Omanisation ratios spreadsheet no real-time | Lang: en",
+    "hr specialist":     "HR and PRO hats too much manual admin | Lang: en",
+    "ceo":               "3+ hrs Monday HR admin | Lang: en",
+    "cfo":               "Payroll errors employee disputes | Lang: en",
+    "managing director": "HR PRO across multiple companies no unified view | Lang: en",
+    "owner":             "Single HR person single point of failure | Lang: en",
+    "founder":           "Client updates via WhatsApp clients feeling abandoned | Lang: en",
+    "investor":          "Investor pitch Oman HR tech market Vision 2040 | Lang: en",
+    "cto":               "Peer multi-tenant GCC compliance | Lang: en",
+    "default":           "Manual HR/payroll admin taking too long | Lang: en",
 }
 
-# ── Language guess ─────────────────────────────────────────────────────────
-_AR_SURNAME = re.compile(r"\b(al-|bin |bint |al |abu )", re.I)
+TAG_MAP = {
+    "sanad":    ["sanad", "muscat"],
+    "pro":      ["pro-services", "muscat"],
+    "hr":       ["hr-manager", "sme"],
+    "ceo":      ["ceo", "sme"],
+    "cfo":      ["cfo", "finance"],
+    "investor": ["investor", "oman"],
+    "cto":      ["tech-founder", "cto"],
+    "founder":  ["founder", "startup"],
+    "default":  ["oman", "sme"],
+}
 
 
-def _lang(name: str) -> str:
-    return "ar" if _AR_SURNAME.search(name) else "en"
+def detect_segment(title: str) -> str:
+    t = title.lower()
+    if any(k in t for k in SEG_B_KEYWORDS):
+        return "B"
+    if any(k in t for k in SEG_C_KEYWORDS):
+        return "C"
+    return "A"
 
 
-# ── Tag builder ────────────────────────────────────────────────────────────
-def _tags(title: str, company: str, location: str, segment: str) -> list[str]:
-    tags: list[str] = []
-    tl = title.lower()
-    cl = company.lower()
-    ll = location.lower()
-
-    if "sanad" in tl or "sanad" in cl:
-        tags.append("sanad")
-    elif "pro" in tl or "pro" in cl:
-        tags.append("pro-services")
-    if "hr" in tl:
-        tags.append("hr-manager" if "manager" in tl else "hr")
-    if "ceo" in tl or "chief executive" in tl:
-        tags.append("ceo")
-    if "cto" in tl or "technology" in tl:
-        tags.append("tech")
-    if "founder" in tl:
-        tags.append("founder")
-    if "director" in tl or "md" == tl.strip() or "managing director" in tl:
-        tags.append("director")
-    if "muscat" in ll:
-        tags.append("muscat")
-    elif "sohar" in ll:
-        tags.append("sohar")
-    elif "nizwa" in ll:
-        tags.append("nizwa")
-    elif "dubai" in ll or "uae" in ll:
-        tags.append("uae")
-    if segment == "A":
-        tags.append("priority-1")
-    elif segment == "B":
-        tags.append("priority-1" if "ceo" in tl or "owner" in tl or "founder" in tl else "priority-2")
-    else:
-        tags.append("priority-2")
-
-    return tags or [segment.lower()]
+def detect_pain(title: str) -> str:
+    t = title.lower()
+    for key, pain in PAIN_MAP.items():
+        if key in t:
+            return pain
+    return PAIN_MAP["default"]
 
 
-# ── ID generation ──────────────────────────────────────────────────────────
-def _next_ids(tracker: list[dict], count: int) -> list[str]:
-    existing = [
-        int(e["id"].split("-")[1]) for e in tracker if re.match(r"OA-\d+", e.get("id", ""))
-    ]
-    start = max(existing, default=0) + 1
-    return [f"OA-{str(i).zfill(3)}" for i in range(start, start + count)]
+def detect_tags(title: str, city: str) -> list:
+    t = title.lower()
+    tags = []
+    for key, tag_list in TAG_MAP.items():
+        if key in t:
+            tags = tag_list[:]
+            break
+    if not tags:
+        tags = TAG_MAP["default"][:]
+    city_l = city.lower()
+    if city_l and city_l not in tags:
+        tags.append(city_l)
+    tags.append("priority-1")
+    return tags
 
 
-# ── URL normaliser ─────────────────────────────────────────────────────────
-def _normalise_url(raw: str) -> str:
-    url = raw.strip().rstrip("/")
-    if not url.startswith("http"):
-        url = "https://" + url
-    return url
+def next_id(tracker: list) -> str:
+    if not tracker:
+        return "OA-021"
+    nums = []
+    for p in tracker:
+        m = re.match(r"OA-(\d+)", p.get("id", ""))
+        if m:
+            nums.append(int(m.group(1)))
+    nxt = max(nums) + 1 if nums else 21
+    return f"OA-{nxt:03d}"
 
 
-# ── Parse input lines ──────────────────────────────────────────────────────
-def parse_lines(lines: list[str]) -> list[dict]:
+def parse_input_file(path: Path) -> list:
     leads = []
-    for line in lines:
-        line = line.strip()
-        if not line or line.startswith("#"):
-            continue
-        parts = [p.strip() for p in line.split("|")]
-        if len(parts) < 2:
-            print(f"  SKIP (need at least URL|Name): {line[:60]}", file=sys.stderr)
-            continue
-        url      = _normalise_url(parts[0])
-        name     = parts[1] if len(parts) > 1 else "Unknown"
-        title    = parts[2] if len(parts) > 2 else "Unknown"
-        company  = parts[3] if len(parts) > 3 else "Unknown"
-        location = parts[4] if len(parts) > 4 else "Muscat"
-        leads.append({"url": url, "name": name, "title": title, "company": company, "location": location})
-    return leads
+    errors = []
+    with open(path, encoding="utf-8") as f:
+        for lineno, raw in enumerate(f, 1):
+            line = raw.strip()
+            if not line or line.startswith("#"):
+                continue
+            parts = [p.strip() for p in line.split("|")]
+            if len(parts) < 4:
+                errors.append(f"  Line {lineno}: expected 4+ fields, got {len(parts)} → '{line}'")
+                continue
+            url, name, title, company = parts[0], parts[1], parts[2], parts[3]
+            city = parts[4] if len(parts) > 4 else ""
+            if not url.startswith("https://www.linkedin.com/in/"):
+                errors.append(f"  Line {lineno}: URL doesn't look like a LinkedIn profile → '{url}'")
+                continue
+            leads.append({"url": url.rstrip("/"), "name": name, "title": title,
+                          "company": company, "city": city})
+    return leads, errors
 
 
-# ── Build tracker entry ────────────────────────────────────────────────────
-def _build_entry(lead_id: str, lead: dict) -> dict:
-    seg  = _segment(lead["title"], lead["company"])
-    lang = _lang(lead["name"])
-    pain = _PAIN[seg]
+def build_tracker_entry(lead: dict, new_id: str) -> dict:
+    seg = detect_segment(lead["title"])
+    pain = detect_pain(lead["title"])
+    tags = detect_tags(lead["title"], lead["city"])
+    location = lead["city"] if lead["city"] else "Oman"
     return {
-        "id":           lead_id,
-        "name":         lead["name"],
-        "company":      lead["company"],
+        "id": new_id,
+        "name": lead["name"],
         "linkedin_url": lead["url"],
-        "segment":      seg,
-        "started_at":   TODAY,
-        "status":       "active",
+        "company": lead["company"],
+        "segment": seg,
+        "started_at": TODAY,
+        "status": "active",
         "current_step": 1,
-        "notes":        (
-            f"Title: {lead['title']} | Location: {lead['location']} | "
-            f"Pain: {pain} | Lang: {lang}"
-        ),
-        "tags":         _tags(lead["title"], lead["company"], lead["location"], seg),
+        "notes": (f"{lead['company']} | Title: {lead['title']} | "
+                  f"Location: {location} | Pain: {pain}"),
+        "tags": tags,
         "converted_at": "",
     }
 
 
-# ── CSV row ────────────────────────────────────────────────────────────────
-def _build_csv_row(lead: dict, entry: dict) -> dict:
+def build_csv_row(lead: dict, entry: dict) -> dict:
     return {
-        "name":            lead["name"],
-        "linkedin_url":    lead["url"],
-        "company":         lead["company"],
-        "title_guess":     lead["title"],
-        "intent":          "high",
-        "post_topic":      "",
-        "comment_text":    "",
-        "reply_status":    "pending",
-        "dm_status":       "step_1",
-        "first_seen":      TODAY,
+        "name": lead["name"],
+        "linkedin_url": lead["url"],
+        "company": lead["company"],
+        "title_guess": lead["title"],
+        "intent": "high" if entry["segment"] == "A" else "medium" if entry["segment"] == "B" else "low",
+        "post_topic": "",
+        "comment_text": "",
+        "reply_status": "pending",
+        "dm_status": "step_1",
+        "first_seen": TODAY,
         "last_touchpoint": TODAY,
-        "demo_requested":  "",
-        "demo_date":       "",
-        "demo_outcome":    "",
-        "deal_value":      "",
-        "notes":           f"Segment {entry['segment']} | {entry['notes']}",
+        "demo_requested": "",
+        "demo_date": "",
+        "demo_outcome": "",
+        "deal_value": "",
+        "notes": entry["notes"],
     }
 
 
-# ── Main ───────────────────────────────────────────────────────────────────
-def main() -> None:
-    parser = argparse.ArgumentParser(description="Import LinkedIn leads into outreach_tracker.json")
-    parser.add_argument("--file",   default=str(INPUT_FILE), help="Path to input file")
-    parser.add_argument("--inline", default="",              help="Semicolon-separated lead strings")
-    parser.add_argument("--dry-run", action="store_true",    help="Print what would be added, don't write")
+def load_tracker() -> list:
+    with open(TRACKER_FILE, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def save_tracker(tracker: list, dry_run: bool):
+    if dry_run:
+        return
+    with open(TRACKER_FILE, "w", encoding="utf-8") as f:
+        json.dump(tracker, f, indent=2, ensure_ascii=False)
+
+
+def load_csv_urls() -> set:
+    """Return set of existing linkedin_urls in leads.csv."""
+    existing = set()
+    if not LEADS_FILE.exists():
+        return existing
+    with open(LEADS_FILE, encoding="utf-8", newline="") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            url = row.get("linkedin_url", "").strip().rstrip("/")
+            if url:
+                existing.add(url)
+    return existing
+
+
+def append_csv(rows: list, dry_run: bool):
+    if dry_run or not rows:
+        return
+    fieldnames = ["name","linkedin_url","company","title_guess","intent","post_topic",
+                  "comment_text","reply_status","dm_status","first_seen","last_touchpoint",
+                  "demo_requested","demo_date","demo_outcome","deal_value","notes"]
+    file_exists = LEADS_FILE.exists()
+    with open(LEADS_FILE, "a", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        if not file_exists:
+            writer.writeheader()
+        for row in rows:
+            writer.writerow(row)
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Import LinkedIn leads into tracker")
+    parser.add_argument("--file", default=str(DEFAULT_INPUT), help="Input file path")
+    parser.add_argument("--dry-run", action="store_true", help="Preview without writing")
     args = parser.parse_args()
 
-    # Read input
-    if args.inline:
-        raw_lines = args.inline.split(";")
-    else:
-        src = Path(args.file)
-        if not src.exists():
-            print(f"Input file not found: {src}")
-            print("Create leads_input.txt with lines like:")
-            print("  https://www.linkedin.com/in/johndoe/ | John Doe | HR Manager | ACME LLC | Muscat")
-            sys.exit(1)
-        raw_lines = src.read_text(encoding="utf-8").splitlines()
+    input_path = Path(args.file)
+    if not input_path.exists():
+        print(f"❌  Input file not found: {input_path}")
+        sys.exit(1)
 
-    leads = parse_lines(raw_lines)
+    print(f"📂  Reading: {input_path}")
+    leads, errors = parse_input_file(input_path)
+
+    if errors:
+        print("\n⚠️  Parse errors (these lines skipped):")
+        for e in errors:
+            print(e)
+
     if not leads:
-        print("No valid leads found in input.")
+        print("\n⚠️  No valid leads found. Check format: URL | Name | Title | Company | City")
         sys.exit(0)
 
-    # Load tracker
-    tracker: list[dict] = json.loads(TRACKER_FILE.read_text(encoding="utf-8")) if TRACKER_FILE.exists() else []
+    print(f"\n✅  Parsed {len(leads)} lead(s)")
 
-    # Check duplicates by URL
-    existing_urls = {e.get("linkedin_url", "").rstrip("/") for e in tracker}
-    new_leads = []
-    for ld in leads:
-        if ld["url"].rstrip("/") in existing_urls:
-            print(f"  SKIP (already in tracker): {ld['url']}")
-        else:
-            new_leads.append(ld)
+    tracker = load_tracker()
+    existing_tracker_urls = {p.get("linkedin_url", "").rstrip("/") for p in tracker}
+    existing_csv_urls = load_csv_urls()
 
-    if not new_leads:
-        print("All provided URLs already exist in the tracker.")
-        return
+    added = []
+    skipped = []
 
-    # Assign IDs and build entries
-    ids     = _next_ids(tracker, len(new_leads))
-    entries = [_build_entry(ids[i], new_leads[i]) for i in range(len(new_leads))]
+    for lead in leads:
+        url = lead["url"].rstrip("/")
+        if url in existing_tracker_urls or url in existing_csv_urls:
+            skipped.append(lead["name"])
+            continue
+        new_id = next_id(tracker)
+        entry = build_tracker_entry(lead, new_id)
+        csv_row = build_csv_row(lead, entry)
+        tracker.append(entry)
+        existing_tracker_urls.add(url)
+        added.append((entry, csv_row))
 
-    # Print summary
-    print(f"\n{'─'*70}")
-    print(f"  Adding {len(entries)} lead(s) to tracker:")
-    for e in entries:
-        print(f"  {e['id']}  Seg {e['segment']}  {e['name']:<28}  {e['company']}")
-    print(f"{'─'*70}\n")
+    print(f"\n{'[DRY RUN] ' if args.dry_run else ''}Results:")
+    print(f"  ➕  Adding  : {len(added)}")
+    print(f"  ⏭️  Skipped : {len(skipped)} (duplicates)")
+    if skipped:
+        print(f"     → {', '.join(skipped)}")
 
-    if args.dry_run:
-        print("DRY RUN — nothing written.")
-        return
+    print()
+    for entry, _ in added:
+        seg_label = {"A": "🟢 Buyer", "B": "🟡 Investor", "C": "🔵 Tech Peer"}[entry["segment"]]
+        print(f"  {entry['id']}  {entry['name']} | {entry['company']} | Seg {seg_label}")
+        print(f"       {entry['linkedin_url']}")
 
-    # Write tracker
-    tracker.extend(entries)
-    TRACKER_FILE.write_text(json.dumps(tracker, indent=2, ensure_ascii=False), encoding="utf-8")
-    print(f"✓ outreach_tracker.json updated ({len(tracker)} total entries)")
+    if not added:
+        print("Nothing new to add.")
+        sys.exit(0)
 
-    # Write CSV
-    csv_headers = [
-        "name","linkedin_url","company","title_guess","intent","post_topic",
-        "comment_text","reply_status","dm_status","first_seen","last_touchpoint",
-        "demo_requested","demo_date","demo_outcome","deal_value","notes",
-    ]
-    existing_csv_names: set[str] = set()
-    rows: list[dict] = []
-    if LEADS_CSV.exists():
-        with LEADS_CSV.open(encoding="utf-8", newline="") as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                rows.append(row)
-                existing_csv_names.add(row.get("name", ""))
+    save_tracker(tracker, args.dry_run)
+    append_csv([row for _, row in added], args.dry_run)
 
-    for e, ld in zip(entries, new_leads):
-        if e["name"] not in existing_csv_names:
-            rows.append(_build_csv_row(ld, e))
-
-    with LEADS_CSV.open("w", encoding="utf-8", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=csv_headers)
-        writer.writeheader()
-        writer.writerows(rows)
-    print(f"✓ leads.csv updated ({len(rows)} total rows)")
+    if not args.dry_run:
+        print(f"\n✅  Saved {len(added)} lead(s) to outreach_tracker.json + leads.csv")
+        print(f"   Next cron run will start Segment sequences for these {len(added)} prospect(s).")
+    else:
+        print("\n[DRY RUN] Nothing written. Remove --dry-run to commit changes.")
 
 
 if __name__ == "__main__":

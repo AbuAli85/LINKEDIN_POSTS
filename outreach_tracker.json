@@ -327,5 +327,221 @@
       "priority-1"
     ],
     "converted_at": ""
+  },
+  {
+    "id": "OA-021",
+    "name": "Rashid Al Hinai",
+    "linkedin_url": "https://www.linkedin.com/in/rashid-al-hinai-a5358836",
+    "company": "Vanguard Engineering & Oilfield Services",
+    "segment": "A",
+    "started_at": "2026-06-08",
+    "status": "active",
+    "current_step": 1,
+    "notes": "Vanguard Engineering & Oilfield Services | Title: HR & Admin Manager | Location: Muscat | Pain: Manual HR/payroll admin taking too long | Lang: en",
+    "tags": [
+      "hr-manager",
+      "sme",
+      "muscat",
+      "priority-1"
+    ],
+    "converted_at": ""
+  },
+  {
+    "id": "OA-022",
+    "name": "Mahmood Al Jabri",
+    "linkedin_url": "https://www.linkedin.com/in/mahmood-al-jabri",
+    "company": "Jabal Asset Management",
+    "segment": "A",
+    "started_at": "2026-06-08",
+    "status": "active",
+    "current_step": 1,
+    "notes": "Jabal Asset Management | Title: HR Manager | Location: Muscat | Pain: WPS payroll file 2+ days every month | Lang: en",
+    "tags": [
+      "hr-manager",
+      "sme",
+      "muscat",
+      "priority-1"
+    ],
+    "converted_at": ""
+  },
+  {
+    "id": "OA-023",
+    "name": "Mohammed Al Balushi",
+    "linkedin_url": "https://www.linkedin.com/in/mohammed-al-balushi-09654328",
+    "company": "Muscat Overseas",
+    "segment": "A",
+    "started_at": "2026-06-08",
+    "status": "active",
+    "current_step": 1,
+    "notes": "Muscat Overseas | Title: HR & OD Manager | Location: Muscat | Pain: Manual HR/payroll admin taking too long | Lang: en",
+    "tags": [
+      "hr-manager",
+      "sme",
+      "muscat",
+      "priority-1"
+    ],
+    "converted_at": ""
+  },
+  {
+    "id": "OA-024",
+    "name": "Khalida Khalil Akram",
+    "linkedin_url": "https://www.linkedin.com/in/khalida-khalil-allah-akram-mba-822b823b",
+    "company": "NOMAC OMAN",
+    "segment": "A",
+    "started_at": "2026-06-08",
+    "status": "active",
+    "current_step": 1,
+    "notes": "NOMAC OMAN | Title: Country HR & Admin Manager | Location: Muscat | Pain: Manual HR/payroll admin taking too long | Lang: en",
+    "tags": [
+      "hr-manager",
+      "sme",
+      "muscat",
+      "priority-1"
+    ],
+    "converted_at": ""
+  },
+  {
+    "id": "OA-025",
+    "name": "Said Al Hasani",
+    "linkedin_url": "https://www.linkedin.com/in/said-al-hasani-799709317",
+    "company": "Oman Sugar Refinery Company",
+    "segment": "A",
+    "started_at": "2026-06-08",
+    "status": "active",
+    "current_step": 1,
+    "notes": "Oman Sugar Refinery Company | Title: HR Manager | Location: Muscat | Pain: WPS payroll file 2+ days every month | Lang: en",
+    "tags": [
+      "hr-manager",
+      "sme",
+      "muscat",
+      "priority-1"
+    ],
+    "converted_at": ""
+  },
+  {
+    "id": "OA-026",
+    "name": "Basim Al Hasani",
+    "linkedin_url": "https://www.linkedin.com/in/basim-al-hasani-a15b05135",
+    "company": "IHG Hotels Oman",
+    "segment": "A",
+    "started_at": "2026-06-08",
+    "status": "active",
+    "current_step": 1,
+    "notes": "IHG Hotels Oman | Title: HR Director | Location: Muscat | Pain: Omanisation ratios spreadsheet no real-time | Lang: en",
+    "tags": [
+      "hr-manager",
+      "sme",
+      "muscat",
+      "priority-1"
+    ],
+    "converted_at": ""
+  },
+  {
+    "id": "OA-027",
+    "name": "Houssam Masri",
+    "linkedin_url": "https://www.linkedin.com/in/houssam-masri-2b118133",
+    "company": "Averda Oman",
+    "segment": "A",
+    "started_at": "2026-06-08",
+    "status": "active",
+    "current_step": 1,
+    "notes": "Averda Oman | Title: HR Manager | Location: Muscat | Pain: WPS payroll file 2+ days every month | Lang: en",
+    "tags": [
+      "hr-manager",
+      "sme",
+      "muscat",
+      "priority-1"
+    ],
+    "converted_at": ""
+  },
+  {
+    "id": "OA-028",
+    "name": "Jihad Jamal",
+    "linkedin_url": "https://www.linkedin.com/in/jihad-jamal-56613534",
+    "company": "Saud Bahwan Group",
+    "segment": "A",
+    "started_at": "2026-06-08",
+    "status": "active",
+    "current_step": 1,
+    "notes": "Saud Bahwan Group | Title: Regional HR & Payroll Manager | Location: Muscat | Pain: Manual HR/payroll admin taking too long | Lang: en",
+    "tags": [
+      "hr-manager",
+      "sme",
+      "muscat",
+      "priority-1"
+    ],
+    "converted_at": ""
+  },
+  {
+    "id": "OA-029",
+    "name": "Nabeel Al Balushi",
+    "linkedin_url": "https://www.linkedin.com/in/nabeel-al-balushi-19b8854b",
+    "company": "Smartrade Investment",
+    "segment": "A",
+    "started_at": "2026-06-08",
+    "status": "active",
+    "current_step": 1,
+    "notes": "Smartrade Investment | Title: Founder & CEO | Location: Muscat | Pain: 3+ hrs Monday HR admin | Lang: en",
+    "tags": [
+      "ceo",
+      "sme",
+      "muscat",
+      "priority-1"
+    ],
+    "converted_at": ""
+  },
+  {
+    "id": "OA-030",
+    "name": "Sadiq Al Lawati",
+    "linkedin_url": "https://www.linkedin.com/in/sadiq-al-matwani-al-lawati-784b5313",
+    "company": "Sharikah Fanniyah Omaniyah",
+    "segment": "A",
+    "started_at": "2026-06-08",
+    "status": "active",
+    "current_step": 1,
+    "notes": "Sharikah Fanniyah Omaniyah | Title: CEO | Location: Muscat | Pain: 3+ hrs Monday HR admin | Lang: en",
+    "tags": [
+      "ceo",
+      "sme",
+      "muscat",
+      "priority-1"
+    ],
+    "converted_at": ""
+  },
+  {
+    "id": "OA-031",
+    "name": "Mohammed Al-Basami",
+    "linkedin_url": "https://www.linkedin.com/in/mohammed-al-basami-bb5246128",
+    "company": "Muscat Marshall",
+    "segment": "A",
+    "started_at": "2026-06-08",
+    "status": "active",
+    "current_step": 1,
+    "notes": "Muscat Marshall | Title: CEO | Location: Muscat | Pain: 3+ hrs Monday HR admin | Lang: en",
+    "tags": [
+      "ceo",
+      "sme",
+      "muscat",
+      "priority-1"
+    ],
+    "converted_at": ""
+  },
+  {
+    "id": "OA-032",
+    "name": "Al Shifa Al-Harthi",
+    "linkedin_url": "https://www.linkedin.com/in/al-shifa-al-harthi-730223196",
+    "company": "Oman",
+    "segment": "A",
+    "started_at": "2026-06-08",
+    "status": "active",
+    "current_step": 1,
+    "notes": "Oman | Title: SME Development Manager | Location: Muscat | Pain: Manual HR/payroll admin taking too long | Lang: en",
+    "tags": [
+      "oman",
+      "sme",
+      "muscat",
+      "priority-1"
+    ],
+    "converted_at": ""
   }
 ]

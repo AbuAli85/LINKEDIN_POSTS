@@ -1,20 +1,15 @@
 # LEADS INPUT FILE
-# Paste real LinkedIn profile URLs below the dashed line.
-# Format (one per line):
-#   URL | Full Name | Job Title | Company Name | City
-#
-# Examples:
-#   https://www.linkedin.com/in/ahmed-al-balushi-123/ | Ahmed Al-Balushi | HR Manager | Al-Balushi Trading LLC | Muscat
-#   https://www.linkedin.com/in/fatma-hinai/ | Fatma Al-Hinai | Sanad Office Owner | Hinai Services | Sohar
-#
-# SEGMENT AUTO-DETECTION (title keywords):
-#   Segment A (buyer)    → HR, Sanad, PRO, WPS, Payroll, Admin, Operations, CFO, Managing Director, CEO, Owner, Founder
-#   Segment B (investor) → Investor, Investment, Fund, Venture, Capital, Partner (VC context)
-#   Segment C (tech peer)→ CTO, Tech, Developer, Engineer, SaaS, Digital, Software
-#
-# City detection: Muscat, Sohar, Salalah, Nizwa, Sur, Ibri → Oman
-#                 Dubai, Abu Dhabi, Riyadh, Kuwait → GCC
-#
-# Script skips duplicate URLs automatically.
-# New IDs continue from OA-021 onward.
+# Format: URL | Full Name | Job Title | Company Name | City
 # -----------------------------------------------------------------------
+https://www.linkedin.com/in/rashid-al-hinai-a5358836/ | Rashid Al Hinai | HR & Admin Manager | Vanguard Engineering & Oilfield Services | Muscat
+https://www.linkedin.com/in/mahmood-al-jabri/ | Mahmood Al Jabri | HR Manager | Jabal Asset Management | Muscat
+https://www.linkedin.com/in/mohammed-al-balushi-09654328/ | Mohammed Al Balushi | HR & OD Manager | Muscat Overseas | Muscat
+https://www.linkedin.com/in/khalida-khalil-allah-akram-mba-822b823b/ | Khalida Khalil Akram | Country HR & Admin Manager | NOMAC OMAN | Muscat
+https://www.linkedin.com/in/said-al-hasani-799709317/ | Said Al Hasani | HR Manager | Oman Sugar Refinery Company | Muscat
+https://www.linkedin.com/in/basim-al-hasani-a15b05135/ | Basim Al Hasani | HR Director | IHG Hotels Oman | Muscat
+https://www.linkedin.com/in/houssam-masri-2b118133/ | Houssam Masri | HR Manager | Averda Oman | Muscat
+https://www.linkedin.com/in/jihad-jamal-56613534/ | Jihad Jamal | Regional HR & Payroll Manager | Saud Bahwan Group | Muscat
+https://www.linkedin.com/in/nabeel-al-balushi-19b8854b/ | Nabeel Al Balushi | Founder & CEO | Smartrade Investment | Muscat
+https://www.linkedin.com/in/sadiq-al-matwani-al-lawati-784b5313/ | Sadiq Al Lawati | CEO | Sharikah Fanniyah Omaniyah | Muscat
+https://www.linkedin.com/in/mohammed-al-basami-bb5246128/ | Mohammed Al-Basami | CEO | Muscat Marshall | Muscat
+https://www.linkedin.com/in/al-shifa-al-harthi-730223196/ | Al Shifa Al-Harthi | SME Development Manager | Oman | Muscat

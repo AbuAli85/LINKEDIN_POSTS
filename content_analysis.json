@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-08T09:09:54.313225+00:00",
+  "generated_at": "2026-06-09T07:15:58.516790+00:00",
   "total_posts_analyzed": 26,
   "pillar_performance": {
     "pain": {
@@ -99,5 +99,19 @@
     "pain_ar",
     "marketing"
   ],
-  "demo_pipeline": {}
+  "demo_pipeline": {
+    "total_qualified_leads": 22,
+    "total_demos": 0,
+    "total_converted": 0,
+    "per_pillar": {
+      "unknown": {
+        "leads": 22,
+        "demos": 0,
+        "converted": 0,
+        "deal_value_omr": 0.0,
+        "demo_rate": 0.0,
+        "close_rate": 0.0
+      }
+    }
+  }
 }

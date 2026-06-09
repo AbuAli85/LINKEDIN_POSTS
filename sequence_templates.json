@@ -1,0 +1,52 @@
+{
+  "_meta": {
+    "product": "SmartPro Hub",
+    "market": "Oman SMEs — HR/Payroll/PRO buyers",
+    "avg_deal_omr": 2400,
+    "step_count": 5,
+    "step_intervals_days": [0, 3, 7, 14, 7],
+    "note": "step_intervals_days[i] = days to wait after the PREVIOUS step was sent before firing step i+1. Index 0 = days after started_at before firing step 1."
+  },
+  "steps": [
+    {
+      "step": 1,
+      "type": "connection_request",
+      "label": "Connection request",
+      "max_chars": 300,
+      "days_after_prev": 0,
+      "template": "Hi {{first_name}}, I help HR teams at Omani SMEs cut WPS/Sanad admin from hours to minutes. Building SmartPro Hub — Oman's first AI-native HR & payroll platform. Would love to connect. – Fahad"
+    },
+    {
+      "step": 2,
+      "type": "message",
+      "label": "Curiosity opener",
+      "max_chars": 600,
+      "days_after_prev": 3,
+      "template": "Hi {{first_name}}, thanks for connecting!\n\nQuick question — how much time does your team spend on WPS submissions and MOL/Sanad compliance each month?\n\nWe've found most Oman HR managers lose 2+ days a month to it. I'd love to hear what it looks like at {{company}} — happy to share what we built to fix it."
+    },
+    {
+      "step": 3,
+      "type": "message",
+      "label": "Pilot results / proof",
+      "max_chars": 600,
+      "days_after_prev": 7,
+      "template": "{{first_name}}, we wrapped a 30-day pilot with an Oman engineering SME (50 staff):\n\n• WPS prep: 2 days → 90 mins\n• Sanad renewals: manual tracking → automated alerts\n• MOL submissions: zero missed deadlines\n\nNo IT setup needed. Uploads direct from your existing payroll file.\n\nWould a quick walkthrough be useful for {{company}}?"
+    },
+    {
+      "step": 4,
+      "type": "message",
+      "label": "Free pilot CTA",
+      "max_chars": 600,
+      "days_after_prev": 14,
+      "template": "{{first_name}}, we're onboarding 5 Oman SMEs for a free 3-month SmartPro Hub pilot — priority given to in-house HR teams managing WPS + Sanad.\n\nOMR 0 to trial. Full platform access.\n\nWorth a 15-min call to see if {{company}} is a good fit? Grab a slot: smartprohub.com/demo\n\nOr just reply here — happy to answer any questions first."
+    },
+    {
+      "step": 5,
+      "type": "message",
+      "label": "Final follow-up",
+      "max_chars": 600,
+      "days_after_prev": 7,
+      "template": "{{first_name}}, last message from me — the pilot cohort closes this week.\n\nIf the timing's off, totally fine. But if HR/payroll compliance is still a manual headache at {{company}}, I'd hate for you to miss it.\n\nOne question: what's your biggest HR admin pain right now? Even if we're not a fit, I might know someone who can help."
+    }
+  ]
+}

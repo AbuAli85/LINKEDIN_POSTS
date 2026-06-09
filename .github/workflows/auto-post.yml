@@ -221,6 +221,16 @@ jobs:
       - name: Export leads.csv
         run: python outreach.py export || echo "export completed"
 
+      - name: Send due sequence steps to tracker leads
+        # Sends connection request (step 1) or DM (steps 2-5) to each lead that is due today.
+        # Advances current_step and sets last_sent_at on success.
+        # Requires w_member_social (connection requests) and w_member_messaging (DMs).
+        # Set LINKEDIN_DRY_RUN=true in repo secrets to preview without sending.
+        env:
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+          LINKEDIN_DRY_RUN: ${{ secrets.LINKEDIN_DRY_RUN || 'false' }}
+        run: python outreach.py send-sequences || echo "send-sequences completed (errors logged above)"
+
       - name: Fetch post engagement metrics (aged posts ≥7 days)
         env:
           LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
@@ -236,7 +246,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           # Commit data files first — unique filenames mean no conflicts
-          git add outreach_history/ leads.csv
+          git add outreach_history/ leads.csv outreach_tracker.json
           git add content_analysis.json 2>/dev/null || true
           DATE=$(date -u '+%Y-%m-%d')
           NLEADS=$(python -c "import csv; r=list(csv.DictReader(open('leads.csv'))); print(len([x for x in r if x.get('intent') in ('high','medium')]))" 2>/dev/null || echo 0)

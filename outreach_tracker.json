@@ -102,7 +102,7 @@
     "segment": "A",
     "started_at": "2026-06-08",
     "status": "active",
-    "current_step": 1,
+    "current_step": 2,
     "notes": "IHG Hotels Oman | Title: HR Director | Location: Muscat | Pain: Omanisation ratios spreadsheet no real-time | Lang: en",
     "tags": [
       "hr-manager",
@@ -110,7 +110,8 @@
       "muscat",
       "priority-1"
     ],
-    "converted_at": ""
+    "converted_at": "",
+    "last_sent_at": "2026-06-09"
   },
   {
     "id": "OA-027",
@@ -120,7 +121,7 @@
     "segment": "A",
     "started_at": "2026-06-08",
     "status": "active",
-    "current_step": 1,
+    "current_step": 2,
     "notes": "Averda Oman | Title: HR Manager | Location: Muscat | Pain: WPS payroll file 2+ days every month | Lang: en",
     "tags": [
       "hr-manager",
@@ -128,7 +129,8 @@
       "muscat",
       "priority-1"
     ],
-    "converted_at": ""
+    "converted_at": "",
+    "last_sent_at": "2026-06-09"
   },
   {
     "id": "OA-028",
@@ -138,7 +140,7 @@
     "segment": "A",
     "started_at": "2026-06-08",
     "status": "active",
-    "current_step": 1,
+    "current_step": 2,
     "notes": "Saud Bahwan Group | Title: Regional HR & Payroll Manager | Location: Muscat | Pain: Manual HR/payroll admin taking too long | Lang: en",
     "tags": [
       "hr-manager",
@@ -146,7 +148,8 @@
       "muscat",
       "priority-1"
     ],
-    "converted_at": ""
+    "converted_at": "",
+    "last_sent_at": "2026-06-09"
   },
   {
     "id": "OA-029",
@@ -156,7 +159,7 @@
     "segment": "A",
     "started_at": "2026-06-08",
     "status": "active",
-    "current_step": 1,
+    "current_step": 2,
     "notes": "Smartrade Investment | Title: Founder & CEO | Location: Muscat | Pain: 3+ hrs Monday HR admin | Lang: en",
     "tags": [
       "ceo",
@@ -164,7 +167,8 @@
       "muscat",
       "priority-1"
     ],
-    "converted_at": ""
+    "converted_at": "",
+    "last_sent_at": "2026-06-09"
   },
   {
     "id": "OA-030",
@@ -174,7 +178,7 @@
     "segment": "A",
     "started_at": "2026-06-08",
     "status": "active",
-    "current_step": 1,
+    "current_step": 2,
     "notes": "Sharikah Fanniyah Omaniyah | Title: CEO | Location: Muscat | Pain: 3+ hrs Monday HR admin | Lang: en",
     "tags": [
       "ceo",
@@ -182,7 +186,8 @@
       "muscat",
       "priority-1"
     ],
-    "converted_at": ""
+    "converted_at": "",
+    "last_sent_at": "2026-06-09"
   },
   {
     "id": "OA-031",
@@ -192,7 +197,7 @@
     "segment": "A",
     "started_at": "2026-06-08",
     "status": "active",
-    "current_step": 1,
+    "current_step": 2,
     "notes": "Muscat Marshall | Title: CEO | Location: Muscat | Pain: 3+ hrs Monday HR admin | Lang: en",
     "tags": [
       "ceo",
@@ -200,7 +205,8 @@
       "muscat",
       "priority-1"
     ],
-    "converted_at": ""
+    "converted_at": "",
+    "last_sent_at": "2026-06-09"
   },
   {
     "id": "OA-032",
@@ -210,7 +216,7 @@
     "segment": "A",
     "started_at": "2026-06-08",
     "status": "active",
-    "current_step": 1,
+    "current_step": 2,
     "notes": "Oman | Title: SME Development Manager | Location: Muscat | Pain: Manual HR/payroll admin taking too long | Lang: en",
     "tags": [
       "oman",
@@ -218,7 +224,8 @@
       "muscat",
       "priority-1"
     ],
-    "converted_at": ""
+    "converted_at": "",
+    "last_sent_at": "2026-06-09"
   },
   {
     "id": "OA-033",
@@ -228,7 +235,7 @@
     "segment": "A",
     "started_at": "2026-06-08",
     "status": "active",
-    "current_step": 1,
+    "current_step": 2,
     "notes": "NOV Oman | Title: Country HR Manager | Location: Muscat | Pain: WPS payroll file 2+ days every month | Lang: en",
     "tags": [
       "hr-manager",
@@ -236,7 +243,8 @@
       "muscat",
       "priority-1"
     ],
-    "converted_at": ""
+    "converted_at": "",
+    "last_sent_at": "2026-06-09"
   },
   {
     "id": "OA-034",
@@ -246,7 +254,7 @@
     "segment": "A",
     "started_at": "2026-06-08",
     "status": "active",
-    "current_step": 1,
+    "current_step": 2,
     "notes": "Alsafa ETS | Title: HR & Administration Manager | Location: Muscat | Pain: Manual HR/payroll admin taking too long | Lang: en",
     "tags": [
       "hr-manager",
@@ -254,7 +262,8 @@
       "muscat",
       "priority-1"
     ],
-    "converted_at": ""
+    "converted_at": "",
+    "last_sent_at": "2026-06-09"
   },
   {
     "id": "OA-035",
@@ -264,7 +273,7 @@
     "segment": "A",
     "started_at": "2026-06-08",
     "status": "active",
-    "current_step": 1,
+    "current_step": 2,
     "notes": "Diamond Developers Oman | Title: HR Manager | Location: Muscat | Pain: WPS payroll file 2+ days every month | Lang: en",
     "tags": [
       "hr-manager",
@@ -272,7 +281,8 @@
       "muscat",
       "priority-1"
     ],
-    "converted_at": ""
+    "converted_at": "",
+    "last_sent_at": "2026-06-09"
   },
   {
     "id": "OA-036",
@@ -282,7 +292,7 @@
     "segment": "A",
     "started_at": "2026-06-08",
     "status": "active",
-    "current_step": 1,
+    "current_step": 2,
     "notes": "Composite Pipes Industry | Title: Group HR Manager | Location: Muscat | Pain: WPS payroll file 2+ days every month | Lang: en",
     "tags": [
       "hr-manager",
@@ -290,7 +300,8 @@
       "muscat",
       "priority-1"
     ],
-    "converted_at": ""
+    "converted_at": "",
+    "last_sent_at": "2026-06-09"
   },
   {
     "id": "OA-037",
@@ -300,7 +311,7 @@
     "segment": "A",
     "started_at": "2026-06-08",
     "status": "active",
-    "current_step": 1,
+    "current_step": 2,
     "notes": "Sterling International | Title: HR & Omanisation Manager | Location: Muscat | Pain: Manual HR/payroll admin taking too long | Lang: en",
     "tags": [
       "hr-manager",
@@ -308,7 +319,8 @@
       "muscat",
       "priority-1"
     ],
-    "converted_at": ""
+    "converted_at": "",
+    "last_sent_at": "2026-06-09"
   },
   {
     "id": "OA-038",
@@ -318,7 +330,7 @@
     "segment": "A",
     "started_at": "2026-06-08",
     "status": "active",
-    "current_step": 1,
+    "current_step": 2,
     "notes": "Weatherford Oman | Title: Senior HR Manager | Location: Muscat | Pain: WPS payroll file 2+ days every month | Lang: en",
     "tags": [
       "hr-manager",
@@ -326,7 +338,8 @@
       "muscat",
       "priority-1"
     ],
-    "converted_at": ""
+    "converted_at": "",
+    "last_sent_at": "2026-06-09"
   },
   {
     "id": "OA-039",
@@ -336,7 +349,7 @@
     "segment": "A",
     "started_at": "2026-06-08",
     "status": "active",
-    "current_step": 1,
+    "current_step": 2,
     "notes": "ABAQ AL EBDAA Trading | Title: HR Manager | Location: Muscat | Pain: WPS payroll file 2+ days every month | Lang: en",
     "tags": [
       "hr-manager",
@@ -344,7 +357,8 @@
       "muscat",
       "priority-1"
     ],
-    "converted_at": ""
+    "converted_at": "",
+    "last_sent_at": "2026-06-09"
   },
   {
     "id": "OA-040",
@@ -354,7 +368,7 @@
     "segment": "A",
     "started_at": "2026-06-08",
     "status": "active",
-    "current_step": 1,
+    "current_step": 2,
     "notes": "Oman | Title: HR General Manager | Location: Muscat | Pain: Manual HR/payroll admin taking too long | Lang: en",
     "tags": [
       "hr-manager",
@@ -362,7 +376,8 @@
       "muscat",
       "priority-1"
     ],
-    "converted_at": ""
+    "converted_at": "",
+    "last_sent_at": "2026-06-09"
   },
   {
     "id": "OA-041",
@@ -372,7 +387,7 @@
     "segment": "A",
     "started_at": "2026-06-08",
     "status": "active",
-    "current_step": 1,
+    "current_step": 2,
     "notes": "Al-Mutawaa Group | Title: HR & Payroll Manager | Location: Muscat | Pain: Manual HR/payroll admin taking too long | Lang: en",
     "tags": [
       "hr-manager",
@@ -380,7 +395,8 @@
       "muscat",
       "priority-1"
     ],
-    "converted_at": ""
+    "converted_at": "",
+    "last_sent_at": "2026-06-09"
   },
   {
     "id": "OA-042",
@@ -390,7 +406,7 @@
     "segment": "A",
     "started_at": "2026-06-08",
     "status": "active",
-    "current_step": 1,
+    "current_step": 2,
     "notes": "Oman | Title: Chief People Officer | Location: Muscat | Pain: Manual HR/payroll admin taking too long | Lang: en",
     "tags": [
       "oman",
@@ -398,7 +414,8 @@
       "muscat",
       "priority-1"
     ],
-    "converted_at": ""
+    "converted_at": "",
+    "last_sent_at": "2026-06-09"
   },
   {
     "id": "OA-043",
@@ -408,7 +425,7 @@
     "segment": "A",
     "started_at": "2026-06-08",
     "status": "active",
-    "current_step": 1,
+    "current_step": 2,
     "notes": "Muscat International Bitumen | Pain: Multi-site Oman manufacturing ops payroll + WPS compliance for large expat workforce",
     "tags": [
       "ceo",
@@ -416,7 +433,8 @@
       "muscat",
       "priority-1"
     ],
-    "converted_at": ""
+    "converted_at": "",
+    "last_sent_at": "2026-06-09"
   },
   {
     "id": "OA-044",
@@ -426,7 +444,7 @@
     "segment": "A",
     "started_at": "2026-06-08",
     "status": "active",
-    "current_step": 1,
+    "current_step": 2,
     "notes": "Oman Metal Industries & Contracting | Pain: Multi-site Oman manufacturing ops payroll + WPS compliance for large expat workforce",
     "tags": [
       "ceo",
@@ -434,7 +452,8 @@
       "muscat",
       "priority-1"
     ],
-    "converted_at": ""
+    "converted_at": "",
+    "last_sent_at": "2026-06-09"
   },
   {
     "id": "OA-045",
@@ -444,7 +463,7 @@
     "segment": "A",
     "started_at": "2026-06-08",
     "status": "active",
-    "current_step": 1,
+    "current_step": 2,
     "notes": "Zawad Development & Consultancy | Title: CEO & Founder | Location: Muscat | Pain: 3+ hrs Monday HR admin | Lang: en",
     "tags": [
       "ceo",
@@ -452,6 +471,7 @@
       "muscat",
       "priority-1"
     ],
-    "converted_at": ""
+    "converted_at": "",
+    "last_sent_at": "2026-06-09"
   }
 ]

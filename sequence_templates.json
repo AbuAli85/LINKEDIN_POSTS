@@ -38,7 +38,7 @@
       "label": "Free pilot CTA",
       "max_chars": 600,
       "days_after_prev": 14,
-      "template": "{{first_name}}, we're onboarding 5 Oman SMEs for a free 3-month SmartPro Hub pilot — priority given to in-house HR teams managing WPS + Sanad.\n\nOMR 0 to trial. Full platform access.\n\nWorth a 15-min call to see if {{company}} is a good fit? Grab a slot: smartprohub.com/demo\n\nOr just reply here — happy to answer any questions first."
+      "template": "{{first_name}}, we're onboarding 5 Oman SMEs for a free 3-month SmartPro Hub pilot — priority given to in-house HR teams managing WPS + Sanad.\n\nOMR 0 to trial. Full platform access.\n\nWorth a 15-min call to see if {{company}} is a good fit? Grab a slot: www.thesmartpro.io/demo\n\nOr just reply here — happy to answer any questions first."
     },
     {
       "step": 5,

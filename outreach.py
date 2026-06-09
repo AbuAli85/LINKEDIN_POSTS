@@ -1081,6 +1081,9 @@ def cmd_send_sequences() -> int:
     if dry_run:
         print("  [DRY RUN -- messages will NOT be sent, but tracker WILL advance]")
 
+    daily_limit = int(os.environ.get("OUTREACH_DAILY_LIMIT", "15"))
+    print(f"  Daily cap: {daily_limit} messages")
+
     templates = _load_templates()
     step_map  = {s["step"]: s for s in templates["steps"]}
     max_step  = max(step_map.keys())
@@ -1148,6 +1151,10 @@ def cmd_send_sequences() -> int:
                 lead["status"] = "sequence_complete"
             sent += 1
             print(f"    OK {'[DRY RUN] ' if dry_run else ''}Step {step_num} sent")
+            if sent >= daily_limit:
+                print(f"\n  Daily cap of {daily_limit} reached — stopping. "
+                      f"Remaining leads will be picked up on the next run.")
+                break
         else:
             errors += 1
             print(f"    FAIL Step {step_num} -- tracker NOT advanced", file=sys.stderr)
@@ -1174,7 +1181,10 @@ def _cli() -> None:
     sub.add_parser("draft-replies",   help="Draft replies for qualified leads")
     sub.add_parser("draft-dms",       help="Draft DM sequences for high-intent replied leads")
     sub.add_parser("export",          help="Export leads.csv")
-    sub.add_parser("send-sequences",  help="Send due sequence steps (LINKEDIN_DRY_RUN=true to preview)")
+    p_seq = sub.add_parser("send-sequences",
+                           help="Send due sequence steps (LINKEDIN_DRY_RUN=true to preview)")
+    p_seq.add_argument("--limit", type=int, default=None,
+                       help="Max messages to send this run (overrides OUTREACH_DAILY_LIMIT env var, default 15)")
     sub.add_parser("run-all",         help="Run all pipeline steps in sequence")
     p_manual = sub.add_parser("manual-capture",
         help="Add leads by LinkedIn profile URL (no r_member_social needed)")
@@ -1193,10 +1203,14 @@ def _cli() -> None:
         "draft-replies":  cmd_draft_replies,
         "draft-dms":      cmd_draft_dms,
         "export":         cmd_export,
-        "send-sequences": cmd_send_sequences,
         "run-all":        cmd_run_all,
     }
-    dispatch[args.cmd]()
+    if args.cmd == "send-sequences":
+        if getattr(args, "limit", None) is not None:
+            os.environ["OUTREACH_DAILY_LIMIT"] = str(args.limit)
+        cmd_send_sequences()
+    else:
+        dispatch[args.cmd]()
 
 
 if __name__ == "__main__":

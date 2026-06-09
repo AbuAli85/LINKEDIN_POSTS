@@ -7,7 +7,7 @@
     "segment": "A",
     "started_at": "2026-06-08",
     "status": "active",
-    "current_step": 1,
+    "current_step": 2,
     "notes": "Vanguard Engineering & Oilfield Services | Title: HR & Admin Manager | Location: Muscat | Pain: Manual HR/payroll admin taking too long | Lang: en",
     "tags": [
       "hr-manager",
@@ -15,7 +15,8 @@
       "muscat",
       "priority-1"
     ],
-    "converted_at": ""
+    "converted_at": "",
+    "last_sent_at": "2026-06-09"
   },
   {
     "id": "OA-022",
@@ -25,7 +26,7 @@
     "segment": "A",
     "started_at": "2026-06-08",
     "status": "active",
-    "current_step": 1,
+    "current_step": 2,
     "notes": "Jabal Asset Management | Title: HR Manager | Location: Muscat | Pain: WPS payroll file 2+ days every month | Lang: en",
     "tags": [
       "hr-manager",
@@ -33,7 +34,8 @@
       "muscat",
       "priority-1"
     ],
-    "converted_at": ""
+    "converted_at": "",
+    "last_sent_at": "2026-06-09"
   },
   {
     "id": "OA-023",
@@ -43,7 +45,7 @@
     "segment": "A",
     "started_at": "2026-06-08",
     "status": "active",
-    "current_step": 1,
+    "current_step": 2,
     "notes": "Muscat Overseas | Title: HR & OD Manager | Location: Muscat | Pain: Manual HR/payroll admin taking too long | Lang: en",
     "tags": [
       "hr-manager",
@@ -51,7 +53,8 @@
       "muscat",
       "priority-1"
     ],
-    "converted_at": ""
+    "converted_at": "",
+    "last_sent_at": "2026-06-09"
   },
   {
     "id": "OA-024",
@@ -61,7 +64,7 @@
     "segment": "A",
     "started_at": "2026-06-08",
     "status": "active",
-    "current_step": 1,
+    "current_step": 2,
     "notes": "NOMAC OMAN | Title: Country HR & Admin Manager | Location: Muscat | Pain: Manual HR/payroll admin taking too long | Lang: en",
     "tags": [
       "hr-manager",
@@ -69,7 +72,8 @@
       "muscat",
       "priority-1"
     ],
-    "converted_at": ""
+    "converted_at": "",
+    "last_sent_at": "2026-06-09"
   },
   {
     "id": "OA-025",
@@ -79,7 +83,7 @@
     "segment": "A",
     "started_at": "2026-06-08",
     "status": "active",
-    "current_step": 1,
+    "current_step": 2,
     "notes": "Oman Sugar Refinery Company | Title: HR Manager | Location: Muscat | Pain: WPS payroll file 2+ days every month | Lang: en",
     "tags": [
       "hr-manager",
@@ -87,7 +91,8 @@
       "muscat",
       "priority-1"
     ],
-    "converted_at": ""
+    "converted_at": "",
+    "last_sent_at": "2026-06-09"
   },
   {
     "id": "OA-026",

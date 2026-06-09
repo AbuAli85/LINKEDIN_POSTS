@@ -1002,7 +1002,7 @@ def _li_resolve_urn(linkedin_url: str) -> str | None:
     Returns None on failure.
     """
     vanity = linkedin_url.rstrip("/").split("/in/")[-1].split("?")[0]
-    url    = f"{LI_BASE}/people/(vanityName={urllib.parse.quote(vanity)})?projection=(id)"
+    url    = f"{LI_BASE}/people/(vanityName:{urllib.parse.quote(vanity)})?projection=(id)"
     data   = _li_get(url)
     if data and data.get("id"):
         return f"urn:li:person:{data['id']}"

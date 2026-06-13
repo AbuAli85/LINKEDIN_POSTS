@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-06-12T07:39:21.695570+00:00",
-  "total_posts_analyzed": 28,
+  "generated_at": "2026-06-13T07:20:18.864339+00:00",
+  "total_posts_analyzed": 30,
   "pillar_performance": {
     "sanad_pro": {
       "posts": 4,
@@ -52,7 +52,7 @@
       "avg_engagement_rate": 0.0
     },
     "tech": {
-      "posts": 1,
+      "posts": 3,
       "total_reactions": 0,
       "total_comments": 0,
       "total_shares": 0,

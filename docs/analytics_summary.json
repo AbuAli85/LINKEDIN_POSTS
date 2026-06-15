@@ -1,9 +1,16 @@
 {
-  "generated_at": "2026-06-08T09:09:54.313225+00:00",
-  "total_posts_analyzed": 26,
+  "generated_at": "2026-06-15T09:40:02.787396+00:00",
+  "total_posts_analyzed": 31,
   "pillar_performance": {
-    "pain": {
-      "posts": 5,
+    "sanad_pro": {
+      "posts": 4,
+      "total_reactions": 0,
+      "total_comments": 0,
+      "total_shares": 0,
+      "avg_engagement_rate": 0.0
+    },
+    "marketing": {
+      "posts": 1,
       "total_reactions": 0,
       "total_comments": 0,
       "total_shares": 0,
@@ -11,6 +18,27 @@
     },
     "sanad_pro_ar": {
       "posts": 4,
+      "total_reactions": 0,
+      "total_comments": 0,
+      "total_shares": 0,
+      "avg_engagement_rate": 0.0
+    },
+    "vision": {
+      "posts": 3,
+      "total_reactions": 0,
+      "total_comments": 0,
+      "total_shares": 0,
+      "avg_engagement_rate": 0.0
+    },
+    "pain": {
+      "posts": 6,
+      "total_reactions": 0,
+      "total_comments": 0,
+      "total_shares": 0,
+      "avg_engagement_rate": 0.0
+    },
+    "leadership": {
+      "posts": 2,
       "total_reactions": 0,
       "total_comments": 0,
       "total_shares": 0,
@@ -24,28 +52,7 @@
       "avg_engagement_rate": 0.0
     },
     "tech": {
-      "posts": 1,
-      "total_reactions": 0,
-      "total_comments": 0,
-      "total_shares": 0,
-      "avg_engagement_rate": 0.0
-    },
-    "sanad_pro": {
       "posts": 3,
-      "total_reactions": 0,
-      "total_comments": 0,
-      "total_shares": 0,
-      "avg_engagement_rate": 0.0
-    },
-    "vision": {
-      "posts": 2,
-      "total_reactions": 0,
-      "total_comments": 0,
-      "total_shares": 0,
-      "avg_engagement_rate": 0.0
-    },
-    "leadership": {
-      "posts": 2,
       "total_reactions": 0,
       "total_comments": 0,
       "total_shares": 0,
@@ -57,47 +64,54 @@
       "total_comments": 0,
       "total_shares": 0,
       "avg_engagement_rate": 0.0
-    },
-    "marketing": {
-      "posts": 1,
-      "total_reactions": 0,
-      "total_comments": 0,
-      "total_shares": 0,
-      "avg_engagement_rate": 0.0
     }
   },
   "hook_performance": {
-    "question": 0.0,
     "story": 0.0,
-    "numbered-list": 0.0,
+    "question": 0.0,
     "bold-statement": 0.0,
+    "numbered-list": 0.0,
     "data-lead": 0.0,
-    "contrast": 0.0,
-    "observation": 0.0
+    "observation": 0.0,
+    "contrast": 0.0
   },
   "frequency_multipliers": {
-    "pain": 1.0,
+    "sanad_pro": 1.0,
+    "marketing": 1.0,
     "sanad_pro_ar": 1.0,
+    "vision": 1.0,
+    "pain": 1.0,
+    "leadership": 1.0,
     "proof": 1.0,
     "tech": 1.0,
-    "sanad_pro": 1.0,
-    "vision": 1.0,
-    "leadership": 1.0,
-    "pain_ar": 1.0,
-    "marketing": 1.0
+    "pain_ar": 1.0
   },
-  "best_pillar": "pain",
-  "best_hook_style": "question",
+  "best_pillar": "sanad_pro",
+  "best_hook_style": "story",
   "recommended_emphasis": [
-    "pain",
+    "sanad_pro",
+    "marketing",
     "sanad_pro_ar",
+    "vision",
+    "pain",
+    "leadership",
     "proof",
     "tech",
-    "sanad_pro",
-    "vision",
-    "leadership",
-    "pain_ar",
-    "marketing"
+    "pain_ar"
   ],
-  "demo_pipeline": {}
+  "demo_pipeline": {
+    "total_qualified_leads": 22,
+    "total_demos": 0,
+    "total_converted": 0,
+    "per_pillar": {
+      "unknown": {
+        "leads": 22,
+        "demos": 0,
+        "converted": 0,
+        "deal_value_omr": 0.0,
+        "demo_rate": 0.0,
+        "close_rate": 0.0
+      }
+    }
+  }
 }

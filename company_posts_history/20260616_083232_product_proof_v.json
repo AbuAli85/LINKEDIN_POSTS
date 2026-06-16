@@ -1,0 +1,20 @@
+{
+  "pillar": "product_proof",
+  "topic": "How a multi-branch operation manages payroll for four locations from one screen",
+  "format": "Lead with a specific customer outcome \u2014 time saved, errors eliminated, hours recovered \u2014 then describe what changed",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "A multi-branch business in Oman was running four separate payroll spreadsheets \u2014 one per location, dozens of WhatsApp threads, and a payroll manager drowning in reconciliation every month.\n\nOne platform change fixed all of it.\n\nBefore: payroll for each site lived in its own spreadsheet. HR spent days reconciling hours, chasing managers for approvals, manually calculating WPS transfers per branch \u2014 then holding their breath before the bank deadline.\n\nAfter moving onto one platform, all four locations appeared on a single screen. WPS payroll ran with direct bank integration. SPF deductions calculated automatically. No spreadsheets. No branch-to-branch WhatsApp chains.\n\nThe payroll manager got back nearly a full working day every month.\n\nSmartPro Hub was built for exactly this \u2014 Oman and GCC businesses running multi-site operations where fragmented tools keep creating problems. WPS payroll compliance, Ministry of Labour filings, Omanization tracking, bilingual Arabic and English. One place.\n\nFrom OMR 25/month. 14-day free trial, no credit card needed.\n\nIf you're still stitching payroll together across locations by hand, the real cost isn't the hours lost. It's the errors sitting quietly in last month's run.\n\nBook a 20-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#WPS\n#PayrollOman\n#OmanBusiness\n#GCCBusiness",
+  "char_count": 1403,
+  "generated_at": "2026-06-16T08:32:42.680308+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260616_083233_product_proof.json"
+}

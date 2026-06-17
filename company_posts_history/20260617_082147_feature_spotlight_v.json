@@ -1,0 +1,20 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "Automated invoicing per service for PRO firms \u2014 billing 30 clients in the time it used to take to bill three",
+  "format": "Compare 'how most Oman businesses do X today' with 'how SmartPro Hub customers do X'",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "A PRO firm billing 30 clients manually loses two full working days every single month. Those days don't come back.\n\nExport from a spreadsheet. Open a template. Type in the client name, the services, the amounts. Save. Send. Repeat. For every single client.\n\nBilling 15 clients eats a full day. Billing 30 means two days gone \u2014 and those days don't really exist when you're also running operations.\n\nSmartPro Hub works differently.\n\nWhen a PRO service wraps up \u2014 visa processing, work permit renewal, Ministry of Labour filing \u2014 an invoice generates automatically. Tied to that service, for that client, with no manual entry and no copying figures between tabs.\n\nOne firm cut their entire monthly billing run from most of a working day down to before lunch. Same 30 clients. A fraction of the time.\n\nWe built this because PRO services work in Oman shouldn't require a dedicated billing person on top of everything else. The service is done. The invoice should just appear.\n\nThe firms growing past 25\u201330 clients aren't solving this by hiring more admin staff. They're cutting out the manual steps that were never actually necessary.\n\nIf your billing still runs on templates and copy-paste, what would you do with those hours?\n\nBook a 20-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#PRO services automation Oman\n#GCCBusiness\n#SMEOman",
+  "char_count": 1428,
+  "generated_at": "2026-06-17T08:21:58.147692+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260617_082148_feature_spotlight.json"
+}

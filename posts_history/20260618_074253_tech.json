@@ -1,0 +1,18 @@
+{
+  "pillar": "tech",
+  "topic": "Shipping to 200 real companies: what breaks that unit tests never catch",
+  "format": "A sprint retrospective: what shipped, what slipped, what surprised you \u2014 honest, specific, no PR spin",
+  "language": "en",
+  "segment": "C",
+  "publish_day": "Saturday",
+  "post": "We shipped to company #200 last week.\n\nNo champagne. We spent the day chasing a race condition that never showed up across 4,000 tests.\n\nHere's the gap nobody talks about enough: tests passing and production holding are two different things.\n\nUnit tests catch logic. They don't catch timing.\n\nOur WPS payroll engine runs clean in isolation. But 12 companies hitting the same bank integration window simultaneously? One tenant's job bleeds into another's. Drizzle ORM, tRPC, MySQL \u2014 each one fine on its own. The seams between them are where real companies find the cracks.\n\nThree things that only broke at scale:\n\nMinistry of Labour compliance checks that fly through dev, then timeout under actual document volumes.\n\nEnd-of-service gratuity calculations that were accurate for one employee, wrong for 40 when contract types mixed mid-batch.\n\nSanad office management workflows built around sequential requests \u2014 real offices don't work sequentially.\n\nHonest retrospective: the architecture held. Our assumptions about usage patterns didn't.\n\nThe fix wasn't elegant. Queue depth limits and per-tenant job isolation. Boring. Correct.\n\nI keep thinking about how many edge cases are still sitting quietly in the codebase, waiting for company #300 to find them. That's not doom \u2014 it's just the actual work. You don't know what you don't know until real load hits real users with real deadlines.\n\nWhat's lurking in your stack that 200 real users will eventually surface?\n\nSee SmartPRO Hub in action \u2014 book a free 20-min demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}\n\n#BuildInPublic\n#SaaS\n#GCCTech\n#TypeScript\n#SmartPROHub",
+  "char_count": 1669,
+  "generated_at": "2026-06-18T07:42:53.500385+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 2,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true
+}

@@ -104,6 +104,15 @@ _BRAND_CONTEXT = (
     f"End every post with this CTA on its own line: {COMPANY_CTA}"
 )
 
+# Feasibility pillar uses a single CTA — the tracked feasibility link injected by
+# _cta_block. Drop the default demo/WhatsApp sign-off so these posts don't carry
+# two competing calls-to-action.
+_BRAND_CONTEXT_FEASIBILITY = _BRAND_CONTEXT.replace(
+    f"End every post with this CTA on its own line: {COMPANY_CTA}",
+    "End every post with the exact tracked CTA provided below on its own line. "
+    "Do not add any other call-to-action, demo link, phone number, or WhatsApp number.",
+)
+
 _BRAND_CONTEXT_CANDIDATES = (
     "BRAND CONTEXT: You are writing on behalf of SmartPRO Hub — a platform that connects job seekers "
     "with companies actively hiring in Oman. Candidates can create a free profile, browse open roles, "
@@ -577,7 +586,7 @@ PILLARS = {
         "generate_day":    "on demand",
         "tone":            "encouraging, practical, demystifying — make starting a funded business feel achievable, never salesy",
         "audience":        "aspiring entrepreneurs, SMEs, and Sanad-office clients in Oman who need a feasibility study to apply for Development Bank Oman (DBO) or Riyada funding",
-        "brand_context":   _BRAND_CONTEXT,
+        "brand_context":   _BRAND_CONTEXT_FEASIBILITY,
         "formats": [
             "Explain what a bank-ready feasibility study must contain — then show how the reader can produce one free in about 10 minutes",
             "Walk through the real reason most Oman loan applications get rejected, and how a proper feasibility study fixes it",

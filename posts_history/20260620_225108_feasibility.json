@@ -10,9 +10,11 @@
   "generated_at": "2026-06-20T22:51:08.720059+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 1,
-  "status": "draft",
+  "status": "superseded",
   "published": false,
   "approved": false,
   "approval_required": false,
-  "dry_run": true
+  "dry_run": true,
+  "superseded_at": "2026-06-20T23:18:15.622817+00:00",
+  "superseded_by": "20260620_231815_feasibility.json"
 }

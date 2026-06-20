@@ -989,6 +989,15 @@ def pick_pillar(weekday: int, force: str | None = None) -> tuple[str, dict]:
         # Off-schedule trigger — pick most under-represented high-weight pillar
         return _pick_by_weight(schedulable, weights, recent)
 
+    # Biweekly Feasibility Studio rotation: on even ISO weeks, hand the vision
+    # slot to the (manual-only) feasibility pillar. This promotes Feasibility
+    # Studio every other week without adding a post or changing the cadence —
+    # vision is the lowest-converting scheduled pillar, so it absorbs the swap.
+    if scheduled == "vision" and "feasibility" in PILLARS:
+        from datetime import datetime, timezone
+        if datetime.now(timezone.utc).isocalendar()[1] % 2 == 0:
+            return "feasibility", PILLARS["feasibility"]
+
     # Check whether the highest-weight pillar is substantially under-represented
     total_weight = sum(weights.get(k, 1.0) for k in schedulable) or 1.0
     total_recent = sum(recent.get(k, 0) for k in schedulable) or 1

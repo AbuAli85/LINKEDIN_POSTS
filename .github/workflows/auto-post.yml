@@ -58,7 +58,7 @@ on:
         required: false
         default: ""
       pillar:
-        description: "Force a specific pillar (pain/proof/vision/conversion). Leave blank to auto-pick."
+        description: "Force a specific pillar (pain/proof/vision/conversion/feasibility). Leave blank to auto-pick."
         required: false
         default: ""
       dry_run:

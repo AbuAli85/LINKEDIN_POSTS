@@ -47,6 +47,20 @@ CTA_DEMO_AR = (
     "https://www.thesmartpro.io/demo"
     "?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}"
 )
+# Feasibility Studio — free AI feasibility-study generator (lead magnet).
+# Used via a pillar's "cta" override (see _cta_block in generator.py).
+CTA_FEASIBILITY = (
+    "Build a bank-ready feasibility study free in ~10 minutes — covers all 10 "
+    "Development Bank Oman / Riyada programs: "
+    "https://www.thesmartpro.io/feasibility-studio"
+    "?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}"
+)
+CTA_FEASIBILITY_AR = (
+    "أنشئ دراسة جدوى جاهزة للبنك مجاناً خلال ١٠ دقائق — تغطّي جميع برامج بنك "
+    "التنمية العُماني/ريادة العشرة: "
+    "https://www.thesmartpro.io/feasibility-studio"
+    "?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}"
+)
 CTA_INVESTORS = (
     "Investor and partnership inquiries: "
     "https://www.thesmartpro.io/investors"
@@ -280,6 +294,38 @@ PILLARS = {
             "Sanad office partner program — how it works, who qualifies",
             "Accounting and HR consultancy partners — what referral and co-sell look like",
             "Bank integrations for WPS — current partners and what is coming next",
+        ],
+    },
+
+    # ── FEASIBILITY ──────────────────────────────────────────────────────────
+    # Manual only (FORCE_PILLAR=feasibility). Promotes Feasibility Studio — the
+    # free AI tool that produces a bank-ready feasibility study for Development
+    # Bank Oman / Riyada loan applications. CTA -> /feasibility-studio.
+    "feasibility": {
+        "weight":           1.0,
+        "segment":          "A",
+        "cta":              "feasibility",  # override -> CTA_FEASIBILITY (see _cta_block)
+        "post_type":        ["Educational/How-To", "Engagement"],
+        "day":              "Manual",
+        "weekday":          -1,
+        "generate_weekday": -1,
+        "publish_day":      "Manual",
+        "generate_day":     "Manual",
+        "tone":             "encouraging, practical, demystifying — make starting a funded business feel achievable, never salesy",
+        "audience":         "aspiring entrepreneurs, SMEs, and Sanad-office clients in Oman who need a feasibility study to apply for Development Bank Oman (DBO) or Riyada funding",
+        "brand_context":    _COMPANY_BRAND_CONTEXT,
+        "formats": [
+            "Explain what a bank-ready feasibility study must contain, then show how to produce one free in about 10 minutes",
+            "Map the 10 Development Bank Oman / Riyada programs to who qualifies for each, then point to the matching study",
+            "Before/after: paying a consultant and waiting weeks versus a free AI-generated study ready the same day",
+            "List the 9 documents a complete feasibility study includes — and what each tells the bank",
+        ],
+        "topics": [
+            "SmartPro Hub Feasibility Studio — turn a business idea into a bank-ready study free in ~10 minutes",
+            "The 9 documents every funded Oman business needs before applying to Development Bank Oman",
+            "Program 5 (Craft/Home/Mobile) at 0% interest up to OMR 20K — who qualifies and how to apply",
+            "Feasibility study vs business plan — what Development Bank Oman actually asks for",
+            "From idea to bank-ready, in English or Arabic — covering all 10 DBO / Riyada programs",
         ],
     },
 }

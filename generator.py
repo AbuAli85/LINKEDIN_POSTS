@@ -280,7 +280,12 @@ def _seo_block() -> str:
 
 
 def _cta_block(pillar_config: dict) -> str:
-    """Return the UTM-tracked CTA for the given pillar's segment."""
+    """Return the UTM-tracked CTA for the given pillar.
+
+    A pillar may set an explicit "cta" key (e.g. "feasibility", "sanad") to
+    override the default segment-based selection; otherwise the CTA is chosen by
+    segment (A -> demo, B -> investors, C -> tech).
+    """
     try:
         _s = load_strategy()
         CTA_DEMO, CTA_DEMO_AR = _s.CTA_DEMO, _s.CTA_DEMO_AR
@@ -291,12 +296,20 @@ def _cta_block(pillar_config: dict) -> str:
     segment  = (pillar_config.get("segment") or "A").strip().upper()
     language = pillar_config.get("language", "en")
     campaign = (pillar_config.get("name") or "general").replace("_", "-")
+    override = (pillar_config.get("cta") or "").strip().lower()
 
-    if segment == "B":
+    if override == "feasibility":
+        template = getattr(_s, "CTA_FEASIBILITY_AR" if language == "ar" else "CTA_FEASIBILITY", None)
+    elif override == "sanad":
+        template = getattr(_s, "SANAD_CTA_AR" if language == "ar" else "SANAD_CTA", None)
+    elif segment == "B":
         template = CTA_INVESTORS_AR if language == "ar" else CTA_INVESTORS
     elif segment == "C":
         return f"CTA: {CTA_TECH}\n"
     else:
+        template = CTA_DEMO_AR if language == "ar" else CTA_DEMO
+
+    if not template:  # override named a CTA the strategy module doesn't define
         template = CTA_DEMO_AR if language == "ar" else CTA_DEMO
 
     return f"CTA (use this exact URL with tracking): {template.format(campaign=campaign)}\n"

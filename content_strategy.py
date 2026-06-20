@@ -49,6 +49,20 @@ CTA_TECH = (
     "Follow for build-in-public updates from SmartPRO Hub. "
     "DM if you want to compare notes on multi-tenant architecture."
 )
+# Feasibility Studio — free AI feasibility-study generator (lead magnet).
+# Used via a pillar's "cta" override (see _cta_block in generator.py).
+CTA_FEASIBILITY = (
+    "Build a bank-ready feasibility study free in ~10 minutes — covers all 10 "
+    "Development Bank Oman / Riyada programs: "
+    "https://www.thesmartpro.io/feasibility-studio"
+    "?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}"
+)
+CTA_FEASIBILITY_AR = (
+    "أنشئ دراسة جدوى جاهزة للبنك مجاناً خلال ١٠ دقائق — تغطّي جميع برامج بنك "
+    "التنمية العُماني/ريادة العشرة: "
+    "https://www.thesmartpro.io/feasibility-studio"
+    "?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}"
+)
 
 # Segment-specific hashtag sets (3-5 per post; generator picks from the segment's list)
 HASHTAGS: dict[str, list[str]] = {
@@ -544,6 +558,45 @@ PILLARS = {
             # Trial CTA
             "SmartPRO Hub: 14-day free trial, no credit card required — starts at OMR 12/month after trial",
             "Start your SmartPRO Hub trial today: HR, payroll, CRM, client portal, and government compliance from OMR 12/month",
+        ],
+    },
+
+    # ── FEASIBILITY ──────────────────────────────────────────────────────────────
+    # Manual-only (FORCE_PILLAR=feasibility). Promotes Feasibility Studio — the
+    # free AI tool that produces a bank-ready feasibility study for Development
+    # Bank Oman / Riyada loan applications. CTA points at /feasibility-studio.
+    "feasibility": {
+        "weight":          0.0,  # manual-only; excluded from automatic weighted scheduling
+        "segment":         "A",
+        "cta":             "feasibility",  # override -> CTA_FEASIBILITY (see _cta_block)
+        "post_type":       ["Educational/How-To", "Engagement"],
+        "day":             "Monday",
+        "weekday":         0,
+        "generate_weekday": -1,  # -1 = not on automatic schedule; manual only
+        "publish_day":     "on demand",
+        "generate_day":    "on demand",
+        "tone":            "encouraging, practical, demystifying — make starting a funded business feel achievable, never salesy",
+        "audience":        "aspiring entrepreneurs, SMEs, and Sanad-office clients in Oman who need a feasibility study to apply for Development Bank Oman (DBO) or Riyada funding",
+        "brand_context":   _BRAND_CONTEXT,
+        "formats": [
+            "Explain what a bank-ready feasibility study must contain — then show how the reader can produce one free in about 10 minutes",
+            "Walk through the real reason most Oman loan applications get rejected, and how a proper feasibility study fixes it",
+            "Map the 10 Development Bank Oman / Riyada programs to who qualifies for each — close with how to generate the matching study",
+            "Before/after: paying a consultant OMR hundreds and waiting weeks versus a free AI-generated study ready the same day",
+            "Open with a question about a business idea the reader has been sitting on, then show the exact first step to fund it",
+            "List the 9 documents a complete feasibility study includes — and what each one tells the bank",
+        ],
+        "topics": [
+            "What a bank-ready feasibility study actually contains — and why most Oman loan applications miss half of it",
+            "The real reason Development Bank Oman rejects loan applications — and how to avoid it",
+            "Program 5 (Craft/Home/Mobile) at 0% interest up to OMR 20K — who qualifies and how to apply",
+            "Program 1 (Local Value Added) up to OMR 500K — what your feasibility study must prove",
+            "How to turn a business idea into a complete feasibility study in about 10 minutes, free",
+            "Thinking of starting a business in Oman? Here is the first document the bank will ask you for",
+            "Feasibility study vs business plan — what Development Bank Oman actually wants from you",
+            "The 9 documents every funded Oman business needs before applying — and how to generate them",
+            "You do not need to pay a consultant to start: build your feasibility study free, then apply at db.om",
+            "From idea to bank-ready in one sitting — covering all 10 DBO / Riyada programs in English or Arabic",
         ],
     },
 

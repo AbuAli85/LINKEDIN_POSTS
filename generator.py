@@ -285,7 +285,7 @@ def _cta_block(pillar_config: dict) -> str:
         _s = load_strategy()
         CTA_DEMO, CTA_DEMO_AR = _s.CTA_DEMO, _s.CTA_DEMO_AR
         CTA_INVESTORS, CTA_INVESTORS_AR = _s.CTA_INVESTORS, _s.CTA_INVESTORS_AR
-        CTA_TECH        = "See SmartPRO Hub in action — book a free 20-min demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}"
+        CTA_TECH        = "See SmartPRO Hub in action — book a free 30-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}"
     except (ImportError, AttributeError):
         return ""
     segment  = (pillar_config.get("segment") or "A").strip().upper()

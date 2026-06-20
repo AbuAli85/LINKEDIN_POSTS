@@ -5,12 +5,12 @@ from pathlib import Path
 
 BRAND_URL      = "www.thesmartpro.io"
 # CTA for posts targeting companies (HR managers, business owners, PRO service firms).
-COMPANY_CTA    = "Book a 20-minute demo at www.thesmartpro.io — or WhatsApp +96879665522 to see SmartPRO Hub live."
+COMPANY_CTA    = "Book a 30-minute demo at www.thesmartpro.io — or WhatsApp +96879665522 to see SmartPRO Hub live."
 # CTA for Sanad/PRO posts — free AI assistant is the entry point, no login needed.
 SANAD_CTA      = "Try the Sanad AI Assistant free — instant answers on work permits, visas & government fees: www.thesmartpro.io/sanad/assistant"
 SANAD_CTA_AR   = "جرّب مساعد سند الذكي مجاناً — إجابات فورية عن تصاريح العمل والتأشيرات والرسوم الحكومية: www.thesmartpro.io/sanad/assistant"
 # CTA for Arabic posts targeting companies (pain_ar pillar)
-COMPANY_CTA_AR = "احجز عرضاً تجريبياً مجانياً مدته ٢٠ دقيقة على www.thesmartpro.io — أو راسلنا على واتساب +96879665522 لمشاهدة SmartPRO Hub مباشرة."
+COMPANY_CTA_AR = "احجز عرضاً تجريبياً مجانياً مدته ٣٠ دقيقة على www.thesmartpro.io — أو راسلنا على واتساب +96879665522 لمشاهدة SmartPRO Hub مباشرة."
 # CTA for posts targeting candidates (job seekers)
 CANDIDATE_CTA  = "Browse open jobs and apply at www.thesmartpro.io"
 # CTA for Segment C (tech/build-in-public posts targeting engineers and SaaS founders)
@@ -22,13 +22,13 @@ DEMO_CTA       = COMPANY_CTA
 # {campaign} is filled at generation time with the pillar name (e.g. "pain-en").
 # Segment A — HR managers and business owners
 CTA_DEMO = (
-    "Book a free 20-minute demo: "
+    "Book a free 30-minute demo: "
     "https://www.thesmartpro.io/demo"
     "?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}"
     "\nOr WhatsApp +96879665522"
 )
 CTA_DEMO_AR = (
-    "احجز عرضاً تجريبياً مجانياً مدته ٢٠ دقيقة: "
+    "احجز عرضاً تجريبياً مجانياً مدته ٣٠ دقيقة: "
     "https://www.thesmartpro.io/demo"
     "?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}"
     "\nأو واتساب +96879665522"
@@ -508,30 +508,30 @@ PILLARS = {
         "brand_context":   _BRAND_CONTEXT,
         "formats": [
             "Name the exact problem SmartPRO Hub solves, then make the specific offer with one clear next step — no buildup needed",
-            "Walk through what a 20-minute SmartPRO Hub demo actually shows — what they will see, what questions it answers, what they will know by the end",
+            "Walk through what a 30-minute SmartPRO Hub demo actually shows — what they will see, what questions it answers, what they will know by the end",
             "List three specific SmartPRO Hub features with the exact pain each one eliminates — close with a direct demo invitation",
             "Open with a qualifying question that identifies the right reader, confirm SmartPRO Hub solves it, state the next step clearly",
             "Lead with a result a SmartPRO Hub user achieved — make it specific and real — then invite the reader to see it for themselves",
-            "Before/after: the manual process most Oman businesses run today versus SmartPRO Hub — end with a clear 20-minute demo invitation",
+            "Before/after: the manual process most Oman businesses run today versus SmartPRO Hub — end with a clear 30-minute demo invitation",
         ],
         "topics": [
             # HR / payroll conversion
             "If you run a business in Oman with 10 or more employees — I want to show you something specific",
             "SmartPRO Hub: one platform for HR, payroll, CRM, client portal, and government compliance in Oman",
             "WPS compliance made fully automatic — what SmartPRO Hub does for Oman businesses every month",
-            "What a 20-minute SmartPRO Hub demo shows you — and what you will know by the end of it",
+            "What a 30-minute SmartPRO Hub demo shows you — and what you will know by the end of it",
             "Three problems SmartPRO Hub solves that most Oman businesses deal with every single month",
             "If payroll still takes your team more than four hours — there is a faster and more accurate way",
             "What SmartPRO Hub's direct bank integration means for your WPS submission process",
             "Built specifically for Oman: what makes SmartPRO Hub different from generic HR software",
-            "See SmartPRO Hub handle your entire payroll run automatically — free 20-minute demo",
+            "See SmartPRO Hub handle your entire payroll run automatically — free 30-minute demo",
             # Client management / CRM conversion
             "If you manage more than five client companies — SmartPRO Hub has a dashboard built for exactly that",
             "Replace the WhatsApp group and the shared spreadsheet: SmartPRO Hub's client portal in 20 minutes",
             "Send a professional quotation, get it signed, deliver the service, generate the invoice — all in one system",
             "What SmartPRO Hub's CRM shows a business owner that a spreadsheet never can",
             # PRO / Sanad conversion
-            "If you run a PRO service firm or Sanad office in Oman — this 20-minute demo is built for you",
+            "If you run a PRO service firm or Sanad office in Oman — this 30-minute demo is built for you",
             "SmartPRO Hub tracks every work permit, visa, and MOL filing across all your clients — automatically",
             "What automatic permit expiry alerts mean for a PRO firm managing 30+ client work permits",
             "See how Sanad offices use SmartPRO Hub to give every client live visibility into their government cases",

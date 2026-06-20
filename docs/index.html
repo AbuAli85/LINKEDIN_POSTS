@@ -544,7 +544,7 @@ footer a:hover{color:#ede9e3}
     Dashboard
   </div>
   <div class="topbar-right">
-    <span class="updated" title="Last refreshed: Jun 20, 2026 · 12:24 pm Muscat">Updated Jun 20, 2026 · 12:24 pm Muscat</span>
+    <span class="updated" title="Last refreshed: Jun 21, 2026 · 1:11 am Muscat">Updated Jun 21, 2026 · 1:11 am Muscat</span>
     <div class="live-dot" title="Live" aria-hidden="true"></div>
     <nav class="actions" aria-label="Site actions">
       <a class="tb-btn primary" href="https://github.com/AbuAli85/LINKEDIN_POSTS/actions/workflows/auto-post.yml" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">&#9654;</span> Run workflow<span class="sr-only"> (opens in new tab)</span></a>
@@ -5439,12 +5439,6 @@ What&#x27;s the longest you&#x27;ve ever stretched a single piece of content —
 </div>
 
 
-    <div class="content" style="margin-top:0">
-      <h2 class="section-lbl">Pending replies (0)</h2>
-      <div class="empty" style="padding:30px 20px">No pending replies</div>
-      
-      
-    </div>
 
 
 <div class="statsbar" style="padding-top:30px;border-top:1px solid rgba(255,255,255,.05);margin-top:12px">
@@ -6446,22 +6440,25 @@ async function _doApproveWorkflow(path, pat, statusEl, btnEl) {
   history.replaceState({}, document.title, window.location.pathname);
 
   if (approvePath) {
+    /* Always require an explicit click to confirm — never auto-dispatch the
+       workflow from a URL param. Otherwise a crafted ?approve=<path> link (e.g.
+       in an email) could silently trigger an approval using a persisted token. */
     var pat = _getPat();
-    if (pat) {
-      toast('Approving draft…', { variant: 'info', duration: 3000 });
-      _doApproveWorkflow(approvePath, pat, null, null);
-    } else {
-      document.getElementById('modal-draft-path').value = approvePath;
-      document.getElementById('modal-path-display').textContent = approvePath;
-      document.getElementById('modal-preview').textContent = 'Enter your GitHub PAT to approve this draft.';
-      document.getElementById('approve-modal-title').textContent = '✓ Approve Draft';
-      document.getElementById('approve-pat').value = '';
-      document.getElementById('approve-status').textContent = '';
-      var cb = document.getElementById('approve-confirm-btn');
-      cb.textContent = '✓ Approve'; cb.disabled = false;
-      document.getElementById('approve-modal').classList.add('open');
-      setTimeout(function() { document.getElementById('approve-pat').focus(); }, 80);
-    }
+    document.getElementById('modal-draft-path').value = approvePath;
+    document.getElementById('modal-path-display').textContent = approvePath;
+    document.getElementById('modal-preview').textContent = pat
+      ? 'Confirm the draft path above, then click Approve to publish on the next scheduled cron.'
+      : 'Enter your GitHub PAT to approve this draft.';
+    document.getElementById('approve-modal-title').textContent = '✓ Approve Draft';
+    document.getElementById('approve-pat').value = pat;
+    document.getElementById('approve-status').textContent = '';
+    var cb = document.getElementById('approve-confirm-btn');
+    cb.textContent = '✓ Approve'; cb.disabled = false;
+    document.getElementById('approve-modal').classList.add('open');
+    setTimeout(function() {
+      if (pat) cb.focus();
+      else document.getElementById('approve-pat').focus();
+    }, 80);
   }
 
   if (revisePath) {
@@ -6478,19 +6475,21 @@ function _hideReviewUI(card) {
   var ra = card.querySelector('.review-actions'); if (ra) ra.style.display = 'none';
   var ab = card.querySelector('.approve-btn');   if (ab) ab.style.display = 'none';
 }
-function _updateStats(reviewDelta, approvedDelta) {
+function _updateStats(reviewDelta, approvedDelta, publishedDelta) {
+  publishedDelta = publishedDelta || 0;
   document.querySelectorAll('.stat .l').forEach(function(el) {
     var n = el.previousElementSibling; if (!n) return;
     var t = el.textContent.trim();
     if (t === 'Needs review') n.textContent = Math.max(0, parseInt(n.textContent||'0') + reviewDelta);
     if (t === 'Approved')     n.textContent = Math.max(0, parseInt(n.textContent||'0') + approvedDelta);
+    if (t === 'Published')    n.textContent = Math.max(0, parseInt(n.textContent||'0') + publishedDelta);
   });
 }
 
 /* Auto-refresh draft cards on page load */
 async function refreshDraftCards() {
   var cards = document.querySelectorAll('.card');
-  var count = 0;
+  var publishedCount = 0, approvedCount = 0;
   for (var i = 0; i < cards.length; i++) {
     var card = cards[i];
     if (!card.querySelector('.badge.draft')) continue;
@@ -6503,14 +6502,17 @@ async function refreshDraftCards() {
       var badge = card.querySelector('.badge.draft'); if (!badge) continue;
       if (data.published || data.status === 'published') {
         badge.className = 'badge published'; badge.innerHTML = '✓ Published';
-        _hideReviewUI(card); count++;
+        _hideReviewUI(card); publishedCount++;
       } else if (data.approved || data.status === 'approved') {
         badge.className = 'badge approved'; badge.textContent = 'Approved';
-        _hideReviewUI(card); count++;
+        _hideReviewUI(card); approvedCount++;
       }
     } catch(e) {}
   }
-  if (count > 0) _updateStats(-count, count);
+  /* Each card leaves "Needs review"; route it to the correct destination stat
+     (Published vs Approved) instead of always crediting Approved. */
+  var moved = publishedCount + approvedCount;
+  if (moved > 0) _updateStats(-moved, approvedCount, publishedCount);
 }
 window.addEventListener('load', refreshDraftCards);
 

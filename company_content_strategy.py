@@ -23,10 +23,10 @@ BRAND_URL = "www.thesmartpro.io"
 
 # ── CTAs — third-person, demo-first, jobs-board for hiring posts ─────────────
 COMPANY_CTA = (
-    "See SmartPro Hub in action — book a 20-minute demo at www.thesmartpro.io"
+    "See SmartPro Hub in action — book a 30-minute demo at www.thesmartpro.io"
 )
 COMPANY_CTA_AR = (
-    "شاهد SmartPro Hub أثناء العمل — احجز عرضاً تجريبياً مدته ٢٠ دقيقة على www.thesmartpro.io"
+    "شاهد SmartPro Hub أثناء العمل — احجز عرضاً تجريبياً مدته ٣٠ دقيقة على www.thesmartpro.io"
 )
 PARTNER_CTA = (
     "Sanad offices, accountants, and HR consultancies: "
@@ -38,12 +38,12 @@ JOBS_CTA = (
 
 # UTM-tracked variants the generator uses (template; {campaign} filled in)
 CTA_DEMO = (
-    "Book a 20-minute demo: "
+    "Book a 30-minute demo: "
     "https://www.thesmartpro.io/demo"
     "?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}"
 )
 CTA_DEMO_AR = (
-    "احجز عرضاً تجريبياً مدته ٢٠ دقيقة: "
+    "احجز عرضاً تجريبياً مدته ٣٠ دقيقة: "
     "https://www.thesmartpro.io/demo"
     "?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}"
 )

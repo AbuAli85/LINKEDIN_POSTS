@@ -23,10 +23,10 @@ BRAND_URL = "www.thesmartpro.io"
 
 # ── CTAs — third-person, demo-first, jobs-board for hiring posts ─────────────
 COMPANY_CTA = (
-    "See SmartPro Hub in action — book a 30-minute demo at www.thesmartpro.io"
+    "See SmartPro Hub in action — book a 30-minute demo at www.thesmartpro.io/demo"
 )
 COMPANY_CTA_AR = (
-    "شاهد SmartPro Hub أثناء العمل — احجز عرضاً تجريبياً مدته ٣٠ دقيقة على www.thesmartpro.io"
+    "شاهد SmartPro Hub أثناء العمل — احجز عرضاً تجريبياً مدته ٣٠ دقيقة على www.thesmartpro.io/demo"
 )
 PARTNER_CTA = (
     "Sanad offices, accountants, and HR consultancies: "

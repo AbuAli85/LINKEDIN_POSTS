@@ -5,12 +5,12 @@ from pathlib import Path
 
 BRAND_URL      = "www.thesmartpro.io"
 # CTA for posts targeting companies (HR managers, business owners, PRO service firms).
-COMPANY_CTA    = "Book a 30-minute demo at www.thesmartpro.io — or WhatsApp +96879665522 to see SmartPRO Hub live."
+COMPANY_CTA    = "Book a 30-minute demo at www.thesmartpro.io/demo — or WhatsApp +96879665522 to see SmartPRO Hub live."
 # CTA for Sanad/PRO posts — free AI assistant is the entry point, no login needed.
 SANAD_CTA      = "Try the Sanad AI Assistant free — instant answers on work permits, visas & government fees: www.thesmartpro.io/sanad/assistant"
 SANAD_CTA_AR   = "جرّب مساعد سند الذكي مجاناً — إجابات فورية عن تصاريح العمل والتأشيرات والرسوم الحكومية: www.thesmartpro.io/sanad/assistant"
 # CTA for Arabic posts targeting companies (pain_ar pillar)
-COMPANY_CTA_AR = "احجز عرضاً تجريبياً مجانياً مدته ٣٠ دقيقة على www.thesmartpro.io — أو راسلنا على واتساب +96879665522 لمشاهدة SmartPRO Hub مباشرة."
+COMPANY_CTA_AR = "احجز عرضاً تجريبياً مجانياً مدته ٣٠ دقيقة على www.thesmartpro.io/demo — أو راسلنا على واتساب +96879665522 لمشاهدة SmartPRO Hub مباشرة."
 # CTA for posts targeting candidates (job seekers)
 CANDIDATE_CTA  = "Browse open jobs and apply at www.thesmartpro.io"
 # CTA for Segment C (tech/build-in-public posts targeting engineers and SaaS founders)

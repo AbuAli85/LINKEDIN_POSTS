@@ -1,11 +1,16 @@
-"""Render a branded 1080×1350 quote-card PNG for LinkedIn image posts.
+"""Render a branded 1080×1350 SmartPRO quote-card PNG for LinkedIn image posts.
+
+Reproduces the brand "OG card" (smartpro-hub1/client/public/linkedin-quote-idea.svg):
+dark-green gradient, soft glow circles, full-height accent bar, SmartPRO HUB wordmark,
+oversized quotation mark, blockquote bar, auto-wrapped quote with an accent-colored
+closing line, divider, attribution block, and a centered profile watermark. The card
+is always green-branded; `pillar` is accepted only for API compatibility.
 
 No external font files required — tries common system fonts in order and
 falls back to Pillow's built-in bitmap font if none are found.
 
 CLI smoke-test:
     python -m image_card            # writes quote_card_sample.png
-    python image_card.py pain       # force a specific pillar accent
 """
 
 from __future__ import annotations
@@ -15,26 +20,21 @@ import os
 from pathlib import Path
 
 CARD_W, CARD_H   = 1080, 1350
-BORDER_PX        = 6
-BG_COLOR         = (10, 10, 10)
-TEXT_COLOR       = (237, 233, 227)
-MUTED_COLOR      = (110, 110, 110)
-MARGIN           = 80
-QUOTE_SIZE       = 52
-MIN_QUOTE_SIZE   = 30   # auto-shrink floor when the quote is long
-HANDLE_SIZE      = 18
-LINE_SPACING     = 14
 
-# Match the accent palette used in dashboard.py
-PILLAR_COLOR: dict[str, str] = {
-    "pain":       "#ef4444",
-    "proof":      "#10b981",
-    "leadership": "#3b82f6",
-    "marketing":  "#f59e0b",
-    "vision":     "#818cf8",
-    "conversion": "#a855f7",
-}
-_DEFAULT_ACCENT = "#e8372a"
+# Brand palette — always green, matching the OG card (linkedin-quote-idea.svg).
+BG_TOP           = (0x08, 0x13, 0x0e)   # #08130e — vertical gradient top
+BG_BOTTOM        = (0x06, 0x11, 0x0b)   # #06110b — vertical gradient bottom
+ACCENT           = (0x10, 0xB9, 0x81)   # #10B981 emerald — bars, divider, quote mark
+ACCENT_LIGHT     = (0x34, 0xd3, 0x99)   # #34d399 — wordmark "PRO" + quote punchline
+TEXT_COLOR       = (0xff, 0xff, 0xff)   # quote + name
+SUBTITLE_COL     = (0x7f, 0x9c, 0x8c)   # wordmark tagline
+TITLE_COL        = (0x9f, 0xc7, 0xb4)   # attribution role
+WATERMARK_COL    = (0x5f, 0x7a, 0x6c)   # bottom handle
+MARGIN           = 80
+QUOTE_SIZE       = 60
+MIN_QUOTE_SIZE   = 32   # auto-shrink floor when the quote is long
+HANDLE_SIZE      = 22
+LINE_SPACING     = 16
 
 # System font search — first found wins; uv/CI runner typically has DejaVu
 _FONT_CANDIDATES = [
@@ -49,11 +49,6 @@ _FONT_CANDIDATES = [
     "C:/Windows/Fonts/calibrib.ttf",
     "C:/Windows/Fonts/calibri.ttf",
 ]
-
-
-def _hex_rgb(hex_color: str) -> tuple[int, int, int]:
-    h = hex_color.lstrip("#")
-    return int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
 
 
 def _load_font(size: int):
@@ -128,24 +123,52 @@ def render_quote_card(text: str, pillar: str = "", post_index: int = 0) -> bytes
     """
     from PIL import Image, ImageDraw
 
-    accent  = _hex_rgb(PILLAR_COLOR.get(pillar, _DEFAULT_ACCENT))
-    handle  = os.environ.get("LINKEDIN_HANDLE", "linkedin.com/in/fahad-alamri-smartpro")
-    quote   = _best_quote(text)
+    accent = ACCENT   # always green; `pillar` is accepted only for API compatibility
+    handle = os.environ.get("LINKEDIN_HANDLE", "linkedin.com/in/fahad-alamri-smartpro")
+    author = os.environ.get("LINKEDIN_AUTHOR", "Fahad Al Amri")
+    role   = os.environ.get("LINKEDIN_ROLE", "Founder & Chairman, SmartPRO Hub")
+    quote  = _best_quote(text)
 
-    img  = Image.new("RGB", (CARD_W, CARD_H), BG_COLOR)
+    # Vertical gradient background, built from a 1px column then stretched.
+    column = Image.new("RGB", (1, CARD_H))
+    for yy in range(CARD_H):
+        t = yy / (CARD_H - 1)
+        column.putpixel((0, yy), tuple(
+            int(BG_TOP[i] + (BG_BOTTOM[i] - BG_TOP[i]) * t) for i in range(3)
+        ))
+    img  = column.resize((CARD_W, CARD_H))
+
+    # Soft brand glow circles (translucent) composited over the gradient.
+    glow = Image.new("RGBA", (CARD_W, CARD_H), (0, 0, 0, 0))
+    gd   = ImageDraw.Draw(glow)
+    gd.ellipse([980 - 380, 160 - 380, 980 + 380, 160 + 380], fill=(*accent, 20))   # ~0.08
+    gd.ellipse([120 - 300, 1220 - 300, 120 + 300, 1220 + 300], fill=(*accent, 15)) # ~0.06
+    img  = Image.alpha_composite(img.convert("RGBA"), glow).convert("RGB")
     draw = ImageDraw.Draw(img)
 
-    # Top accent border
-    draw.rectangle([(0, 0), (CARD_W, BORDER_PX)], fill=accent)
+    # Dimmed accent (blend toward bg) for the oversized quote mark — avoids
+    # needing an RGBA overlay just for one translucent glyph.
+    dim_accent = tuple(int(BG_TOP[i] + (accent[i] - BG_TOP[i]) * 0.5) for i in range(3))
 
-    font_handle = _load_font(HANDLE_SIZE)
+    # Full-height brand bar on the left edge.
+    draw.rectangle([(0, 0), (14, CARD_H)], fill=accent)
 
-    # Fit the quote to the card: wrap by measured pixel width, and shrink the font
-    # until the block fits both the usable width AND height (so nothing clips off
-    # the right edge or the bottom). `rule_x = x - 22` needs ~22px of left gutter,
-    # so the usable text width leaves room for the accent rule.
-    max_text_w = CARD_W - 2 * MARGIN - 22
-    max_text_h = CARD_H - (BORDER_PX + MARGIN) - 96   # reserve space for the handle
+    # Wordmark: "Smart" (white) + "PRO" (accent) + tagline.
+    font_brand = _load_font(46)
+    font_tag   = _load_font(20)
+    draw.text((90, 92), "Smart", font=font_brand, fill=TEXT_COLOR)
+    smart_w = draw.textlength("Smart", font=font_brand)
+    draw.text((90 + smart_w, 92), "PRO", font=font_brand, fill=ACCENT_LIGHT)
+    draw.text((92, 148), "HUB · SULTANATE OF OMAN", font=font_tag, fill=SUBTITLE_COL)
+
+    # Oversized decorative quotation mark.
+    draw.text((82, 235), "“", font=_load_font(180), fill=dim_accent)
+
+    # Quote sits between the wordmark and the attribution block. Wrap by measured
+    # pixel width and auto-shrink so it can never clip the right edge or bottom.
+    area_top, area_bottom = 430, CARD_H - 215
+    max_text_w = CARD_W - 132 - MARGIN     # text starts at x=132
+    max_text_h = area_bottom - area_top
     size = QUOTE_SIZE
     while True:
         font_quote = _load_font(size)
@@ -157,30 +180,30 @@ def render_quote_card(text: str, pillar: str = "", post_index: int = 0) -> bytes
             break
         size -= 4
 
-    # Centered — guaranteed within margins now that text_w <= usable width.
-    x = max(MARGIN, (CARD_W - text_w) // 2)
-    y = max(BORDER_PX + MARGIN, (CARD_H - text_h) // 2 - 24)
+    lines = wrapped.split("\n")
+    ascent, descent = font_quote.getmetrics()
+    line_h  = ascent + descent + LINE_SPACING
+    block_h = line_h * len(lines) - LINE_SPACING
+    x = 132
+    y = area_top + max(0, (max_text_h - block_h) // 2)   # vertically centered in the area
 
-    # Thin vertical accent rule to the left of the quote
-    rule_x = x - 22
-    if rule_x >= MARGIN // 2:
-        draw.rectangle(
-            [(rule_x, y - 4), (rule_x + 3, y + text_h + 4)],
-            fill=accent,
-        )
+    # Blockquote accent rule beside the quote, then the quote line by line so the
+    # closing line can be accented for emphasis.
+    draw.rectangle([(92, y - 4), (100, y + block_h + 4)], fill=accent)
+    for i, ln in enumerate(lines):
+        last = (i == len(lines) - 1 and len(lines) > 1)
+        draw.text((x, y), ln, font=font_quote, fill=ACCENT_LIGHT if last else TEXT_COLOR)
+        y += line_h
 
-    # Quote text
-    draw.multiline_text(
-        (x, y), wrapped,
-        font=font_quote, fill=TEXT_COLOR,
-        align="left", spacing=LINE_SPACING,
-    )
+    # Attribution block (divider + name + role) anchored near the bottom.
+    base_y = CARD_H - 170
+    draw.rectangle([(132, base_y - 34), (196, base_y - 29)], fill=accent)
+    draw.text((132, base_y), author, font=_load_font(34), fill=TEXT_COLOR)
+    draw.text((132, base_y + 46), role, font=_load_font(24), fill=TITLE_COL)
 
-    # Handle — bottom right
-    draw.text(
-        (CARD_W - MARGIN, CARD_H - 38),
-        handle, font=font_handle, fill=MUTED_COLOR, anchor="rm",
-    )
+    # Handle watermark — centered along the bottom.
+    draw.text((CARD_W // 2, CARD_H - 42), handle,
+              font=_load_font(HANDLE_SIZE), fill=WATERMARK_COL, anchor="mm")
 
     buf = io.BytesIO()
     img.save(buf, format="PNG", optimize=True)

@@ -95,7 +95,7 @@ jobs:
           cache: "pip"
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install --no-cache-dir -r requirements.txt
 
       - name: Verify card rendering (Arabic shaping) before posting
         run: python verify_render.py
@@ -192,7 +192,7 @@ jobs:
           cache: "pip"
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install --no-cache-dir -r requirements.txt
 
       - name: Fetch new comments
         # LINKEDIN_READ_TOKEN comes from the second app (Community Management API,
@@ -292,7 +292,7 @@ jobs:
           cache: "pip"
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install --no-cache-dir -r requirements.txt
 
       - name: Verify card rendering (Arabic shaping) before posting
         run: python verify_render.py
@@ -356,7 +356,7 @@ jobs:
           cache: "pip"
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install --no-cache-dir -r requirements.txt
 
       - name: Fetch LinkedIn engagement for all published posts
         env:

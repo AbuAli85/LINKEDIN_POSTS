@@ -10,6 +10,7 @@ Run locally or in CI:
 
 from __future__ import annotations
 
+import os
 import sys
 
 from image_card import _is_arabic, _shape_ar, render_quote_card
@@ -37,6 +38,8 @@ def main() -> None:
     # Arabic must be reshaped into connected presentation forms — not left raw.
     word = "المندوب"
     shaped = _shape_ar(word)
+    pres = sum(1 for c in shaped if "ﭐ" <= c <= "﻿")
+    print(f"shape('{word}') -> {shaped!r}  (presentation-form glyphs: {pres})")
     assert shaped != word, "Arabic was not reshaped (shaping libs inactive?)"
     assert any("ﭐ" <= c <= "﻿" for c in shaped), (
         "no Arabic presentation forms in shaped output — letters would be disconnected"
@@ -55,5 +58,22 @@ if __name__ == "__main__":
     try:
         main()
     except Exception as exc:  # noqa: BLE001 — surface any failure as a non-zero exit
-        print(f"VERIFY FAILED: {exc}", file=sys.stderr)
+        msg = f"VERIFY FAILED: {exc}"
+        print(msg, file=sys.stderr)
+        # Surface the failure (incl. installed versions) in the GitHub run summary
+        # so it's readable without downloading logs.
+        summary = os.environ.get("GITHUB_STEP_SUMMARY")
+        if summary:
+            try:
+                import importlib.metadata as md
+                with open(summary, "a", encoding="utf-8") as fh:
+                    fh.write(f"### ❌ Card render self-test failed\n\n```\n{msg}\n")
+                    for pkg in ("pillow", "arabic-reshaper", "python-bidi"):
+                        try:
+                            fh.write(f"{pkg}=={md.version(pkg)}\n")
+                        except Exception:
+                            fh.write(f"{pkg}==<not installed>\n")
+                    fh.write("```\n")
+            except Exception:
+                pass
         sys.exit(1)

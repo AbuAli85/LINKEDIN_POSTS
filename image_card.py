@@ -132,21 +132,22 @@ def _shape_ar(text: str) -> str:
     Pillow has no built-in shaping, so without this Arabic renders as isolated,
     left-to-right letters. `use_unshaped_instead_of_isolated` keeps isolated-position
     letters as their base codepoint instead of the legacy isolated presentation form,
-    which modern Google Fonts (Tajawal, Almarai, Cairo, …) omit — so they render
-    without tofu. Falls back to the raw text if the libs are missing.
+    which modern Google Fonts (Almarai, Tajawal, Cairo, …) omit — so they render
+    without tofu.
+
+    Raises if the shaping libs are unavailable rather than returning raw (unshaped)
+    text: a silent fallback produced disconnected, mis-ordered Arabic cards. Raising
+    lets the caller skip the image (text-only post) instead of publishing a broken one.
     """
     global _AR_RESHAPER
+    if _AR_RESHAPER is None:
+        from arabic_reshaper import ArabicReshaper
+        _AR_RESHAPER = ArabicReshaper({"use_unshaped_instead_of_isolated": True})
     try:
-        if _AR_RESHAPER is None:
-            from arabic_reshaper import ArabicReshaper
-            _AR_RESHAPER = ArabicReshaper({"use_unshaped_instead_of_isolated": True})
-        try:
-            from bidi.algorithm import get_display   # python-bidi < 0.5
-        except Exception:
-            from bidi import get_display             # python-bidi >= 0.5
-        return get_display(_AR_RESHAPER.reshape(text))
+        from bidi.algorithm import get_display   # python-bidi < 0.5
     except Exception:
-        return text
+        from bidi import get_display             # python-bidi >= 0.5
+    return get_display(_AR_RESHAPER.reshape(text))
 
 
 def _best_quote(text: str) -> str:

@@ -17,7 +17,19 @@ from image_card import _is_arabic, _shape_ar, render_quote_card
 _PNG_MAGIC = b"\x89PNG\r\n\x1a\n"
 
 
+def _report_versions() -> None:
+    import importlib.metadata as md
+    for pkg in ("pillow", "arabic-reshaper", "python-bidi"):
+        try:
+            print(f"  {pkg}=={md.version(pkg)}")
+        except Exception:
+            print(f"  {pkg}==<not installed>")
+
+
 def main() -> None:
+    print("Installed shaping deps:")
+    _report_versions()
+
     # Language detection.
     assert _is_arabic("المندوب الذكي"), "Arabic text not detected as Arabic"
     assert not _is_arabic("payroll team"), "English text misdetected as Arabic"

@@ -147,7 +147,19 @@ def _shape_ar(text: str) -> str:
         from bidi.algorithm import get_display   # python-bidi < 0.5
     except Exception:
         from bidi import get_display             # python-bidi >= 0.5
-    return get_display(_AR_RESHAPER.reshape(text))
+
+    reshaped = _AR_RESHAPER.reshape(text)
+    # Guard: connectable Arabic must yield joining (presentation-form) glyphs. If a
+    # multi-letter Arabic run produced none, shaping silently failed in this env —
+    # raise so the caller skips the image rather than emitting a disconnected card.
+    arabic_letters = sum(1 for c in text if "؀" <= c <= "ۿ")
+    has_pres_forms = any("ﭐ" <= c <= "﻿" for c in reshaped)
+    if arabic_letters >= 4 and not has_pres_forms:
+        raise RuntimeError(
+            "Arabic reshaping produced no presentation forms — shaping is broken "
+            "in this environment (check arabic-reshaper / python-bidi install)."
+        )
+    return get_display(reshaped)
 
 
 def _best_quote(text: str) -> str:

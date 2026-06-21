@@ -3,18 +3,21 @@
 import json
 from pathlib import Path
 
-BRAND_URL      = "www.thesmartpro.io"
+import links
+
+BRAND_URL      = links.display("home")
 # CTA for posts targeting companies (HR managers, business owners, PRO service firms).
-COMPANY_CTA    = "Book a 30-minute demo at www.thesmartpro.io/demo — or WhatsApp +96879665522 to see SmartPRO Hub live."
+COMPANY_CTA    = f"Book a 30-minute demo at {links.display('demo')} — or WhatsApp {links.WHATSAPP} to see SmartPRO Hub live."
 # CTA for Sanad/PRO posts — free AI assistant is the entry point, no login needed.
-SANAD_CTA      = "Try the Sanad AI Assistant free — instant answers on work permits, visas & government fees: www.thesmartpro.io/sanad/assistant"
-SANAD_CTA_AR   = "جرّب مساعد سند الذكي مجاناً — إجابات فورية عن تصاريح العمل والتأشيرات والرسوم الحكومية: www.thesmartpro.io/sanad/assistant"
+# Tracked template ({campaign} filled by _cta_block) so Sanad traffic is attributable.
+SANAD_CTA      = "Try the Sanad AI Assistant free — instant answers on work permits, visas & government fees: " + links.tracked_template("sanad")
+SANAD_CTA_AR   = "جرّب مساعد سند الذكي مجاناً — إجابات فورية عن تصاريح العمل والتأشيرات والرسوم الحكومية: " + links.tracked_template("sanad")
 # CTA for Arabic posts targeting companies (pain_ar pillar)
-COMPANY_CTA_AR = "احجز عرضاً تجريبياً مجانياً مدته ٣٠ دقيقة على www.thesmartpro.io/demo — أو راسلنا على واتساب +96879665522 لمشاهدة SmartPRO Hub مباشرة."
+COMPANY_CTA_AR = f"احجز عرضاً تجريبياً مجانياً مدته ٣٠ دقيقة على {links.display('demo')} — أو راسلنا على واتساب {links.WHATSAPP} لمشاهدة SmartPRO Hub مباشرة."
 # CTA for posts targeting candidates (job seekers)
-CANDIDATE_CTA  = "Browse open jobs and apply at www.thesmartpro.io"
+CANDIDATE_CTA  = f"Browse open jobs and apply at {links.display('home')}"
 # CTA for Segment C (tech/build-in-public posts targeting engineers and SaaS founders)
-TECH_CTA       = "SmartPRO Hub is open for early adopters — OMR 12/month, 14-day free trial: www.thesmartpro.io"
+TECH_CTA       = f"SmartPRO Hub is open for early adopters — OMR 12/month, 14-day free trial: {links.display('home')}"
 # Legacy alias kept so existing code that references DEMO_CTA still works
 DEMO_CTA       = COMPANY_CTA
 
@@ -22,27 +25,19 @@ DEMO_CTA       = COMPANY_CTA
 # {campaign} is filled at generation time with the pillar name (e.g. "pain-en").
 # Segment A — HR managers and business owners
 CTA_DEMO = (
-    "Book a free 30-minute demo: "
-    "https://www.thesmartpro.io/demo"
-    "?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}"
-    "\nOr WhatsApp +96879665522"
+    "Book a free 30-minute demo: " + links.tracked_template("demo")
+    + f"\nOr WhatsApp {links.WHATSAPP}"
 )
 CTA_DEMO_AR = (
-    "احجز عرضاً تجريبياً مجانياً مدته ٣٠ دقيقة: "
-    "https://www.thesmartpro.io/demo"
-    "?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}"
-    "\nأو واتساب +96879665522"
+    "احجز عرضاً تجريبياً مجانياً مدته ٣٠ دقيقة: " + links.tracked_template("demo")
+    + f"\nأو واتساب {links.WHATSAPP}"
 )
 # Segment B — Investors and government
 CTA_INVESTORS = (
-    "Request an investor briefing: "
-    "https://www.thesmartpro.io/investors"
-    "?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}"
+    "Request an investor briefing: " + links.tracked_template("investors")
 )
 CTA_INVESTORS_AR = (
-    "اطلب جلسة إحاطة للمستثمرين: "
-    "https://www.thesmartpro.io/investors"
-    "?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}"
+    "اطلب جلسة إحاطة للمستثمرين: " + links.tracked_template("investors")
 )
 # Segment C — Tech founders
 CTA_TECH = (
@@ -53,15 +48,11 @@ CTA_TECH = (
 # Used via a pillar's "cta" override (see _cta_block in generator.py).
 CTA_FEASIBILITY = (
     "Build a bank-ready feasibility study free in ~10 minutes — covers all 10 "
-    "Development Bank Oman / Riyada programs: "
-    "https://www.thesmartpro.io/feasibility-studio"
-    "?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}"
+    "Development Bank Oman / Riyada programs: " + links.tracked_template("feasibility")
 )
 CTA_FEASIBILITY_AR = (
     "أنشئ دراسة جدوى جاهزة للبنك مجاناً خلال ١٠ دقائق — تغطّي جميع برامج بنك "
-    "التنمية العُماني/ريادة العشرة: "
-    "https://www.thesmartpro.io/feasibility-studio"
-    "?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}"
+    "التنمية العُماني/ريادة العشرة: " + links.tracked_template("feasibility")
 )
 
 # Segment-specific hashtag sets (3-5 per post; generator picks from the segment's list)
@@ -166,7 +157,8 @@ _BRAND_CONTEXT_SANAD_AR = (
     "ومديرو الموارد البشرية المتعاملون مع الجهات الحكومية، وكل صاحب شركة يحتاج خدمات حكومية. "
     "هدف كل منشور: أن يشعر القارئ أنك تصف واقعه اليومي بالضبط، ثم تدعوه لتجربة مساعد سند الذكي المجاني. "
     f"الموقع الإلكتروني: {BRAND_URL}. "
-    f"أنهِ كل منشور بهذه الدعوة للتصرف في سطر منفصل: {SANAD_CTA_AR}"
+    "أنهِ كل منشور بالدعوة للتصرف المتعقّبة المرفقة أدناه في سطر منفصل. "
+    "لا تُضِف أي دعوة أخرى أو رابط أو رقم هاتف أو رقم واتساب."
 )
 
 _BRAND_CONTEXT_SANAD = (
@@ -200,7 +192,8 @@ _BRAND_CONTEXT_SANAD = (
     "Goal: make the reader feel understood, surface their exact daily pain, drive them to try the "
     "free Sanad AI Assistant or book a platform demo. "
     f"Website: {BRAND_URL}. "
-    f"End every post with this CTA on its own line: {SANAD_CTA}"
+    "End every post with the exact tracked CTA provided below on its own line. "
+    "Do not add any other call-to-action, demo link, phone number, or WhatsApp number."
 )
 
 _BRAND_CONTEXT_TECH = (
@@ -436,6 +429,7 @@ PILLARS = {
     # reach every business they serve.
     "sanad_pro": {
         "weight":           2.5,   # high-priority scheduled pillar — 924 offices, massive channel
+        "cta":              "sanad",  # deterministic tracked Sanad AI Assistant CTA via _cta_block
         "segment":          "A",
         "post_type":        ["Story", "Engagement"],
         "day":              "Thursday",
@@ -717,6 +711,7 @@ PILLARS = {
     # Generate Sunday (2 days before Tuesday publish).
     "sanad_pro_ar": {
         "weight":           2.5,   # highest priority — 924 Omani-staffed offices, Arabic-first audience
+        "cta":              "sanad",  # deterministic tracked Sanad AI Assistant CTA via _cta_block
         "segment":          "A",
         "post_type":        ["Story", "Engagement"],
         "day":              "Tuesday",

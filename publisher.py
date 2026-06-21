@@ -12,6 +12,7 @@ import time
 
 import requests
 
+import links
 from strategy_loader import (
     access_token_env_var,
     author_urn_env_var,
@@ -24,7 +25,8 @@ CHAR_LIMIT       = 3000
 MAX_RETRIES      = 3
 RETRY_CODES      = {429, 500, 502, 503, 504}
 
-CTA_URL = "https://www.thesmartpro.io/sanad/assistant"
+# Tracked so first-comment Sanad clicks are attributable (utm_campaign=sanad-comment).
+CTA_URL = links.tracked("sanad", "sanad-comment")
 
 CTA_COMMENTS: dict[str, str] = {
     "pain": (

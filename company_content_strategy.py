@@ -19,62 +19,54 @@ your input.
 import json
 from pathlib import Path
 
-BRAND_URL = "www.thesmartpro.io"
+import links
+
+BRAND_URL = links.display("home")
 
 # ── CTAs — third-person, demo-first, jobs-board for hiring posts ─────────────
 COMPANY_CTA = (
-    "See SmartPro Hub in action — book a 30-minute demo at www.thesmartpro.io/demo"
+    f"See SmartPro Hub in action — book a 30-minute demo at {links.display('demo')}"
 )
 COMPANY_CTA_AR = (
-    "شاهد SmartPro Hub أثناء العمل — احجز عرضاً تجريبياً مدته ٣٠ دقيقة على www.thesmartpro.io/demo"
+    f"شاهد SmartPro Hub أثناء العمل — احجز عرضاً تجريبياً مدته ٣٠ دقيقة على {links.display('demo')}"
 )
 PARTNER_CTA = (
     "Sanad offices, accountants, and HR consultancies: "
-    "partner with SmartPro Hub — www.thesmartpro.io/partners"
+    f"partner with SmartPro Hub — {links.display('partners')}"
 )
 JOBS_CTA = (
-    "Browse open roles at SmartPro Hub — www.thesmartpro.io/careers"
+    f"Browse open roles at SmartPro Hub — {links.display('careers')}"
 )
+# Sanad AI Assistant (tracked template; {campaign} filled by _cta_block).
+SANAD_CTA = "Try the Sanad AI Assistant free — instant answers on Oman government services: " + links.tracked_template("sanad")
+SANAD_CTA_AR = "جرّب مساعد سند الذكي مجاناً — إجابات فورية عن الخدمات الحكومية في عُمان: " + links.tracked_template("sanad")
 
 # UTM-tracked variants the generator uses (template; {campaign} filled in)
 CTA_DEMO = (
-    "Book a 30-minute demo: "
-    "https://www.thesmartpro.io/demo"
-    "?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}"
+    "Book a 30-minute demo: " + links.tracked_template("demo")
 )
 CTA_DEMO_AR = (
-    "احجز عرضاً تجريبياً مدته ٣٠ دقيقة: "
-    "https://www.thesmartpro.io/demo"
-    "?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}"
+    "احجز عرضاً تجريبياً مدته ٣٠ دقيقة: " + links.tracked_template("demo")
 )
 # Feasibility Studio — free AI feasibility-study generator (lead magnet).
 # Used via a pillar's "cta" override (see _cta_block in generator.py).
 CTA_FEASIBILITY = (
     "Build a bank-ready feasibility study free in ~10 minutes — covers all 10 "
-    "Development Bank Oman / Riyada programs: "
-    "https://www.thesmartpro.io/feasibility-studio"
-    "?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}"
+    "Development Bank Oman / Riyada programs: " + links.tracked_template("feasibility")
 )
 CTA_FEASIBILITY_AR = (
     "أنشئ دراسة جدوى جاهزة للبنك مجاناً خلال ١٠ دقائق — تغطّي جميع برامج بنك "
-    "التنمية العُماني/ريادة العشرة: "
-    "https://www.thesmartpro.io/feasibility-studio"
-    "?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}"
+    "التنمية العُماني/ريادة العشرة: " + links.tracked_template("feasibility")
 )
 CTA_INVESTORS = (
-    "Investor and partnership inquiries: "
-    "https://www.thesmartpro.io/investors"
-    "?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}"
+    "Investor and partnership inquiries: " + links.tracked_template("investors")
 )
 CTA_INVESTORS_AR = (
-    "للاستفسارات الاستثمارية والشراكات: "
-    "https://www.thesmartpro.io/investors"
-    "?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}"
+    "للاستفسارات الاستثمارية والشراكات: " + links.tracked_template("investors")
 )
 CTA_TECH = (
     "SmartPro Hub for early adopters — OMR 12/month, 14-day free trial: "
-    "https://www.thesmartpro.io"
-    "?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}"
+    + links.tracked_template("home")
 )
 
 # ── Hashtag sets per segment ─────────────────────────────────────────────────

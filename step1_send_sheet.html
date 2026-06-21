@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SmartPro Hub — Step 1 Send Sheet</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0d0d0f; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; padding: 24px; }
+  h1 { font-size: 20px; margin-bottom: 4px; color: #fff; }
+  .subtitle { color: rgba(255,255,255,.4); font-size: 13px; margin-bottom: 24px; }
+  .progress-bar { background: rgba(255,255,255,.07); border-radius: 6px; height: 8px; margin-bottom: 6px; overflow: hidden; }
+  .progress-fill { background: #2a9a5c; height: 100%; width: 0%; transition: width .3s; border-radius: 6px; }
+  .progress-label { font-size: 12px; color: rgba(255,255,255,.4); margin-bottom: 24px; }
+  #prog-text { color: #2a9a5c; font-weight: 600; }
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; padding: 8px 12px; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: rgba(255,255,255,.3); border-bottom: 1px solid rgba(255,255,255,.08); }
+  tr.lead-row { border-bottom: 1px solid rgba(255,255,255,.05); transition: background .15s; }
+  tr.lead-row:hover { background: rgba(255,255,255,.03); }
+  tr.lead-row.done { opacity: .4; }
+  td { padding: 12px; vertical-align: top; }
+  td.num { color: rgba(255,255,255,.2); font-size: 13px; width: 32px; }
+  .name { font-weight: 600; font-size: 14px; }
+  .meta { font-size: 11px; color: rgba(255,255,255,.4); margin-top: 2px; }
+  .company { font-size: 12px; color: #0ea5e9; margin-top: 2px; }
+  .li-link { color: #0ea5e9; text-decoration: none; font-size: 13px; white-space: nowrap; border: 1px solid rgba(14,165,233,.3); padding: 4px 10px; border-radius: 6px; display: inline-block; }
+  .li-link:hover { background: rgba(14,165,233,.1); }
+  .batch { font-size: 11px; font-weight: 600; padding: 8px; border-radius: 6px; white-space: nowrap; text-align: center; width: 90px; }
+  .msg-box { font-size: 12px; line-height: 1.5; color: rgba(255,255,255,.7); background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); border-radius: 6px; padding: 10px; max-width: 420px; white-space: pre-wrap; cursor: pointer; }
+  .msg-box:hover { border-color: rgba(255,255,255,.2); }
+  .copy-btn { margin-top: 6px; background: rgba(42,154,92,.15); border: 1px solid rgba(42,154,92,.4); color: #2a9a5c; padding: 4px 12px; border-radius: 5px; font-size: 11px; cursor: pointer; }
+  .copy-btn:hover { background: rgba(42,154,92,.3); }
+  .copy-btn.copied { background: rgba(42,154,92,.4); color: #fff; }
+  .done-wrap { display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; white-space: nowrap; }
+  .done-wrap input { width: 16px; height: 16px; cursor: pointer; accent-color: #2a9a5c; }
+  .tip { background: rgba(42,154,92,.08); border: 1px solid rgba(42,154,92,.2); border-radius: 8px; padding: 12px 16px; margin-bottom: 24px; font-size: 13px; color: rgba(255,255,255,.7); }
+  .tip strong { color: #2a9a5c; }
+</style>
+</head>
+<body>
+<h1>SmartPro Hub — Step 1 Connection Requests</h1>
+<p class="subtitle">25 Segment A leads · Send manually this week · Message is personalised and under 300 chars</p>
+
+<div class="progress-bar"><div class="progress-fill" id="prog-fill"></div></div>
+<p class="progress-label"><span id="prog-text">0 / 25</span> sent</p>
+
+<div class="tip">
+  <strong>Workflow (10 sec per lead):</strong> Click "Open Profile" → Connect → Add a note → paste the message → optionally add one specific line → Send → tick "Sent" here.<br>
+  <strong>Today:</strong> leads 1–10 &nbsp;|&nbsp; <strong>Tomorrow:</strong> leads 11–20 &nbsp;|&nbsp; <strong>Day 3:</strong> leads 21–25
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Name</th>
+      <th>Profile</th>
+      <th>Batch</th>
+      <th>Step 1 Message (click to copy)</th>
+      <th>Done</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <tr class="lead-row" data-batch="1">
+      <td class="num">1</td>
+      <td>
+        <div class="name">Rashid Al Hinai</div>
+        <div class="meta"></div>
+        <div class="company">Vanguard Engineering & Oilfield Services</div>
+      </td>
+      <td><a href="https://www.linkedin.com/in/rashid-al-hinai-a5358836" target="_blank" class="li-link">Open Profile ↗</a></td>
+      <td class="batch" style="background:#1a3a1a">Day 1 (today)</td>
+      <td>
+        <div class="msg-box" onclick="copyMsg(this)">Hi Rashid, I help HR teams at Omani SMEs cut WPS/Sanad admin from hours to minutes. Building SmartPro Hub — Oman's first AI-native HR & payroll platform. Would love to connect. – Fahad</div>
+        <button class="copy-btn" onclick="copyMsg(this.previousElementSibling)">Copy</button>
+      </td>
+      <td>
+        <label class="done-wrap">
+          <input type="checkbox" onchange="markDone(this)"> Sent
+        </label>
+      </td>
+    </tr>
+    <tr class="lead-row" data-batch="2">
+      <td class="num">2</td>
+      <td>
+        <div class="name">Mahmood Al Jabri</div>
+        <div class="meta"></div>
+        <div class="company">Jabal Asset Management</div>
+      </td>
+      <td><a href="https://www.linkedin.com/in/mahmood-al-jabri" target="_blank" class="li-link">Open Profile ↗</a></td>
+      <td class="batch" style="background:#1a3a1a">Day 1 (today)</td>
+      <td>
+        <div class="msg-box" onclick="copyMsg(this)">Hi Mahmood, I help HR teams at Omani SMEs cut WPS/Sanad admin from hours to minutes. Building SmartPro Hub — Oman's first AI-native HR & payroll platform. Would love to connect. – Fahad</div>
+        <button class="copy-btn" onclick="copyMsg(this.previousElementSibling)">Copy</button>
+      </td>
+      <td>
+        <label class="done-wrap">
+          <input type="checkbox" onchange="markDone(this)"> Sent
+        </label>
+      </td>
+    </tr>
+    <tr class="lead-row" data-batch="3">
+      <td class="num">3</td>
+      <td>
+        <div class="name">Mohammed Al Balushi</div>
+        <div class="meta"></div>
+        <div class="company">Muscat Overseas</div>
+      </td>
+      <td><a href="https://www.linkedin.com/in/mohammed-al-balushi-09654328" target="_blank" class="li-link">Open Profile ↗</a></td>
+      <td class="batch" style="background:#1a3a1a">Day 1 (today)</td>
+      <td>
+        <div class="msg-box" onclick="copyMsg(this)">Hi Mohammed, I help HR teams at Omani SMEs cut WPS/Sanad admin from hours to minutes. Building SmartPro Hub — Oman's first AI-native HR & payroll platform. Would love to connect. – Fahad</div>
+        <button class="copy-btn" onclick="copyMsg(this.previousElementSibling)">Copy</button>
+      </td>
+      <td>
+        <label class="done-wrap">
+          <input type="checkbox" onchange="markDone(this)"> Sent
+        </label>
+      </td>
+    </tr>
+    <tr class="lead-row" data-batch="4">
+      <td class="num">4</td>
+      <td>
+        <div class="name">Khalida Khalil Akram</div>
+        <div class="meta"></div>
+        <div class="company">NOMAC OMAN</div>
+      </td>
+      <td><a href="https://www.linkedin.com/in/khalida-khalil-allah-akram-mba-822b823b" target="_blank" class="li-link">Open Profile ↗</a></td>
+      <td class="batch" style="background:#1a3a1a">Day 1 (today)</td>
+      <td>
+        <div class="msg-box" onclick="copyMsg(this)">Hi Khalida, I help HR teams at Omani SMEs cut WPS/Sanad admin from hours to minutes. Building SmartPro Hub — Oman's first AI-native HR & payroll platform. Would love to connect. – Fahad</div>
+        <button class="copy-btn" onclick="copyMsg(this.previousElementSibling)">Copy</button>
+      </td>
+      <td>
+        <label class="done-wrap">
+          <input type="checkbox" onchange="markDone(this)"> Sent
+        </label>
+      </td>
+    </tr>
+    <tr class="lead-row" data-batch="5">
+      <td class="num">5</td>
+      <td>
+        <div class="name">Said Al Hasani</div>
+        <div class="meta"></div>
+        <div class="company">Oman Sugar Refinery Company</div>
+      </td>
+      <td><a href="https://www.linkedin.com/in/said-al-hasani-799709317" target="_blank" class="li-link">Open Profile ↗</a></td>
+      <td class="batch" style="background:#1a3a1a">Day 1 (today)</td>
+      <td>
+        <div class="msg-box" onclick="copyMsg(this)">Hi Said, I help HR teams at Omani SMEs cut WPS/Sanad admin from hours to minutes. Building SmartPro Hub — Oman's first AI-native HR & payroll platform. Would love to connect. – Fahad</div>
+        <button class="copy-btn" onclick="copyMsg(this.previousElementSibling)">Copy</button>
+      </td>
+      <td>
+        <label class="done-wrap">
+          <input type="checkbox" onchange="markDone(this)"> Sent
+        </label>
+      </td>
+    </tr>
+    <tr class="lead-row" data-batch="6">
+      <td class="num">6</td>
+      <td>
+        <div class="name">Basim Al Hasani</div>
+        <div class="meta"></div>
+        <div class="company">IHG Hotels Oman</div>
+      </td>
+      <td><a href="https://www.linkedin.com/in/basim-al-hasani-a15b05135" target="_blank" class="li-link">Open Profile ↗</a></td>
+      <td class="batch" style="background:#1a3a1a">Day 1 (today)</td>
+      <td>
+        <div class="msg-box" onclick="copyMsg(this)">Hi Basim, I help HR teams at Omani SMEs cut WPS/Sanad admin from hours to minutes. Building SmartPro Hub — Oman's first AI-native HR & payroll platform. Would love to connect. – Fahad</div>
+        <button class="copy-btn" onclick="copyMsg(this.previousElementSibling)">Copy</button>
+      </td>
+      <td>
+        <label class="done-wrap">
+          <input type="checkbox" onchange="markDone(this)"> Sent
+        </label>
+      </td>
+    </tr>
+    <tr class="lead-row" data-batch="7">
+      <td class="num">7</td>
+      <td>
+        <div class="name">Houssam Masri</div>
+        <div class="meta"></div>
+        <div class="company">Averda Oman</div>
+      </td>
+      <td><a href="https://www.linkedin.com/in/houssam-masri-2b118133" target="_blank" class="li-link">Open Profile ↗</a></td>
+      <td class="batch" style="background:#1a3a1a">Day 1 (today)</td>
+      <td>
+        <div class="msg-box" onclick="copyMsg(this)">Hi Houssam, I help HR teams at Omani SMEs cut WPS/Sanad admin from hours to minutes. Building SmartPro Hub — Oman's first AI-native HR & payroll platform. Would love to connect. – Fahad</div>
+        <button class="copy-btn" onclick="copyMsg(this.previousElementSibling)">Copy</button>
+      </td>
+      <td>
+        <label class="done-wrap">
+          <input type="checkbox" onchange="markDone(this)"> Sent
+        </label>
+      </td>
+    </tr>
+    <tr class="lead-row" data-batch="8">
+      <td class="num">8</td>
+      <td>
+        <div class="name">Jihad Jamal</div>
+        <div class="meta"></div>
+        <div class="company">Saud Bahwan Group</div>
+      </td>
+      <td><a href="https://www.linkedin.com/in/jihad-jamal-56613534" target="_blank" class="li-link">Open Profile ↗</a></td>
+      <td class="batch" style="background:#1a3a1a">Day 1 (today)</td>
+      <td>
+        <div class="msg-box" onclick="copyMsg(this)">Hi Jihad, I help HR teams at Omani SMEs cut WPS/Sanad admin from hours to minutes. Building SmartPro Hub — Oman's first AI-native HR & payroll platform. Would love to connect. – Fahad</div>
+        <button class="copy-btn" onclick="copyMsg(this.previousElementSibling)">Copy</button>
+      </td>
+      <td>
+        <label class="done-wrap">
+          <input type="checkbox" onchange="markDone(this)"> Sent
+        </label>
+      </td>
+    </tr>
+    <tr class="lead-row" data-batch="9">
+      <td class="num">9</td>
+      <td>
+        <div class="name">Nabeel Al Balushi</div>
+        <div class="meta"></div>
+        <div class="company">Smartrade Investment</div>
+      </td>
+      <td><a href="https://www.linkedin.com/in/nabeel-al-balushi-19b8854b" target="_blank" class="li-link">Open Profile ↗</a></td>
+      <td class="batch" style="background:#1a3a1a">Day 1 (today)</td>
+      <td>
+        <div class="msg-box" onclick="copyMsg(this)">Hi Nabeel, I help HR teams at Omani SMEs cut WPS/Sanad admin from hours to minutes. Building SmartPro Hub — Oman's first AI-native HR & payroll platform. Would love to connect. – Fahad</div>
+        <button class="copy-btn" onclick="copyMsg(this.previousElementSibling)">Copy</button>
+      </td>
+      <td>
+        <label class="done-wrap">
+          <input type="checkbox" onchange="markDone(this)"> Sent
+        </label>
+      </td>
+    </tr>
+    <tr class="lead-row" data-batch="10">
+      <td class="num">10</td>
+      <td>
+        <div class="name">Sadiq Al Lawati</div>
+        <div class="meta"></div>
+        <div class="company">Sharikah Fanniyah Omaniyah</div>
+      </td>
+      <td><a href="https://www.linkedin.com/in/sadiq-al-matwani-al-lawati-784b5313" target="_blank" class="li-link">Open Profile ↗</a></td>
+      <td class="batch" style="background:#1a3a1a">Day 1 (today)</td>
+      <td>
+        <div class="msg-box" onclick="copyMsg(this)">Hi Sadiq, I help HR teams at Omani SMEs cut WPS/Sanad admin from hours to minutes. Building SmartPro Hub — Oman's first AI-native HR & payroll platform. Would love to connect. – Fahad</div>
+        <button class="copy-btn" onclick="copyMsg(this.previousElementSibling)">Copy</button>
+      </td>
+      <td>
+        <label class="done-wrap">
+          <input type="checkbox" onchange="markDone(this)"> Sent
+        </label>
+      </td>
+    </tr>
+    <tr class="lead-row" data-batch="11">
+      <td class="num">11</td>
+      <td>
+        <div class="name">Mohammed Al-Basami</div>
+        <div class="meta"></div>
+        <div class="company">Muscat Marshall</div>
+      </td>
+      <td><a href="https://www.linkedin.com/in/mohammed-al-basami-bb5246128" target="_blank" class="li-link">Open Profile ↗</a></td>
+      <td class="batch" style="background:#2a2a1a">Day 2 (tomorrow)</td>
+      <td>
+        <div class="msg-box" onclick="copyMsg(this)">Hi Mohammed, I help HR teams at Omani SMEs cut WPS/Sanad admin from hours to minutes. Building SmartPro Hub — Oman's first AI-native HR & payroll platform. Would love to connect. – Fahad</div>
+        <button class="copy-btn" onclick="copyMsg(this.previousElementSibling)">Copy</button>
+      </td>
+      <td>
+        <label class="done-wrap">
+          <input type="checkbox" onchange="markDone(this)"> Sent
+        </label>
+      </td>
+    </tr>
+    <tr class="lead-row" data-batch="12">
+      <td class="num">12</td>
+      <td>
+        <div class="name">Alshifa Al-Harthi</div>
+        <div class="meta"></div>
+        <div class="company">Oman</div>
+      </td>
+      <td><a href="https://www.linkedin.com/in/al-shifa-al-harthi-730223196" target="_blank" class="li-link">Open Profile ↗</a></td>
+      <td class="batch" style="background:#2a2a1a">Day 2 (tomorrow)</td>
+      <td>
+        <div class="msg-box" onclick="copyMsg(this)">Hi Alshifa, I help HR teams at Omani SMEs cut WPS/Sanad admin from hours to minutes. Building SmartPro Hub — Oman's first AI-native HR & payroll platform. Would love to connect. – Fahad</div>
+        <button class="copy-btn" onclick="copyMsg(this.previousElementSibling)">Copy</button>
+      </td>
+      <td>
+        <label class="done-wrap">
+          <input type="checkbox" onchange="markDone(this)"> Sent
+        </label>
+      </td>
+    </tr>
+    <tr class="lead-row" data-batch="13">
+      <td class="num">13</td>
+      <td>
+        <div class="name">Abdullah Al Farsi</div>
+        <div class="meta"></div>
+        <div class="company">NOV Oman</div>
+      </td>
+      <td><a href="https://www.linkedin.com/in/abdullah-alfarsi" target="_blank" class="li-link">Open Profile ↗</a></td>
+      <td class="batch" style="background:#2a2a1a">Day 2 (tomorrow)</td>
+      <td>
+        <div class="msg-box" onclick="copyMsg(this)">Hi Abdullah, I help HR teams at Omani SMEs cut WPS/Sanad admin from hours to minutes. Building SmartPro Hub — Oman's first AI-native HR & payroll platform. Would love to connect. – Fahad</div>
+        <button class="copy-btn" onclick="copyMsg(this.previousElementSibling)">Copy</button>
+      </td>
+      <td>
+        <label class="done-wrap">
+          <input type="checkbox" onchange="markDone(this)"> Sent
+        </label>
+      </td>
+    </tr>
+    <tr class="lead-row" data-batch="14">
+      <td class="num">14</td>
+      <td>
+        <div class="name">Hamed Al Yaqoobi</div>
+        <div class="meta"></div>
+        <div class="company">Alsafa ETS</div>
+      </td>
+      <td><a href="https://www.linkedin.com/in/hamed-al-yaqoobi-311a1822" target="_blank" class="li-link">Open Profile ↗</a></td>
+      <td class="batch" style="background:#2a2a1a">Day 2 (tomorrow)</td>
+      <td>
+        <div class="msg-box" onclick="copyMsg(this)">Hi Hamed, I help HR teams at Omani SMEs cut WPS/Sanad admin from hours to minutes. Building SmartPro Hub — Oman's first AI-native HR & payroll platform. Would love to connect. – Fahad</div>
+        <button class="copy-btn" onclick="copyMsg(this.previousElementSibling)">Copy</button>
+      </td>
+      <td>
+        <label class="done-wrap">
+          <input type="checkbox" onchange="markDone(this)"> Sent
+        </label>
+      </td>
+    </tr>
+    <tr class="lead-row" data-batch="15">
+      <td class="num">15</td>
+      <td>
+        <div class="name">Mohammed Al-Harrasi</div>
+        <div class="meta"></div>
+        <div class="company">Diamond Developers Oman</div>
+      </td>
+      <td><a href="https://www.linkedin.com/in/mohammed-al-harrasi-5174a14b" target="_blank" class="li-link">Open Profile ↗</a></td>
+      <td class="batch" style="background:#2a2a1a">Day 2 (tomorrow)</td>
+      <td>
+        <div class="msg-box" onclick="copyMsg(this)">Hi Mohammed, I help HR teams at Omani SMEs cut WPS/Sanad admin from hours to minutes. Building SmartPro Hub — Oman's first AI-native HR & payroll platform. Would love to connect. – Fahad</div>
+        <button class="copy-btn" onclick="copyMsg(this.previousElementSibling)">Copy</button>
+      </td>
+      <td>
+        <label class="done-wrap">
+          <input type="checkbox" onchange="markDone(this)"> Sent
+        </label>
+      </td>
+    </tr>
+    <tr class="lead-row" data-batch="16">
+      <td class="num">16</td>
+      <td>
+        <div class="name">Humaid Al Kharusi</div>
+        <div class="meta"></div>
+        <div class="company">Composite Pipes Industry</div>
+      </td>
+      <td><a href="https://www.linkedin.com/in/humaid-al-kharusi-15093130" target="_blank" class="li-link">Open Profile ↗</a></td>
+      <td class="batch" style="background:#2a2a1a">Day 2 (tomorrow)</td>
+      <td>
+        <div class="msg-box" onclick="copyMsg(this)">Hi Humaid, I help HR teams at Omani SMEs cut WPS/Sanad admin from hours to minutes. Building SmartPro Hub — Oman's first AI-native HR & payroll platform. Would love to connect. – Fahad</div>
+        <button class="copy-btn" onclick="copyMsg(this.previousElementSibling)">Copy</button>
+      </td>
+      <td>
+        <label class="done-wrap">
+          <input type="checkbox" onchange="markDone(this)"> Sent
+        </label>
+      </td>
+    </tr>
+    <tr class="lead-row" data-batch="17">
+      <td class="num">17</td>
+      <td>
+        <div class="name">Khamis Al Ghafri</div>
+        <div class="meta"></div>
+        <div class="company">Sterling International</div>
+      </td>
+      <td><a href="https://www.linkedin.com/in/khamis-said-al-ghafri-50130696" target="_blank" class="li-link">Open Profile ↗</a></td>
+      <td class="batch" style="background:#2a2a1a">Day 2 (tomorrow)</td>
+      <td>
+        <div class="msg-box" onclick="copyMsg(this)">Hi Khamis, I help HR teams at Omani SMEs cut WPS/Sanad admin from hours to minutes. Building SmartPro Hub — Oman's first AI-native HR & payroll platform. Would love to connect. – Fahad</div>
+        <button class="copy-btn" onclick="copyMsg(this.previousElementSibling)">Copy</button>
+      </td>
+      <td>
+        <label class="done-wrap">
+          <input type="checkbox" onchange="markDone(this)"> Sent
+        </label>
+      </td>
+    </tr>
+    <tr class="lead-row" data-batch="18">
+      <td class="num">18</td>
+      <td>
+        <div class="name">Salim Al Harthy</div>
+        <div class="meta"></div>
+        <div class="company">Weatherford Oman</div>
+      </td>
+      <td><a href="https://www.linkedin.com/in/salim-al-harthy-490b623b" target="_blank" class="li-link">Open Profile ↗</a></td>
+      <td class="batch" style="background:#2a2a1a">Day 2 (tomorrow)</td>
+      <td>
+        <div class="msg-box" onclick="copyMsg(this)">Hi Salim, I help HR teams at Omani SMEs cut WPS/Sanad admin from hours to minutes. Building SmartPro Hub — Oman's first AI-native HR & payroll platform. Would love to connect. – Fahad</div>
+        <button class="copy-btn" onclick="copyMsg(this.previousElementSibling)">Copy</button>
+      </td>
+      <td>
+        <label class="done-wrap">
+          <input type="checkbox" onchange="markDone(this)"> Sent
+        </label>
+      </td>
+    </tr>
+    <tr class="lead-row" data-batch="19">
+      <td class="num">19</td>
+      <td>
+        <div class="name">Nasreen Al Balushi</div>
+        <div class="meta"></div>
+        <div class="company">ABAQ AL EBDAA Trading</div>
+      </td>
+      <td><a href="https://www.linkedin.com/in/nasreen-al-balushi-8b694a24" target="_blank" class="li-link">Open Profile ↗</a></td>
+      <td class="batch" style="background:#2a2a1a">Day 2 (tomorrow)</td>
+      <td>
+        <div class="msg-box" onclick="copyMsg(this)">Hi Nasreen, I help HR teams at Omani SMEs cut WPS/Sanad admin from hours to minutes. Building SmartPro Hub — Oman's first AI-native HR & payroll platform. Would love to connect. – Fahad</div>
+        <button class="copy-btn" onclick="copyMsg(this.previousElementSibling)">Copy</button>
+      </td>
+      <td>
+        <label class="done-wrap">
+          <input type="checkbox" onchange="markDone(this)"> Sent
+        </label>
+      </td>
+    </tr>
+    <tr class="lead-row" data-batch="20">
+      <td class="num">20</td>
+      <td>
+        <div class="name">Rashid Al Hashmi</div>
+        <div class="meta"></div>
+        <div class="company">Oman</div>
+      </td>
+      <td><a href="https://www.linkedin.com/in/rashid-al-hashmi-648592295" target="_blank" class="li-link">Open Profile ↗</a></td>
+      <td class="batch" style="background:#2a2a1a">Day 2 (tomorrow)</td>
+      <td>
+        <div class="msg-box" onclick="copyMsg(this)">Hi Rashid, I help HR teams at Omani SMEs cut WPS/Sanad admin from hours to minutes. Building SmartPro Hub — Oman's first AI-native HR & payroll platform. Would love to connect. – Fahad</div>
+        <button class="copy-btn" onclick="copyMsg(this.previousElementSibling)">Copy</button>
+      </td>
+      <td>
+        <label class="done-wrap">
+          <input type="checkbox" onchange="markDone(this)"> Sent
+        </label>
+      </td>
+    </tr>
+    <tr class="lead-row" data-batch="21">
+      <td class="num">21</td>
+      <td>
+        <div class="name">Saeed Al Madany</div>
+        <div class="meta"></div>
+        <div class="company">Al-Mutawaa Group</div>
+      </td>
+      <td><a href="https://www.linkedin.com/in/saeed-al-madany-almadany-967a4831" target="_blank" class="li-link">Open Profile ↗</a></td>
+      <td class="batch" style="background:#1a1a3a">Day 3</td>
+      <td>
+        <div class="msg-box" onclick="copyMsg(this)">Hi Saeed, I help HR teams at Omani SMEs cut WPS/Sanad admin from hours to minutes. Building SmartPro Hub — Oman's first AI-native HR & payroll platform. Would love to connect. – Fahad</div>
+        <button class="copy-btn" onclick="copyMsg(this.previousElementSibling)">Copy</button>
+      </td>
+      <td>
+        <label class="done-wrap">
+          <input type="checkbox" onchange="markDone(this)"> Sent
+        </label>
+      </td>
+    </tr>
+    <tr class="lead-row" data-batch="22">
+      <td class="num">22</td>
+      <td>
+        <div class="name">Faisal Al-Mamari</div>
+        <div class="meta"></div>
+        <div class="company">Oman</div>
+      </td>
+      <td><a href="https://www.linkedin.com/in/faisal-al-mamari-37091971" target="_blank" class="li-link">Open Profile ↗</a></td>
+      <td class="batch" style="background:#1a1a3a">Day 3</td>
+      <td>
+        <div class="msg-box" onclick="copyMsg(this)">Hi Faisal, I help HR teams at Omani SMEs cut WPS/Sanad admin from hours to minutes. Building SmartPro Hub — Oman's first AI-native HR & payroll platform. Would love to connect. – Fahad</div>
+        <button class="copy-btn" onclick="copyMsg(this.previousElementSibling)">Copy</button>
+      </td>
+      <td>
+        <label class="done-wrap">
+          <input type="checkbox" onchange="markDone(this)"> Sent
+        </label>
+      </td>
+    </tr>
+    <tr class="lead-row" data-batch="23">
+      <td class="num">23</td>
+      <td>
+        <div class="name">Ahmed Al-Shanfari</div>
+        <div class="meta"></div>
+        <div class="company">Muscat International Bitumen</div>
+      </td>
+      <td><a href="https://www.linkedin.com/in/ahmed-alshanfari-9207986b" target="_blank" class="li-link">Open Profile ↗</a></td>
+      <td class="batch" style="background:#1a1a3a">Day 3</td>
+      <td>
+        <div class="msg-box" onclick="copyMsg(this)">Hi Ahmed, I help HR teams at Omani SMEs cut WPS/Sanad admin from hours to minutes. Building SmartPro Hub — Oman's first AI-native HR & payroll platform. Would love to connect. – Fahad</div>
+        <button class="copy-btn" onclick="copyMsg(this.previousElementSibling)">Copy</button>
+      </td>
+      <td>
+        <label class="done-wrap">
+          <input type="checkbox" onchange="markDone(this)"> Sent
+        </label>
+      </td>
+    </tr>
+    <tr class="lead-row" data-batch="24">
+      <td class="num">24</td>
+      <td>
+        <div class="name">Ahmed Al Ajmi</div>
+        <div class="meta"></div>
+        <div class="company">Oman Metal Industries & Contracting</div>
+      </td>
+      <td><a href="https://www.linkedin.com/in/ahmedajmi" target="_blank" class="li-link">Open Profile ↗</a></td>
+      <td class="batch" style="background:#1a1a3a">Day 3</td>
+      <td>
+        <div class="msg-box" onclick="copyMsg(this)">Hi Ahmed, I help HR teams at Omani SMEs cut WPS/Sanad admin from hours to minutes. Building SmartPro Hub — Oman's first AI-native HR & payroll platform. Would love to connect. – Fahad</div>
+        <button class="copy-btn" onclick="copyMsg(this.previousElementSibling)">Copy</button>
+      </td>
+      <td>
+        <label class="done-wrap">
+          <input type="checkbox" onchange="markDone(this)"> Sent
+        </label>
+      </td>
+    </tr>
+    <tr class="lead-row" data-batch="25">
+      <td class="num">25</td>
+      <td>
+        <div class="name">Ghasan Al Maamari</div>
+        <div class="meta"></div>
+        <div class="company">Zawad Development & Consultancy</div>
+      </td>
+      <td><a href="https://www.linkedin.com/in/ghasan-al-maamari-5610a33a" target="_blank" class="li-link">Open Profile ↗</a></td>
+      <td class="batch" style="background:#1a1a3a">Day 3</td>
+      <td>
+        <div class="msg-box" onclick="copyMsg(this)">Hi Ghasan, I help HR teams at Omani SMEs cut WPS/Sanad admin from hours to minutes. Building SmartPro Hub — Oman's first AI-native HR & payroll platform. Would love to connect. – Fahad</div>
+        <button class="copy-btn" onclick="copyMsg(this.previousElementSibling)">Copy</button>
+      </td>
+      <td>
+        <label class="done-wrap">
+          <input type="checkbox" onchange="markDone(this)"> Sent
+        </label>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<script>
+function copyMsg(el) {
+  navigator.clipboard.writeText(el.textContent.trim()).then(() => {
+    const btn = el.nextElementSibling || el.previousElementSibling;
+    if (btn && btn.classList.contains('copy-btn')) {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+    }
+  });
+}
+
+function markDone(cb) {
+  const row = cb.closest('tr');
+  row.classList.toggle('done', cb.checked);
+  updateProgress();
+  // Persist in localStorage
+  const rowId = row.dataset.batch;
+  const saved = JSON.parse(localStorage.getItem('step1_done') || '{}');
+  saved[rowId] = cb.checked;
+  localStorage.setItem('step1_done', JSON.stringify(saved));
+}
+
+function updateProgress() {
+  const total = document.querySelectorAll('.lead-row').length;
+  const done = document.querySelectorAll('.lead-row.done').length;
+  document.getElementById('prog-text').textContent = done + ' / ' + total;
+  document.getElementById('prog-fill').style.width = (done / total * 100) + '%';
+}
+
+// Restore checkboxes from localStorage
+window.onload = function() {
+  const saved = JSON.parse(localStorage.getItem('step1_done') || '{}');
+  document.querySelectorAll('.lead-row').forEach(row => {
+    if (saved[row.dataset.batch]) {
+      row.querySelector('input[type=checkbox]').checked = true;
+      row.classList.add('done');
+    }
+  });
+  updateProgress();
+};
+</script>
+</body>
+</html>

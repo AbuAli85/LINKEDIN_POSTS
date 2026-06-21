@@ -8,7 +8,7 @@ brand colors are used — #1c7811 (green) and #f43a35 (red) — varied per post 
 red, or mixed (chosen from the post text). `pillar` is accepted only for API compat.
 
 Arabic quotes are auto-detected and rendered right-to-left with proper letter
-shaping (arabic-reshaper + python-bidi) using the bundled IBM Plex Sans Arabic, with a
+shaping (arabic-reshaper + python-bidi) using the bundled Almarai font, with a
 fully mirrored layout. Other fonts fall back to common system fonts, then to
 Pillow's built-in bitmap font.
 
@@ -60,12 +60,12 @@ _FONT_CANDIDATES = [
     "C:/Windows/Fonts/calibri.ttf",
 ]
 
-# Arabic-capable fonts: bundled IBM Plex Sans Arabic first (always present, full
-# presentation-form coverage), then OS fallbacks. A subsetted font drops glyphs
-# (renders tofu), so the bundled copy is the reliable default.
+# Arabic-capable fonts: bundled Almarai first (always present, geometric sans),
+# then OS fallbacks. _shape_ar keeps isolated letters as base codepoints so modern
+# Google fonts like Almarai render without tofu; the bundled copy is the default.
 _FONT_AR_CANDIDATES = [
-    str(_FONTS_DIR / "IBMPlexSansArabic-Bold.ttf"),
-    str(_FONTS_DIR / "IBMPlexSansArabic-Regular.ttf"),
+    str(_FONTS_DIR / "Almarai-Bold.ttf"),
+    str(_FONTS_DIR / "Almarai-Regular.ttf"),
     "/usr/share/fonts/truetype/noto/NotoNaskhArabic-Bold.ttf",
     "/usr/share/fonts/truetype/noto/NotoSansArabic-Regular.ttf",
     "C:/Windows/Fonts/segoeuib.ttf",
@@ -123,19 +123,28 @@ def _is_arabic(text: str) -> bool:
     )
 
 
+_AR_RESHAPER = None
+
+
 def _shape_ar(text: str) -> str:
     """Reshape + bidi-reorder Arabic so Pillow draws connected, right-to-left glyphs.
 
     Pillow has no built-in shaping, so without this Arabic renders as isolated,
-    left-to-right letters. Falls back to the raw text if the libs are missing.
+    left-to-right letters. `use_unshaped_instead_of_isolated` keeps isolated-position
+    letters as their base codepoint instead of the legacy isolated presentation form,
+    which modern Google Fonts (Tajawal, Almarai, Cairo, …) omit — so they render
+    without tofu. Falls back to the raw text if the libs are missing.
     """
+    global _AR_RESHAPER
     try:
-        import arabic_reshaper
+        if _AR_RESHAPER is None:
+            from arabic_reshaper import ArabicReshaper
+            _AR_RESHAPER = ArabicReshaper({"use_unshaped_instead_of_isolated": True})
         try:
             from bidi.algorithm import get_display   # python-bidi < 0.5
         except Exception:
             from bidi import get_display             # python-bidi >= 0.5
-        return get_display(arabic_reshaper.reshape(text))
+        return get_display(_AR_RESHAPER.reshape(text))
     except Exception:
         return text
 
@@ -213,9 +222,10 @@ def render_quote_card(text: str, pillar: str = "", post_index: int = 0) -> bytes
     rtl   = _is_arabic(quote)
     shape = _shape_ar if rtl else (lambda s: s)
     if rtl:
-        author  = os.environ.get("LINKEDIN_AUTHOR_AR", "فهد العامري")
-        role    = os.environ.get("LINKEDIN_ROLE_AR", "المؤسس ورئيس مجلس الإدارة، سمارت برو")
-        tagline = os.environ.get("LINKEDIN_TAGLINE_AR", "سلطنة عُمان")
+        brand_ar = os.environ.get("LINKEDIN_BRAND_AR", "المندوب الذكي")
+        author   = os.environ.get("LINKEDIN_AUTHOR_AR", "فهد العامري")
+        role     = os.environ.get("LINKEDIN_ROLE_AR", "المؤسس ورئيس مجلس الإدارة، المندوب الذكي")
+        tagline  = os.environ.get("LINKEDIN_TAGLINE_AR", "سلطنة عُمان")
     else:
         author  = os.environ.get("LINKEDIN_AUTHOR", "Fahad Al Amri")
         role    = os.environ.get("LINKEDIN_ROLE", "Founder & Chairman, SmartPRO Hub")
@@ -249,20 +259,27 @@ def render_quote_card(text: str, pillar: str = "", post_index: int = 0) -> bytes
         draw.line([(bar_x0, yy), (bar_x0 + 14, yy)],
                   fill=_blend(primary, accent2, yy / (CARD_H - 1)))
 
-    # Wordmark: "Smart" (white) + "PRO" (accent2). The Latin brand stays LTR but
-    # right-aligns on Arabic cards; the tagline follows the reading direction.
-    font_brand = _load_font(46)
-    font_tag   = _load_font(20, arabic=rtl)
-    smart_w = draw.textlength("Smart", font=font_brand)
-    pro_w   = draw.textlength("PRO", font=font_brand)
+    # Wordmark. English cards show Latin "Smart"+"PRO"; Arabic cards show the Arabic
+    # brand name, right-aligned with its last word accented. Arabic words don't join
+    # across spaces, so each word can be shaped/coloured independently.
+    font_tag = _load_font(20, arabic=rtl)
     if rtl:
         edge = CARD_W - 90
-        draw.text((edge - pro_w - smart_w, 92), "Smart", font=font_brand, fill=TEXT_COLOR)
-        draw.text((edge - pro_w, 92), "PRO", font=font_brand, fill=accent2)
+        fb   = _load_font(46, arabic=True)
+        gap  = draw.textlength(" ", font=fb)
+        x    = edge
+        words = brand_ar.split()
+        for idx, w in enumerate(words):
+            col = accent2 if idx == len(words) - 1 else TEXT_COLOR
+            sw  = shape(w)
+            draw.text((x, 92), sw, font=fb, fill=col, anchor="ra")
+            x -= draw.textlength(sw, font=fb) + gap
         draw.text((edge, 148), shape(tagline), font=font_tag, fill=SUBTITLE_COL, anchor="ra")
         draw.text((CARD_W - 82, 235), "”", font=_load_font(180, arabic=True),
                   fill=dim_accent, anchor="ra")
     else:
+        font_brand = _load_font(46)
+        smart_w = draw.textlength("Smart", font=font_brand)
         draw.text((90, 92), "Smart", font=font_brand, fill=TEXT_COLOR)
         draw.text((90 + smart_w, 92), "PRO", font=font_brand, fill=accent2)
         draw.text((92, 148), tagline, font=font_tag, fill=SUBTITLE_COL)

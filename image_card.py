@@ -3,8 +3,9 @@
 Reproduces the brand "OG card" (smartpro-hub1/client/public/linkedin-quote-idea.svg):
 dark-green gradient, soft glow circles, full-height accent bar, SmartPRO HUB wordmark,
 oversized quotation mark, blockquote bar, auto-wrapped quote with an accent-colored
-closing line, divider, attribution block, and a centered profile watermark. The card
-is always green-branded; `pillar` is accepted only for API compatibility.
+closing line, divider, attribution block, and a centered profile watermark. Only two
+brand colors are used — #1c7811 (green) and #f43a35 (red) — varied per post as green,
+red, or mixed (chosen from the post text). `pillar` is accepted only for API compat.
 
 No external font files required — tries common system fonts in order and
 falls back to Pillow's built-in bitmap font if none are found.
@@ -15,26 +16,29 @@ CLI smoke-test:
 
 from __future__ import annotations
 
+import hashlib
 import io
 import os
 from pathlib import Path
 
 CARD_W, CARD_H   = 1080, 1350
 
-# Brand palette — always green, matching the OG card (linkedin-quote-idea.svg).
-BG_TOP           = (0x08, 0x13, 0x0e)   # #08130e — vertical gradient top
-BG_BOTTOM        = (0x06, 0x11, 0x0b)   # #06110b — vertical gradient bottom
-ACCENT           = (0x10, 0xB9, 0x81)   # #10B981 emerald — bars, divider, quote mark
-ACCENT_LIGHT     = (0x34, 0xd3, 0x99)   # #34d399 — wordmark "PRO" + quote punchline
+# Two-color brand palette — only these two accents ever appear on the card.
+BRAND_GREEN      = (0x1c, 0x78, 0x11)   # #1c7811
+BRAND_RED        = (0xf4, 0x3a, 0x35)   # #f43a35
 TEXT_COLOR       = (0xff, 0xff, 0xff)   # quote + name
-SUBTITLE_COL     = (0x7f, 0x9c, 0x8c)   # wordmark tagline
-TITLE_COL        = (0x9f, 0xc7, 0xb4)   # attribution role
-WATERMARK_COL    = (0x5f, 0x7a, 0x6c)   # bottom handle
+SUBTITLE_COL     = (0x9a, 0x9a, 0x9a)   # wordmark tagline (neutral grey)
+TITLE_COL        = (0xb4, 0xb4, 0xb4)   # attribution role (neutral grey)
+WATERMARK_COL    = (0x78, 0x78, 0x78)   # bottom handle (neutral grey)
 MARGIN           = 80
 QUOTE_SIZE       = 60
 MIN_QUOTE_SIZE   = 32   # auto-shrink floor when the quote is long
 HANDLE_SIZE      = 22
 LINE_SPACING     = 16
+
+# Each post uses one color variant, chosen from the post text so it stays stable
+# per post yet varies across posts. Override with env LINKEDIN_CARD_VARIANT.
+CARD_VARIANTS    = ("green", "red", "mixed")
 
 # System font search — first found wins; uv/CI runner typically has DejaVu
 _FONT_CANDIDATES = [
@@ -49,6 +53,33 @@ _FONT_CANDIDATES = [
     "C:/Windows/Fonts/calibrib.ttf",
     "C:/Windows/Fonts/calibri.ttf",
 ]
+
+
+def _blend(c1, c2, t: float) -> tuple[int, int, int]:
+    return tuple(int(c1[i] + (c2[i] - c1[i]) * t) for i in range(3))
+
+
+def _pick_variant(seed: str) -> str:
+    """Choose green / red / mixed — forced by env, else stable hash of the text."""
+    forced = os.environ.get("LINKEDIN_CARD_VARIANT", "").strip().lower()
+    if forced in CARD_VARIANTS:
+        return forced
+    digest = hashlib.sha1(seed.encode("utf-8")).hexdigest()
+    return CARD_VARIANTS[int(digest, 16) % len(CARD_VARIANTS)]
+
+
+def _scheme(variant: str) -> tuple[tuple[int, int, int], tuple[int, int, int]]:
+    """Return (primary, accent2) for a variant.
+
+    `primary` drives the bars, glow, quote mark and divider; `accent2` colors the
+    wordmark "PRO" and the quote's closing line. In "mixed" the two differ so both
+    brand colors show; in single-color variants they are equal.
+    """
+    if variant == "red":
+        return BRAND_RED, BRAND_RED
+    if variant == "mixed":
+        return BRAND_GREEN, BRAND_RED
+    return BRAND_GREEN, BRAND_GREEN
 
 
 def _load_font(size: int):
@@ -123,42 +154,45 @@ def render_quote_card(text: str, pillar: str = "", post_index: int = 0) -> bytes
     """
     from PIL import Image, ImageDraw
 
-    accent = ACCENT   # always green; `pillar` is accepted only for API compatibility
+    primary, accent2 = _scheme(_pick_variant(text))
+    accent = primary  # bars, glow, quote mark and divider
     handle = os.environ.get("LINKEDIN_HANDLE", "linkedin.com/in/fahad-alamri-smartpro")
     author = os.environ.get("LINKEDIN_AUTHOR", "Fahad Al Amri")
     role   = os.environ.get("LINKEDIN_ROLE", "Founder & Chairman, SmartPRO Hub")
     quote  = _best_quote(text)
 
+    # Very dark background, tinted toward the primary brand color.
+    bg_top    = _blend(primary, (0, 0, 0), 0.88)
+    bg_bottom = _blend(primary, (0, 0, 0), 0.94)
+
     # Vertical gradient background, built from a 1px column then stretched.
     column = Image.new("RGB", (1, CARD_H))
     for yy in range(CARD_H):
-        t = yy / (CARD_H - 1)
-        column.putpixel((0, yy), tuple(
-            int(BG_TOP[i] + (BG_BOTTOM[i] - BG_TOP[i]) * t) for i in range(3)
-        ))
+        column.putpixel((0, yy), _blend(bg_top, bg_bottom, yy / (CARD_H - 1)))
     img  = column.resize((CARD_W, CARD_H))
 
     # Soft brand glow circles (translucent) composited over the gradient.
     glow = Image.new("RGBA", (CARD_W, CARD_H), (0, 0, 0, 0))
     gd   = ImageDraw.Draw(glow)
-    gd.ellipse([980 - 380, 160 - 380, 980 + 380, 160 + 380], fill=(*accent, 20))   # ~0.08
-    gd.ellipse([120 - 300, 1220 - 300, 120 + 300, 1220 + 300], fill=(*accent, 15)) # ~0.06
+    gd.ellipse([980 - 380, 160 - 380, 980 + 380, 160 + 380], fill=(*primary, 20))   # ~0.08
+    gd.ellipse([120 - 300, 1220 - 300, 120 + 300, 1220 + 300], fill=(*accent2, 15)) # ~0.06
     img  = Image.alpha_composite(img.convert("RGBA"), glow).convert("RGB")
     draw = ImageDraw.Draw(img)
 
     # Dimmed accent (blend toward bg) for the oversized quote mark — avoids
     # needing an RGBA overlay just for one translucent glyph.
-    dim_accent = tuple(int(BG_TOP[i] + (accent[i] - BG_TOP[i]) * 0.5) for i in range(3))
+    dim_accent = _blend(bg_top, accent, 0.5)
 
-    # Full-height brand bar on the left edge.
-    draw.rectangle([(0, 0), (14, CARD_H)], fill=accent)
+    # Full-height brand bar on the left edge (mixes primary→accent2 top to bottom).
+    for yy in range(CARD_H):
+        draw.line([(0, yy), (14, yy)], fill=_blend(primary, accent2, yy / (CARD_H - 1)))
 
     # Wordmark: "Smart" (white) + "PRO" (accent) + tagline.
     font_brand = _load_font(46)
     font_tag   = _load_font(20)
     draw.text((90, 92), "Smart", font=font_brand, fill=TEXT_COLOR)
     smart_w = draw.textlength("Smart", font=font_brand)
-    draw.text((90 + smart_w, 92), "PRO", font=font_brand, fill=ACCENT_LIGHT)
+    draw.text((90 + smart_w, 92), "PRO", font=font_brand, fill=accent2)
     draw.text((92, 148), "HUB · SULTANATE OF OMAN", font=font_tag, fill=SUBTITLE_COL)
 
     # Oversized decorative quotation mark.
@@ -192,7 +226,7 @@ def render_quote_card(text: str, pillar: str = "", post_index: int = 0) -> bytes
     draw.rectangle([(92, y - 4), (100, y + block_h + 4)], fill=accent)
     for i, ln in enumerate(lines):
         last = (i == len(lines) - 1 and len(lines) > 1)
-        draw.text((x, y), ln, font=font_quote, fill=ACCENT_LIGHT if last else TEXT_COLOR)
+        draw.text((x, y), ln, font=font_quote, fill=accent2 if last else TEXT_COLOR)
         y += line_h
 
     # Attribution block (divider + name + role) anchored near the bottom.

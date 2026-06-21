@@ -124,6 +124,24 @@ def _is_arabic(text: str) -> bool:
 
 
 _AR_RESHAPER = None
+_HAS_RAQM = None
+
+
+def _has_raqm() -> bool:
+    """True if Pillow was built with libraqm (native complex-text shaping).
+
+    When present, Pillow shapes + bidi-orders Arabic itself from the raw logical
+    string — the correct, robust path. PyPI Pillow wheels bundle libraqm, so this
+    is normally available both locally and on CI. We cache the (cheap) check.
+    """
+    global _HAS_RAQM
+    if _HAS_RAQM is None:
+        try:
+            from PIL import features
+            _HAS_RAQM = bool(features.check("raqm"))
+        except Exception:
+            _HAS_RAQM = False
+    return _HAS_RAQM
 
 
 def _shape_ar(text: str) -> str:
@@ -171,7 +189,8 @@ def _best_quote(text: str) -> str:
     return (text[:196] + " ...") if len(text) > 200 else text
 
 
-def _wrap_to_width(draw, text: str, font, max_width: int, measure=None) -> list[str]:
+def _wrap_to_width(draw, text: str, font, max_width: int, measure=None,
+                   draw_kwargs=None) -> list[str]:
     """Word-wrap `text` so each line's *rendered* width stays within `max_width`.
 
     Measures each candidate line with the actual font (not a character count), so
@@ -182,12 +201,13 @@ def _wrap_to_width(draw, text: str, font, max_width: int, measure=None) -> list[
     than `max_width` is hard-split so it can never overflow.
     """
     render = measure or (lambda s: s)
+    dkw = draw_kwargs or {}
     words = text.split()
     if not words:
         return [""]
 
     def fits(s: str) -> bool:
-        return draw.textlength(render(s), font=font) <= max_width
+        return draw.textlength(render(s), font=font, **dkw) <= max_width
 
     lines: list[str] = []
     cur = ""
@@ -232,8 +252,23 @@ def render_quote_card(text: str, pillar: str = "", post_index: int = 0) -> bytes
     quote  = _best_quote(text)
 
     # Arabic quotes drive a right-to-left, shaped, mirrored layout.
+    #
+    # Preferred path: Pillow's native libraqm shaping. We pass the *raw logical*
+    # string plus direction="rtl"/language="ar" to every draw/measure call and let
+    # libraqm join letters and apply the bidi algorithm — this renders connected,
+    # correctly ordered Arabic. The old arabic-reshaper + python-bidi pre-shaping
+    # produced reversed, disconnected glyphs (it fights libraqm) and is kept only
+    # as a best-effort fallback for Pillow builds without raqm.
     rtl   = _is_arabic(quote)
-    shape = _shape_ar if rtl else (lambda s: s)
+    if rtl and _has_raqm():
+        shape  = lambda s: s                       # libraqm shapes raw text
+        dir_kw = {"direction": "rtl", "language": "ar"}
+    elif rtl:
+        shape  = _shape_ar                         # fallback: manual pre-shaping
+        dir_kw = {}
+    else:
+        shape  = lambda s: s
+        dir_kw = {}
     if rtl:
         brand_ar = os.environ.get("LINKEDIN_BRAND_AR", "المندوب الذكي")
         author   = os.environ.get("LINKEDIN_AUTHOR_AR", "فهد العامري")
@@ -285,9 +320,10 @@ def render_quote_card(text: str, pillar: str = "", post_index: int = 0) -> bytes
         for idx, w in enumerate(words):
             col = accent2 if idx == len(words) - 1 else TEXT_COLOR
             sw  = shape(w)
-            draw.text((x, 92), sw, font=fb, fill=col, anchor="ra")
-            x -= draw.textlength(sw, font=fb) + gap
-        draw.text((edge, 148), shape(tagline), font=font_tag, fill=SUBTITLE_COL, anchor="ra")
+            draw.text((x, 92), sw, font=fb, fill=col, anchor="ra", **dir_kw)
+            x -= draw.textlength(sw, font=fb, **dir_kw) + gap
+        draw.text((edge, 148), shape(tagline), font=font_tag, fill=SUBTITLE_COL,
+                  anchor="ra", **dir_kw)
         draw.text((CARD_W - 82, 235), "”", font=_load_font(180, arabic=True),
                   fill=dim_accent, anchor="ra")
     else:
@@ -306,11 +342,12 @@ def render_quote_card(text: str, pillar: str = "", post_index: int = 0) -> bytes
     size = QUOTE_SIZE
     while True:
         font_quote = _load_font(size, arabic=rtl)
-        lines   = _wrap_to_width(draw, quote, font_quote, max_text_w, measure=shape)
+        lines   = _wrap_to_width(draw, quote, font_quote, max_text_w,
+                                 measure=shape, draw_kwargs=dir_kw)
         ascent, descent = font_quote.getmetrics()
         line_h  = ascent + descent + LINE_SPACING
         block_h = line_h * len(lines) - LINE_SPACING
-        widest  = max(draw.textlength(shape(ln), font=font_quote) for ln in lines)
+        widest  = max(draw.textlength(shape(ln), font=font_quote, **dir_kw) for ln in lines)
         if (widest <= max_text_w and block_h <= max_text_h) or size <= MIN_QUOTE_SIZE:
             break
         size -= 4
@@ -327,7 +364,7 @@ def render_quote_card(text: str, pillar: str = "", post_index: int = 0) -> bytes
     for i, ln in enumerate(lines):
         last = (i == len(lines) - 1 and len(lines) > 1)
         draw.text((text_x, y), shape(ln), font=font_quote,
-                  fill=accent2 if last else TEXT_COLOR, anchor=anchor)
+                  fill=accent2 if last else TEXT_COLOR, anchor=anchor, **dir_kw)
         y += line_h
 
     # Attribution block (divider + name + role) near the bottom; right-aligned for RTL.
@@ -336,9 +373,9 @@ def render_quote_card(text: str, pillar: str = "", post_index: int = 0) -> bytes
         ax = CARD_W - 132
         draw.rectangle([(ax - 64, base_y - 34), (ax, base_y - 29)], fill=accent)
         draw.text((ax, base_y), shape(author), font=_load_font(34, arabic=True),
-                  fill=TEXT_COLOR, anchor="ra")
+                  fill=TEXT_COLOR, anchor="ra", **dir_kw)
         draw.text((ax, base_y + 46), shape(role), font=_load_font(24, arabic=True),
-                  fill=TITLE_COL, anchor="ra")
+                  fill=TITLE_COL, anchor="ra", **dir_kw)
     else:
         draw.rectangle([(132, base_y - 34), (196, base_y - 29)], fill=accent)
         draw.text((132, base_y), author, font=_load_font(34), fill=TEXT_COLOR)

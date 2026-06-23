@@ -1,0 +1,19 @@
+{
+  "pillar": "sanad_pro",
+  "topic": "How do you onboard a new PRO officer without losing track of open cases mid-handover?",
+  "format": "Build a sharp before/after: managing government services with WhatsApp and Excel versus SmartPRO Hub case tracking and a client portal \u2014 show the same week, completely different experience",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Thursday",
+  "post": "Monday, 8:00 AM. New PRO officer starts today.\n\nBy 10:30 AM, three clients are calling about cases the old officer was handling. Nobody knows where the files are. The handover \"notes\" are a WhatsApp thread with 340 messages.\n\nThat's not a staffing problem. That's a systems problem.\n\nSanad offices running on WhatsApp and Excel don't have a case management system \u2014 they have a memory system. And memory walks out the door with every officer change.\n\nSame Monday, on SmartPRO Hub:\n\nNew officer opens the platform. Every client company is there. Every open case \u2014 work permits, visa renewals, MOL filings \u2014 has a status, a deadline, and the last action logged. Nothing lives in someone's head. Nothing disappears.\n\nHandover goes from three days of chaos to 20 minutes of orientation.\n\nOnce you're past 15 clients, this isn't a nice-to-have. Work permit tracking in Oman can't depend on which officer happens to remember what. I've seen what happens when it does \u2014 and it's always the client who pays for it.\n\nThe question isn't whether to fix this. It's how many more Monday mornings you can absorb before you do.\n\nTry the Sanad AI Assistant free \u2014 instant answers on work permits, visas & government fees: https://www.thesmartpro.io/sanad/assistant?utm_source=linkedin&utm_medium=social&utm_campaign=sanad-pro\n\n#OmanBusiness\n#HRManagement\n#SmartPROHub\n#Omanization\n#GCCBusiness",
+  "char_count": 1377,
+  "generated_at": "2026-06-23T07:16:26.664017+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "has_variant": true
+}

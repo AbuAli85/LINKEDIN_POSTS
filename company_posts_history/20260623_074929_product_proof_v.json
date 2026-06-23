@@ -1,0 +1,20 @@
+{
+  "pillar": "product_proof",
+  "topic": "The HR manager who finally stopped processing leave requests on WhatsApp \u2014 what changed in week one",
+  "format": "Before/after of a single workflow: same task, two completely different experiences",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "11 leave requests over WhatsApp before 9am on a Monday. That was one HR manager's week, every single week, at a mid-size company in Muscat \u2014 before SmartPro Hub.\n\nWeek one looked different.\n\nLeave requests went through the employee portal. Auto-routed to the right approver. Status visible without anyone having to chase it down. Zero follow-up messages.\n\nShe didn't process a single leave request on WhatsApp that week.\n\nNot because people stopped taking leave. Because there was finally a proper place to do it.\n\nThis is what SmartPro Hub customers running HR software in Oman describe consistently: week one isn't some dramatic overhaul. It's just the small, grinding chaos that stops. Approval chains that actually reach the right person. Records that live somewhere other than a manager's phone.\n\nWe built this because a group chat held together by one exhausted person is not a workflow. GCC operations deserve better than that.\n\nSmartPro Hub covers HR, WPS payroll Oman compliance, work permits, SPF filings \u2014 all in one place, bilingual Arabic and English. Starter plans from OMR 12/month.\n\nWhat in your business is still running on WhatsApp when it shouldn't be?\n\nBook a 30-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#PayrollOman\n#Omanization",
+  "char_count": 1354,
+  "generated_at": "2026-06-23T07:49:41.727080+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260623_074930_product_proof.json"
+}

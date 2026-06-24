@@ -1,0 +1,18 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "Direct bank integration for WPS submission \u2014 what disappears from the HR team's monthly checklist",
+  "format": "Open with the specific operational problem, then show how one SmartPro Hub feature addresses it end-to-end",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "Salary day is the one deadline HR can't miss \u2014 and somehow it still involves the most manual work.\n\nMost HR teams in Oman run WPS submission the same way every month: export payroll data, format the file to bank spec, log into the banking portal, upload, wait for confirmation, chase if it bounces, then manually update records.\n\nSame process. Same risk of a formatting error holding up 200 salaries.\n\nSmartPro Hub cuts out that whole chain.\n\nDirect bank integration is built into the WPS payroll module, so submission happens from inside the platform. No file exports, no separate portal, no reformatting. Payroll runs, compliance gets checked against WPS rules automatically, and the file goes to the bank in the same workflow.\n\nWhat disappears from the HR checklist:\n\u2014 Manual file formatting\n\u2014 Separate bank portal login\n\u2014 Follow-up on failed submissions\n\u2014 Reconciling what was sent vs. what was processed\n\nCustomers running 50\u2013300 employees tell us this saves 2\u20133 hours per payroll cycle. That's time that never showed up on anyone's job description, but it was always there \u2014 every single month.\n\nWPS compliance in Oman doesn't have to mean extra admin. It can just be one step in a process that mostly runs itself.\n\nWhat's the most repetitive task your HR team still does manually every month?\n\nBook a 30-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#WPS\n#PayrollOman\n#OmanBusiness\n#HRTech",
+  "char_count": 1478,
+  "generated_at": "2026-06-24T07:48:26.580767+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true
+}

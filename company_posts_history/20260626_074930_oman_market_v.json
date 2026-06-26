@@ -1,0 +1,20 @@
+{
+  "pillar": "oman_market",
+  "topic": "GCC business growth and the operations infrastructure that has to scale with it",
+  "format": "Open with an Oman market data point or Vision 2040 reference, then connect it to operational reality for SMEs",
+  "language": "en",
+  "segment": "B",
+  "publish_day": "Friday",
+  "post": "Oman's non-oil GDP grew 4.9% last year. And behind a lot of that growth is an HR manager still doing WPS payroll on a spreadsheet.\n\nThat's not a knock on anyone \u2014 it's just where most SMEs are. You grow fast enough that the old way stops working, but not fast enough that fixing it feels urgent. Until it does.\n\nMore employees means more work permit renewals slipping through the cracks. More revenue means more compliance filings, not fewer. More clients means the WhatsApp thread becomes completely unmanageable. The operational load scales with the business, but the systems often don't.\n\nThe companies that handle growth well tend to share one thing: they dealt with this before it became a crisis, not after.\n\nSmartPro Hub is built for this \u2014 WPS payroll with direct bank integration, SPF and Omanization compliance, PRO services automation, and work permit tracking, all in one place. Bilingual. Starting at OMR 12/month.\n\nInvestor and partnership inquiries: https://www.thesmartpro.io/investors?utm_source=linkedin&utm_medium=social&utm_campaign=oman-market\n\nWhat operational bottleneck are you seeing most in Omani businesses right now?\n\nBook a 30-minute demo at www.thesmartpro.io/demo\n\n#SmartPROHub\n#OmanVision2040\n#GCCBusiness\n#HRTech\n#SMEOman",
+  "char_count": 1254,
+  "generated_at": "2026-06-26T07:49:42.510316+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260626_074931_oman_market.json"
+}

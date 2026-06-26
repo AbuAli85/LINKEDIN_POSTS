@@ -3,13 +3,15 @@
 Two layers:
   OFFICIAL_TERMS  — correct Omani government/legal/HR terminology with wrong
                     alternatives to catch and reject at generation time.
-  OMANI_VOICE     — authentic Omani/Gulf dialect expressions that make posts
-                    sound locally written, not translated.
+  DIALECT_TO_FORMAL — colloquial words to avoid, each mapped to its formal
+                    Modern Standard Arabic replacement, so posts stay formal
+                    and professional (فصحى مبسطة), never colloquial.
 
 Public API:
-  build_terminology_block() -> str   inject into Arabic system prompts
-  build_voice_block()        -> str   inject into Arabic system prompts
-  validate_arabic_terms(text)-> str|None  warn if wrong alternatives detected
+  build_terminology_block()    -> str   inject into Arabic system prompts
+  build_voice_block()          -> str   formal-register guidance for the prompt
+  validate_arabic_terms(text)  -> str|None  warn if wrong terminology detected
+  validate_arabic_register(text) -> str|None  warn if colloquial/dialect detected
 """
 
 # ---------------------------------------------------------------------------
@@ -370,30 +372,69 @@ OFFICIAL_TERMS: dict[str, dict] = {
 
 
 # ---------------------------------------------------------------------------
-# Layer 2 — Omani / Gulf dialect voice expressions
-# key   = the dialect word/phrase
-# value = usage note (Arabic) — shown in system prompt as guidance
+# Layer 2 — Register control: keep Arabic in FORMAL Modern Standard Arabic
+# key   = colloquial / dialect word or phrase that must NOT appear in posts
+# value = (formal_replacement, short Arabic note for the prompt)
+#
+# The audience is business owners and managers; LinkedIn is a professional
+# register. Posts must read as polished فصحى مبسطة — natural and readable, but
+# never colloquial. This map is injected into the prompt as "avoid X, use Y"
+# guidance AND used by validate_arabic_register() to catch slips at generation.
 # ---------------------------------------------------------------------------
-OMANI_VOICE: dict[str, str] = {
-    "وايد":     "بمعنى 'جداً' أو 'كثير' — أقوى وأكثر خليجية من 'جداً'",
-    "عاد":      "أداة خطاب محادثاتية: 'تعرف'، 'يعني'، 'بعدين' — تُضفي طابعاً طبيعياً",
-    "خلاص":     "للإشارة إلى الإنجاز والتسوية — 'خلاص، الأمر محسوم' أقوى من 'انتهى'",
-    "ما يصير":  "هذا لا يمكن / غير مقبول — أكثر مباشرةً وعُمانيةً من 'لا يمكن'",
-    "شايل":     "يحمل / يتعامل مع — 'شايل شغل' = مثقل بالأعباء، مألوفة جداً",
-    "الحين":    "الآن / في هذه اللحظة — خليجي وعُماني بامتياز، أسرع وقعاً من 'الآن'",
-    "تعبان":    "يُعاني / مثقل — يُستخدم للأشخاص والأنظمة: 'الإكسل تعبان' يفهمها الجميع",
-    "زين":      "جيد / حسناً / موافق — تأكيد محادثاتي أصيل في الخليج وعُمان",
-    "بس":       "فقط / لكن — متعددة المعاني، تُوقف الجملة أو تُعطيها تحفظاً: 'بس ما في تنبيه'",
-    "مو":       "ليس / لا — نفي مباشر وقوي: 'مو المشكلة في التنظيم' أقوى من 'ليست'",
-    "والله":    "للتأكيد الحقيقي — ليست دائماً دينية، تعني 'صدقاً': 'والله ما أدري وين الملف'",
-    "يلا":      "هيا / تمام / إذن — للانتقال أو الحث على الفعل في خاتمة المنشور",
-    "بعدين":    "لاحقاً / ثم — أقوى من 'بعد ذلك' في السياق السردي المتسارع",
-    "صح":       "صحيح / تماماً — تأكيد سريع ومحادثاتي أكثر من 'صحيح'",
-    "عيل":      "إذن / إذاً — رابط نتيجة طبيعي: 'عيل شو الحل؟' يدفع للتعليق",
-    "شوي":      "قليلاً / تدريجياً — 'شوي شوي' = بدون تسرع، مألوفة في وصف التحسن",
-    "ودّي":     "أريد / أودّ — أكثر ليونةً من 'أريد'، تُناسب اقتراح الحلول",
-    "ما أدري":  "لا أعرف — أكثر صدقاً وأقل رسميةً، تُناسب الاعتراف بالغموض",
+DIALECT_TO_FORMAL: dict[str, tuple[str, str]] = {
+    "وايد":    ("كثير / كثيراً",        "عامية خليجية لـ'كثير'"),
+    "مو":      ("ليس / ليست",           "نفي عامي — استخدم 'ليس/ليست/لا'"),
+    "ما في":   ("لا يوجد",              "نفي عامي — استخدم 'لا يوجد/ليس هناك'"),
+    "الحين":   ("الآن",                 "عامية لـ'الآن'"),
+    "وين":     ("أين",                  "عامية لـ'أين'"),
+    "اللي":    ("الذي / التي / الذين",  "موصول عامي — استخدم 'الذي/التي/الذين'"),
+    "خلاص":    ("(احذفها)",             "حشو عامي — احذفها أو استبدلها بجملة فصيحة"),
+    "عاد":     ("(احذفها)",             "أداة خطاب عامية — احذفها"),
+    "عيل":     ("إذن",                  "عامية عُمانية لـ'إذن'"),
+    "بس":      ("لكن / فقط",            "عامية — استخدم 'لكن' أو 'فقط'"),
+    "زين":     ("جيد / حسناً",          "عامية لـ'جيد'"),
+    "تعبان":   ("مرهق / متعثّر",         "عامية — للأنظمة استخدم 'متعثّر/غير كفؤ'"),
+    "شايل":    ("يحمل / يتحمّل",         "عامية لـ'يحمل العبء'"),
+    "يجي":     ("يأتي",                 "عامية لـ'يأتي'"),
+    "يجيك":    ("يأتيك / يصلك",         "عامية لـ'يأتيك'"),
+    "تشوف":    ("ترى",                  "عامية لـ'ترى'"),
+    "تدوّر":   ("تبحث",                 "عامية لـ'تبحث'"),
+    "سويت":    ("فعلت / أنجزت",         "عامية لـ'فعلت'"),
+    "ايش":     ("ماذا / ما",            "عامية لـ'ماذا'"),
+    "شو":      ("ماذا / ما",            "عامية لـ'ماذا'"),
+    "ودّي":    ("أودّ / أرغب",          "عامية لـ'أودّ'"),
+    "ما أدري": ("لا أعرف",              "عامية لـ'لا أعرف'"),
+    "ما درّيت":("لم أعلم",              "عامية لـ'لم أعلم'"),
+    "يلا":     ("(احذفها) / إذن",       "عامية — احذفها"),
+    "بعدين":   ("بعد ذلك / ثم",         "عامية لـ'ثم'"),
+    "ردّيت":   ("أجبت / رددت",          "عامية لـ'أجبت'"),
+    "ما رديت": ("لم أجب",               "عامية لـ'لم أجب'"),
+    "جروب":    ("مجموعة",               "دخيلة — استخدم 'مجموعة'"),
+    "ما يصير": ("لا يصحّ / لا يجوز",     "عامية لـ'لا يصحّ'"),
+    "عشان":    ("لأن / كي",             "عامية لـ'لأنّ/كي'"),
+    "علشان":   ("لأن / كي",             "عامية لـ'لأنّ/كي'"),
+    "ليش":     ("لماذا",                "عامية لـ'لماذا'"),
+    "أشوف":    ("أرى",                  "عامية لـ'أرى'"),
+    "نشوف":    ("نرى",                  "عامية لـ'نرى'"),
+    "شفت":     ("رأيت",                 "عامية لـ'رأيت'"),
+    "شاف":     ("رأى",                  "عامية لـ'رأى'"),
+    "شافت":    ("رأت",                  "عامية لـ'رأت'"),
+    "يجيني":   ("يصلني / يأتيني",       "عامية لـ'يصلني'"),
+    "شوي":     ("قليلاً",               "عامية لـ'قليلاً'"),
+    "تروح":    ("تذهب / تضيع",          "عامية لـ'تذهب'"),
+    "نروح":    ("نذهب",                 "عامية لـ'نذهب'"),
+    "يبغى":    ("يريد",                 "عامية لـ'يريد'"),
+    "يبي":     ("يريد",                 "عامية لـ'يريد'"),
 }
+
+# Dialect words that are HOMOGRAPHS of legitimate formal words — kept in the
+# prompt guidance above, but excluded from validate_arabic_register() so they
+# never trigger a false-positive regeneration:
+#   عاد (formal: "returned")   زين (formal: a proper name / "adorned")
+_REGISTER_SKIP: frozenset[str] = frozenset({"عاد", "زين"})
+
+# All dialect keys (for prompt guidance / external callers).
+DIALECT_WORDS: tuple[str, ...] = tuple(DIALECT_TO_FORMAL.keys())
 
 
 # ---------------------------------------------------------------------------
@@ -448,14 +489,56 @@ def build_terminology_block() -> str:
 
 
 def build_voice_block() -> str:
-    """Return a formatted dialect voice section for injection into Arabic system prompts."""
+    """Return the FORMAL-register guidance block for Arabic system prompts.
+
+    The post must be polished Modern Standard Arabic (فصحى مبسطة): natural and
+    readable, but never colloquial. This block lists the dialect words to avoid
+    and the formal word to use instead.
+    """
     lines = [
-        "عبارات عُمانية وخليجية أصيلة — استخدمها بجرعة مناسبة (٢-٣ عبارات كحد أقصى) "
-        "لتُضفي طابعاً محلياً حقيقياً بدلاً من الأسلوب المترجم:",
+        "السجل اللغوي — التزم بالعربية الفصحى المبسطة طوال المنشور:",
+        "- اكتب بفصحى احترافية واضحة تناسب جمهور الأعمال على LinkedIn — مفهومة بلا جهد، لكنها ليست عامية إطلاقاً.",
+        "- ممنوع منعاً باتاً أي لفظ من اللهجة العامية أو الخليجية. استبدل كل عامية بمقابلها الفصيح:",
     ]
-    for word, meaning in OMANI_VOICE.items():
-        lines.append(f"- {word}: {meaning}")
+    for word, (formal, _note) in DIALECT_TO_FORMAL.items():
+        lines.append(f"- ❌ {word}  ←  ✅ {formal}")
+    lines.append(
+        "- النفي بالفصحى: 'ليس/ليست/لا يوجد' لا 'مو/ما في'. "
+        "الاستفهام بالفصحى: 'أين/ماذا/كيف' لا 'وين/ايش/شو'. "
+        "الموصول 'الذي/التي/الذين' لا 'اللي'."
+    )
+    lines.append(
+        "- ابقَ ودوداً ومباشراً دون تكلّف أكاديمي — الفصحى المبسطة، لا المعجمية الجافة."
+    )
     return "\n".join(lines)
+
+
+def validate_arabic_register(text: str) -> str | None:
+    """Scan post text for colloquial/dialect words that break the formal register.
+
+    Returns a warning string (Arabic) listing the violations with their formal
+    replacements, or None if the text is clean. Caps at 5 to stay readable.
+    Uses whitespace/punctuation boundaries so short words don't false-match
+    inside longer formal words (e.g. 'بس' must not trip on 'بسبب').
+    """
+    import re
+
+    found: list[str] = []
+    for dialect, (formal, _note) in DIALECT_TO_FORMAL.items():
+        if dialect in _REGISTER_SKIP:
+            continue
+        # Arabic word boundaries on both ends: the match must not be glued to
+        # another Arabic letter. This stops 'بس' matching 'بسبب', 'مو' matching
+        # 'موظف', or 'ما في' matching 'كما في'. Works for single words and
+        # multi-word phrases alike.
+        pattern = rf"(?<![ء-ي]){re.escape(dialect)}(?![ء-ي])"
+        if re.search(pattern, text):
+            found.append(f"'{dialect}' ← استخدم '{formal}'")
+        if len(found) >= 5:
+            break
+    if not found:
+        return None
+    return "لهجة عامية (يجب أن يكون المنشور بالفصحى): " + " ؛ ".join(found)
 
 
 def validate_arabic_terms(text: str) -> str | None:

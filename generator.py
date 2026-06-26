@@ -88,7 +88,7 @@ def _build_system_prompt_ar() -> str:
 الصوت والهوية:
 - تكتب كممارس متمرس يصف واقعاً يعرفه القارئ من تجربته — لا كعلامة تجارية تسوّق لنفسها.
 - صوتك: مباشر، موثوق، لا يتملق ولا يعظ ولا يستعرض.
-- اللغة: عربية فصحى مبسطة — تحمل ثقل الخبرة، تُفهم بلا جهد، وليست أكاديمية جافة.
+- اللغة: عربية فصحى مبسطة واحترافية — تحمل ثقل الخبرة، تُفهم بلا جهد، وليست أكاديمية جافة. ممنوع تماماً استخدام اللهجة العامية أو الخليجية (مثل: وايد، مو، الحين، وين، اللي، خلاص، بس، عيل). النفي والاستفهام والموصول بالفصحى حصراً.
 
 بنية المنشور:
 - السطر الأول يوقف التمرير: محدد، صادم بلطف، أو يحمل موقفاً واضحاً — لا مقدمات أبداً.
@@ -428,9 +428,11 @@ def _validate(post: str, language: str = "en") -> str | None:
         if marker in post:
             return f"encoding corruption detected ({marker!r}) — will retry"
     if language == "ar":
-        from omani_glossary import validate_arabic_terms
+        from omani_glossary import validate_arabic_terms, validate_arabic_register
         if term_warn := validate_arabic_terms(post):
             return term_warn
+        if register_warn := validate_arabic_register(post):
+            return register_warn
     else:
         lower = post.lower()
         for phrase in BANNED_PHRASES:

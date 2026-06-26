@@ -427,6 +427,10 @@ def _validate(post: str, language: str = "en") -> str | None:
     for marker in _MOJIBAKE_MARKERS:
         if marker in post:
             return f"encoding corruption detected ({marker!r}) — will retry"
+    # LinkedIn renders no Markdown — bold/code markers would publish literally.
+    # (Single '_' is fine: it appears in hashtags and utm_ params; '__' does not.)
+    if "**" in post or "__" in post or "```" in post:
+        return "contains markdown formatting (** or ``` ) — LinkedIn shows it literally; will retry"
     if language == "ar":
         from omani_glossary import validate_arabic_terms, validate_arabic_register
         if term_warn := validate_arabic_terms(post):

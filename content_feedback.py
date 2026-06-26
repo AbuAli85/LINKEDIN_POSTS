@@ -78,7 +78,7 @@ def detect_hook_style(first_line: str) -> str:
 # ---------------------------------------------------------------------------
 
 def _load(path: Path) -> dict:
-    return json.loads(path.read_text(encoding="utf-8"))
+    return json.loads(path.read_text(encoding="utf-8-sig"))
 
 
 def _save(path: Path, data: dict) -> None:

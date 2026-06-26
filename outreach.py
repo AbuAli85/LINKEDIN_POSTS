@@ -174,7 +174,7 @@ def _save_json(path: Path, data: dict) -> None:
 
 
 def _load_json(path: Path) -> dict:
-    return json.loads(path.read_text(encoding="utf-8"))
+    return json.loads(path.read_text(encoding="utf-8-sig"))
 
 
 def _all_comment_files() -> list[Path]:
@@ -359,7 +359,7 @@ def _preflight_scope_check() -> bool:
     # Pick the most recent published post to probe with.
     for f in sorted(HISTORY_DIR.glob("*.json"), reverse=True):
         try:
-            p = json.loads(f.read_text(encoding="utf-8"))
+            p = json.loads(f.read_text(encoding="utf-8-sig"))
         except Exception:
             continue
         if not p.get("post_id"):
@@ -399,7 +399,7 @@ def cmd_fetch() -> None:
     published = []
     for f in sorted(HISTORY_DIR.glob("*.json")):
         try:
-            p = json.loads(f.read_text(encoding="utf-8"))
+            p = json.loads(f.read_text(encoding="utf-8-sig"))
             if p.get("post_id"):
                 published.append((f, p))
         except Exception:
@@ -816,7 +816,7 @@ def cmd_manual_capture(urls: list[str]) -> None:
     LEADS   = Path(__file__).parent / "leads.csv"
     TODAY   = date.today().isoformat()
 
-    tracker = json.loads(TRACKER.read_text(encoding="utf-8")) if TRACKER.exists() else []
+    tracker = json.loads(TRACKER.read_text(encoding="utf-8-sig")) if TRACKER.exists() else []
     existing_urls = {p.get("linkedin_url","").rstrip("/") for p in tracker}
 
     csv_urls: set = set()
@@ -907,7 +907,7 @@ def cmd_manual_capture(urls: list[str]) -> None:
 def _load_tracker() -> list[dict]:
     """Load outreach_tracker.json; return [] if missing."""
     if TRACKER_FILE.exists():
-        return json.loads(TRACKER_FILE.read_text(encoding="utf-8"))
+        return json.loads(TRACKER_FILE.read_text(encoding="utf-8-sig"))
     return []
 
 
@@ -920,7 +920,7 @@ def _load_templates() -> dict:
         raise RuntimeError(
             "sequence_templates.json not found — run from repo root or check path."
         )
-    return json.loads(TEMPLATES_FILE.read_text(encoding="utf-8"))
+    return json.loads(TEMPLATES_FILE.read_text(encoding="utf-8-sig"))
 
 
 def _render_template(template: str, lead: dict) -> str:

@@ -70,7 +70,7 @@ def load_posts() -> list[dict]:
     posts = []
     for f in files:
         try:
-            p = json.loads(f.read_text(encoding="utf-8"))
+            p = json.loads(f.read_text(encoding="utf-8-sig"))
             p["_filename"] = f.name
             posts.append(p)
         except Exception:
@@ -1811,7 +1811,7 @@ def _outreach_pipeline_section() -> str:
     prospects: list[dict] = []
     if tracker_path.exists():
         try:
-            prospects = json.loads(tracker_path.read_text(encoding="utf-8"))
+            prospects = json.loads(tracker_path.read_text(encoding="utf-8-sig"))
         except Exception:
             prospects = []
 
@@ -1821,7 +1821,7 @@ def _outreach_pipeline_section() -> str:
     if outreach_dir.exists():
         for f in sorted(outreach_dir.glob("*_comments.json"), reverse=True):
             try:
-                data = json.loads(f.read_text(encoding="utf-8"))
+                data = json.loads(f.read_text(encoding="utf-8-sig"))
                 for c in data.get("comments", []):
                     c["_file_path"]  = f"outreach_history/{f.name}"
                     c["_post_topic"] = data.get("post_topic", "")
@@ -1990,7 +1990,7 @@ def _outreach_pipeline_section() -> str:
         dm_file = outreach_dir / f"{safe_id}_dm_sequence.json"
         if dm_file.exists():
             try:
-                dm_data = json.loads(dm_file.read_text(encoding="utf-8"))
+                dm_data = json.loads(dm_file.read_text(encoding="utf-8-sig"))
                 dm_items = ""
                 for msg in dm_data.get("dm_sequence", []):
                     day_label = "Immediately" if msg.get("day", 0) == 0 else f"Day {msg['day']}"

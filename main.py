@@ -147,7 +147,7 @@ def _supersede_previous_draft(pillar: str, new_path: Path) -> None:
         if f.resolve() == new_path.resolve():
             continue
         try:
-            data = json.loads(f.read_text(encoding="utf-8"))
+            data = json.loads(f.read_text(encoding="utf-8-sig"))
         except Exception:
             continue
         if (
@@ -218,7 +218,7 @@ def publish_approved_for_today() -> int:
     # Walk oldest-first so candidates[0] is the post that has waited longest
     for f in sorted(history.glob("*.json")):
         try:
-            post = json.loads(f.read_text(encoding="utf-8"))
+            post = json.loads(f.read_text(encoding="utf-8-sig"))
         except Exception:
             continue
         if not (post.get("approved") or post.get("status") == "approved"):
@@ -269,7 +269,7 @@ def approve_draft_file() -> int:
     if not path.exists():
         raise SystemExit(f"Draft not found: {path}")
 
-    post = json.loads(path.read_text(encoding="utf-8"))
+    post = json.loads(path.read_text(encoding="utf-8-sig"))
     if post.get("published"):
         raise SystemExit(f"Post is already published — cannot re-approve: {path}")
 
@@ -303,7 +303,7 @@ def _publish_post_file(path: Path) -> int:
     if not path.exists():
         raise SystemExit(f"Draft file not found: {path}")
 
-    post = json.loads(path.read_text(encoding="utf-8"))
+    post = json.loads(path.read_text(encoding="utf-8-sig"))
     if not post.get("post"):
         raise SystemExit(f"Draft file does not contain a post body: {path}")
     if post.get("published"):
@@ -353,7 +353,7 @@ def revise_saved_draft() -> int:
     if not path.exists():
         raise SystemExit(f"Draft not found: {path}")
 
-    original = json.loads(path.read_text(encoding="utf-8"))
+    original = json.loads(path.read_text(encoding="utf-8-sig"))
     print(f"Revising draft: {path.name}")
     print(f"Feedback: {notes}")
 
@@ -436,7 +436,7 @@ def _print_post(post: dict) -> None:
 
 
 def _update_json(path: Path, updates: dict) -> None:
-    data = json.loads(path.read_text(encoding="utf-8"))
+    data = json.loads(path.read_text(encoding="utf-8-sig"))
     data.update(updates)
     path.write_text(json.dumps(data, indent=2), encoding="utf-8")
 

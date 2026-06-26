@@ -321,7 +321,7 @@ def _load_recent_posts(limit: int = 10) -> list[dict]:
     out = []
     for f in files:
         try:
-            out.append(json.loads(f.read_text(encoding="utf-8")))
+            out.append(json.loads(f.read_text(encoding="utf-8-sig")))
         except Exception:
             continue
     return out

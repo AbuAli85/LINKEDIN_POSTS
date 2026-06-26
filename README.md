@@ -2,6 +2,23 @@
 
 Draft-first LinkedIn content system — generates posts with Claude, requires owner approval before publishing, and tracks performance to improve future content.
 
+> **New here? Read [`START_HERE.md`](./START_HERE.md) first.** It's the 2‑minute daily
+> routine. Day to day, you only need one command: `python panel.py`.
+
+## Daily control panel
+
+```bash
+python panel.py            # what needs you right now
+python panel.py review     # list drafts waiting for review
+python panel.py show 1     # read a draft in full
+python panel.py approve 1  # approve it (publishes on schedule)
+python panel.py publish 1  # publish to LinkedIn now (with confirmation)
+python panel.py reject 1   # remove it from the queue
+```
+
+The panel reuses the same approve/publish logic as the GitHub Actions workflow and
+stays in sync with the dashboard at `docs/index.html`.
+
 ## Content strategy
 
 | Publish day | Pillar | What it covers | Generated |

@@ -10,9 +10,10 @@
   "generated_at": "2026-06-26T07:19:33.272856+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 1,
-  "status": "draft",
+  "status": "approved",
   "published": false,
-  "approved": false,
-  "approval_required": true,
-  "dry_run": true
+  "approved": true,
+  "approval_required": false,
+  "dry_run": false,
+  "approved_at": "2026-06-26T17:28:02.877093+00:00"
 }

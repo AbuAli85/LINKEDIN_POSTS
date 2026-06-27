@@ -10,11 +10,12 @@
   "generated_at": "2026-06-27T07:06:39.882782+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 1,
-  "status": "draft",
+  "status": "approved",
   "published": false,
-  "approved": false,
-  "approval_required": true,
-  "dry_run": true,
+  "approved": true,
+  "approval_required": false,
+  "dry_run": false,
   "is_variant": true,
-  "variant_of": "20260627_070630_pain.json"
+  "variant_of": "20260627_070630_pain.json",
+  "approved_at": "2026-06-27T07:42:17.036521+00:00"
 }

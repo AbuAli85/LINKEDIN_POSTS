@@ -20,6 +20,7 @@ from pathlib import Path
 
 import anthropic
 
+import links
 from content_strategy import BRAND_URL, COMPANY_CTA
 
 ROOT             = Path(__file__).parent
@@ -372,7 +373,7 @@ def render_html(issue: dict) -> str:
 
   <div style="margin-top:32px;padding-top:20px;border-top:1px solid #eee;font-size:13px;color:#888;text-align:center">
     SmartPro · Muscat, Oman · <a href="https://{BRAND_URL}/" style="color:#2a9a5c;text-decoration:none">{BRAND_URL}</a><br>
-    <a href="https://wa.me/96879665522" style="color:#888;text-decoration:none">WhatsApp +968 7966 5522</a>
+    <a href="{links.whatsapp()}" style="color:#888;text-decoration:none">WhatsApp {links.WHATSAPP}</a>
   </div>
 </div>
 </body></html>"""

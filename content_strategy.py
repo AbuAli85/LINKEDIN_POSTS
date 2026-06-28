@@ -7,13 +7,13 @@ import links
 
 BRAND_URL      = links.display("home")
 # CTA for posts targeting companies (HR managers, business owners, PRO service firms).
-COMPANY_CTA    = f"Book a 30-minute demo at {links.display('demo')} — or WhatsApp {links.WHATSAPP} to see SmartPRO Hub live."
+COMPANY_CTA    = f"Book a 30-minute demo at {links.display('demo')} — or WhatsApp {links.whatsapp()} to see SmartPRO Hub live."
 # CTA for Sanad/PRO posts — free AI assistant is the entry point, no login needed.
 # Tracked template ({campaign} filled by _cta_block) so Sanad traffic is attributable.
 SANAD_CTA      = "Try the Sanad AI Assistant free — instant answers on work permits, visas & government fees: " + links.tracked_template("sanad")
 SANAD_CTA_AR   = "جرّب مساعد سند الذكي مجاناً — إجابات فورية عن تصاريح العمل والتأشيرات والرسوم الحكومية: " + links.tracked_template("sanad")
 # CTA for Arabic posts targeting companies (pain_ar pillar)
-COMPANY_CTA_AR = f"احجز عرضاً تجريبياً مجانياً مدته ٣٠ دقيقة على {links.display('demo')} — أو راسلنا على واتساب {links.WHATSAPP} لمشاهدة SmartPRO Hub مباشرة."
+COMPANY_CTA_AR = f"احجز عرضاً تجريبياً مجانياً مدته ٣٠ دقيقة على {links.display('demo')} — أو راسلنا على واتساب {links.whatsapp()} لمشاهدة SmartPRO Hub مباشرة."
 # CTA for posts targeting candidates (job seekers)
 CANDIDATE_CTA  = f"Browse open jobs and apply at {links.display('home')}"
 # CTA for Segment C (tech/build-in-public posts targeting engineers and SaaS founders)
@@ -26,11 +26,11 @@ DEMO_CTA       = COMPANY_CTA
 # Segment A — HR managers and business owners
 CTA_DEMO = (
     "Book a free 30-minute demo: " + links.tracked_template("demo")
-    + f"\nOr WhatsApp {links.WHATSAPP}"
+    + f"\nOr WhatsApp: {links.whatsapp('Hi, I saw your LinkedIn post and want to learn more about SmartPRO Hub.')}"
 )
 CTA_DEMO_AR = (
     "احجز عرضاً تجريبياً مجانياً مدته ٣٠ دقيقة: " + links.tracked_template("demo")
-    + f"\nأو واتساب {links.WHATSAPP}"
+    + f"\nأو واتساب: {links.whatsapp('مرحباً، رأيت منشورك على LinkedIn وأودّ معرفة المزيد عن SmartPRO Hub.')}"
 )
 # Segment B — Investors and government
 CTA_INVESTORS = (

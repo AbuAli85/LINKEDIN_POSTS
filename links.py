@@ -15,6 +15,7 @@ Helpers:
 from __future__ import annotations
 
 import os
+from urllib.parse import quote
 
 BASE = os.environ.get("SMARTPRO_BASE_URL", "https://www.thesmartpro.io").rstrip("/")
 BRAND_HOST = BASE.split("://", 1)[-1]                       # e.g. "www.thesmartpro.io"
@@ -53,3 +54,14 @@ def tracked(key: str, campaign: str, *, source: str = UTM_SOURCE, medium: str = 
 def tracked_template(key: str, *, source: str = UTM_SOURCE, medium: str = UTM_MEDIUM) -> str:
     """Like tracked() but leaves a literal {campaign} placeholder for str.format()."""
     return f"{url(key)}?utm_source={source}&utm_medium={medium}&utm_campaign={{campaign}}"
+
+
+def whatsapp(prefill: str | None = None) -> str:
+    """Return a wa.me link for WHATSAPP number (clickable, RTL-safe).
+
+    With prefill, appends ?text=... so the lead's first message is pre-written
+    and you know the chat came from LinkedIn.
+    """
+    num = WHATSAPP.lstrip("+").replace(" ", "")
+    base = f"https://wa.me/{num}"
+    return f"{base}?text={quote(prefill)}" if prefill else base

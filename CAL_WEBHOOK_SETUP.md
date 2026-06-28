@@ -24,6 +24,14 @@ The `record-booking.yml` workflow expects a `repository_dispatch` event with typ
 {
   "event_type": "smartpro-demo",
   "booked_at": "2026-05-18T10:30:00Z",
+  "attendee": {
+    "name": "Aisha Al-Balushi",
+    "email": "aisha@example.com",
+    "phone": "+96890000000",
+    "company": "Al-Balushi Trading",
+    "linkedin": "https://www.linkedin.com/in/aisha-al-balushi",
+    "message": "Interested in WPS + Omanization tracking"
+  },
   "utm": {
     "utm_source": "linkedin",
     "utm_medium": "post",
@@ -32,6 +40,13 @@ The `record-booking.yml` workflow expects a `repository_dispatch` event with typ
   }
 }
 ```
+
+> **Map the attendee fields in your Make.com relay.** Cal.com's webhook payload
+> already contains the attendee under `payload.attendees[0]` (name, email,
+> timeZone) plus any custom booking-question `responses` (phone, company,
+> LinkedIn). Map those into the `attendee` object above so each booking becomes
+> a complete, contactable lead — not just an anonymous UTM hit. `lead_intake.py`
+> then turns every contactable booking into a ready-to-send, attributed follow-up.
 
 ---
 

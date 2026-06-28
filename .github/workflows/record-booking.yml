@@ -32,9 +32,18 @@ jobs:
           except FileNotFoundError:
               bookings = []
 
+          # Attendee contact (the actual lead). Cal.com sends these; the relay
+          # must forward them. All optional + backward-compatible (default "").
+          att = payload.get('attendee', {}) or {}
           bookings.append({
               'booked_at':     payload.get('booked_at', datetime.now(timezone.utc).isoformat()),
               'event_type':    payload.get('event_type', 'unknown'),
+              'name':          att.get('name', ''),
+              'email':         att.get('email', ''),
+              'phone':         att.get('phone', ''),
+              'linkedin':      att.get('linkedin', ''),
+              'company':       att.get('company', ''),
+              'message':       att.get('message', ''),
               'utm_source':    payload.get('utm', {}).get('utm_source', ''),
               'utm_medium':    payload.get('utm', {}).get('utm_medium', ''),
               'utm_campaign':  payload.get('utm', {}).get('utm_campaign', ''),

@@ -362,7 +362,7 @@ OFFICIAL_TERMS: dict[str, dict] = {
         ],
         "category": "sanad",
     },
-    "SmartPro Hub": {
+    "SmartPRO Hub": {
         "wrong": [
             "نظام سمارت برو",
             "برنامج سمارت برو",

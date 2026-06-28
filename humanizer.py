@@ -132,7 +132,7 @@ if __name__ == "__main__":
 
 The system. The tool. The platform. It's not just software — it's a transformative approach to workforce management that underscores the importance of seamless integration.
 
-By highlighting key performance indicators and showcasing groundbreaking features, SmartPro Hub contributes to a more intuitive experience for all stakeholders.
+By highlighting key performance indicators and showcasing groundbreaking features, SmartPRO Hub contributes to a more intuitive experience for all stakeholders.
 
 The future looks bright for Oman businesses ready to embark on this journey.
 

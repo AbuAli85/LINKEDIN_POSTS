@@ -1,10 +1,10 @@
-"""Content strategy: SmartPro Hub COMPANY PAGE — third-person, brand-led voice.
+"""Content strategy: SmartPRO Hub COMPANY PAGE — third-person, brand-led voice.
 
 Mirrors the surface area of `content_strategy.py` so the same generator
 and main entrypoints can swap modules via LINKEDIN_AUDIENCE=company.
 
 VOICE GUIDELINES for company posts:
-  - Third person — "SmartPro Hub helps...", "Our team built...", "Customers tell us..."
+  - Third person — "SmartPRO Hub helps...", "Our team built...", "Customers tell us..."
   - Brand-led, never first-person founder voice
   - More formal than personal posts but still concrete and example-driven
   - Always tie back to a specific product capability or customer outcome
@@ -25,17 +25,17 @@ BRAND_URL = links.display("home")
 
 # ── CTAs — third-person, demo-first, jobs-board for hiring posts ─────────────
 COMPANY_CTA = (
-    f"See SmartPro Hub in action — book a 30-minute demo at {links.display('demo')}"
+    f"See SmartPRO Hub in action — book a 30-minute demo at {links.display('demo')}"
 )
 COMPANY_CTA_AR = (
-    f"شاهد SmartPro Hub أثناء العمل — احجز عرضاً تجريبياً مدته ٣٠ دقيقة على {links.display('demo')}"
+    f"شاهد SmartPRO Hub أثناء العمل — احجز عرضاً تجريبياً مدته ٣٠ دقيقة على {links.display('demo')}"
 )
 PARTNER_CTA = (
     "Sanad offices, accountants, and HR consultancies: "
-    f"partner with SmartPro Hub — {links.display('partners')}"
+    f"partner with SmartPRO Hub — {links.display('partners')}"
 )
 JOBS_CTA = (
-    f"Browse open roles at SmartPro Hub — {links.display('careers')}"
+    f"Browse open roles at SmartPRO Hub — {links.display('careers')}"
 )
 # Sanad AI Assistant (tracked template; {campaign} filled by _cta_block).
 SANAD_CTA = "Try the Sanad AI Assistant free — instant answers on Oman government services: " + links.tracked_template("sanad")
@@ -65,7 +65,7 @@ CTA_INVESTORS_AR = (
     "للاستفسارات الاستثمارية والشراكات: " + links.tracked_template("investors")
 )
 CTA_TECH = (
-    "SmartPro Hub for early adopters — OMR 12/month, 14-day free trial: "
+    "SmartPRO Hub for early adopters — OMR 12/month, 14-day free trial: "
     + links.tracked_template("home")
 )
 
@@ -88,7 +88,7 @@ HASHTAGS: dict[str, list[str]] = {
 
 # ── SEO keywords ─────────────────────────────────────────────────────────────
 SEO_KEYWORDS: list[str] = [
-    "SmartPro Hub",
+    "SmartPRO Hub",
     "HR software Oman",
     "WPS payroll Oman",
     "Sanad office management software",
@@ -102,10 +102,10 @@ SEO_KEYWORDS: list[str] = [
 
 # ── Brand context (system-prompt foundation) ────────────────────────────────
 _COMPANY_BRAND_CONTEXT = (
-    "BRAND CONTEXT: You are writing as the SmartPro Hub company page. "
-    "Use third-person, brand-led voice — 'SmartPro Hub helps...', 'Our customers...', "
+    "BRAND CONTEXT: You are writing as the SmartPRO Hub company page. "
+    "Use third-person, brand-led voice — 'SmartPRO Hub helps...', 'Our customers...', "
     "'We built this because...'. NEVER use first-person founder voice ('I think', 'when I started'). "
-    "\n\nSmartPro Hub is the enterprise operations platform built exclusively for Oman and GCC businesses. "
+    "\n\nSmartPRO Hub is the enterprise operations platform built exclusively for Oman and GCC businesses. "
     "Capabilities: CRM with deal pipeline and quotations, white-label client portal, HR and workforce management, "
     "WPS payroll with direct bank integration, SPF (Social Protection Fund) and Omanization compliance, "
     "Ministry of Labour government filings, Sanad office management, PRO services workflow, "
@@ -128,10 +128,10 @@ _COMPANY_BRAND_CONTEXT_FEASIBILITY = _COMPANY_BRAND_CONTEXT.replace(
 )
 
 _COMPANY_BRAND_CONTEXT_AR = (
-    "سياق العلامة التجارية: أنت تكتب باسم صفحة شركة SmartPro Hub. "
-    "استخدم صيغة الغائب وصوت العلامة التجارية — 'SmartPro Hub تساعد...'، 'عملاؤنا...'، 'نحن بنينا هذا لأن...'. "
+    "سياق العلامة التجارية: أنت تكتب باسم صفحة شركة SmartPRO Hub. "
+    "استخدم صيغة الغائب وصوت العلامة التجارية — 'SmartPRO Hub تساعد...'، 'عملاؤنا...'، 'نحن بنينا هذا لأن...'. "
     "لا تستخدم أبداً صيغة المتكلم الفردي. "
-    "\n\nSmartPro Hub هي منصة العمليات المتكاملة المصممة خصيصاً لشركات عُمان ودول الخليج. "
+    "\n\nSmartPRO Hub هي منصة العمليات المتكاملة المصممة خصيصاً لشركات عُمان ودول الخليج. "
     "تجمع في نظام واحد: إدارة علاقات العملاء، بوابة العملاء، الموارد البشرية، رواتب WPS، "
     "الامتثال لصندوق الحماية الاجتماعية ونسب التعمين، تسجيلات وزارة العمل، إدارة مكاتب سند وخدمات PRO، "
     "تتبع تصاريح العمل والتأشيرات، إدارة العقود بالتوقيع الإلكتروني، إصدار الفواتير التلقائي. "
@@ -164,7 +164,7 @@ PILLARS = {
             "Lead with a specific customer outcome — time saved, errors eliminated, hours recovered — then describe what changed",
             "Before/after of a single workflow: same task, two completely different experiences",
             "Tight case study: company profile, problem, what changed, the one number that proves it worked",
-            "Open with a SmartPro Hub product capability, then show the real-world business outcome it enables",
+            "Open with a SmartPRO Hub product capability, then show the real-world business outcome it enables",
         ],
         "topics": [
             # TODO: refine with real customer outcomes once 3-5 case studies are documented
@@ -193,9 +193,9 @@ PILLARS = {
         "audience":         "HR managers, ops directors, business owners researching solutions",
         "brand_context":    _COMPANY_BRAND_CONTEXT,
         "formats": [
-            "Open with the specific operational problem, then show how one SmartPro Hub feature addresses it end-to-end",
+            "Open with the specific operational problem, then show how one SmartPRO Hub feature addresses it end-to-end",
             "Walk through a feature in 4-5 steps: what triggers it, what it does, what it prevents, who saves time",
-            "Compare 'how most Oman businesses do X today' with 'how SmartPro Hub customers do X'",
+            "Compare 'how most Oman businesses do X today' with 'how SmartPRO Hub customers do X'",
             "Lead with a quote or question from a customer, then explain the feature built in response",
         ],
         "topics": [
@@ -227,7 +227,7 @@ PILLARS = {
             "Open with an Oman market data point or Vision 2040 reference, then connect it to operational reality for SMEs",
             "Walk through a structural shift in Oman business (digitization, Omanization, regulatory) and what it means for HR/ops",
             "Compare Oman's SME operations landscape today vs three years ago — what has changed, what is still broken",
-            "Frame SmartPro Hub's roadmap or worldview in the context of Oman's broader business transformation",
+            "Frame SmartPRO Hub's roadmap or worldview in the context of Oman's broader business transformation",
         ],
         "topics": [
             "Vision 2040 and the digitization of SME operations — where Oman businesses actually stand",
@@ -258,13 +258,13 @@ PILLARS = {
         "formats": [
             "Open with the real problem the new hire will work on, then describe what success looks like in 90 days",
             "A day in the life of the role — concrete, not generic",
-            "Walk through what SmartPro Hub is building and where this role plugs in",
+            "Walk through what SmartPRO Hub is building and where this role plugs in",
             "Three things the hiring manager wants candidates to know before applying",
         ],
         "topics": [
-            "What we are building at SmartPro Hub and the kind of operators we are hiring",
+            "What we are building at SmartPRO Hub and the kind of operators we are hiring",
             "Open role announcement — frame the problem, not the title",
-            "Engineering at SmartPro Hub — small team, real customers, weekly shipping",
+            "Engineering at SmartPRO Hub — small team, real customers, weekly shipping",
             "Customer success role — what a great week looks like in support of Oman SMEs",
         ],
     },
@@ -286,7 +286,7 @@ PILLARS = {
         "formats": [
             "Open with what the partnership unlocks for end customers, then explain the structural integration",
             "Walk through a specific workflow that is now end-to-end thanks to the new partner",
-            "Quote the partner — what they say about working with SmartPro Hub",
+            "Quote the partner — what they say about working with SmartPRO Hub",
             "Show the before/after of a customer journey that this partnership shortens",
         ],
         "topics": [
@@ -321,7 +321,7 @@ PILLARS = {
             "List the 9 documents a complete feasibility study includes — and what each tells the bank",
         ],
         "topics": [
-            "SmartPro Hub Feasibility Studio — turn a business idea into a bank-ready study free in ~10 minutes",
+            "SmartPRO Hub Feasibility Studio — turn a business idea into a bank-ready study free in ~10 minutes",
             "The 9 documents every funded Oman business needs before applying to Development Bank Oman",
             "Program 5 (Craft/Home/Mobile) at 0% interest up to OMR 20K — who qualifies and how to apply",
             "Feasibility study vs business plan — what Development Bank Oman actually asks for",

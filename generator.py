@@ -431,6 +431,18 @@ def _validate(post: str, language: str = "en") -> str | None:
     # (Single '_' is fine: it appears in hashtags and utm_ params; '__' does not.)
     if "**" in post or "__" in post or "```" in post:
         return "contains markdown formatting (** or ``` ) — LinkedIn shows it literally; will retry"
+    # Trailing hashtags must each be a single token. A "#phrase with spaces"
+    # (e.g. an SEO keyword mistakenly hashtagged) renders broken on LinkedIn —
+    # only the first word becomes a tag. Scan the trailing hashtag block only.
+    for line in reversed(post.rstrip().splitlines()):
+        s = line.strip()
+        if not s:
+            continue
+        if s.startswith("#"):
+            if any(not tok.startswith("#") for tok in s.split()):
+                return f"malformed hashtag (spaces/words after #): {s!r} — will retry"
+        else:
+            break
     if language == "ar":
         from omani_glossary import validate_arabic_terms, validate_arabic_register
         if term_warn := validate_arabic_terms(post):

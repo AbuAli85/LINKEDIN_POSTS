@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-06-22T09:32:17.706253+00:00",
-  "total_posts_analyzed": 37,
+  "generated_at": "2026-06-29T09:11:15.193303+00:00",
+  "total_posts_analyzed": 45,
   "pillar_performance": {
     "sanad_pro": {
       "posts": 6,
@@ -17,7 +17,7 @@
       "avg_engagement_rate": 0.0
     },
     "proof": {
-      "posts": 8,
+      "posts": 9,
       "total_reactions": 0,
       "total_comments": 0,
       "total_shares": 0,
@@ -38,7 +38,14 @@
       "avg_engagement_rate": 0.0
     },
     "pain": {
-      "posts": 8,
+      "posts": 9,
+      "total_reactions": 0,
+      "total_comments": 0,
+      "total_shares": 0,
+      "avg_engagement_rate": 0.0
+    },
+    "tech": {
+      "posts": 5,
       "total_reactions": 0,
       "total_comments": 0,
       "total_shares": 0,
@@ -51,8 +58,8 @@
       "total_shares": 0,
       "avg_engagement_rate": 0.0
     },
-    "tech": {
-      "posts": 4,
+    "feasibility": {
+      "posts": 5,
       "total_reactions": 0,
       "total_comments": 0,
       "total_shares": 0,
@@ -82,8 +89,9 @@
     "sanad_pro_ar": 1.0,
     "vision": 1.0,
     "pain": 1.0,
-    "leadership": 1.0,
     "tech": 1.0,
+    "leadership": 1.0,
+    "feasibility": 1.0,
     "pain_ar": 1.0
   },
   "best_pillar": "sanad_pro",
@@ -95,8 +103,9 @@
     "sanad_pro_ar",
     "vision",
     "pain",
-    "leadership",
     "tech",
+    "leadership",
+    "feasibility",
     "pain_ar"
   ],
   "demo_pipeline": {

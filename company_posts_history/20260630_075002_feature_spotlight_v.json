@@ -1,0 +1,20 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "Growth partner commission tracking \u2014 what gets logged automatically and what no longer needs a spreadsheet",
+  "format": "Lead with a quote or question from a customer, then explain the feature built in response",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "\"Most partner commission disputes don't start with bad intentions \u2014 they start with a spreadsheet nobody updated in time.\"\n\nThat's a direct quote from an ops director before she switched to SmartPRO Hub. I've heard versions of it more times than I can count.\n\nPartner commissions are quietly one of the most underreported operational headaches out there. The spreadsheet works fine \u2014 until someone closes a deal on a Friday, an invoice gets paid Monday, and by Wednesday nobody agrees on the number. And it always seems to blow up in front of the partner you can least afford to frustrate.\n\nHere's what the fix actually looks like:\n\nThe moment a deal enters your CRM pipeline, the referral gets logged. Commission rates sit at the partner and tier level \u2014 no manual math, no formula someone built eight months ago and doesn't fully remember. When an invoice is paid, the commission entry updates on its own.\n\nWhat drops off your ops team's plate: calculating partner totals, chasing payment status, sorting out deal attribution, running the monthly reconciliation. What you get instead: a clear view of who's owed what, without a two-day email chain to get there.\n\nIf you're already using SmartPRO Hub for WPS payroll Oman or workforce management \u2014 this is already sitting in your platform. No separate tool. No CSV exports. No \"wait, which version are we working from?\" conversation at 4pm on a Tuesday.\n\nStarts at OMR 12/month. 14-day free trial, no credit card required.\n\nIf your partner program still lives in a shared sheet \u2014 how many hours does reconciliation eat every month?\n\nBook a 30-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#GCCBusiness\n#SMEOman",
+  "char_count": 1765,
+  "generated_at": "2026-06-30T07:50:15.984857+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260630_075003_feature_spotlight.json"
+}

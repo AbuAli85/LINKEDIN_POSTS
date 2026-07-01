@@ -1,0 +1,20 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "E-signature for employment contracts \u2014 three signatures across two countries, end-to-end in one platform",
+  "format": "Open with the specific operational problem, then show how one SmartPRO Hub feature addresses it end-to-end",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "Four days to collect three signatures \u2014 that's how long it took one HR team to get a single employment contract signed before they could move a visa application forward.\n\nThe candidate was in India. The department head in Dubai. The GM in Muscat. The process: print, scan, email, follow up on WhatsApp, get back a blurry PDF, start over.\n\nFour days. Three signatures.\n\nSmartPRO Hub sends the contract to all signatories at once. You see who's signed and who hasn't. The completed document saves directly to the employee record. No chasing, no version confusion, no one forwarding the wrong file.\n\nWhen the last signature lands, the contract is ready to attach to the work permit application immediately.\n\nWe built this because HR managers across Oman and the GCC were literally coordinating legal documents over WhatsApp threads \u2014 not because they wanted to, but because nothing else connected their signing process to their visa tracking. Now it does. Bilingual Arabic and English, everything in one place.\n\nIf your onboarding process still involves a printer and a prayer, it's worth taking a closer look.\n\nBook a 30-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#GCCBusiness\n#SMEOman",
+  "char_count": 1290,
+  "generated_at": "2026-07-01T07:58:17.275915+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260701_075806_feature_spotlight.json"
+}

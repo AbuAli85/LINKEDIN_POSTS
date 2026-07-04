@@ -1,0 +1,20 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "WhatsApp Business integration \u2014 how client requests flow into a tracked case instead of a group chat",
+  "format": "Open with the specific operational problem, then show how one SmartPRO Hub feature addresses it end-to-end",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "37 unread WhatsApp messages. One of them is a work permit request that expires tomorrow.\n\nBy Sunday morning, it's buried under 40 others. Nobody followed up. The deadline passed.\n\nThat's not a people problem. It's a process problem.\n\nWhatsApp runs most client communication across Oman and GCC businesses \u2014 fine for quick questions, genuinely bad for requests that need tracking, ownership, and a paper trail.\n\nSmartPRO Hub's WhatsApp Business integration converts incoming client messages into tracked cases inside the platform. The request gets logged, assigned to the right team member, and tied to the client's file. Automatically.\n\nNo copy-pasting into a spreadsheet. No \"who's handling this?\" thread in yet another group chat. No request vanishing because someone left the group.\n\nEach case gets a status, a deadline, and one person responsible for it. Managers see the full pipeline. Clients get updates through the portal.\n\nWe built this because PRO service firms and Sanad offices kept telling us the same thing: the work isn't the hard part. Keeping track of it is.\n\nIf your team is managing client requests out of a group chat right now \u2014 how many are sitting unanswered?\n\nBook a 30-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#GCCBusiness\n#SMEOman\n#HRTech",
+  "char_count": 1365,
+  "generated_at": "2026-07-04T07:28:43.826512+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260704_072834_feature_spotlight.json"
+}

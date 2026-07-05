@@ -1,0 +1,65 @@
+# Custom GitHub Pages deployment workflow
+#
+# SETUP REQUIRED (one-time):
+#   Go to Settings → Pages → Build and deployment → Source
+#   Change from "Deploy from a branch" to "GitHub Actions"
+#   This enables this workflow and disables the built-in dynamic workflow.
+#
+# WHY THIS REPLACES THE BUILT-IN WORKFLOW
+#   The auto-generated "pages build and deployment" workflow uses
+#   cancel-in-progress: true, which cancels an in-flight deploy job when a
+#   new push arrives. A cancelled deploy job can leave an orphaned deployment
+#   in the GitHub Pages API, causing the next run to fail with
+#   "Deployment failed, try again later."
+#
+#   This workflow fixes that by:
+#     1. Using cancel-in-progress: false  →  new runs queue instead of
+#        cancelling in-progress runs, so there are never orphaned deployments.
+#     2. Adding a paths filter on docs/**  →  a push that does not touch
+#        docs/ (e.g. deleting a posts_history JSON) never triggers a deploy,
+#        eliminating the most common source of unnecessary Page builds.
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - claude/linkedin-post-automation-lQiJZ
+    paths:
+      - 'docs/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Queue deployments; never cancel an in-progress deploy.
+# This prevents orphaned Pages API deployments that cause
+# "Deployment failed, try again later." errors.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./docs
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

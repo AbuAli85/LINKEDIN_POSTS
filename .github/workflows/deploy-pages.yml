@@ -23,7 +23,11 @@ name: Deploy to GitHub Pages
 
 on:
   push:
+    # The Pages source is currently 'claude/linkedin-post-automation-lQiJZ'.
+    # 'main' is included so the workflow keeps working if the source
+    # is later changed to the default branch or the work is merged back.
     branches:
+      - main
       - claude/linkedin-post-automation-lQiJZ
     paths:
       - 'docs/**'

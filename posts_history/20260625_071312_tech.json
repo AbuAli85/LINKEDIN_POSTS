@@ -1,11 +1,11 @@
 {
   "pillar": "tech",
   "topic": "Multi-language SaaS: the engineering cost of Arabic RTL support nobody tells you about",
-  "format": "Before/after: a technical approach you changed and why \u2014 show the old code in words, the new approach, and the measurable difference",
+  "format": "Before/after: a technical approach you changed and why — show the old code in words, the new approach, and the measurable difference",
   "language": "en",
   "segment": "C",
   "publish_day": "Saturday",
-  "post": "We shipped Arabic support in v1 with a CSS `direction: rtl` wrapper and called it done.\n\nIt wasn't done.\n\nThree months later, our payroll tables were broken. Numbers right-aligned, labels left-aligned, column headers flipped \u2014 but only in Safari. WPS payroll reports for Oman businesses looked like a ransom note written in two directions at once.\n\nThe actual problem: RTL isn't a CSS toggle. It's a data contract.\n\nMix Arabic labels, English currency values, and ISO dates in the same table row and you're simultaneously fighting Unicode bidirectional rendering, font fallback order, and whatever assumptions your component library quietly baked in. None of those fights are easy. None of them are the same fight.\n\nHere's what fixing it actually took:\n\nSwap the table primitive entirely. Rebuild every form input with explicit `dir` attributes at the field level, not the layout level. Audit 4,000+ test snapshots for layout regression. Wire up a dedicated RTL test harness in CI.\n\nThat's roughly 3 weeks of engineering time nobody had scoped.\n\nThe honest takeaway: if you're building HR software for Oman or anywhere else in GCC, RTL is an architecture decision. Treat it like one in week one, or you're buying it back \u2014 at full price \u2014 in month six.\n\nThe part that still stings: an Arabic speaker spots broken RTL in about 3 seconds. English speakers never notice when it works.\n\nWhat did you get wrong about localization that nobody warned you about?\n\nSee SmartPRO Hub in action \u2014 book a free 30-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}\n\n#BuildInPublic\n#SaaS\n#GCCTech\n#TypeScript\n#SmartPROHub",
+  "post": "We shipped Arabic support in v1 with a CSS `direction: rtl` wrapper and called it done.\n\nIt wasn't done.\n\nThree months later, our payroll tables were broken. Numbers right-aligned, labels left-aligned, column headers flipped — but only in Safari. WPS payroll reports for Oman businesses looked like a ransom note written in two directions at once.\n\nThe actual problem: RTL isn't a CSS toggle. It's a data contract.\n\nMix Arabic labels, English currency values, and ISO dates in the same table row and you're simultaneously fighting Unicode bidirectional rendering, font fallback order, and whatever assumptions your component library quietly baked in. None of those fights are easy. None of them are the same fight.\n\nHere's what fixing it actually took:\n\nSwap the table primitive entirely. Rebuild every form input with explicit `dir` attributes at the field level, not the layout level. Audit 4,000+ test snapshots for layout regression. Wire up a dedicated RTL test harness in CI.\n\nThat's roughly 3 weeks of engineering time nobody had scoped.\n\nThe honest takeaway: if you're building HR software for Oman or anywhere else in GCC, RTL is an architecture decision. Treat it like one in week one, or you're buying it back — at full price — in month six.\n\nThe part that still stings: an Arabic speaker spots broken RTL in about 3 seconds. English speakers never notice when it works.\n\nWhat did you get wrong about localization that nobody warned you about?\n\nSee SmartPRO Hub in action — book a free 30-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}\n\n#BuildInPublic\n#SaaS\n#GCCTech\n#TypeScript\n#SmartPROHub",
   "char_count": 1662,
   "generated_at": "2026-06-25T07:13:12.516268+00:00",
   "model": "claude-sonnet-4-6",
@@ -19,5 +19,8 @@
   "post_id": "urn:li:share:7476521459868303360",
   "published_at": "2026-06-27T06:27:03.700143+00:00",
   "cta_comment_posted": false,
-  "cta_comment_url": ""
+  "cta_comment_url": "",
+  "metrics": {
+    "hook_style": "story"
+  }
 }

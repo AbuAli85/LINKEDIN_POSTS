@@ -1,11 +1,11 @@
 {
   "pillar": "tech",
   "topic": "Sprint retrospective: the feature that took 3 sprints but could have taken 3 days",
-  "format": "Open with a counterintuitive engineering decision and explain the reasoning \u2014 readers should come away having learned something concrete",
+  "format": "Open with a counterintuitive engineering decision and explain the reasoning — readers should come away having learned something concrete",
   "language": "en",
   "segment": "C",
   "publish_day": "Saturday",
-  "post": "We chose the slow path on purpose. Most engineers would call it a mistake.\n\nThree sprints ago, I needed to build end-of-service gratuity calculations for SmartPRO Hub. The math isn't hard \u2014 Oman Labour Law Article 39 is explicit about it. I could've hardcoded the logic in a day, shipped it in three.\n\nWe didn't.\n\nWe built a policy engine underneath it instead. Configurable rule layers, tenant-scoped overrides, audit trails on every calculation step. tRPC procedures that validate inputs before they ever touch Drizzle ORM. The kind of infrastructure where the next feature takes three days instead of three sprints.\n\nThat cost us six weeks.\n\nIt also meant that when we added WPS payroll Oman bank integration two sprints later, we didn't touch the compensation core. We plugged in. Same story with Ministry of Labour Oman compliance checks \u2014 the rule engine already had the right shape for it.\n\nThe tradeoff: you're betting future features justify the present slowness. We've made it twice, been right once. That one win saved us three months of rework.\n\n4,000+ automated tests catch us when we're wrong before production does. That part has paid off every time.\n\nWhen does the slow path earn its keep \u2014 and when is it just engineering ego? I don't have a clean rule. It depends on how stable the domain actually is.\n\nBook a free 20-min demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=tech\n\n#BuildInPublic\n#SaaS\n#GCCTech\n#TypeScript\n#SmartPROHub",
+  "post": "We chose the slow path on purpose. Most engineers would call it a mistake.\n\nThree sprints ago, I needed to build end-of-service gratuity calculations for SmartPRO Hub. The math isn't hard — Oman Labour Law Article 39 is explicit about it. I could've hardcoded the logic in a day, shipped it in three.\n\nWe didn't.\n\nWe built a policy engine underneath it instead. Configurable rule layers, tenant-scoped overrides, audit trails on every calculation step. tRPC procedures that validate inputs before they ever touch Drizzle ORM. The kind of infrastructure where the next feature takes three days instead of three sprints.\n\nThat cost us six weeks.\n\nIt also meant that when we added WPS payroll Oman bank integration two sprints later, we didn't touch the compensation core. We plugged in. Same story with Ministry of Labour Oman compliance checks — the rule engine already had the right shape for it.\n\nThe tradeoff: you're betting future features justify the present slowness. We've made it twice, been right once. That one win saved us three months of rework.\n\n4,000+ automated tests catch us when we're wrong before production does. That part has paid off every time.\n\nWhen does the slow path earn its keep — and when is it just engineering ego? I don't have a clean rule. It depends on how stable the domain actually is.\n\nBook a free 20-min demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=tech\n\n#BuildInPublic\n#SaaS\n#GCCTech\n#TypeScript\n#SmartPROHub",
   "char_count": 1468,
   "generated_at": "2026-05-31T07:20:27.700606+00:00",
   "model": "claude-sonnet-4-6",
@@ -19,5 +19,8 @@
   "post_id": "urn:li:share:7476517388566364160",
   "published_at": "2026-06-27T06:10:53.219173+00:00",
   "cta_comment_posted": false,
-  "cta_comment_url": ""
+  "cta_comment_url": "",
+  "metrics": {
+    "hook_style": "story"
+  }
 }

@@ -1,0 +1,20 @@
+{
+  "pillar": "product_proof",
+  "topic": "The HR manager who finally stopped processing leave requests on WhatsApp \u2014 what changed in week one",
+  "format": "Tight case study: company profile, problem, what changed, the one number that proves it worked",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "6 leave requests disappeared last month at a 60-person trading company in Muscat. Nobody caught it \u2014 because all 47 requests that month were buried in a WhatsApp group chat, somewhere between supplier invoices and weekend plans.\n\nWeek one on SmartPRO Hub. Three things changed:\n\nEmployees submitted leave through a self-service portal. Managers approved or declined in one tap. Oman-compliant records generated automatically \u2014 no manual logging.\n\nThe number that actually mattered: 0 missed requests by end of week one. Down from 6 per month slipping through unnoticed.\n\nNo chaser messages. No \"did you see my request?\" No end-of-month scramble to piece together who was actually in the office.\n\nSmartPRO Hub replaces the patchwork \u2014 WhatsApp threads, spreadsheets, disconnected tools \u2014 with one bilingual platform built for Oman and GCC businesses. HR, WPS payroll, work permit tracking, SPF compliance, all in one place. Starting at OMR 12/month.\n\nOne question worth sitting with: how many requests fell through last month that you still don't know about?\n\nBook a 30-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#WPS\n#SMEOman",
+  "char_count": 1228,
+  "generated_at": "2026-07-06T08:03:45.442399+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260706_080335_product_proof.json"
+}

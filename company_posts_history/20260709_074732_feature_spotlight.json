@@ -1,0 +1,19 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "Direct bank integration for WPS submission \u2014 what disappears from the HR team's monthly checklist",
+  "format": "Walk through a feature in 4-5 steps: what triggers it, what it does, what it prevents, who saves time",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "Salary day is the most stressful day on an HR manager's calendar. It shouldn't be.\n\nHere's what WPS submission actually looks like without direct bank integration:\n\nExport payroll data. Reformat it. Log into a separate banking portal. Upload the file. Wait for confirmation. Chase finance for approval. Discover a formatting error. Start over.\n\nThat's half a day of work \u2014 every single month.\n\nSmartPRO Hub connects payroll directly to WPS bank submission. When salaries are approved inside the platform, the WPS file generates automatically in the correct format and goes straight to the bank. No exports, no reformatting, no portal-switching.\n\nWhat disappears from the HR checklist:\n\u2014 Manual file preparation\n\u2014 Format errors that delay submission\n\u2014 Back-and-forth with finance to confirm sign-off\n\u2014 The anxiety of missing the Ministry deadline\n\nCustomers running WPS payroll across Oman tell us this one connection saves 3\u20134 hours every month, per payroll run. For teams processing multiple entities, that adds up quickly.\n\nWe built this because compliance shouldn't require a workaround.\n\nThe deadline doesn't move. Your process should.\n\nWhat's the most repetitive step your team still does manually at month-end? Drop it in the comments.\n\nBook a 30-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#WPS\n#PayrollOman\n#OmanBusiness\n#HRTech",
+  "char_count": 1420,
+  "generated_at": "2026-07-09T07:47:32.665833+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "has_variant": true
+}

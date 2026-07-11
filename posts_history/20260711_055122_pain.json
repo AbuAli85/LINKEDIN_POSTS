@@ -1,0 +1,19 @@
+{
+  "pillar": "pain",
+  "topic": "Managing three locations in Oman with no central HR system \u2014 what breaks first",
+  "format": "Write a numbered list of 4-5 warning signs \u2014 make them specific enough that most readers recognise at least three of them",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "You're running three locations. Here's what's already broken \u2014 you just haven't named it yet.\n\n1. Someone in Muscat approved leave. Nobody in Sohar knows.\n2. WPS payroll for the Salalah branch was submitted two days late \u2014 again.\n3. HR in each office has a different version of the same employee contract.\n4. A work permit expired last month. You found out from the employee, not your system.\n5. End-of-service gratuity for one staff member took three people and a weekend to calculate.\n\nIf three of those felt personal, the problem isn't your team.\n\nIt's that you're running a multi-location business on tools that were never meant for it. WhatsApp threads. Shared spreadsheets. Someone's memory. That someone is probably exhausted.\n\nAnd the first thing that cracks isn't payroll. It's visibility. Nobody knows what's actually happening across locations until something already went wrong.\n\nHR software for Oman needs to handle WPS payroll, Ministry of Labour compliance, SPF contributions, and work permit tracking \u2014 all in one place. Not spread across five vendors and a group chat where messages get buried.\n\nThat's what SmartPRO Hub was built for. One platform covering all your locations. Bilingual. Starts at OMR 12/month.\n\nSo tell me \u2014 what breaks first in your setup? People, paperwork, or payments?\n\nBook a free 30-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=pain\nOr WhatsApp: https://wa.me/96879665522?text=Hi%2C%20I%20saw%20your%20LinkedIn%20post%20and%20want%20to%20learn%20more%20about%20SmartPRO%20Hub.\n\n#OmanBusiness\n#HRManagement\n#PayrollOman\n#WPS\n#SmartPROHub",
+  "char_count": 1629,
+  "generated_at": "2026-07-11T05:51:22.831292+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 2,
+  "validation_warning": "too long (1526 chars, need <= 1500)",
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true
+}

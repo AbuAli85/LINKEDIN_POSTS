@@ -1,0 +1,20 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "Bilingual (Arabic/English) interface \u2014 why a single-language HR system fails Oman businesses",
+  "format": "Compare 'how most Oman businesses do X today' with 'how SmartPRO Hub customers do X'",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "Most HR systems in Oman are legally compliant on paper \u2014 and completely inaccessible in practice.\n\nThen you hand it to a workforce that thinks, works, and reads in Arabic.\n\nHere's what that actually looks like: a blue-collar employee can't confirm their own salary breakdown. A supervisor misreads a policy notice. An HR manager burns an hour translating documents before anyone can act on them.\n\nThat's not a language preference issue. That's a compliance risk.\n\nSmartPRO Hub was built bilingual from day one \u2014 Arabic and English, across every screen, every workflow, every document. Not a translation layer bolted on after the fact. The interface switches. The contracts switch. The payslips switch.\n\nCustomers running WPS payroll in Oman don't send a PDF and hope it lands correctly. Every employee sees their breakdown in the language they actually use.\n\nOne platform. One source of truth. No translation bottlenecks.\n\nIf the HR software your Oman teams rely on only speaks one language, half your workforce is guessing \u2014 and someone is quietly absorbing the cost of that gap. Usually the employee who can't read their own payslip, or the HR manager cleaning it up at 6pm.\n\nWhich language is your HR system actually running in?\n\nBook a 30-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#PayrollOman\n#Omanization",
+  "char_count": 1418,
+  "generated_at": "2026-07-11T07:17:13.758163+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260711_071703_feature_spotlight.json"
+}

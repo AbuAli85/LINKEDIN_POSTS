@@ -1,11 +1,11 @@
 {
   "pillar": "proof",
   "topic": "The client portal that cut inbound status-update calls by 80% in the first month",
-  "format": "Open with a specific measurable result \u2014 a number, a time saved, a cost eliminated \u2014 then explain exactly what created it",
+  "format": "Open with a specific measurable result — a number, a time saved, a cost eliminated — then explain exactly what created it",
   "language": "en",
   "segment": "A",
   "publish_day": "Wednesday",
-  "post": "90 minutes a day. That's what one Muscat HR manager was losing to WhatsApp \u2014 before 64 status-update calls disappeared in a single month.\n\nSame client base. Same team. One change: every client got their own portal.\n\nShe was spending roughly 90 minutes daily on messages like \"where is my document?\" and \"when does my employee's visa expire?\" The work was already done. Clients just couldn't see it.\n\nWith SmartPRO Hub, they log in and check for themselves. Work permit tracking, visa status, contract approvals \u2014 in Arabic or English. No call needed.\n\nThe HR team didn't shrink. They stopped running a call centre and started doing their actual jobs.\n\nThis is what most HR software in Oman gets wrong. The bottleneck isn't processing speed. It's visibility. When clients can track their own progress, the inbound noise stops \u2014 fast.\n\n20+ status calls a week isn't a people problem. It's a systems problem.\n\nWhat would your team actually get done with 90 minutes back every day?\n\nBook a free 30-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=proof\nOr WhatsApp: https://wa.me/96879665522?text=Hi%2C%20I%20saw%20your%20LinkedIn%20post%20and%20want%20to%20learn%20more%20about%20SmartPRO%20Hub.\n\n#OmanBusiness\n#HRManagement\n#SmartPROHub\n#GCCBusiness\n#Omanization",
+  "post": "90 minutes a day. That's what one Muscat HR manager was losing to WhatsApp — before 64 status-update calls disappeared in a single month.\n\nSame client base. Same team. One change: every client got their own portal.\n\nShe was spending roughly 90 minutes daily on messages like \"where is my document?\" and \"when does my employee's visa expire?\" The work was already done. Clients just couldn't see it.\n\nWith SmartPRO Hub, they log in and check for themselves. Work permit tracking, visa status, contract approvals — in Arabic or English. No call needed.\n\nThe HR team didn't shrink. They stopped running a call centre and started doing their actual jobs.\n\nThis is what most HR software in Oman gets wrong. The bottleneck isn't processing speed. It's visibility. When clients can track their own progress, the inbound noise stops — fast.\n\n20+ status calls a week isn't a people problem. It's a systems problem.\n\nWhat would your team actually get done with 90 minutes back every day?\n\nBook a free 30-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=proof\nOr WhatsApp: https://wa.me/96879665522?text=Hi%2C%20I%20saw%20your%20LinkedIn%20post%20and%20want%20to%20learn%20more%20about%20SmartPRO%20Hub.\n\n#OmanBusiness\n#HRManagement\n#SmartPROHub\n#GCCBusiness\n#Omanization",
   "char_count": 1307,
   "generated_at": "2026-06-29T07:44:32.817624+00:00",
   "model": "claude-sonnet-4-6",
@@ -21,5 +21,8 @@
   "post_id": "urn:li:share:7477971760588632064",
   "published_at": "2026-07-01T06:30:02.328455+00:00",
   "cta_comment_posted": false,
-  "cta_comment_url": ""
+  "cta_comment_url": "",
+  "metrics": {
+    "hook_style": "data-lead"
+  }
 }

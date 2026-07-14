@@ -1,0 +1,20 @@
+{
+  "pillar": "sanad_pro",
+  "topic": "The Sanad AI Assistant: ask it how much a work permit costs, where the nearest licensed Sanad office is, or how to set up a company in Oman. It answers like a PRO officer who has done it hundreds of times.",
+  "format": "Walk through the exact day-in-the-life of a Sanad office manager handling 20+ client companies with no case tracking system \u2014 every painful step in sequence",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Thursday",
+  "post": "Every Sanad office worker knows the 8:15am gut drop: three clients, three urgent questions, zero seconds to find the answer.\n\nOne wants to know if their new hire's work permit is ready. One is asking what a family residence visa costs. The third needs to know which documents to bring for a company registration.\n\nYou're answering all three from memory \u2014 or digging through three different WhatsApp threads for a screenshot of a fee schedule you saved two months ago.\n\nThis is Sanad office work in 2025. Not because the job is hard. Because nobody built the right tool for it.\n\nThat's why we built the Sanad AI Assistant.\n\nAsk it the cost of a work permit. Ask it where the nearest licensed Sanad office is. Ask it how to register a company in Oman. It answers the way a PRO officer with ten years in answers \u2014 specific, current, bilingual.\n\nNo login. No waiting. Free.\n\nVerified government fees. Licensed offices by governorate. Full service quotes on the spot.\n\nIf you're running a Sanad office and still fielding basic fee questions on WhatsApp, your time is worth more than that.\n\nTry the Sanad AI Assistant free \u2014 instant answers on work permits, visas & government fees: https://www.thesmartpro.io/sanad/assistant?utm_source=linkedin&utm_medium=social&utm_campaign=sanad-pro\n\n#OmanBusiness\n#HRManagement\n#SmartPROHub\n#Omanization\n#GCCBusiness",
+  "char_count": 1348,
+  "generated_at": "2026-07-14T07:55:45.292220+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260714_075536_sanad_pro.json"
+}

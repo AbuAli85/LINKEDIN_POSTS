@@ -153,6 +153,25 @@ def test_publish_refuses_rejected_draft(tmp_path):
     assert d.get("published") is not True and d["status"] == "deleted"
 
 
+def test_approve_dead_draft_is_noop(tmp_path, monkeypatch):
+    """approve_draft_file should no-op (not fail) on already rejected/removed drafts."""
+    import main
+
+    f = tmp_path / "20260715_080037_vision.json"
+    f.write_text(json.dumps({
+        "post": "stale body",
+        "status": "deleted",
+        "rejected": True,
+        "pillar": "vision",
+    }), encoding="utf-8")
+    monkeypatch.setenv("PUBLISH_DRAFT_PATH", str(f))
+
+    assert main.approve_draft_file() == 0
+    d = json.loads(f.read_text(encoding="utf-8"))
+    assert d["status"] == "deleted"
+    assert d.get("approved") is not True
+
+
 def test_expire_stale_idempotent(tmp_path):
     d = tmp_path / "posts_history"
     d.mkdir()

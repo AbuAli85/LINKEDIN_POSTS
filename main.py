@@ -292,6 +292,12 @@ def approve_draft_file() -> int:
     from queue_hygiene import can_approve
     ok, why = can_approve(post)
     if not ok:
+        # Idempotent "approve" behavior: stale approve links can target drafts that
+        # were already rejected/removed. Treat that as a safe no-op instead of a
+        # failed workflow run.
+        if post.get("rejected") or post.get("status") in ("superseded", "deleted"):
+            print(f"Skipping approval for {path.name}: {why}")
+            return 0
         raise SystemExit(f"Cannot approve {path.name}: {why}")
 
     post.update({

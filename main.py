@@ -86,8 +86,20 @@ def main() -> int:
     return generate_draft()
 
 
+def _expire_stale_drafts() -> None:
+    """Reject drafts older than the queue-hygiene age cap (best-effort, never fatal)."""
+    try:
+        from queue_hygiene import expire_stale, MAX_AGE_DAYS
+        expired = expire_stale()
+        if expired:
+            print(f"[queue-hygiene] auto-expired {len(expired)} draft(s) older than {MAX_AGE_DAYS} days.")
+    except Exception as exc:
+        print(f"[queue-hygiene] expire step skipped: {exc}")
+
+
 def generate_draft() -> int:
     now = datetime.now(timezone.utc)
+    _expire_stale_drafts()
     force = os.environ.get("FORCE_PILLAR") or None
 
     pillar, config = pick_pillar(now.weekday(), force)
@@ -212,6 +224,10 @@ def publish_approved_for_today() -> int:
     now        = datetime.now(timezone.utc)
     today_name = now.strftime("%A")  # e.g. "Monday"
 
+    # Auto-expire stale drafts BEFORE the sweep so a pre-fix/aged approved draft
+    # can never publish weeks after it was written.
+    _expire_stale_drafts()
+
     history    = _history_dir()
     candidates: list[tuple[Path, dict]] = []
 
@@ -270,8 +286,11 @@ def approve_draft_file() -> int:
         raise SystemExit(f"Draft not found: {path}")
 
     post = json.loads(path.read_text(encoding="utf-8-sig"))
-    if post.get("published"):
-        raise SystemExit(f"Post is already published — cannot re-approve: {path}")
+    # Queue-hygiene guard: never approve a published post or an empty-body shell.
+    from queue_hygiene import can_approve
+    ok, why = can_approve(post)
+    if not ok:
+        raise SystemExit(f"Cannot approve {path.name}: {why}")
 
     post.update({
         "status":           "approved",

@@ -307,6 +307,32 @@ def cmd_doctor() -> int:
     except Exception as e:
         print(f"  stale-content scan failed to run: {e}")
         rc = 1
+
+    _rule("Queue hygiene (age cap + empty-body approvals)")
+    try:
+        import queue_hygiene as qh
+        stale = qh.expire_stale(write=False)  # preview only — doctor never mutates
+        if stale:
+            print(f"  {len(stale)} draft(s) older than {qh.MAX_AGE_DAYS} days (auto-expire on next cron):")
+            for p in stale:
+                print(f"      - {Path(p).name}")
+        else:
+            print(f"  OK: no drafts older than {qh.MAX_AGE_DAYS} days.")
+        bad = []
+        for post in load_posts():
+            if (post.get("approved") or post.get("status") == "approved") \
+               and not post.get("published") and qh.is_empty_body(post):
+                bad.append(post["_filename"])
+        if bad:
+            rc = 1
+            print(f"  INVALID: {len(bad)} empty-body draft(s) marked approved:")
+            for name in bad:
+                print(f"      - {name}")
+        else:
+            print("  OK: no empty-body draft is approved.")
+    except Exception as e:
+        print(f"  queue-hygiene check failed to run: {e}")
+        rc = 1
     print()
     return rc
 

@@ -9,6 +9,7 @@ Everything an owner does day-to-day, in one command:
     python panel.py approve 1  # approve draft #1 (publishes on its next cron)
     python panel.py publish 1  # publish draft #1 to LinkedIn right now
     python panel.py reject 1   # remove draft #1 from the queue
+    python panel.py doctor     # health check — live links + stale-price/CTA scan
     python panel.py help
 
 Drafts can be addressed by their review number (from `review`/`status`) or by
@@ -280,6 +281,36 @@ def cmd_reject(selector: str) -> int:
     return 0
 
 
+def cmd_doctor() -> int:
+    """Health check: canonical links live + no stale pricing / stacked CTAs queued."""
+    rc = 0
+    _rule("Link liveness (canonical URLs)")
+    try:
+        import check_links
+        rc |= check_links.main([])
+    except Exception as e:
+        print(f"  link check failed to run: {e}")
+        rc = 1
+
+    _rule("Stale pricing / stacked CTAs in unpublished drafts")
+    try:
+        import flag_stale_content
+        findings = flag_stale_content.scan()
+        if not findings:
+            print("  OK: no unpublished drafts carry stale pricing or stacked CTAs.")
+        else:
+            for f in findings:
+                print(f"  {f['file']}  [pillar={f['pillar']}, status={f['status']}]")
+                for issue in f["issues"]:
+                    print(f"      - {issue}")
+            print("\n  Reject these from the panel so the corrected pipeline regenerates them.")
+    except Exception as e:
+        print(f"  stale-content scan failed to run: {e}")
+        rc = 1
+    print()
+    return rc
+
+
 def cmd_help() -> int:
     print(__doc__)
     return 0
@@ -296,6 +327,7 @@ COMMANDS = {
     "publish": cmd_publish,
     "reject": cmd_reject,
     "remove": cmd_reject,
+    "doctor": cmd_doctor,
     "help": cmd_help,
     "-h": cmd_help,
     "--help": cmd_help,

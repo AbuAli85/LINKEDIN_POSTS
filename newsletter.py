@@ -54,7 +54,7 @@ STRUCTURE (every issue follows this shape)
 6. THE PLAYBOOK — a 4-6 step actionable how-to the reader can run THIS WEEK
    even if they're not a customer. Genuinely useful, not gated.
 7. ONE QUESTION — a single open question that invites a reply. Real curiosity.
-8. SIGN-OFF — short, by name, with a clear CTA to www.thesmartpro.io.
+8. SIGN-OFF — short, by name, with a clear CTA to thesmartpro.io.
 
 TERMINOLOGY (use these exact English terms — never the wrong alternative)
 - Ministry of Labour  (NOT "Ministry of Manpower" — the ministry was renamed)

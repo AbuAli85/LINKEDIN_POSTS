@@ -297,6 +297,9 @@ jobs:
       - name: Verify card rendering (Arabic shaping) before posting
         run: python verify_render.py
 
+      - name: Check canonical links are live (blocks the /careers class of bug)
+        run: python check_links.py
+
       - name: Publish approved post for today
         env:
           LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}

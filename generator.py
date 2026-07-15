@@ -24,6 +24,16 @@ MIN_CHARS = 800
 MAX_CHARS = 1500
 MAX_TOKENS = 1200
 
+# One primary tracked CTA per post, plus optionally the WhatsApp link — never a
+# third. The demo CTA already carries a booking link + a wa.me link (2 total),
+# so the hard ceiling on clickable https:// URLs in a finished post is 2.
+MAX_LINKS = 2
+
+
+def count_links(post: str) -> int:
+    """Count clickable https:// URLs in a post body (the CTA-stacking guard)."""
+    return post.count("https://")
+
 BANNED_PHRASES = [
     "in today's fast-paced",
     "in the ever-evolving",
@@ -291,7 +301,7 @@ def _cta_block(pillar_config: dict) -> str:
         _s = load_strategy()
         CTA_DEMO, CTA_DEMO_AR = _s.CTA_DEMO, _s.CTA_DEMO_AR
         CTA_INVESTORS, CTA_INVESTORS_AR = _s.CTA_INVESTORS, _s.CTA_INVESTORS_AR
-        CTA_TECH        = "See SmartPRO Hub in action — book a free 30-minute demo: " + links.tracked_template("demo")
+        CTA_TECH        = "See SmartPRO Hub in action — book a free 30-minute demo: " + links.book_template("demo")
     except (ImportError, AttributeError):
         return ""
     segment  = (pillar_config.get("segment") or "A").strip().upper()
@@ -303,10 +313,12 @@ def _cta_block(pillar_config: dict) -> str:
         template = getattr(_s, "CTA_FEASIBILITY_AR" if language == "ar" else "CTA_FEASIBILITY", None)
     elif override == "sanad":
         template = getattr(_s, "SANAD_CTA_AR" if language == "ar" else "SANAD_CTA", None)
+    elif override == "partner":
+        template = getattr(_s, "CTA_PARTNER_AR" if language == "ar" else "CTA_PARTNER", None)
     elif segment == "B":
         template = CTA_INVESTORS_AR if language == "ar" else CTA_INVESTORS
     elif segment == "C":
-        return f"CTA: {CTA_TECH}\n"
+        return f"CTA: {CTA_TECH.format(campaign=campaign)}\n"
     else:
         template = CTA_DEMO_AR if language == "ar" else CTA_DEMO
 
@@ -431,6 +443,15 @@ def _validate(post: str, language: str = "en") -> str | None:
     # (Single '_' is fine: it appears in hashtags and utm_ params; '__' does not.)
     if "**" in post or "__" in post or "```" in post:
         return "contains markdown formatting (** or ``` ) — LinkedIn shows it literally; will retry"
+    # One primary CTA per post: at most MAX_LINKS clickable https:// URLs
+    # (the booking link + optional WhatsApp). More means the model stacked
+    # competing CTAs (e.g. demo + wa.me + investors) — regenerate.
+    n_links = count_links(post)
+    if n_links > MAX_LINKS:
+        return (
+            f"too many links ({n_links} https:// URLs, max {MAX_LINKS}) — "
+            "post is stacking CTAs; will retry"
+        )
     # Trailing hashtags must each be a single token. A "#phrase with spaces"
     # (e.g. an SEO keyword mistakenly hashtagged) renders broken on LinkedIn —
     # only the first word becomes a tag. Scan the trailing hashtag block only.

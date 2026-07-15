@@ -10,11 +10,14 @@
   "generated_at": "2026-05-23T07:21:57.947719+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 1,
-  "status": "draft",
+  "status": "deleted",
   "published": false,
   "approved": false,
-  "approval_required": true,
+  "approval_required": false,
   "dry_run": true,
   "is_variant": true,
-  "variant_of": "20260523_072147_product_proof.json"
+  "variant_of": "20260523_072147_product_proof.json",
+  "rejected": true,
+  "rejected_at": "2026-07-15T08:50:54.986235+00:00",
+  "rejected_reason": "stale pricing / stacked CTA \u2014 Link & Pricing fix sprint 2026-07-15"
 }

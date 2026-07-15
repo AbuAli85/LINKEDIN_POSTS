@@ -5,10 +5,15 @@
   "score": 7.9,
   "publish_date": "2026-06-14",
   "topic": "End-of-service calculation errors cost Oman businesses real money",
-  "post": "End-of-service gratuity disputes are the most expensive HR error in Oman.\n\nNot because the amounts are always large. Because the Ministry of Labour takes them seriously, and the paper trail required to defend a calculation goes back years.\n\nThe formula is straightforward. The inputs aren't:\n— Which salary figure applies (basic vs total)?\n— How are unpaid leave days treated?\n— What happens when someone changes from full-time to part-time mid-service?\n— How are partial years calculated after year 3?\n\nMost businesses calculate end-of-service manually, in a spreadsheet, at the moment someone resigns. Under time pressure. With incomplete records.\n\nThe employee gets a number. They disagree. HR recalculates. The number changes. The employee files a complaint. Now you're explaining a spreadsheet to a Ministry inspector.\n\nA 15-year employee with a basic salary of OMR 600 — the difference between a correct and incorrect end-of-service calculation can exceed OMR 3,000. That's the dispute cost before you count legal fees or management time.\n\nAutomate the calculation from day one. Keep the audit trail from day one.\n\nThe cost of fixing a 5-year-old end-of-service error is always higher than the cost of getting it right on day one.\n\n#OmanHR #WPS #EndOfService #SmartPROHub #HRCompliance",
-  "status": "scheduled",
+  "post": "End-of-service gratuity disputes are the most expensive HR error in Oman.\n\nNot because the amounts are always large. Because the Ministry of Labour takes them seriously, and the paper trail required to defend a calculation goes back years.\n\nThe formula is straightforward. The inputs aren't:\n\u2014 Which salary figure applies (basic vs total)?\n\u2014 How are unpaid leave days treated?\n\u2014 What happens when someone changes from full-time to part-time mid-service?\n\u2014 How are partial years calculated after year 3?\n\nMost businesses calculate end-of-service manually, in a spreadsheet, at the moment someone resigns. Under time pressure. With incomplete records.\n\nThe employee gets a number. They disagree. HR recalculates. The number changes. The employee files a complaint. Now you're explaining a spreadsheet to a Ministry inspector.\n\nA 15-year employee with a basic salary of OMR 600 \u2014 the difference between a correct and incorrect end-of-service calculation can exceed OMR 3,000. That's the dispute cost before you count legal fees or management time.\n\nAutomate the calculation from day one. Keep the audit trail from day one.\n\nThe cost of fixing a 5-year-old end-of-service error is always higher than the cost of getting it right on day one.\n\n#OmanHR #WPS #EndOfService #SmartPROHub #HRCompliance",
+  "status": "deleted",
   "publish_time": "09:00 GST",
   "generated_at": "2026-05-28",
   "scored_at": "2026-05-28",
-  "model": "claude-sonnet-4-6"
+  "model": "claude-sonnet-4-6",
+  "approved": false,
+  "approval_required": false,
+  "rejected": true,
+  "rejected_at": "2026-07-15T08:50:54.983093+00:00",
+  "rejected_reason": "stale pricing / stacked CTA \u2014 Link & Pricing fix sprint 2026-07-15"
 }

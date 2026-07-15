@@ -8,8 +8,46 @@ from pathlib import Path
 
 import requests
 
-SMARTPRO_API = os.environ.get("SMARTPRO_API_URL", "https://www.thesmartpro.io")
+SMARTPRO_API = os.environ.get("SMARTPRO_API_URL", "https://thesmartpro.io")
 PENDING_JOBS_FILE = Path(__file__).parent / "smartpro_feed" / "pending_jobs.json"
+
+# ── Public pricing — SINGLE SOURCE OF TRUTH ─────────────────────────────────
+# Mirrors the live platform (shared/entitlements.ts, DB migration 0159).
+# Every price string in the LinkedIn generators MUST derive from PRICING so the
+# advertised numbers can never drift from the platform again. Do NOT hardcode a
+# price like the old (stale) Business/Enterprise tiers, or even the correct
+# numbers, anywhere else — build the sentence from these constants and helpers.
+PRICING = {"starter": 12, "business": 49, "enterprise": 149}
+
+_AR_DIGITS = str.maketrans("0123456789", "٠١٢٣٤٥٦٧٨٩")
+
+
+def _ar_num(n: int) -> str:
+    """Render an integer with Arabic-Indic digits (12 -> ١٢)."""
+    return str(n).translate(_AR_DIGITS)
+
+
+# Full pricing sentence for injection into generation prompts / brand context.
+PRICING_SENTENCE_EN = (
+    f"Starter OMR {PRICING['starter']}/month, "
+    f"Business OMR {PRICING['business']}/month, "
+    f"Enterprise OMR {PRICING['enterprise']}/month — "
+    f"14-day free trial, no credit card"
+)
+PRICING_SENTENCE_AR = (
+    f"Starter بـ{_ar_num(PRICING['starter'])} ريالاً عُمانياً/شهر، "
+    f"Business بـ{_ar_num(PRICING['business'])} ريالاً/شهر، "
+    f"Enterprise بـ{_ar_num(PRICING['enterprise'])} ريالاً/شهر — "
+    f"تجربة مجانية ١٤ يوماً بدون بطاقة ائتمانية"
+)
+
+# "From OMR X/month" phrasing — ALWAYS the starter price (the entry point).
+PRICING_FROM_EN = f"from OMR {PRICING['starter']}/month"
+PRICING_FROM_AR = f"من {_ar_num(PRICING['starter'])} ريالاً عُمانياً/شهر"
+
+# Bare starter price token, e.g. the entry-tier OMR/month string.
+STARTER_PRICE_EN = f"OMR {PRICING['starter']}/month"
+STARTER_PRICE_AR = f"{_ar_num(PRICING['starter'])} ريالاً عُمانياً/شهر"
 
 # 5-minute in-memory cache
 _metrics_cache: dict | None = None

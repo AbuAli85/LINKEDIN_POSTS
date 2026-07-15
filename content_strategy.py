@@ -4,32 +4,46 @@ import json
 from pathlib import Path
 
 import links
+import smartpro_data
 
 BRAND_URL      = links.display("home")
+
+# Shared CTA instruction — every brand context ends with this so the ONLY CTA in
+# a post is the deterministic tracked one injected by generator._cta_block. This
+# is what keeps posts to a single primary link (plus the optional WhatsApp that
+# rides inside the demo CTA) instead of stacking demo + WhatsApp + investors.
+CTA_INSTRUCTION = (
+    "End every post with the exact tracked CTA provided below on its own line. "
+    "Use it verbatim. Do not add any other link, phone number, WhatsApp number, "
+    "or call-to-action beyond the CTA provided."
+)
+
 # CTA for posts targeting companies (HR managers, business owners, PRO service firms).
-COMPANY_CTA    = f"Book a 30-minute demo at {links.display('demo')} — or WhatsApp {links.whatsapp()} to see SmartPRO Hub live."
+# Clickable booking link — used by newsletter.py and as a brand-level default.
+COMPANY_CTA    = f"Book a 30-minute demo: {links.book('demo', 'general')} — or WhatsApp {links.whatsapp()} to see SmartPRO Hub live."
 # CTA for Sanad/PRO posts — free AI assistant is the entry point, no login needed.
 # Tracked template ({campaign} filled by _cta_block) so Sanad traffic is attributable.
 SANAD_CTA      = "Try the Sanad AI Assistant free — instant answers on work permits, visas & government fees: " + links.tracked_template("sanad")
 SANAD_CTA_AR   = "جرّب مساعد سند الذكي مجاناً — إجابات فورية عن تصاريح العمل والتأشيرات والرسوم الحكومية: " + links.tracked_template("sanad")
 # CTA for Arabic posts targeting companies (pain_ar pillar)
-COMPANY_CTA_AR = f"احجز عرضاً تجريبياً مجانياً مدته ٣٠ دقيقة على {links.display('demo')} — أو راسلنا على واتساب {links.whatsapp()} لمشاهدة SmartPRO Hub مباشرة."
+COMPANY_CTA_AR = f"احجز عرضاً تجريبياً مجانياً مدته ٣٠ دقيقة: {links.book('demo', 'general')} — أو راسلنا على واتساب {links.whatsapp()} لمشاهدة SmartPRO Hub مباشرة."
 # CTA for posts targeting candidates (job seekers)
-CANDIDATE_CTA  = f"Browse open jobs and apply at {links.display('home')}"
+CANDIDATE_CTA  = f"Browse open jobs and apply at {links.url('home')}"
 # CTA for Segment C (tech/build-in-public posts targeting engineers and SaaS founders)
-TECH_CTA       = f"SmartPRO Hub is open for early adopters — OMR 12/month, 14-day free trial: {links.display('home')}"
+TECH_CTA       = f"SmartPRO Hub is open for early adopters — {smartpro_data.STARTER_PRICE_EN}, 14-day free trial: {links.url('home')}"
 # Legacy alias kept so existing code that references DEMO_CTA still works
 DEMO_CTA       = COMPANY_CTA
 
 # ── UTM-tracked CTA templates per segment ──────────────────────────────────
 # {campaign} is filled at generation time with the pillar name (e.g. "pain-en").
-# Segment A — HR managers and business owners
+# Segment A — HR managers and business owners. Booking link + optional WhatsApp
+# (two links max — the primary CTA plus WhatsApp, never a third).
 CTA_DEMO = (
-    "Book a free 30-minute demo: " + links.tracked_template("demo")
+    "Book a free 30-minute demo: " + links.book_template("demo")
     + f"\nOr WhatsApp: {links.whatsapp('Hi, I saw your LinkedIn post and want to learn more about SmartPRO Hub.')}"
 )
 CTA_DEMO_AR = (
-    "احجز عرضاً تجريبياً مجانياً مدته ٣٠ دقيقة: " + links.tracked_template("demo")
+    "احجز عرضاً تجريبياً مجانياً مدته ٣٠ دقيقة: " + links.book_template("demo")
     + f"\nأو واتساب: {links.whatsapp('مرحباً، رأيت منشورك على LinkedIn وأودّ معرفة المزيد عن SmartPRO Hub.')}"
 )
 # Segment B — Investors and government
@@ -86,23 +100,19 @@ _BRAND_CONTEXT = (
     "programme with automatic commission tracking. "
     "It replaces WhatsApp groups, spreadsheets, and fragmented vendor systems with one connected platform. "
     "Bilingual — Arabic and English. "
-    "Pricing: Starter OMR 12/month, Business OMR 25/month, Enterprise OMR 60/month. 14-day free trial, no credit card. "
+    f"Pricing: {smartpro_data.PRICING_SENTENCE_EN}. "
     "Target buyers: business owners, HR managers, finance managers, and operations directors at Oman and GCC "
     "companies with 10–500 employees, PRO service firms, staffing agencies, Sanad offices, and any "
     "multi-client B2B service business. "
     "The goal of every post is to surface a pain the reader recognises, build trust, and drive trial signups or demo requests. "
     f"Website: {BRAND_URL}. "
-    f"End every post with this CTA on its own line: {COMPANY_CTA}"
+    + CTA_INSTRUCTION
 )
 
-# Feasibility pillar uses a single CTA — the tracked feasibility link injected by
-# _cta_block. Drop the default demo/WhatsApp sign-off so these posts don't carry
-# two competing calls-to-action.
-_BRAND_CONTEXT_FEASIBILITY = _BRAND_CONTEXT.replace(
-    f"End every post with this CTA on its own line: {COMPANY_CTA}",
-    "End every post with the exact tracked CTA provided below on its own line. "
-    "Do not add any other call-to-action, demo link, phone number, or WhatsApp number.",
-)
+# Feasibility pillar uses the tracked feasibility link injected by _cta_block.
+# All brand contexts now share CTA_INSTRUCTION (single primary CTA), so this is
+# identical to _BRAND_CONTEXT — kept as a named alias for call-site clarity.
+_BRAND_CONTEXT_FEASIBILITY = _BRAND_CONTEXT
 
 _BRAND_CONTEXT_CANDIDATES = (
     "BRAND CONTEXT: You are writing on behalf of SmartPRO Hub — a platform that connects job seekers "
@@ -110,6 +120,7 @@ _BRAND_CONTEXT_CANDIDATES = (
     "apply in seconds, and track their application from applied to hired. "
     f"Website: {BRAND_URL}. "
     f"End every post with this CTA on its own line: {CANDIDATE_CTA}"
+    " Do not add any other link or call-to-action."
 )
 
 _BRAND_CONTEXT_AR = (
@@ -123,11 +134,12 @@ _BRAND_CONTEXT_AR = (
     "وبرنامج شركاء النمو مع تتبع العمولات تلقائياً. "
     "تحل محل مجموعات واتساب والجداول الورقية والأنظمة المتفرقة بمنصة واحدة متكاملة. "
     "ثنائية اللغة — العربية والإنجليزية. "
-    f"الأسعار: Starter بـ١٢ ريال عُماني/شهر، Business بـ٢٥ ريالاً/شهر، Enterprise بـ٦٠ ريالاً/شهر. تجربة مجانية ١٤ يوماً بدون بطاقة ائتمانية. "
+    f"الأسعار: {smartpro_data.PRICING_SENTENCE_AR}. "
     "المستهدفون: أصحاب الأعمال والمديرون في شركات عُمان ودول الخليج التي تضم ١٠ إلى ٥٠٠ موظف. "
     "هدف كل منشور: إبراز الألم الذي يعرفه القارئ، وبناء الثقة، وتوليد طلبات تجريب أو عروض توضيحية. "
     f"الموقع الإلكتروني: {BRAND_URL}. "
-    f"أنهِ كل منشور بهذه الدعوة للتصرف في سطر منفصل: {COMPANY_CTA_AR}"
+    "أنهِ كل منشور بالدعوة للتصرف المتعقّبة المرفقة أدناه في سطر منفصل، كما هي بالضبط. "
+    "لا تُضِف أي رابط أو رقم هاتف أو رقم واتساب أو دعوة أخرى غير الدعوة المرفقة."
 )
 
 _BRAND_CONTEXT_SANAD_AR = (
@@ -144,7 +156,7 @@ _BRAND_CONTEXT_SANAD_AR = (
     "إسناد المهام لمسؤول PRO، خزينة وثائق رقمية لكل عميل، "
     "بوابة عميل تتيح للشركات تتبع طلباتها دون اتصال، "
     "إصدار فواتير تلقائي لكل خدمة منجزة، ولوحة امتثال شاملة لجميع العملاء. "
-    "الميزة المميزة — مساعد سند الذكي (www.thesmartpro.io/sanad/assistant): "
+    f"الميزة المميزة — مساعد سند الذكي ({links.display('sanad')}): "
     "وكيل ذكاء اصطناعي مجاني متاح للعموم — لا تسجيل دخول مطلوب — يعمل كمسؤول PRO متمرس. "
     "ثنائي اللغة عربي وإنجليزي، مع إدخال صوتي وإخراج صوتي باللهجة العُمانية (ar-OM). "
     "يُجيب على أسئلة تصاريح العمل والتأشيرات وتسجيل الشركات والتصديق وغيرها. "
@@ -152,7 +164,7 @@ _BRAND_CONTEXT_SANAD_AR = (
     "ويُصدر عروض أسعار كاملة (رسوم حكومية + رسوم المكتب). "
     "مدعوم بـClaude AI. أي صاحب شركة أو مدير موارد بشرية أو فرد يستطيع استخدامه مجاناً فوراً، "
     "ثم يُوصَل بمكتب سند مرخص لإتمام الخدمة. "
-    f"الأسعار: Starter بـ١٢ ريال عُماني/شهر، Business بـ٢٥ ريالاً/شهر، Enterprise بـ٦٠ ريالاً/شهر. تجربة مجانية ١٤ يوماً. "
+    f"الأسعار: {smartpro_data.PRICING_SENTENCE_AR}. "
     "المستهدفون: أصحاب ومديرو مكاتب سند الـ٩٢٤ في عُمان، ومديرو شركات خدمات PRO، "
     "ومديرو الموارد البشرية المتعاملون مع الجهات الحكومية، وكل صاحب شركة يحتاج خدمات حكومية. "
     "هدف كل منشور: أن يشعر القارئ أنك تصف واقعه اليومي بالضبط، ثم تدعوه لتجربة مساعد سند الذكي المجاني. "
@@ -177,7 +189,7 @@ _BRAND_CONTEXT_SANAD = (
     "PRO officer task assignment, digital document vault per client, a client portal so companies can "
     "track every request themselves without calling, automated invoicing per service delivered, "
     "and a compliance dashboard across all clients. "
-    "KEY DIFFERENTIATOR — Sanad AI Assistant (www.thesmartpro.io/sanad/assistant): "
+    f"KEY DIFFERENTIATOR — Sanad AI Assistant ({links.display('sanad')}): "
     "A free public AI agent — no login required — that acts like an experienced PRO officer. "
     "Bilingual English and Arabic, with Omani Arabic voice input and voice output. "
     "It answers questions on work permits, visas, business registration, attestation, and more. "
@@ -185,8 +197,7 @@ _BRAND_CONTEXT_SANAD = (
     "governorate, and builds full service quotes (government fees + office fees). "
     "Powered by Claude AI. Any company owner, HR manager, or individual can use it instantly for "
     "free — then get matched to a licensed Sanad office to complete the work. "
-    "Pricing: Starter OMR 12/month, Business OMR 25/month, Enterprise OMR 60/month. "
-    "14-day free trial, no credit card required. "
+    f"Pricing: {smartpro_data.PRICING_SENTENCE_EN}. "
     "Target readers: Sanad office owners and managers, PRO service firm directors, HR managers "
     "dealing with government paperwork, and any Oman business owner who needs government services done right. "
     "Goal: make the reader feel understood, surface their exact daily pain, drive them to try the "
@@ -207,7 +218,7 @@ _BRAND_CONTEXT_TECH = (
     "Write candidly. Share real numbers and real tradeoffs. Don't pitch — build in public. "
     "Assume the reader can read code, but don't paste walls of it — describe decisions and their consequences. "
     f"Website: {BRAND_URL}. "
-    f"End every post with this CTA on its own line: {TECH_CTA}"
+    + CTA_INSTRUCTION
 )
 
 PILLARS = {
@@ -501,7 +512,7 @@ PILLARS = {
             "We built an AI agent that answers any question about Oman government services — work permits, visas, fees, business registration — in Arabic or English. It is free. No login. Try it.",
             "The Sanad AI Assistant: ask it how much a work permit costs, where the nearest licensed Sanad office is, or how to set up a company in Oman. It answers like a PRO officer who has done it hundreds of times.",
             "Most people in Oman have no idea what a work permit actually costs or how long it takes. We built a free AI agent that tells them — with verified government fees, step-by-step, in Arabic or English.",
-            "Voice input in Omani Arabic. Instant government fee lookups. Nearby Sanad office matching. Full service quotes. Free. No login. This is the Sanad AI Assistant at www.thesmartpro.io/sanad/assistant",
+            "Voice input in Omani Arabic. Instant government fee lookups. Nearby Sanad office matching. Full service quotes. Free. No login. This is the Sanad AI Assistant at thesmartpro.io/sanad/assistant",
             "What happens when a company owner can ask an AI 'how do I get a work permit for my new employee?' and get the exact steps, real fees, and a list of licensed Sanad offices near them — instantly, for free",
             "The Sanad AI Assistant finds the nearest licensed Sanad office to you, tells you exactly what it will cost, and walks you through every step. We built this because the information is scattered and confusing.",
         ],
@@ -559,8 +570,8 @@ PILLARS = {
             "SmartPRO Hub's growth partner programme: refer clients, track commissions in real time, get paid automatically",
             "If you know Oman businesses that need better operations — SmartPRO Hub's partner programme rewards every referral",
             # Trial CTA
-            "SmartPRO Hub: 14-day free trial, no credit card required — starts at OMR 12/month after trial",
-            "Start your SmartPRO Hub trial today: HR, payroll, CRM, client portal, and government compliance from OMR 12/month",
+            f"SmartPRO Hub: 14-day free trial, no credit card required — starts at {smartpro_data.STARTER_PRICE_EN} after trial",
+            f"Start your SmartPRO Hub trial today: HR, payroll, CRM, client portal, and government compliance {smartpro_data.PRICING_FROM_EN}",
         ],
     },
 
@@ -771,7 +782,7 @@ PILLARS = {
             "بنينا وكيل ذكاء اصطناعي يُجيب على أي سؤال عن المعاملات الحكومية في عُمان — تصاريح العمل، التأشيرات، الرسوم، تسجيل الشركات — بالعربية أو الإنجليزية. مجاني. بدون تسجيل دخول.",
             "مساعد سند الذكي: اسأله كم تكلفة تصريح العمل، وأين أقرب مكتب سند مرخص، وكيف تؤسس شركة في عُمان. يُجيب كمسؤول PRO متمرس أنجز المعاملة مئات المرات.",
             "معظم أصحاب الشركات في عُمان لا يعرفون بالضبط ما تكلفه تصاريح العمل أو كم تستغرق. بنينا مساعداً ذكياً مجانياً يُخبرهم — بالرسوم الرسمية المعتمدة، خطوة بخطوة، بالعربية أو الإنجليزية.",
-            "إدخال صوتي باللهجة العُمانية. بحث فوري في الرسوم الحكومية. مطابقة مع أقرب مكتب سند مرخص. عرض سعر كامل. مجاني. بدون تسجيل. هذا مساعد سند الذكي على www.thesmartpro.io/sanad/assistant",
+            "إدخال صوتي باللهجة العُمانية. بحث فوري في الرسوم الحكومية. مطابقة مع أقرب مكتب سند مرخص. عرض سعر كامل. مجاني. بدون تسجيل. هذا مساعد سند الذكي على thesmartpro.io/sanad/assistant",
             "ماذا يحدث حين يستطيع صاحب شركة أن يسأل ذكاءً اصطناعياً: كيف أستخرج تصريح عمل لموظفي الجديد؟ ويحصل على الخطوات الدقيقة والرسوم الحقيقية وقائمة مكاتب سند مرخصة قريبة منه — فوراً ومجاناً",
             "مساعد سند الذكي يجد أقرب مكتب سند مرخص إليك، ويُخبرك بالتكلفة الدقيقة، ويشرح كل خطوة. بنيناه لأن المعلومة كانت متفرقة وغير واضحة — وهذا يُكلّف الشركات وقتاً ومالاً كل يوم.",
         ],

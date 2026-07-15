@@ -17,36 +17,58 @@ your input.
 """
 
 import json
+import os
 from pathlib import Path
 
 import links
+import smartpro_data
 
 BRAND_URL = links.display("home")
 
+# Shared CTA instruction — every brand context ends with this so the ONLY CTA in
+# a post is the deterministic tracked one injected by generator._cta_block.
+CTA_INSTRUCTION = (
+    "End every post with the exact tracked CTA provided below on its own line. "
+    "Use it verbatim. Do not add any other link, phone number, WhatsApp number, "
+    "or call-to-action beyond the CTA provided."
+)
+
 # ── CTAs — third-person, demo-first, jobs-board for hiring posts ─────────────
+# Clickable booking links (LinkedIn does not reliably linkify scheme-less URLs).
 COMPANY_CTA = (
-    f"See SmartPRO Hub in action — book a 30-minute demo at {links.display('demo')}"
+    f"See SmartPRO Hub in action — book a 30-minute demo: {links.book('demo', 'general')}"
 )
 COMPANY_CTA_AR = (
-    f"شاهد SmartPRO Hub أثناء العمل — احجز عرضاً تجريبياً مدته ٣٠ دقيقة على {links.display('demo')}"
+    f"شاهد SmartPRO Hub أثناء العمل — احجز عرضاً تجريبياً مدته ٣٠ دقيقة: {links.book('demo', 'general')}"
 )
-PARTNER_CTA = (
-    "Sanad offices, accountants, and HR consultancies: "
-    f"partner with SmartPRO Hub — {links.display('partners')}"
+# "Learn about our partners" showcase link — a brand mention of the /partners page.
+PARTNERS_SHOWCASE_CTA = (
+    "See the SmartPRO Hub partner network — " + links.url("partners")
 )
-JOBS_CTA = (
-    f"Browse open roles at SmartPRO Hub — {links.display('careers')}"
+# "Become a partner" CTA — booking link with type=partner (used by the
+# partnership pillar via its "cta": "partner" override in _cta_block).
+CTA_PARTNER = (
+    "Partner with SmartPRO Hub — refer clients and earn commission: "
+    + links.book_template("partner")
 )
+CTA_PARTNER_AR = (
+    "كن شريكاً لـSmartPRO Hub — أحِل العملاء واكسب عمولة: "
+    + links.book_template("partner")
+)
+# Careers CTA — the platform has no /careers page. Point at the LinkedIn company
+# jobs URL if configured; otherwise omit the CTA entirely (empty string).
+_JOBS_URL = os.environ.get("SMARTPRO_LINKEDIN_JOBS_URL", "").strip()
+JOBS_CTA = f"Browse open roles at SmartPRO Hub — {_JOBS_URL}" if _JOBS_URL else ""
 # Sanad AI Assistant (tracked template; {campaign} filled by _cta_block).
 SANAD_CTA = "Try the Sanad AI Assistant free — instant answers on Oman government services: " + links.tracked_template("sanad")
 SANAD_CTA_AR = "جرّب مساعد سند الذكي مجاناً — إجابات فورية عن الخدمات الحكومية في عُمان: " + links.tracked_template("sanad")
 
 # UTM-tracked variants the generator uses (template; {campaign} filled in)
 CTA_DEMO = (
-    "Book a 30-minute demo: " + links.tracked_template("demo")
+    "Book a 30-minute demo: " + links.book_template("demo")
 )
 CTA_DEMO_AR = (
-    "احجز عرضاً تجريبياً مدته ٣٠ دقيقة: " + links.tracked_template("demo")
+    "احجز عرضاً تجريبياً مدته ٣٠ دقيقة: " + links.book_template("demo")
 )
 # Feasibility Studio — free AI feasibility-study generator (lead magnet).
 # Used via a pillar's "cta" override (see _cta_block in generator.py).
@@ -65,7 +87,7 @@ CTA_INVESTORS_AR = (
     "للاستفسارات الاستثمارية والشراكات: " + links.tracked_template("investors")
 )
 CTA_TECH = (
-    "SmartPRO Hub for early adopters — OMR 12/month, 14-day free trial: "
+    f"SmartPRO Hub for early adopters — {smartpro_data.STARTER_PRICE_EN}, 14-day free trial: "
     + links.tracked_template("home")
 )
 
@@ -112,20 +134,16 @@ _COMPANY_BRAND_CONTEXT = (
     "work permit and visa tracking, e-signature contracts, automated invoicing, growth partner program. "
     "\n\nReplaces WhatsApp groups, spreadsheets, and fragmented vendor systems with one connected platform. "
     "Bilingual Arabic and English. "
-    "Pricing: Starter OMR 12/month, Business OMR 25/month, Enterprise OMR 60/month. 14-day free trial, no credit card. "
+    f"Pricing: {smartpro_data.PRICING_SENTENCE_EN}. "
     "Target buyers: business owners, HR managers, finance managers, ops directors at Oman and GCC companies "
     "with 10–500 employees, PRO service firms, staffing agencies, Sanad offices. "
     f"\n\nWebsite: {BRAND_URL}. "
-    f"End every post with this CTA on its own line: {COMPANY_CTA}"
+    + CTA_INSTRUCTION
 )
 
-# Feasibility pillar uses a single CTA — the tracked feasibility link injected by
-# _cta_block. Drop the default demo sign-off so these posts don't carry two CTAs.
-_COMPANY_BRAND_CONTEXT_FEASIBILITY = _COMPANY_BRAND_CONTEXT.replace(
-    f"End every post with this CTA on its own line: {COMPANY_CTA}",
-    "End every post with the exact tracked CTA provided below on its own line. "
-    "Do not add any other call-to-action, demo link, phone number, or WhatsApp number.",
-)
+# All brand contexts now share CTA_INSTRUCTION (single primary CTA), so the
+# feasibility context is identical — kept as a named alias for call-site clarity.
+_COMPANY_BRAND_CONTEXT_FEASIBILITY = _COMPANY_BRAND_CONTEXT
 
 _COMPANY_BRAND_CONTEXT_AR = (
     "سياق العلامة التجارية: أنت تكتب باسم صفحة شركة SmartPRO Hub. "
@@ -136,7 +154,8 @@ _COMPANY_BRAND_CONTEXT_AR = (
     "الامتثال لصندوق الحماية الاجتماعية ونسب التعمين، تسجيلات وزارة العمل، إدارة مكاتب سند وخدمات PRO، "
     "تتبع تصاريح العمل والتأشيرات، إدارة العقود بالتوقيع الإلكتروني، إصدار الفواتير التلقائي. "
     f"\n\nالموقع الإلكتروني: {BRAND_URL}. "
-    f"أنهِ كل منشور بهذه الدعوة للتصرف: {COMPANY_CTA_AR}"
+    "أنهِ كل منشور بالدعوة للتصرف المتعقّبة المرفقة أدناه في سطر منفصل، كما هي بالضبط. "
+    "لا تُضِف أي رابط أو رقم هاتف أو رقم واتساب أو دعوة أخرى غير الدعوة المرفقة."
 )
 
 # ── PILLARS ──────────────────────────────────────────────────────────────────
@@ -274,6 +293,7 @@ PILLARS = {
     "partnership": {
         "weight":           1.0,
         "segment":          "B",
+        "cta":              "partner",  # override -> CTA_PARTNER (book?type=partner)
         "post_type":        ["Social Proof/Milestone", "Story"],
         "day":              "Manual",
         "weekday":          -1,

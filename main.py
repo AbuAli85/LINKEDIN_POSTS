@@ -330,6 +330,10 @@ def _publish_post_file(path: Path) -> int:
     if post.get("published"):
         print(f"Already published: {path}")
         return 0
+    # Never publish a rejected/removed draft directly (publish_draft / publish_now
+    # on a stale draft path). Same guard as approve — regenerate instead.
+    if post.get("rejected") or post.get("status") in ("deleted", "superseded"):
+        raise SystemExit(f"Draft was rejected/removed — cannot publish: {path}")
 
     post.update({
         "status": "approved",

@@ -138,6 +138,21 @@ def test_expire_stale_dry_run_does_not_write(tmp_path):
     }
 
 
+def test_publish_refuses_rejected_draft(tmp_path):
+    """_publish_post_file must refuse a rejected/removed draft (no LinkedIn call)."""
+    import main
+    f = tmp_path / "20260715_080037_vision.json"
+    f.write_text(json.dumps({
+        "post": "stale body with OMR 25", "status": "deleted", "rejected": True,
+        "pillar": "vision", "publish_day": "Friday",
+    }), encoding="utf-8")
+    with pytest.raises(SystemExit, match="rejected/removed"):
+        main._publish_post_file(f)
+    # And the file was not mutated to published/approved.
+    d = json.loads(f.read_text(encoding="utf-8"))
+    assert d.get("published") is not True and d["status"] == "deleted"
+
+
 def test_expire_stale_idempotent(tmp_path):
     d = tmp_path / "posts_history"
     d.mkdir()

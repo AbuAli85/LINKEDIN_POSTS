@@ -3,13 +3,18 @@
   "segment": "founders",
   "hook": "story",
   "hook_text": "I almost hired an HR consultant for OMR 2,000/month. Then I built the software instead.",
-  "body": "Three years ago, I was running my first tech project in Oman.\n\nPayroll was a mess. I'd already paid two late-payment fines.\n\nA consultant quoted me OMR 2,000/month to handle HR compliance.\n\nI was ready to sign.\n\nThen I spent one weekend mapping every rule myself:\n— WPS deadlines\n— End-of-service calculations\n— Leave accrual under Labour Law\n— Sanad registration windows\n— Gratuity triggers\n\nI filled a notebook.\n\nAnd I realized: this isn't complicated. It's just uncodified.\n\nNobody had written it down in a way that software could enforce.\n\nSo I did.\n\nTwo years of conversations with HR directors, MOL inspectors, accountants.\n\nSmartPRO Hub is that notebook — turned into a system.\n\nThe OMR 2,000/month consultant? We still talk. He now refers clients to us.\n\n---\n\nEvery founder has a moment where they almost outsourced the thing they should have built.\n\nWhat was yours?",
+  "body": "Three years ago, I was running my first tech project in Oman.\n\nPayroll was a mess. I'd already paid two late-payment fines.\n\nA consultant quoted me OMR 2,000/month to handle HR compliance.\n\nI was ready to sign.\n\nThen I spent one weekend mapping every rule myself:\n\u2014 WPS deadlines\n\u2014 End-of-service calculations\n\u2014 Leave accrual under Labour Law\n\u2014 Sanad registration windows\n\u2014 Gratuity triggers\n\nI filled a notebook.\n\nAnd I realized: this isn't complicated. It's just uncodified.\n\nNobody had written it down in a way that software could enforce.\n\nSo I did.\n\nTwo years of conversations with HR directors, MOL inspectors, accountants.\n\nSmartPRO Hub is that notebook \u2014 turned into a system.\n\nThe OMR 2,000/month consultant? We still talk. He now refers clients to us.\n\n---\n\nEvery founder has a moment where they almost outsourced the thing they should have built.\n\nWhat was yours?",
   "cta": "",
   "score": 8.8,
   "scored_at": "2026-05-28",
-  "status": "scheduled",
+  "status": "deleted",
   "publish_date": "2026-06-23",
   "publish_time": "09:00 GST",
   "lang": "en",
-  "notes": "Q3 batch generated 2026-05-28"
+  "notes": "Q3 batch generated 2026-05-28",
+  "approved": false,
+  "approval_required": false,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
 }

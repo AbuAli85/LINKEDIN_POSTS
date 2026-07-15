@@ -10,9 +10,12 @@
   "generated_at": "2026-07-14T07:03:11.791652+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 1,
-  "status": "draft",
+  "status": "deleted",
   "published": false,
   "approved": false,
-  "approval_required": true,
-  "dry_run": true
+  "approval_required": false,
+  "dry_run": true,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
 }

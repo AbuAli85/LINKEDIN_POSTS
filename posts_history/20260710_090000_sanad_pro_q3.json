@@ -3,13 +3,18 @@
   "segment": "hr_managers",
   "hook": "story",
   "hook_text": "The call we get every March from companies who ignored our October demo.",
-  "body": "October: \"We're happy with our current process. We'll revisit in Q2.\"\n\nMarch: \"We just got a Sanad violation notice. Can you help?\"\n\nIt happens every year.\n\nMarch in Oman: end of Q1. Companies that haven't done Sanad compliance reviews since year-end are hit by the quarterly audit cycle.\n\nThe violation pattern is consistent:\n- Profession code mismatches built up over the year\n- Worker transfers not formally documented\n- Visa expiry warnings ignored (no automated alerts)\n- Omanization ratios drifted without anyone noticing\n\nMost of these are fixable before March — if someone's looking.\n\nNobody was looking because nobody had a system that looked for them.\n\nSmartPRO Hub runs continuous Sanad compliance monitoring. It flags issues the week they appear, not the quarter the inspector arrives.\n\nOur March support tickets from existing clients: typically 2-3 per year, minor issues.\nFrom non-clients who call us in crisis: 8-12 in March alone.\n\n---\n\nWhat does your Sanad monitoring process look like between audit cycles?",
+  "body": "October: \"We're happy with our current process. We'll revisit in Q2.\"\n\nMarch: \"We just got a Sanad violation notice. Can you help?\"\n\nIt happens every year.\n\nMarch in Oman: end of Q1. Companies that haven't done Sanad compliance reviews since year-end are hit by the quarterly audit cycle.\n\nThe violation pattern is consistent:\n- Profession code mismatches built up over the year\n- Worker transfers not formally documented\n- Visa expiry warnings ignored (no automated alerts)\n- Omanization ratios drifted without anyone noticing\n\nMost of these are fixable before March \u2014 if someone's looking.\n\nNobody was looking because nobody had a system that looked for them.\n\nSmartPRO Hub runs continuous Sanad compliance monitoring. It flags issues the week they appear, not the quarter the inspector arrives.\n\nOur March support tickets from existing clients: typically 2-3 per year, minor issues.\nFrom non-clients who call us in crisis: 8-12 in March alone.\n\n---\n\nWhat does your Sanad monitoring process look like between audit cycles?",
   "cta": "Comment \"SANAD\" for our compliance monitoring guide.",
   "score": 8.1,
   "scored_at": "2026-05-28",
-  "status": "scheduled",
+  "status": "deleted",
   "publish_date": "2026-07-10",
   "publish_time": "09:00 GST",
   "lang": "en",
-  "notes": "Q3 batch generated 2026-05-28"
+  "notes": "Q3 batch generated 2026-05-28",
+  "approved": false,
+  "approval_required": false,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
 }

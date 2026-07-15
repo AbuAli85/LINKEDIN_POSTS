@@ -5,16 +5,19 @@
   "language": "en",
   "segment": "B",
   "publish_day": "Friday",
-  "post": "Most HR software running inside Omani businesses was built for the UK, the US, or India — then sold here anyway.\n\nThat's not just an inconvenience. Generic platforms don't understand WPS payroll as it works locally. They don't model SPF contribution tiers. They can't file to the Ministry of Labour or track Omanization ratios at the department level. Work permit expiry gets handled through a phone reminder, if anyone remembers.\n\nSo SMEs improvise. Spreadsheets for compliance. WhatsApp threads for PRO workflows. A separate tool for contracts. All of it held together by one or two people who've memorized the gaps.\n\nWhen one of them leaves, the business doesn't just lose a person. It loses the system.\n\nThat's the specific problem SmartPro Hub was built to solve — WPS payroll with direct bank integration, SPF and Omanization compliance, Ministry of Labour filings, Sanad office management, work permit tracking, all connected, bilingual, and built around how business actually runs here.\n\nOur customers aren't stitching foreign tools together anymore.\n\nWhat's the biggest compliance blind spot you see in HR software built outside the GCC?\n\nInvestor and partnership inquiries: https://www.thesmartpro.io/investors?utm_source=linkedin&utm_medium=social&utm_campaign=oman-market\n\nBook a 20-minute demo at www.thesmartpro.io/demo\n\n#SmartPROHub\n#OmanVision2040\n#HRTech\n#SMEOman\n#Oman",
+  "post": "Most HR software running inside Omani businesses was built for the UK, the US, or India \u2014 then sold here anyway.\n\nThat's not just an inconvenience. Generic platforms don't understand WPS payroll as it works locally. They don't model SPF contribution tiers. They can't file to the Ministry of Labour or track Omanization ratios at the department level. Work permit expiry gets handled through a phone reminder, if anyone remembers.\n\nSo SMEs improvise. Spreadsheets for compliance. WhatsApp threads for PRO workflows. A separate tool for contracts. All of it held together by one or two people who've memorized the gaps.\n\nWhen one of them leaves, the business doesn't just lose a person. It loses the system.\n\nThat's the specific problem SmartPro Hub was built to solve \u2014 WPS payroll with direct bank integration, SPF and Omanization compliance, Ministry of Labour filings, Sanad office management, work permit tracking, all connected, bilingual, and built around how business actually runs here.\n\nOur customers aren't stitching foreign tools together anymore.\n\nWhat's the biggest compliance blind spot you see in HR software built outside the GCC?\n\nInvestor and partnership inquiries: https://www.thesmartpro.io/investors?utm_source=linkedin&utm_medium=social&utm_campaign=oman-market\n\nBook a 20-minute demo at www.thesmartpro.io/demo\n\n#SmartPROHub\n#OmanVision2040\n#HRTech\n#SMEOman\n#Oman",
   "char_count": 1386,
   "generated_at": "2026-06-05T07:56:27.180012+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 2,
-  "status": "draft",
+  "status": "deleted",
   "published": false,
   "approved": false,
-  "approval_required": true,
+  "approval_required": false,
   "dry_run": true,
   "is_variant": true,
-  "variant_of": "20260605_075618_oman_market.json"
+  "variant_of": "20260605_075618_oman_market.json",
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
 }

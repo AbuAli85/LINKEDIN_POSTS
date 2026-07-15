@@ -6,9 +6,14 @@
   "publish_date": "2026-06-13",
   "topic": "The founder who stopped doing HR himself",
   "post": "I spoke to a founder last week who had just hired his 40th employee.\n\nHe was still personally approving every leave request.\n\nNot because he didn't trust his team. Because there was no system that let him delegate it properly. Every delegation attempt ended in a discrepancy he had to resolve himself on a Saturday.\n\nThe problem wasn't his team. The problem was that \"HR\" in his business was a collection of informal agreements held together by his personal memory.\n\nWhen I asked what made him finally change: a leave dispute that cost him a client meeting. He was on the phone with an employee about annual leave while a prospect waited for 20 minutes.\n\nThat's the real cost. Not the hours. The opportunity you weren't present for.\n\nThe businesses that scale well in Oman aren't the ones with the best founders at the centre of everything. They're the ones that built systems early enough that the founder could actually leave the room.\n\nWhat was the first thing you successfully delegated that you thought you couldn't?\n\n#OmanBusiness #Leadership #SmartPROHub #Founder #OmanHR",
-  "status": "scheduled",
+  "status": "deleted",
   "publish_time": "09:00 GST",
   "generated_at": "2026-05-28",
   "scored_at": "2026-05-28",
-  "model": "claude-sonnet-4-6"
+  "model": "claude-sonnet-4-6",
+  "approved": false,
+  "approval_required": false,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
 }

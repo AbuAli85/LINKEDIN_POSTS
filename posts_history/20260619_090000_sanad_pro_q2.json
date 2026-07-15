@@ -5,10 +5,15 @@
   "score": 8.0,
   "publish_date": "2026-06-19",
   "topic": "The hidden cost of the status-check call",
-  "post": "Every \"what's the status of my permit?\" call costs a Sanad office 4 minutes.\n\nThat sounds trivial. Here's the math:\n\n— Average Sanad office: 20 client companies\n— Average active cases per client: 3–5\n— Average status calls per client per week: 2\n\nThat's 40–50 status calls per week. At 4 minutes each: 160–200 minutes.\n\n2.5 to 3 hours per week answering questions about information you already have.\n\n13 hours per month. 156 hours per year. Nearly a full month of working time spent on calls that add zero value to either party.\n\nThe client doesn't want to call. They call because they have no other way to know.\n\nGive them a portal. One screen. Real-time case status. No call needed.\n\nThe Sanad offices we work with report that client status calls dropped by over 80% within the first month of going live.\n\nThat's not a product pitch. That's arithmetic.\n\n#SanadOffice #PRO #OmanBusiness #SmartPROHub #Oman",
-  "status": "scheduled",
+  "post": "Every \"what's the status of my permit?\" call costs a Sanad office 4 minutes.\n\nThat sounds trivial. Here's the math:\n\n\u2014 Average Sanad office: 20 client companies\n\u2014 Average active cases per client: 3\u20135\n\u2014 Average status calls per client per week: 2\n\nThat's 40\u201350 status calls per week. At 4 minutes each: 160\u2013200 minutes.\n\n2.5 to 3 hours per week answering questions about information you already have.\n\n13 hours per month. 156 hours per year. Nearly a full month of working time spent on calls that add zero value to either party.\n\nThe client doesn't want to call. They call because they have no other way to know.\n\nGive them a portal. One screen. Real-time case status. No call needed.\n\nThe Sanad offices we work with report that client status calls dropped by over 80% within the first month of going live.\n\nThat's not a product pitch. That's arithmetic.\n\n#SanadOffice #PRO #OmanBusiness #SmartPROHub #Oman",
+  "status": "deleted",
   "publish_time": "09:00 GST",
   "generated_at": "2026-05-28",
   "scored_at": "2026-05-28",
-  "model": "claude-sonnet-4-6"
+  "model": "claude-sonnet-4-6",
+  "approved": false,
+  "approval_required": false,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
 }

@@ -3,13 +3,18 @@
   "segment": "founders",
   "hook": "story",
   "hook_text": "The best HR director I ever met quit her job to become a client. This is why.",
-  "body": "She'd been HR director at a mid-size Omani trading company for 9 years.\n\nBrilliant at her job. Exhausted by her tools.\n\nEvery month: the same payroll cycle. Same manual WPS prep. Same Sanad status calls. Same end-of-service queries from employees who were just curious.\n\n\"I spend 40% of my time doing work a system should do,\" she told me.\n\nShe left. Started a boutique HR consultancy.\n\nHer first call to us: \"I want to use your platform for all my clients.\"\n\nShe now manages HR compliance for 7 companies through SmartPRO Hub.\n\nHer time allocation today:\n- 15% on repetitive admin (vs 40% before)\n- 45% on strategic HR advisory (vs 20% before)\n- 40% on business development and client relationships\n\nRevenue: 3x her previous salary.\n\nThe best HR professionals aren't burned out by HR. They're burned out by the tools they're forced to use.\n\nGive them better tools and they become unstoppable.\n\n---\n\nAre you in HR because you love the work — or despite the tools?",
+  "body": "She'd been HR director at a mid-size Omani trading company for 9 years.\n\nBrilliant at her job. Exhausted by her tools.\n\nEvery month: the same payroll cycle. Same manual WPS prep. Same Sanad status calls. Same end-of-service queries from employees who were just curious.\n\n\"I spend 40% of my time doing work a system should do,\" she told me.\n\nShe left. Started a boutique HR consultancy.\n\nHer first call to us: \"I want to use your platform for all my clients.\"\n\nShe now manages HR compliance for 7 companies through SmartPRO Hub.\n\nHer time allocation today:\n- 15% on repetitive admin (vs 40% before)\n- 45% on strategic HR advisory (vs 20% before)\n- 40% on business development and client relationships\n\nRevenue: 3x her previous salary.\n\nThe best HR professionals aren't burned out by HR. They're burned out by the tools they're forced to use.\n\nGive them better tools and they become unstoppable.\n\n---\n\nAre you in HR because you love the work \u2014 or despite the tools?",
   "cta": "",
   "score": 8.8,
   "scored_at": "2026-05-28",
-  "status": "scheduled",
+  "status": "deleted",
   "publish_date": "2026-07-01",
   "publish_time": "09:00 GST",
   "lang": "en",
-  "notes": "Q3 batch generated 2026-05-28"
+  "notes": "Q3 batch generated 2026-05-28",
+  "approved": false,
+  "approval_required": false,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
 }

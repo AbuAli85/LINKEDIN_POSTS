@@ -1,17 +1,22 @@
 {
   "pillar": "sanad_pro",
   "segment": "A",
-  "status": "scheduled",
+  "status": "deleted",
   "generated_at": "2026-05-28T18:16:28+04:00",
   "model": "sonnet-4-6",
   "hook": "data-lead",
   "score": 7.9,
   "notes": "Data-lead: specific number of filings across 20 clients = 160+ deadlines. System break point is precise.",
-  "title": "Managing MOL filing deadlines across 20 client companies — when exactly does the system break?",
+  "title": "Managing MOL filing deadlines across 20 client companies \u2014 when exactly does the system break?",
   "brief": "Data-lead: specific number of filings across 20 clients = 160+ deadlines. System break point is precise.",
-  "body": "20 client companies. 8 MOL filings per company per year. That's 160 government deadlines.\n\nOne Sanad office. One PRO officer. One shared spreadsheet.\n\nI want you to do the math on that before you keep reading.\n\n160 deadlines across 20 clients means on average one filing is due every 2.3 days. Some months it clusters — Ramadan renewals, new hire seasons, corporate restructuring. In those months, a single PRO officer is managing 12–15 active submissions simultaneously.\n\nAnd the spreadsheet doesn't know that two of them are due on the same day. It just sits there.\n\nHere's exactly when the system breaks:\n\nThe first miss is always small — a filing submitted 3 days late because the officer thought it was next week. A OMR 50 fine. Client is understanding.\n\nThe second miss is in a different client's file. The officer has 8 active cases that week. They didn't see the date slip. OMR 150 fine.\n\nBy the third miss, the client has already started asking around.\n\nThe issue isn't the officer's capability. It's that the tool they're using was designed to store data, not to manage deadlines across 20 simultaneous client relationships.\n\nSmartPRO Hub tracks every MOL filing deadline per client, sends automatic alerts 30 days and 7 days out, and shows the PRO officer their full weekly workload in one view — not across 20 tabs.\n\n160 deadlines. One dashboard.\n\nHow many MOL filing deadlines are you tracking right now — and what happens when one slips?\n\nTry the Sanad AI Assistant free:\nwww.thesmartpro.io/sanad/assistant\n\nBook a free 20-minute demo:\nhttps://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=sanad-pro-en\nOr WhatsApp +96879665522\n\n#OmanBusiness #SmartPROHub #Omanization #HRManagement #GCCBusiness",
+  "body": "20 client companies. 8 MOL filings per company per year. That's 160 government deadlines.\n\nOne Sanad office. One PRO officer. One shared spreadsheet.\n\nI want you to do the math on that before you keep reading.\n\n160 deadlines across 20 clients means on average one filing is due every 2.3 days. Some months it clusters \u2014 Ramadan renewals, new hire seasons, corporate restructuring. In those months, a single PRO officer is managing 12\u201315 active submissions simultaneously.\n\nAnd the spreadsheet doesn't know that two of them are due on the same day. It just sits there.\n\nHere's exactly when the system breaks:\n\nThe first miss is always small \u2014 a filing submitted 3 days late because the officer thought it was next week. A OMR 50 fine. Client is understanding.\n\nThe second miss is in a different client's file. The officer has 8 active cases that week. They didn't see the date slip. OMR 150 fine.\n\nBy the third miss, the client has already started asking around.\n\nThe issue isn't the officer's capability. It's that the tool they're using was designed to store data, not to manage deadlines across 20 simultaneous client relationships.\n\nSmartPRO Hub tracks every MOL filing deadline per client, sends automatic alerts 30 days and 7 days out, and shows the PRO officer their full weekly workload in one view \u2014 not across 20 tabs.\n\n160 deadlines. One dashboard.\n\nHow many MOL filing deadlines are you tracking right now \u2014 and what happens when one slips?\n\nTry the Sanad AI Assistant free:\nwww.thesmartpro.io/sanad/assistant\n\nBook a free 20-minute demo:\nhttps://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=sanad-pro-en\nOr WhatsApp +96879665522\n\n#OmanBusiness #SmartPROHub #Omanization #HRManagement #GCCBusiness",
   "scored_at": "2026-05-28",
   "publish_date": "2026-06-07",
   "publish_time": "09:00 GST",
-  "_scheduled_at": "2026-05-28T18:00:00+00:00"
+  "_scheduled_at": "2026-05-28T18:00:00+00:00",
+  "approved": false,
+  "approval_required": false,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
 }

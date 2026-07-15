@@ -2,14 +2,19 @@
   "pillar": "vision",
   "segment": "founders",
   "hook": "question",
-  "hook_text": "When Oman mandates digital employment contracts — is your company ready to comply in 24 hours?",
-  "body": "It's not hypothetical. It's a trajectory.\n\nGulf countries are moving toward mandatory digital employment contracts with Ministry registration.\n\nSaudi Arabia has had digitally registered contracts via Musaned for years.\nUAE's MOHRE requires electronic contract records.\nOman's direction is clear — the infrastructure is being built.\n\nWhen that mandate drops:\n- Every new employment contract will need digital registration\n- Historical contracts will need digitization within a window (likely 6-12 months)\n- Contract terms will be cross-referenceable against WPS payroll data\n\nCompanies with 50 employees and paper contracts: weeks of frantic scanning and uploading.\n\nCompanies with digitized records already in a compliant system: ready in days.\n\nThe compliance window after a new mandate is always shorter than expected.\n\nThe companies that move now — not because they have to, but because they're building for where Oman is going — will spend that window winning market share while competitors scramble.\n\n---\n\nWhat's your current contract documentation situation? Paper, scanned PDFs, or fully digital?",
+  "hook_text": "When Oman mandates digital employment contracts \u2014 is your company ready to comply in 24 hours?",
+  "body": "It's not hypothetical. It's a trajectory.\n\nGulf countries are moving toward mandatory digital employment contracts with Ministry registration.\n\nSaudi Arabia has had digitally registered contracts via Musaned for years.\nUAE's MOHRE requires electronic contract records.\nOman's direction is clear \u2014 the infrastructure is being built.\n\nWhen that mandate drops:\n- Every new employment contract will need digital registration\n- Historical contracts will need digitization within a window (likely 6-12 months)\n- Contract terms will be cross-referenceable against WPS payroll data\n\nCompanies with 50 employees and paper contracts: weeks of frantic scanning and uploading.\n\nCompanies with digitized records already in a compliant system: ready in days.\n\nThe compliance window after a new mandate is always shorter than expected.\n\nThe companies that move now \u2014 not because they have to, but because they're building for where Oman is going \u2014 will spend that window winning market share while competitors scramble.\n\n---\n\nWhat's your current contract documentation situation? Paper, scanned PDFs, or fully digital?",
   "cta": "",
   "score": 7.3,
   "scored_at": "2026-05-28",
-  "status": "scheduled",
+  "status": "deleted",
   "publish_date": "2026-07-09",
   "publish_time": "09:00 GST",
   "lang": "en",
-  "notes": "Q3 batch generated 2026-05-28"
+  "notes": "Q3 batch generated 2026-05-28",
+  "approved": false,
+  "approval_required": false,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
 }

@@ -7,9 +7,14 @@
   "cta": "",
   "score": 8.3,
   "scored_at": "2026-05-28",
-  "status": "scheduled",
+  "status": "deleted",
   "publish_date": "2026-07-03",
   "publish_time": "09:00 GST",
   "lang": "en",
-  "notes": "Q3 batch generated 2026-05-28"
+  "notes": "Q3 batch generated 2026-05-28",
+  "approved": false,
+  "approval_required": false,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
 }

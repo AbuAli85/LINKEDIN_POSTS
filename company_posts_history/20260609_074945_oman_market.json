@@ -1,18 +1,21 @@
 {
   "pillar": "oman_market",
-  "topic": "Vision 2040 and the digitization of SME operations — where Oman businesses actually stand",
-  "format": "Compare Oman's SME operations landscape today vs three years ago — what has changed, what is still broken",
+  "topic": "Vision 2040 and the digitization of SME operations \u2014 where Oman businesses actually stand",
+  "format": "Compare Oman's SME operations landscape today vs three years ago \u2014 what has changed, what is still broken",
   "language": "en",
   "segment": "B",
   "publish_day": "Friday",
-  "post": "Three years ago, most Oman SMEs ran HR from a WhatsApp group and called it a system.\n\nThat's not a joke. That was the reality — and honestly, for a lot of businesses, it still is.\n\nVision 2040 changed the conversation at the top. Digitization landed on boardroom agendas. New businesses started registering faster. Omanization targets got serious attention. WPS compliance stopped being something you could quietly ignore.\n\nBut awareness and operations aren't the same thing. The gap between knowing you need to modernize and actually doing it is where most SMEs are stuck right now. The spreadsheets are still there. The disconnected vendors are still there. Manual government filings are still eating hours every week. HR software in Oman is genuinely underdeployed for the size of the opportunity. WPS payroll still breaks when staff transitions happen. PRO services automation barely exists outside large enterprises.\n\nThat's the real story of Oman's SME sector in 2024 — not that digital transformation hasn't arrived, but that it arrived unevenly.\n\nSmartPro Hub was built for exactly this gap. One connected platform covering HR, WPS payroll, Omanization compliance, Ministry of Labour filings, work permit tracking, and Sanad office management. Arabic and English. Starting at OMR 12/month.\n\nOur customers aren't waiting around. They're already running.\n\nInvestor and partnership inquiries: https://www.thesmartpro.io/investors?utm_source=linkedin&utm_medium=social&utm_campaign=oman-market\n\nBook a 20-minute demo at www.thesmartpro.io/demo\n\nWhere do you see the biggest operational gap in Oman's SME sector right now?\n\n#SmartPROHub\n#OmanVision2040\n#SMEOman\n#HRTech\n#DigitalTransformation",
+  "post": "Three years ago, most Oman SMEs ran HR from a WhatsApp group and called it a system.\n\nThat's not a joke. That was the reality \u2014 and honestly, for a lot of businesses, it still is.\n\nVision 2040 changed the conversation at the top. Digitization landed on boardroom agendas. New businesses started registering faster. Omanization targets got serious attention. WPS compliance stopped being something you could quietly ignore.\n\nBut awareness and operations aren't the same thing. The gap between knowing you need to modernize and actually doing it is where most SMEs are stuck right now. The spreadsheets are still there. The disconnected vendors are still there. Manual government filings are still eating hours every week. HR software in Oman is genuinely underdeployed for the size of the opportunity. WPS payroll still breaks when staff transitions happen. PRO services automation barely exists outside large enterprises.\n\nThat's the real story of Oman's SME sector in 2024 \u2014 not that digital transformation hasn't arrived, but that it arrived unevenly.\n\nSmartPro Hub was built for exactly this gap. One connected platform covering HR, WPS payroll, Omanization compliance, Ministry of Labour filings, work permit tracking, and Sanad office management. Arabic and English. Starting at OMR 12/month.\n\nOur customers aren't waiting around. They're already running.\n\nInvestor and partnership inquiries: https://www.thesmartpro.io/investors?utm_source=linkedin&utm_medium=social&utm_campaign=oman-market\n\nBook a 20-minute demo at www.thesmartpro.io/demo\n\nWhere do you see the biggest operational gap in Oman's SME sector right now?\n\n#SmartPROHub\n#OmanVision2040\n#SMEOman\n#HRTech\n#DigitalTransformation",
   "char_count": 1695,
   "generated_at": "2026-06-09T07:49:45.502483+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 1,
-  "status": "draft",
+  "status": "deleted",
   "published": false,
   "approved": false,
-  "approval_required": true,
-  "dry_run": true
+  "approval_required": false,
+  "dry_run": true,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
 }

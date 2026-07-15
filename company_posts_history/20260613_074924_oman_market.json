@@ -1,18 +1,21 @@
 {
   "pillar": "oman_market",
-  "topic": "From WhatsApp-run operations to platform-run operations — the SME journey in Oman, 2024 to 2026",
+  "topic": "From WhatsApp-run operations to platform-run operations \u2014 the SME journey in Oman, 2024 to 2026",
   "format": "Frame SmartPro Hub's roadmap or worldview in the context of Oman's broader business transformation",
   "language": "en",
   "segment": "B",
   "publish_day": "Friday",
-  "post": "A business owner in Muscat walked us through her Monday morning last month.\n\nWhatsApp for HR updates. A spreadsheet for payroll. Email to the PRO for visa status. A call to the accountant to confirm WPS.\n\nFour tools. Four places where things quietly disappear.\n\nThis isn't carelessness — it's what running an SME in Oman actually looks like in 2024. The tools most businesses inherited weren't built for this market. They weren't built for WPS requirements, Omanization ratios, SPF deadlines, or the specific way PRO work gets done here. So people improvised. Group chats became systems. Spreadsheets became the source of truth.\n\nThat's the problem SmartPro Hub was built for — one connected platform handling payroll with direct bank integration, compliance tracking, work permits, and PRO services automation, in Arabic and English, sized for companies with 10 to 500 employees.\n\nVision 2040 gets talked about a lot in policy terms. But what it actually requires is a private sector that can operate at a different level — and that means infrastructure, not just intent. You can't scale a business that still runs on WhatsApp threads.\n\nBy 2026, the SMEs that grow won't necessarily be the ones that pushed hardest. They'll be the ones that stopped losing hours to tools that were never designed for them.\n\nInvestor and partnership inquiries: https://www.thesmartpro.io/investors?utm_source=linkedin&utm_medium=social&utm_campaign=oman-market\n\nBook a 20-minute demo at www.thesmartpro.io/demo\n\n#SmartPROHub\n#OmanVision2040\n#SMEOman\n#HRTech\n#DigitalTransformation",
+  "post": "A business owner in Muscat walked us through her Monday morning last month.\n\nWhatsApp for HR updates. A spreadsheet for payroll. Email to the PRO for visa status. A call to the accountant to confirm WPS.\n\nFour tools. Four places where things quietly disappear.\n\nThis isn't carelessness \u2014 it's what running an SME in Oman actually looks like in 2024. The tools most businesses inherited weren't built for this market. They weren't built for WPS requirements, Omanization ratios, SPF deadlines, or the specific way PRO work gets done here. So people improvised. Group chats became systems. Spreadsheets became the source of truth.\n\nThat's the problem SmartPro Hub was built for \u2014 one connected platform handling payroll with direct bank integration, compliance tracking, work permits, and PRO services automation, in Arabic and English, sized for companies with 10 to 500 employees.\n\nVision 2040 gets talked about a lot in policy terms. But what it actually requires is a private sector that can operate at a different level \u2014 and that means infrastructure, not just intent. You can't scale a business that still runs on WhatsApp threads.\n\nBy 2026, the SMEs that grow won't necessarily be the ones that pushed hardest. They'll be the ones that stopped losing hours to tools that were never designed for them.\n\nInvestor and partnership inquiries: https://www.thesmartpro.io/investors?utm_source=linkedin&utm_medium=social&utm_campaign=oman-market\n\nBook a 20-minute demo at www.thesmartpro.io/demo\n\n#SmartPROHub\n#OmanVision2040\n#SMEOman\n#HRTech\n#DigitalTransformation",
   "char_count": 1563,
   "generated_at": "2026-06-13T07:49:24.525582+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 2,
-  "status": "draft",
+  "status": "deleted",
   "published": false,
   "approved": false,
-  "approval_required": true,
-  "dry_run": true
+  "approval_required": false,
+  "dry_run": true,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
 }

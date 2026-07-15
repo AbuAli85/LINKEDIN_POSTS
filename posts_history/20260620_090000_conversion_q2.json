@@ -5,10 +5,15 @@
   "score": 8.4,
   "publish_date": "2026-06-20",
   "topic": "What the free trial actually looks like",
-  "post": "We don't ask you to trust us. We ask you to run payroll once.\n\nHere's what the 14-day free trial at SmartPRO Hub actually looks like:\n\nDay 1: We import your employee records. You don't enter anything manually — we pull from whatever format you have. CSV, Excel, even a clean WhatsApp export if that's what exists.\n\nDay 2: You run a test WPS file. The system validates it against your bank's requirements before it leaves. You see every error flagged before submission. Not after.\n\nDay 3–7: Work permit expiry alerts start firing. You'll probably see 2–3 permits you didn't know were expiring in the next 60 days.\n\nDay 8–14: Your team uses it. Not just you. The system is built for the person actually doing the work, not the person who approved the purchase.\n\nAt the end of 14 days, you decide. No sales call required. No credit card on file. No pressure.\n\nMost companies that finish the trial don't leave. Not because we trapped them — because they ran payroll twice and the second time took 23 minutes.\n\nIf you're managing HR for an Oman business with 20+ employees, the trial is free. Reply or: thesmartpro.io/demo\n\n#SmartPROHub #OmanHR #WPS #Payroll #OmanBusiness",
-  "status": "scheduled",
+  "post": "We don't ask you to trust us. We ask you to run payroll once.\n\nHere's what the 14-day free trial at SmartPRO Hub actually looks like:\n\nDay 1: We import your employee records. You don't enter anything manually \u2014 we pull from whatever format you have. CSV, Excel, even a clean WhatsApp export if that's what exists.\n\nDay 2: You run a test WPS file. The system validates it against your bank's requirements before it leaves. You see every error flagged before submission. Not after.\n\nDay 3\u20137: Work permit expiry alerts start firing. You'll probably see 2\u20133 permits you didn't know were expiring in the next 60 days.\n\nDay 8\u201314: Your team uses it. Not just you. The system is built for the person actually doing the work, not the person who approved the purchase.\n\nAt the end of 14 days, you decide. No sales call required. No credit card on file. No pressure.\n\nMost companies that finish the trial don't leave. Not because we trapped them \u2014 because they ran payroll twice and the second time took 23 minutes.\n\nIf you're managing HR for an Oman business with 20+ employees, the trial is free. Reply or: thesmartpro.io/demo\n\n#SmartPROHub #OmanHR #WPS #Payroll #OmanBusiness",
+  "status": "deleted",
   "publish_time": "09:00 GST",
   "generated_at": "2026-05-28",
   "scored_at": "2026-05-28",
-  "model": "claude-sonnet-4-6"
+  "model": "claude-sonnet-4-6",
+  "approved": false,
+  "approval_required": false,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
 }

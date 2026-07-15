@@ -5,10 +5,15 @@
   "score": 8.8,
   "publish_date": "2026-06-15",
   "topic": "Sanad office doubled clients without hiring",
-  "post": "Six months ago, a Sanad office in Muscat had a hard limit.\n\n20 client companies was all they could handle. Not because of capacity — because of cognitive load. Every new client meant more WhatsApp threads, more Excel rows, more things to remember.\n\nThe owner knew he was leaving money on the table. He just couldn't see how to grow without burning out his two-person team.\n\nHe came to us in January.\n\nBy April, he was at 34 clients. Same two people. No new hires.\n\nWhat changed: clients now check their own case status through a portal. Expiry alerts fire automatically — he doesn't have to remember anything. MOL filings are tracked per client with deadlines visible in one screen. Invoicing goes out automatically when a case closes.\n\nThe work didn't disappear. But the mental load of *tracking* the work disappeared. That's what created the capacity.\n\nThe ceiling for a Sanad office isn't the number of staff. It's the system underneath them.\n\nIf you're running a Sanad office and want to see what this looks like in practice — reply or WhatsApp +968 7966 5522. I'll show you the exact setup.\n\n#SanadOffice #OmanBusiness #SmartPROHub #PRO #Oman",
-  "status": "scheduled",
+  "post": "Six months ago, a Sanad office in Muscat had a hard limit.\n\n20 client companies was all they could handle. Not because of capacity \u2014 because of cognitive load. Every new client meant more WhatsApp threads, more Excel rows, more things to remember.\n\nThe owner knew he was leaving money on the table. He just couldn't see how to grow without burning out his two-person team.\n\nHe came to us in January.\n\nBy April, he was at 34 clients. Same two people. No new hires.\n\nWhat changed: clients now check their own case status through a portal. Expiry alerts fire automatically \u2014 he doesn't have to remember anything. MOL filings are tracked per client with deadlines visible in one screen. Invoicing goes out automatically when a case closes.\n\nThe work didn't disappear. But the mental load of *tracking* the work disappeared. That's what created the capacity.\n\nThe ceiling for a Sanad office isn't the number of staff. It's the system underneath them.\n\nIf you're running a Sanad office and want to see what this looks like in practice \u2014 reply or WhatsApp +968 7966 5522. I'll show you the exact setup.\n\n#SanadOffice #OmanBusiness #SmartPROHub #PRO #Oman",
+  "status": "deleted",
   "publish_time": "09:00 GST",
   "generated_at": "2026-05-28",
   "scored_at": "2026-05-28",
-  "model": "claude-sonnet-4-6"
+  "model": "claude-sonnet-4-6",
+  "approved": false,
+  "approval_required": false,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
 }

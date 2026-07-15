@@ -1,18 +1,21 @@
 {
   "pillar": "oman_market",
-  "topic": "The shift from family-business HR to professionalized operations — what triggers it, what it requires",
+  "topic": "The shift from family-business HR to professionalized operations \u2014 what triggers it, what it requires",
   "format": "Walk through a structural shift in Oman business (digitization, Omanization, regulatory) and what it means for HR/ops",
   "language": "en",
   "segment": "B",
   "publish_day": "Friday",
-  "post": "Family businesses run on trust. Growing businesses need systems.\n\nThe gap between those two things is where most Omani companies quietly stall.\n\nIt rarely starts with a crisis. It starts with a payroll dispute that ate three days. A Ministry of Labour filing that almost missed its deadline. An HR manager managing everything through WhatsApp because no actual process exists yet.\n\nAnd then suddenly the informal setup that worked fine at 15 employees is buckling under 50.\n\nOmanization targets are tightening. SPF compliance is mandatory. WPS payroll regulations now carry real consequences. These aren't distant policy shifts — they're already landing on desks.\n\nVision 2040 is a signal to every business owner in the country: the operating environment is professionalizing, on its own schedule, regardless of whether you're ready.\n\nSmartPro Hub was built for companies in this exact moment — past spreadsheets, not yet at enterprise scale. WPS payroll, Omanization tracking, work permit management, government filings — connected, bilingual, no dedicated IT team required.\n\nThe businesses moving ahead in Oman right now aren't necessarily the biggest. They're the ones that got their systems in order before they had to.\n\nInvestor and partnership inquiries: https://www.thesmartpro.io/investors?utm_source=linkedin&utm_medium=social&utm_campaign=oman-market\n\nBook a 20-minute demo at www.thesmartpro.io/demo\n\n#SmartPROHub\n#OmanVision2040\n#GCCBusiness\n#HRTech\n#SMEOman",
+  "post": "Family businesses run on trust. Growing businesses need systems.\n\nThe gap between those two things is where most Omani companies quietly stall.\n\nIt rarely starts with a crisis. It starts with a payroll dispute that ate three days. A Ministry of Labour filing that almost missed its deadline. An HR manager managing everything through WhatsApp because no actual process exists yet.\n\nAnd then suddenly the informal setup that worked fine at 15 employees is buckling under 50.\n\nOmanization targets are tightening. SPF compliance is mandatory. WPS payroll regulations now carry real consequences. These aren't distant policy shifts \u2014 they're already landing on desks.\n\nVision 2040 is a signal to every business owner in the country: the operating environment is professionalizing, on its own schedule, regardless of whether you're ready.\n\nSmartPro Hub was built for companies in this exact moment \u2014 past spreadsheets, not yet at enterprise scale. WPS payroll, Omanization tracking, work permit management, government filings \u2014 connected, bilingual, no dedicated IT team required.\n\nThe businesses moving ahead in Oman right now aren't necessarily the biggest. They're the ones that got their systems in order before they had to.\n\nInvestor and partnership inquiries: https://www.thesmartpro.io/investors?utm_source=linkedin&utm_medium=social&utm_campaign=oman-market\n\nBook a 20-minute demo at www.thesmartpro.io/demo\n\n#SmartPROHub\n#OmanVision2040\n#GCCBusiness\n#HRTech\n#SMEOman",
   "char_count": 1470,
   "generated_at": "2026-06-19T08:22:28.798293+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 1,
-  "status": "draft",
+  "status": "deleted",
   "published": false,
   "approved": false,
-  "approval_required": true,
-  "dry_run": true
+  "approval_required": false,
+  "dry_run": true,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
 }

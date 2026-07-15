@@ -5,10 +5,15 @@
   "score": 7.6,
   "publish_date": "2026-06-17",
   "topic": "How many hours does payroll actually take your team",
-  "post": "Honest question for Oman HR managers:\n\nHow many hours does payroll actually take your team each month — start to finish?\n\nNot the payroll run itself. The full process:\n— Collecting and verifying attendance data\n— Reconciling leave balances\n— Updating the WPS file with any employee changes\n— Validating against bank requirements\n— Submission and waiting for confirmation\n— Handling any rejections and resubmissions\n— Distributing payslips\n— Answering employee questions about deductions\n\nMost HR managers I speak to say \"a few hours.\" When we map the actual steps, it's usually 12–18 hours for a 50-person company. Often more.\n\nThe gap between perceived time and actual time is where burnout lives. It's also where the case for automation becomes obvious.\n\nDrop your honest number in the comments. I'm building a benchmark for Oman businesses — the data will be anonymised and shared back here.\n\n#OmanHR #Payroll #WPS #HRTech #SmartPROHub",
-  "status": "scheduled",
+  "post": "Honest question for Oman HR managers:\n\nHow many hours does payroll actually take your team each month \u2014 start to finish?\n\nNot the payroll run itself. The full process:\n\u2014 Collecting and verifying attendance data\n\u2014 Reconciling leave balances\n\u2014 Updating the WPS file with any employee changes\n\u2014 Validating against bank requirements\n\u2014 Submission and waiting for confirmation\n\u2014 Handling any rejections and resubmissions\n\u2014 Distributing payslips\n\u2014 Answering employee questions about deductions\n\nMost HR managers I speak to say \"a few hours.\" When we map the actual steps, it's usually 12\u201318 hours for a 50-person company. Often more.\n\nThe gap between perceived time and actual time is where burnout lives. It's also where the case for automation becomes obvious.\n\nDrop your honest number in the comments. I'm building a benchmark for Oman businesses \u2014 the data will be anonymised and shared back here.\n\n#OmanHR #Payroll #WPS #HRTech #SmartPROHub",
+  "status": "deleted",
   "publish_time": "09:00 GST",
   "generated_at": "2026-05-28",
   "scored_at": "2026-05-28",
-  "model": "claude-sonnet-4-6"
+  "model": "claude-sonnet-4-6",
+  "approved": false,
+  "approval_required": false,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
 }

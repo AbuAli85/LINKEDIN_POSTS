@@ -3,13 +3,18 @@
   "segment": "hr_managers",
   "hook": "question",
   "hook_text": "What happens to your Omani employees' end-of-service if your company closes tomorrow?",
-  "body": "Most HR managers in Oman can't answer this without opening a spreadsheet.\n\nAnd most of those spreadsheets have errors.\n\nEnd-of-service gratuity in Oman isn't simple:\n- Different formula for under-3-year employees\n- Different for termination vs. resignation\n- Indemnity caps under Article 39\n- Netting against unpaid loans\n- Adjustments for unpaid leave taken\n\nWe've audited end-of-service calculations for 12 Omani companies.\n\n9 out of 12 had at least one material error.\n\nAverage error size: OMR 340 per affected employee.\nLargest single error found: OMR 2,100.\n\nThese aren't caught until someone leaves — or disputes.\n\nSmartPRO Hub calculates every scenario automatically, in real time, for every employee on your roster.\n\nChange a contract type — gratuity recalculates instantly.\nAdd a disciplinary absence — adjustment applies automatically.\nEmployee resigns — full breakdown ready in 30 seconds.\n\n---\n\nWhen did you last audit your end-of-service calculations?",
+  "body": "Most HR managers in Oman can't answer this without opening a spreadsheet.\n\nAnd most of those spreadsheets have errors.\n\nEnd-of-service gratuity in Oman isn't simple:\n- Different formula for under-3-year employees\n- Different for termination vs. resignation\n- Indemnity caps under Article 39\n- Netting against unpaid loans\n- Adjustments for unpaid leave taken\n\nWe've audited end-of-service calculations for 12 Omani companies.\n\n9 out of 12 had at least one material error.\n\nAverage error size: OMR 340 per affected employee.\nLargest single error found: OMR 2,100.\n\nThese aren't caught until someone leaves \u2014 or disputes.\n\nSmartPRO Hub calculates every scenario automatically, in real time, for every employee on your roster.\n\nChange a contract type \u2014 gratuity recalculates instantly.\nAdd a disciplinary absence \u2014 adjustment applies automatically.\nEmployee resigns \u2014 full breakdown ready in 30 seconds.\n\n---\n\nWhen did you last audit your end-of-service calculations?",
   "cta": "Comment \"AUDIT\" and I'll share our free calculation checklist.",
   "score": 7.8,
   "scored_at": "2026-05-28",
-  "status": "scheduled",
+  "status": "deleted",
   "publish_date": "2026-06-26",
   "publish_time": "09:00 GST",
   "lang": "en",
-  "notes": "Q3 batch generated 2026-05-28"
+  "notes": "Q3 batch generated 2026-05-28",
+  "approved": false,
+  "approval_required": false,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
 }

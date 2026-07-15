@@ -1,18 +1,23 @@
 {
   "pillar": "pain",
   "segment": "A",
-  "status": "scheduled",
+  "status": "deleted",
   "generated_at": "2026-05-28T19:05:00+04:00",
   "model": "sonnet-4-6",
   "hook": "numbered-list",
   "score": 7.9,
   "scored_at": "2026-05-28",
-  "notes": "Carousel-ready format — each numbered point = one slide. Post as PDF document for 3x reach.",
+  "notes": "Carousel-ready format \u2014 each numbered point = one slide. Post as PDF document for 3x reach.",
   "carousel_ready": true,
   "title": "7 things that break when your HR system is a WhatsApp group",
   "brief": "Carousel/document post format. Each point is a slide. High share potential. Pain pillar.",
-  "body": "7 things that break when your HR system is a WhatsApp group:\n\n1. Nobody knows which version of the salary sheet is final.\nThree people edited it. Two saved. One emailed the wrong one to the bank.\n\n2. A work permit expires — and you find out from the employee, not the system.\nBecause the system is a phone notification that scrolled off the screen in March.\n\n3. A Ministry of Labour inspector asks for leave records.\nYou spend 40 minutes reconstructing something that should have been one click.\n\n4. Your best HR person resigns.\nPayroll week becomes a crisis because everything lived in her head.\n\n5. Two managers approve the same employee's leave on different days.\nPayroll closes with the wrong balance. The employee disputes it. You lose.\n\n6. An invoice for a completed work permit doesn't go out for three weeks.\nBecause you finished the case and moved to the next one without billing.\n\n7. A client calls to ask about their visa renewal status.\nYou spend four minutes scrolling through a chat thread to find an answer you should have at your fingertips.\n\nNone of these are catastrophic individually.\n\nTogether, they're the reason your business can't scale past where it is today.\n\nSmartPRO Hub was built for the gap between WhatsApp and enterprise software — structured enough to catch everything, simple enough that your team actually uses it.\n\nBook a free 20-minute demo:\nhttps://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=pain-carousel\nOr WhatsApp +96879665522\n\nWhich one hit closest to home? Drop the number in the comments.\n\n#OmanBusiness #HRManagement #SmallBusinessOman #SmartPROHub #GCCBusiness",
+  "body": "7 things that break when your HR system is a WhatsApp group:\n\n1. Nobody knows which version of the salary sheet is final.\nThree people edited it. Two saved. One emailed the wrong one to the bank.\n\n2. A work permit expires \u2014 and you find out from the employee, not the system.\nBecause the system is a phone notification that scrolled off the screen in March.\n\n3. A Ministry of Labour inspector asks for leave records.\nYou spend 40 minutes reconstructing something that should have been one click.\n\n4. Your best HR person resigns.\nPayroll week becomes a crisis because everything lived in her head.\n\n5. Two managers approve the same employee's leave on different days.\nPayroll closes with the wrong balance. The employee disputes it. You lose.\n\n6. An invoice for a completed work permit doesn't go out for three weeks.\nBecause you finished the case and moved to the next one without billing.\n\n7. A client calls to ask about their visa renewal status.\nYou spend four minutes scrolling through a chat thread to find an answer you should have at your fingertips.\n\nNone of these are catastrophic individually.\n\nTogether, they're the reason your business can't scale past where it is today.\n\nSmartPRO Hub was built for the gap between WhatsApp and enterprise software \u2014 structured enough to catch everything, simple enough that your team actually uses it.\n\nBook a free 20-minute demo:\nhttps://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=pain-carousel\nOr WhatsApp +96879665522\n\nWhich one hit closest to home? Drop the number in the comments.\n\n#OmanBusiness #HRManagement #SmallBusinessOman #SmartPROHub #GCCBusiness",
   "publish_date": "2026-06-11",
   "publish_time": "09:00 GST",
-  "post": "7 things that break when your HR system is a WhatsApp group:\n\n(Upload the PDF carousel — see carousel_7_things_hr_whatsapp.pdf)\n\nWhich one hit closest to home? Drop the number in the comments.\n\n#OmanBusiness #HRManagement #SmallBusinessOman #SmartPROHub #GCCBusiness"
+  "post": "7 things that break when your HR system is a WhatsApp group:\n\n(Upload the PDF carousel \u2014 see carousel_7_things_hr_whatsapp.pdf)\n\nWhich one hit closest to home? Drop the number in the comments.\n\n#OmanBusiness #HRManagement #SmallBusinessOman #SmartPROHub #GCCBusiness",
+  "approved": false,
+  "approval_required": false,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
 }

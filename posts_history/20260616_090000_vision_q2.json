@@ -5,10 +5,15 @@
   "score": 7.8,
   "publish_date": "2026-06-16",
   "topic": "Why Oman SME compliance SaaS is a better bet than consumer fintech",
-  "post": "Consumer fintech in the GCC is crowded. B2B compliance SaaS in Oman is not.\n\nThe reasons investors overlook Oman SME software are the same reasons it's a good bet:\n\n— The market looks small until you count the mandated interactions. Every business with employees must file WPS monthly, submit MOL paperwork, and maintain Omanization records. These aren't optional. They're recurring, government-mandated workflows.\n\n— The competition is Excel. Not a legacy SaaS player. Excel and WhatsApp. That's the incumbent you're displacing.\n\n— Switching costs are low to enter but high to exit. Once payroll, permits, and MOL filings live in one system, moving them out is painful. Retention follows.\n\n— The regulatory tailwind is strong. Vision 2040 is actively pushing SME digitisation. The Ministry of Labour has an enforcement mandate. The deadline isn't artificial — it's policy.\n\nThe window for first-mover advantage in Oman SME HR compliance is narrower than it looks from Dubai.\n\n#OmanTech #GCCSaaS #Vision2040 #HRTech #Investor",
-  "status": "scheduled",
+  "post": "Consumer fintech in the GCC is crowded. B2B compliance SaaS in Oman is not.\n\nThe reasons investors overlook Oman SME software are the same reasons it's a good bet:\n\n\u2014 The market looks small until you count the mandated interactions. Every business with employees must file WPS monthly, submit MOL paperwork, and maintain Omanization records. These aren't optional. They're recurring, government-mandated workflows.\n\n\u2014 The competition is Excel. Not a legacy SaaS player. Excel and WhatsApp. That's the incumbent you're displacing.\n\n\u2014 Switching costs are low to enter but high to exit. Once payroll, permits, and MOL filings live in one system, moving them out is painful. Retention follows.\n\n\u2014 The regulatory tailwind is strong. Vision 2040 is actively pushing SME digitisation. The Ministry of Labour has an enforcement mandate. The deadline isn't artificial \u2014 it's policy.\n\nThe window for first-mover advantage in Oman SME HR compliance is narrower than it looks from Dubai.\n\n#OmanTech #GCCSaaS #Vision2040 #HRTech #Investor",
+  "status": "deleted",
   "publish_time": "09:00 GST",
   "generated_at": "2026-05-28",
   "scored_at": "2026-05-28",
-  "model": "claude-sonnet-4-6"
+  "model": "claude-sonnet-4-6",
+  "approved": false,
+  "approval_required": false,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
 }

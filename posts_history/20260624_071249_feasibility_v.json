@@ -10,12 +10,15 @@
   "generated_at": "2026-06-24T07:13:04.035677+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 1,
-  "status": "approved",
+  "status": "deleted",
   "published": false,
-  "approved": true,
+  "approved": false,
   "approval_required": false,
   "dry_run": false,
   "is_variant": true,
   "variant_of": "20260624_071250_feasibility.json",
-  "approved_at": "2026-06-24T20:04:34.726637+00:00"
+  "approved_at": "2026-06-24T20:04:34.726637+00:00",
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
 }

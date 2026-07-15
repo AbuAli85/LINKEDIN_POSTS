@@ -10,12 +10,16 @@
   "generated_at": "2026-07-06T07:33:59.948776+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 1,
-  "status": "approved",
-  "published": false,
+  "status": "published",
+  "published": true,
   "approved": true,
   "approval_required": false,
   "dry_run": false,
   "is_variant": true,
   "variant_of": "20260706_073351_proof.json",
-  "approved_at": "2026-07-10T06:15:41.010718+00:00"
+  "approved_at": "2026-07-15T07:24:04.889634+00:00",
+  "post_id": "urn:li:share:7483058797733634049",
+  "published_at": "2026-07-15T07:24:06.392838+00:00",
+  "cta_comment_posted": false,
+  "cta_comment_url": ""
 }

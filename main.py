@@ -241,7 +241,9 @@ def publish_approved_for_today() -> int:
             continue
         if post.get("published"):
             continue
-        if post.get("status") == "superseded":
+        # Never publish a draft that was rejected/removed — even if some path
+        # left approved=true on it (e.g. re-approving a stale notification email).
+        if post.get("rejected") or post.get("status") in ("superseded", "deleted"):
             continue
         post_publish_day = post.get("publish_day", "")
         # Include posts whose publish_day matches today, or legacy posts with no publish_day

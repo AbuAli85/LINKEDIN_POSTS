@@ -38,10 +38,16 @@ def is_empty_body(post: dict) -> bool:
 def can_approve(post: dict) -> tuple[bool, str]:
     """Whether a draft may be approved. Returns (ok, reason_if_not).
 
-    Guard: an empty-body draft can NEVER hold approved=true.
+    Guards:
+      - a rejected/deleted/superseded draft can NEVER be re-approved (stale
+        notification emails still carry a live Approve button pointing at
+        purged drafts — clicking one must not resurrect it),
+      - an empty-body draft can NEVER hold approved=true.
     """
     if post.get("published"):
         return False, "already published"
+    if post.get("rejected") or post.get("status") in _TERMINAL_STATUS:
+        return False, "draft was rejected/removed — regenerate instead of re-approving a dead draft"
     if is_empty_body(post):
         return False, "empty body — an empty draft can never be approved"
     return True, ""

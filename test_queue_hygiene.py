@@ -41,6 +41,19 @@ def test_can_approve_allows_normal_draft():
     assert why == ""
 
 
+@pytest.mark.parametrize("post", [
+    {"post": "stale body", "status": "deleted", "rejected": True},   # purged draft
+    {"post": "stale body", "status": "deleted"},                      # deleted, no flag
+    {"post": "stale body", "status": "superseded"},                  # superseded variant
+    {"post": "stale body", "rejected": True},                        # rejected flag only
+])
+def test_can_approve_refuses_rejected_or_removed(post):
+    """A stale notification email's Approve button must not resurrect a dead draft."""
+    ok, why = qh.can_approve(post)
+    assert ok is False
+    assert "reject" in why.lower() or "dead" in why.lower()
+
+
 # ── age detection ───────────────────────────────────────────────────────────
 
 def test_draft_datetime_prefers_generated_at():

@@ -10,10 +10,14 @@
   "generated_at": "2026-07-15T17:53:51.220770+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 1,
-  "status": "approved",
-  "published": false,
+  "status": "published",
+  "published": true,
   "approved": true,
   "approval_required": false,
   "dry_run": false,
-  "approved_at": "2026-07-15T18:16:51.486860+00:00"
+  "approved_at": "2026-07-16T07:32:27.629867+00:00",
+  "post_id": "urn:li:share:7483423295120519169",
+  "published_at": "2026-07-16T07:32:29.466549+00:00",
+  "cta_comment_posted": false,
+  "cta_comment_url": ""
 }

@@ -1,8 +1,8 @@
-anthropic==0.100.0
-requests==2.33.1
-resend==2.30.0
+anthropic==0.117.0
+requests==2.34.2
+resend==2.33.0
 python-dotenv==1.2.2
-pillow==12.2.0
+pillow==12.3.0
 arabic-reshaper==3.0.1
 # Pure-Python bidi (0.4.x). The 0.6.x rewrite is a Rust extension whose wheel can
 # fail to import on the CI runner, which silently broke Arabic shaping.

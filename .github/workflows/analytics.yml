@@ -2,7 +2,7 @@ name: LinkedIn Analytics Pull
 
 on:
   schedule:
-    - cron: '30 7 * * 1'   # Every Monday 06:00 UTC — after weekend posts settle
+    - cron: '30 7 * * 1'   # Every Monday 07:30 UTC — after weekend posts settle
   workflow_dispatch:
     inputs:
       fetch_mode:

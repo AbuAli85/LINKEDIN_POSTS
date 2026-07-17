@@ -1,0 +1,23 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "WhatsApp Business integration \u2014 how client requests flow into a tracked case instead of a group chat",
+  "format": "Compare 'how most Oman businesses do X today' with 'how SmartPro Hub customers do X'",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "47 unread messages. One buried client request. Nobody home.\n\nBy noon it's gone \u2014 swallowed under everything else that came in. No one owns it. No one's tracking it. And when it finally falls through the cracks, three people point at each other.\n\nThat's the reality for most Oman businesses running client requests through a group chat. Someone sends a WhatsApp message, someone else maybe sees it, and the rest is optimism.\n\nSmartPro Hub does something different with that message.\n\nWhen it comes in via WhatsApp Business, it doesn't just sit in the thread waiting for someone to remember it. It converts into a tracked case \u2014 assigned to a specific person, given a deadline, visible to the right team members inside the platform. No copy-pasting into a spreadsheet. No \"I thought you had that.\" No missing context because someone's on leave.\n\nThe ops director can see every open request at once. The client gets a response through a white-label portal. The team works from a single queue instead of five overlapping threads that nobody fully controls.\n\nWe built this because PRO services automation in Oman has one consistent failure point: the gap between client communication and internal execution. WhatsApp creates that gap. It's where deals go quiet, clients lose patience, and good teams look like they can't get it together \u2014 not because they're bad at the work, but because they're working out of a chat app that was never meant to run operations.\n\nIf your client follow-up still lives in a group chat, that's not a workflow. It's a wish.\n\nBook a 20-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#GCCBusiness\n#SMEOman",
+  "char_count": 1730,
+  "generated_at": "2026-06-10T07:57:02.228005+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "deleted",
+  "published": false,
+  "approved": false,
+  "approval_required": false,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260610_075649_feature_spotlight.json",
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
+}

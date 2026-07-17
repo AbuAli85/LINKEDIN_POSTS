@@ -1,0 +1,23 @@
+{
+  "pillar": "product_proof",
+  "topic": "How a multi-branch operation manages payroll for four locations from one screen",
+  "format": "Lead with a specific customer outcome \u2014 time saved, errors eliminated, hours recovered \u2014 then describe what changed",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "Four branches. Two full days. One finance manager doing it all \u2014 four spreadsheets, four chances to get something wrong, and no room for either.\n\nAfter switching to SmartPRO Hub, the same process takes under three hours. One screen, all locations, done.\n\nHere's what actually changed:\n\nWPS submissions, bank transfers, and end-of-service calculations across every branch now run in a single workflow. When one location's data updates, it updates everywhere. No manual reconciliation. No hunting for the right version of a file.\n\nMulti-branch customers in Oman keep telling us the same thing: the hours they get back aren't just time saved. They're errors that never happen, compliance gaps that never open, payroll that closes when it's supposed to.\n\nWe built SmartPRO Hub because GCC businesses shouldn't need a separate system for every location \u2014 or a separate person managing each one. Most of the complexity in multi-branch payroll isn't really complexity. It's fragmentation. Consolidate the data, and the process stops fighting you.\n\nIf your payroll still lives across tabs and group chats, that's not a minor inconvenience. It's a liability that comes due every single month.\n\nHow many people does it currently take your team to run payroll across multiple sites?\n\nBook a 30-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#WPS\n#PayrollOman\n#OmanBusiness\n#GCCBusiness",
+  "char_count": 1451,
+  "generated_at": "2026-07-02T07:43:25.347443+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "deleted",
+  "published": false,
+  "approved": false,
+  "approval_required": false,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260702_074313_product_proof.json",
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
+}

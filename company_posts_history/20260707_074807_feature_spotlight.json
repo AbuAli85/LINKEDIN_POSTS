@@ -1,0 +1,22 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "Automated invoicing per service for PRO firms \u2014 billing 30 clients in the time it used to take to bill three",
+  "format": "Compare 'how most Oman businesses do X today' with 'how SmartPRO Hub customers do X'",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "Most PRO firms in Oman bill the same way at month-end: open a spreadsheet, scroll through notes, try to remember which service was done for which client, then send a PDF over WhatsApp.\n\nSmartPRO Hub customers skip all of that.\n\nEvery completed service \u2014 work permit, visa renewal, Sanad filing, government document \u2014 gets logged the moment it's done. When billing time comes, invoices generate automatically, broken down by service and client.\n\n30 clients billed in the time it used to take to handle three.\n\nNo chasing notes. No manual entries. No missed line items.\n\nWe built this because PRO firms lose real money every month \u2014 not from bad clients, but from incomplete invoices. A service gets done, nobody records it, nobody charges for it.\n\nThat gap adds up fast across 30, 50, 80 clients.\n\nAutomated invoicing per service is live on SmartPRO Hub starting at OMR 25/month. No credit card needed for the 14-day trial.\n\nIf your billing still depends on someone's memory, what's that actually costing you?\n\nBook a 30-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#GCCBusiness\n#SMEOman",
+  "char_count": 1191,
+  "generated_at": "2026-07-07T07:48:07.087667+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 2,
+  "status": "deleted",
+  "published": false,
+  "approved": false,
+  "approval_required": false,
+  "dry_run": true,
+  "has_variant": true,
+  "rejected": true,
+  "rejected_at": "2026-07-15T08:50:54.996711+00:00",
+  "rejected_reason": "stale pricing / stacked CTA \u2014 Link & Pricing fix sprint 2026-07-15"
+}

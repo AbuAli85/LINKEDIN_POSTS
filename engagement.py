@@ -169,7 +169,7 @@ def draft_replies(comment_text: str, post_first_line: str, pillar: str, commente
 # ---------------------------------------------------------------------------
 
 def _load(path: Path) -> dict:
-    return json.loads(path.read_text(encoding="utf-8"))
+    return json.loads(path.read_text(encoding="utf-8-sig"))
 
 
 def _save(path: Path, data: dict) -> None:

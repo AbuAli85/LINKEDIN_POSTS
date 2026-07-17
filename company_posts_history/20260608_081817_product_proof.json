@@ -1,0 +1,22 @@
+{
+  "pillar": "product_proof",
+  "topic": "A Sanad office in Muscat moved 40 client work permits off WhatsApp \u2014 no missed renewals in six months",
+  "format": "Open with a SmartPro Hub product capability, then show the real-world business outcome it enables",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "40 client work permits. One Sanad office in Muscat. Zero missed renewals across six months.\n\nNot from adding headcount. Not from a better spreadsheet.\n\nFrom pulling every permit out of WhatsApp and into SmartPro Hub's work permit tracking \u2014 where deadlines are visible, alerts fire automatically, and nothing expires because someone's phone was on silent during a long weekend.\n\nBefore the switch, this team ran their process the way most Sanad offices do: chasing updates across group chats, manually cross-checking dates, hoping nothing slipped while everyone was off for a public holiday.\n\nSix months later \u2014 zero missed renewals. Every client permit in one place. Status visible without sending a single follow-up message.\n\nThis is exactly what we built Sanad office management software for. The risk was never forgetting a date. It's not having anything that remembers it for you.\n\nIf your permit tracking still lives in a chat thread, that's a liability with a countdown on it.\n\nHow many active permits is your team carrying right now \u2014 and how sure are you nothing is quietly expiring?\n\nBook a 20-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#GCCBusiness\n#SMEOman",
+  "char_count": 1271,
+  "generated_at": "2026-06-08T08:18:17.612559+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "deleted",
+  "published": false,
+  "approved": false,
+  "approval_required": false,
+  "dry_run": true,
+  "has_variant": true,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
+}

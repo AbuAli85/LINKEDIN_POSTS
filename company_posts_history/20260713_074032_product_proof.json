@@ -1,0 +1,22 @@
+{
+  "pillar": "product_proof",
+  "topic": "A Sanad office in Muscat moved 40 client work permits off WhatsApp \u2014 no missed renewals in six months",
+  "format": "Open with a SmartPRO Hub product capability, then show the real-world business outcome it enables",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "40 client work permits. Tracked on WhatsApp. Across 7 different chat groups.\n\nThat was one Sanad office in Muscat, before SmartPRO Hub.\n\nRenewals buried in threads. Reminders sent by hand. One missed message away from a compliance issue \u2014 or a client who stops trusting you.\n\nSix months after switching: zero missed renewals. All 40 permits in one place, automated deadline alerts running in the background, and a client portal that keeps everyone updated without anyone chasing anyone.\n\nNo spreadsheets. No group chats. No follow-up calls.\n\nWe built this because Sanad offices were growing their client lists faster than their systems could handle. WhatsApp works fine at 5 clients. At 25, it starts breaking quietly \u2014 and you don't always notice until something goes wrong. When it does, the damage isn't just a missed renewal. It's the client who wonders whether you're on top of their file at all.\n\nSmartPRO Hub gives PRO service teams one dashboard for permit tracking, renewal timelines, and client communication. That's it. Nothing falls through the gaps because there are no gaps.\n\nIf you're still managing this through messages, the risk is easy to miss \u2014 right up until it isn't.\n\nHow are you currently tracking renewal deadlines across multiple clients?\n\nBook a 30-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#SMEOman\n#GCCBusiness",
+  "char_count": 1443,
+  "generated_at": "2026-07-13T07:40:32.004719+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "deleted",
+  "published": false,
+  "approved": false,
+  "approval_required": false,
+  "dry_run": true,
+  "has_variant": true,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
+}

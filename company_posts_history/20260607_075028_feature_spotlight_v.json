@@ -1,0 +1,23 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "Auto-expiry alerts for work permits and visas \u2014 how the dashboard surfaces renewals 30/60/90 days out",
+  "format": "Compare 'how most Oman businesses do X today' with 'how SmartPro Hub customers do X'",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "An expired work permit discovered at the airport isn't a paperwork problem. It's a failure that started weeks earlier, when nobody caught it in time.\n\nA spreadsheet column turns red. Maybe. If someone remembered to update it last month.\n\nSmartPro Hub works differently.\n\nThe dashboard flags every expiring work permit and visa at 90, 60, and 30 days out \u2014 automatically. HR managers see it the moment they log in. No manual checking, no folder-diving, no discovering a visa expired last Tuesday when the employee is already at departures.\n\nWe built this because a missed renewal isn't just a fine. It's operational disruption, Ministry of Labour filings, and an employee who legally can't work while you sort out the mess.\n\nWork permit tracking lives inside the same platform handling your WPS payroll Oman submissions and Omanization compliance. So deadlines don't fall through because they're sitting in a separate system nobody opens until something goes wrong.\n\nEvery deadline. One place. Caught before it becomes your problem.\n\nIf your current process relies on someone remembering \u2014 that's the gap.\n\nBook a 20-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#GCCBusiness\n#SMEOman",
+  "char_count": 1287,
+  "generated_at": "2026-06-07T07:50:39.564909+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "deleted",
+  "published": false,
+  "approved": false,
+  "approval_required": false,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260607_075029_feature_spotlight.json",
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
+}

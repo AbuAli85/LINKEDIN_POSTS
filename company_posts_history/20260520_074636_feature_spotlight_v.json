@@ -1,0 +1,23 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "E-signature for employment contracts \u2014 three signatures across two countries, end-to-end in one platform",
+  "format": "Compare 'how most Oman businesses do X today' with 'how SmartPro Hub customers do X'",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "The signature chase is costing Oman businesses a week of onboarding time \u2014 every single hire.\n\nSmartPro Hub customers do it differently.\n\nOne employment contract. Three signatories \u2014 HR manager in Muscat, department head in Dubai, new hire in Cairo. All signed, timestamped, and stored inside the same platform where their work permit and visa tracking already lives.\n\nNo printer. No courier. No follow-up messages at 11pm.\n\nWe built this because HR managers kept telling us the same thing: onboarding didn't fall apart at payroll or compliance. It fell apart at the signature chase.\n\nThe e-signature in SmartPro Hub isn't a bolt-on. It connects directly to employee records, so the signed contract attaches to the profile the moment it's complete \u2014 ready for Ministry of Labour filings or an audit, without anyone manually uploading anything.\n\nFor companies hiring across Oman and the GCC, that's a real difference. One less thing to remember. One less thread to lose.\n\nIf your onboarding still depends on someone remembering to chase a signature, that's worth fixing.\n\nBook a 20-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=general\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#GCCBusiness\n#SMEOman",
+  "char_count": 1242,
+  "generated_at": "2026-05-20T07:46:46.397348+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "deleted",
+  "published": false,
+  "approved": false,
+  "approval_required": false,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260520_074637_feature_spotlight.json",
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
+}

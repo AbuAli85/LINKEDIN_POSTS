@@ -1,0 +1,22 @@
+{
+  "pillar": "oman_market",
+  "topic": "Why HR tech built outside the GCC consistently misses the Oman labour context",
+  "format": "Open with an Oman market data point or Vision 2040 reference, then connect it to operational reality for SMEs",
+  "language": "en",
+  "segment": "B",
+  "publish_day": "Friday",
+  "post": "Oman's Vision 2040 sets a 35% private sector Omanization target. Most HR software sold here was designed for markets where that number is irrelevant.\n\nThat's not a minor inconvenience. It's a real operational cost hitting SMEs every single month.\n\nGeneric platforms handle payroll. They don't handle SPF contribution logic, Ministry of Labour filing schedules, Omanization quota tracking, or work permit renewal timelines. That compliance layer isn't peripheral \u2014 it's the job.\n\nSo HR managers improvise. Spreadsheets. WhatsApp reminders. Deadlines held together by whoever remembers them.\n\nSmartPro Hub came out of watching that same friction repeat across Omani businesses \u2014 10 employees, 300 employees, didn't matter. The compliance gap looked identical.\n\nWPS payroll with direct bank integration, SPF and Omanization compliance, Ministry of Labour filings, work permit tracking, Sanad office management \u2014 one platform, bilingual Arabic and English. Not patched together. Actually connected.\n\nIf you're an investor or operator paying attention to the HR tech gap in Oman's SME market, we're open to strategic conversations: https://www.thesmartpro.io/investors?utm_source=linkedin&utm_medium=social&utm_campaign=oman-market\n\nWhat compliance process is eating the most time on your team right now?\n\nBook a 30-minute demo at www.thesmartpro.io/demo\n\n#SmartPROHub\n#OmanVision2040\n#HRTech\n#SMEOman\n#Oman",
+  "char_count": 1402,
+  "generated_at": "2026-06-25T07:48:38.555514+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "deleted",
+  "published": false,
+  "approved": false,
+  "approval_required": false,
+  "dry_run": true,
+  "has_variant": true,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
+}

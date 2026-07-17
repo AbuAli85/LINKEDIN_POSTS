@@ -1,0 +1,20 @@
+{
+  "pillar": "conversion",
+  "segment": "founders",
+  "hook": "bold-statement",
+  "hook_text": "Free trials fail. Proof of value doesn't.",
+  "body": "Most HR software companies offer 14-day free trials.\n\nAnd most of those trials end without a decision.\n\nWhy? Because in 14 days, you haven't run a real payroll cycle. You haven't hit a WPS deadline. You haven't had an actual compliance question.\n\nYou've just clicked around a demo environment.\n\nWe built SmartPRO Hub's trial differently.\n\nDay 1: We import your real employee data (we handle it).\nDay 3: You run your first WPS file \u2014 with your actual numbers.\nDay 7: Your HR manager uses it for real leave approval.\nDay 14: You've lived one payroll cycle inside the system.\n\nAt day 14, the question isn't \"should we try it?\"\nIt's \"why would we go back?\"\n\nThat's proof of value. Not a feature tour.\n\n---\n\nThe best demos use real data. Every time.\n\nWould you run a real trial or a sandbox? What makes the difference for you?",
+  "cta": "DM \"TRIAL\" to start with your real data.",
+  "score": 8.0,
+  "scored_at": "2026-05-28",
+  "status": "deleted",
+  "publish_date": "2026-06-25",
+  "publish_time": "09:00 GST",
+  "lang": "en",
+  "notes": "Q3 batch generated 2026-05-28",
+  "approved": false,
+  "approval_required": false,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
+}

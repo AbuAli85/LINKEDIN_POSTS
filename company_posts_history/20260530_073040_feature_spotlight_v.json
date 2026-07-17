@@ -1,0 +1,23 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "Growth partner commission tracking \u2014 what gets logged automatically and what no longer needs a spreadsheet",
+  "format": "Open with the specific operational problem, then show how one SmartPro Hub feature addresses it end-to-end",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "Three versions of the same commission number at month-end means someone isn't getting paid right \u2014 and nobody knows who.\n\nHere's how it happens: someone updates their file, someone else updates theirs, and by the time payroll rolls around you've got competing spreadsheets, no clear record of who referred what, and a very awkward conversation ahead.\n\nSmartPro Hub builds partner commission tracking directly into the deal pipeline. The moment a deal hits closed-won, the referring partner, rate, and payout amount are already logged. No manual entry, no chasing the sales team, no reconciling two spreadsheets at midnight.\n\nSome customers run 50+ active referral relationships this way without adding headcount or scheduling weekly syncs just to keep the numbers straight.\n\nThe commission history lives on the deal record. Auditable. Timestamped. Visible to whoever needs to see it.\n\nIf your current process depends on someone remembering to update a shared sheet, that's not really a process. It's optimism.\n\nWhat's the one part of your partner program that still runs on manual trust?\n\nBook a 20-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#GCCBusiness\n#HRTech\n#SMEOman",
+  "char_count": 1270,
+  "generated_at": "2026-05-30T07:30:50.824497+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "deleted",
+  "published": false,
+  "approved": false,
+  "approval_required": false,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260530_073041_feature_spotlight.json",
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
+}

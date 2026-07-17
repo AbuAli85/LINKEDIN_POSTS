@@ -1,0 +1,36 @@
+name: Rebuild Dashboard
+
+on:
+  workflow_dispatch:
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Rebuild dashboard
+        run: python dashboard.py
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/
+          git diff --cached --quiet && echo "No changes to commit" && exit 0
+          git commit -m "dashboard: manual rebuild $(date -u '+%Y-%m-%d %H:%M UTC')"
+          for _try in 1 2 3; do
+            git push origin HEAD:${{ github.ref_name }} && break
+            [ $_try -eq 3 ] && { echo "Push failed after 3 attempts"; exit 1; }
+            git pull --rebase --autostash origin ${{ github.ref_name }}
+          done

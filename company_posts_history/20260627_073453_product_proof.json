@@ -1,0 +1,22 @@
+{
+  "pillar": "product_proof",
+  "topic": "A Sanad office in Muscat moved 40 client work permits off WhatsApp \u2014 no missed renewals in six months",
+  "format": "Before/after of a single workflow: same task, two completely different experiences",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "Six months ago, a Sanad office in Muscat was tracking 40 client work permits on WhatsApp.\n\nRenewals buried in threads. Reminders sent manually. Deadlines caught by whoever happened to remember.\n\nThen they moved to SmartPro Hub.\n\nSame 40 permits. Same team. Zero missed renewals in six months.\n\nThe team didn't suddenly get more organized \u2014 the platform just tracks every expiry date, flags deadlines before they become problems, and keeps each client's documents in one place instead of scattered across a dozen chat threads.\n\nSanad office management shouldn't depend on a group admin holding everything together by memory.\n\nSmartPro Hub was built for exactly this: work permit tracking, PRO services workflows, and client document management built around how Oman businesses actually operate. Not a generic system retrofitted for the region.\n\nStarter plans from OMR 12/month. 14-day free trial, no credit card needed.\n\nIf your team is still using WhatsApp to track compliance deadlines \u2014 what's actually stopping you from switching?\n\nBook a 30-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#GCCBusiness\n#SMEOman",
+  "char_count": 1212,
+  "generated_at": "2026-06-27T07:34:53.521444+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "deleted",
+  "published": false,
+  "approved": false,
+  "approval_required": false,
+  "dry_run": true,
+  "has_variant": true,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
+}

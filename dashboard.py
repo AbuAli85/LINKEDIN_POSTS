@@ -33,18 +33,26 @@ def _current_branch() -> str:
 
 
 PILLAR_COLOR = {
-    "pain":       "#e8372a",
-    "proof":      "#2a9a5c",
-    "vision":     "#818cf8",
-    "conversion": "#d4840a",
-    "leadership": "#2e7de0",
-    "ai":         "#06b6d4",
-    "marketing":  "#d4840a",
+    "pain":         "#e8372a",
+    "proof":        "#2a9a5c",
+    "vision":       "#818cf8",
+    "conversion":   "#d4840a",
+    "leadership":   "#2e7de0",
+    "ai":           "#06b6d4",
+    "marketing":    "#d4840a",
+    "sanad_pro":    "#0ea5e9",
+    "sanad_pro_ar": "#38bdf8",
+    "pain_ar":      "#f87171",
+    "tech":         "#06b6d4",
 }
 
-CRON_WEEKDAYS  = {5, 0, 2}   # Sat=5, Mon=0, Wed=2
-CRON_HOUR_UTC  = 5
-MUSCAT_OFFSET  = 4
+SEGMENT_COLOR = {"A": "#2e7de0", "B": "#818cf8", "C": "#06b6d4"}
+
+CRON_WEEKDAYS    = {5, 0, 1, 2, 3, 4, 6}  # every day — tech adds Thu generate + Sat publish
+CRON_HOUR_UTC    = 5
+PUBLISH_WEEKDAYS = {0, 1, 2, 3, 4, 5, 6}  # every day
+PUBLISH_HOUR_UTC = 6
+MUSCAT_OFFSET    = 4
 
 
 def _to_muscat(dt: datetime) -> str:
@@ -62,7 +70,7 @@ def load_posts() -> list[dict]:
     posts = []
     for f in files:
         try:
-            p = json.loads(f.read_text(encoding="utf-8"))
+            p = json.loads(f.read_text(encoding="utf-8-sig"))
             p["_filename"] = f.name
             posts.append(p)
         except Exception:
@@ -83,6 +91,54 @@ def next_runs(n: int = 3) -> list[datetime]:
                 break
         dt += timedelta(days=1)
     return result
+
+
+def next_publish_runs(n: int = 3) -> list[datetime]:
+    now = datetime.now(timezone.utc)
+    dt  = now.replace(hour=PUBLISH_HOUR_UTC, minute=0, second=0, microsecond=0)
+    if dt <= now:
+        dt += timedelta(days=1)
+    result = []
+    for _ in range(14):
+        if dt.weekday() in PUBLISH_WEEKDAYS:
+            result.append(dt)
+            if len(result) >= n:
+                break
+        dt += timedelta(days=1)
+    return result
+
+
+def _booking_summary(path: str = "bookings.json") -> dict:
+    """Return booking KPIs for dashboard display."""
+    from datetime import timedelta
+    try:
+        with open(path, encoding="utf-8") as f:
+            bookings = json.load(f)
+    except FileNotFoundError:
+        return {
+            "total": 0, "from_linkedin": 0,
+            "demo_bookings": 0, "investor_bookings": 0,
+            "this_week": 0, "top_campaign": None,
+        }
+
+    week_ago = (datetime.now(timezone.utc) - timedelta(days=7)).isoformat()
+    linkedin  = [b for b in bookings if b.get("utm_source") == "linkedin"]
+    this_week = [b for b in linkedin  if b.get("booked_at", "") >= week_ago]
+
+    campaigns: dict[str, int] = {}
+    for b in linkedin:
+        c = b.get("utm_campaign") or "unknown"
+        campaigns[c] = campaigns.get(c, 0) + 1
+    top = max(campaigns, key=lambda k: campaigns[k]) if campaigns else None
+
+    return {
+        "total":             len(bookings),
+        "from_linkedin":     len(linkedin),
+        "demo_bookings":     sum(1 for b in bookings if "demo"     in b.get("event_type", "")),
+        "investor_bookings": sum(1 for b in bookings if "investor" in b.get("event_type", "")),
+        "this_week":         len(this_week),
+        "top_campaign":      top,
+    }
 
 
 def _token_health(posts: list[dict]) -> tuple[str, str]:
@@ -112,14 +168,15 @@ def _badge(text: str, cls: str) -> str:
 # ---------------------------------------------------------------------------
 # CSS — single source of truth. Dark editorial theme.
 # Brand: black / red / white. Primary accent: #e8372a.
-# @import must be the first statement — placed at top of CSS_BASE.
+# Web fonts are loaded via <link rel="stylesheet"> in <head> (non-render-blocking
+# vs. CSS @import). Keep CSS_BASE pure CSS — no @import at top.
 # ---------------------------------------------------------------------------
 CSS_BASE = r"""
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap');
-
 *{box-sizing:border-box;margin:0;padding:0}
+html{overflow-x:hidden}
 body{font-family:'Geist',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-     background:#0b0b0c;color:#ede9e3;min-height:100vh;-webkit-font-smoothing:antialiased}
+     background:#0b0b0c;color:#ede9e3;min-height:100vh;-webkit-font-smoothing:antialiased;
+     overflow-x:hidden}
 a{color:inherit;text-decoration:none}
 
 /* ── SKIP + SR ── */
@@ -131,22 +188,34 @@ a{color:inherit;text-decoration:none}
 /* ── TOPBAR ── */
 .topbar{background:#111113;border-bottom:1px solid rgba(255,255,255,.07);
         padding:0 28px;display:flex;align-items:center;height:52px;gap:12px;
-        position:sticky;top:0;z-index:50}
-.logo{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:500;letter-spacing:-.01em}
+        position:sticky;top:0;z-index:50;overflow:hidden}
+.logo{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:500;
+      letter-spacing:-.01em;flex-shrink:0;white-space:nowrap}
 .logo-mark{width:26px;height:26px;border-radius:7px;background:#e8372a;
            display:flex;align-items:center;justify-content:center;
            font-size:11px;font-weight:700;color:#fff;letter-spacing:0;flex-shrink:0}
 .logo-sep{color:rgba(255,255,255,.2);margin:0 4px}
-.topbar-right{display:flex;align-items:center;gap:6px;margin-left:auto}
-.updated{font-size:11px;color:rgba(255,255,255,.3);font-family:'DM Mono',monospace;margin-right:8px}
+.topbar-right{display:flex;align-items:center;gap:6px;margin-left:auto;
+              flex-shrink:0;overflow:hidden}
+.updated{font-size:11px;color:rgba(255,255,255,.6);font-family:'DM Mono',monospace;
+         margin-right:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+         max-width:320px}
+nav.actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.brand-accent{color:#e8372a}
 .tb-btn{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;
-        border-radius:6px;font-size:12px;font-weight:500;
+        border-radius:6px;font-size:12px;font-weight:500;white-space:nowrap;
         border:1px solid transparent;cursor:pointer;background:transparent;
-        color:rgba(255,255,255,.45);transition:color .15s,background .15s,border-color .15s;
-        min-height:32px;font-family:inherit}
+        color:rgba(255,255,255,.72);transition:color .15s,background .15s,border-color .15s;
+        min-height:32px;font-family:inherit;flex-shrink:0}
 .tb-btn:hover{color:#ede9e3;background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1)}
 .tb-btn.primary{background:#e8372a;color:#fff;border-color:transparent}
 .tb-btn.primary:hover{background:#c9301f}
+/* Visually-styled-as-link <button> (used in footer for Clear stored token).
+   Uses real button semantics so keyboard + AT see it as an action, not a nav. */
+.link-btn{background:none;border:none;padding:0;margin:0;color:rgba(255,255,255,.55);
+          font:inherit;cursor:pointer;border-bottom:1px dotted rgba(255,255,255,.25);
+          line-height:1.2}
+.link-btn:hover{color:#ede9e3;border-bottom-color:rgba(255,255,255,.45)}
 .live-dot{width:6px;height:6px;border-radius:50%;background:#e8372a;animation:pulse 2s ease-in-out infinite;flex-shrink:0}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
 
@@ -162,7 +231,7 @@ a{color:inherit;text-decoration:none}
 .statsbar{background:#111113;border-bottom:1px solid rgba(255,255,255,.07);
           padding:16px 28px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .stat{background:#161618;border:1px solid rgba(255,255,255,.07);border-radius:10px;
-      padding:12px 18px;text-align:center;min-width:72px;transition:border-color .15s}
+      padding:12px 18px;text-align:center;min-width:72px;flex-shrink:0;transition:border-color .15s}
 .stat:hover{border-color:rgba(255,255,255,.13)}
 .stat .n{font-size:22px;font-weight:600;color:#ede9e3;line-height:1;letter-spacing:-.03em}
 .stat .l{font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.07em;margin-top:4px}
@@ -170,40 +239,47 @@ a{color:inherit;text-decoration:none}
 .stat.amber .n{color:#d4840a}
 .stat.red   .n{color:#e8372a}
 .stat.blue  .n{color:#2e7de0}
-.pillar-pills{display:flex;flex-wrap:wrap;gap:6px;margin-left:8px}
-.pillar-pill{border:1px solid;border-radius:20px;padding:3px 12px;font-size:11px;font-family:'DM Mono',monospace}
+.pillar-pills{display:flex;flex-wrap:wrap;gap:6px;margin-left:auto;padding-left:8px}
+.pillar-pill{border:1px solid;border-radius:20px;padding:3px 12px;font-size:11px;font-family:'DM Mono',monospace;white-space:nowrap}
 .pillar-pill b{color:#ede9e3;margin-left:4px}
 
 /* ── SCHEDULE BAR ── */
 .schedbar{background:#111113;border-bottom:1px solid rgba(255,255,255,.07);
-          padding:10px 28px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;font-size:12px}
-.schedbar .lbl{font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.08em}
-.run-item{color:rgba(255,255,255,.4)}.run-item b{color:#ede9e3}
+          padding:10px 28px;display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;
+          font-size:12px;min-height:40px}
+.schedbar .lbl{font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;
+               letter-spacing:.08em;white-space:nowrap;flex-shrink:0}
+.run-item{color:rgba(255,255,255,.4);white-space:nowrap}.run-item b{color:#ede9e3}
 .run-pillar{text-transform:uppercase;font-size:.7rem;letter-spacing:.06em;font-weight:600}
 .run-arrow{color:rgba(255,255,255,.2);margin:0 4px}
 
 /* ── CONTENT ── */
-.content{max-width:840px;margin:0 auto;padding:24px 28px 60px}
+.content{max-width:840px;margin:0 auto;padding:24px 28px 60px;width:100%}
 .section-lbl{font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;
              letter-spacing:.1em;margin-bottom:14px;font-weight:600}
 
 /* ── CARD ── */
 .card{background:#111113;border:1px solid rgba(255,255,255,.07);
       border-left:3px solid rgba(255,255,255,.07);border-radius:12px;
-      padding:16px 18px;margin-bottom:10px;transition:border-color .15s}
+      padding:16px 18px;margin-bottom:10px;transition:border-color .15s;
+      overflow:hidden;min-width:0;word-break:break-word}
 .card:hover{border-color:rgba(255,255,255,.13)}
-.card-header{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:10px}
+.card-header{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:10px;
+             min-width:0}
 .pillar-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;
             padding:2px 8px;border-radius:4px;border:1px solid;font-family:'DM Mono',monospace}
 
 /* Badges */
 .badge{font-size:10px;padding:3px 9px;border-radius:4px;font-weight:600;
        font-family:'DM Mono',monospace;letter-spacing:.03em}
-.badge.published{background:rgba(42,154,92,.12);color:#2a9a5c;border:1px solid rgba(42,154,92,.25)}
-.badge.approved {background:rgba(46,125,224,.12);color:#2e7de0;border:1px solid rgba(46,125,224,.25)}
-.badge.draft    {background:rgba(212,132,10,.12);color:#d4840a;border:1px solid rgba(212,132,10,.25)}
-.badge.failed   {background:rgba(232,55,42,.12) ;color:#e8372a;border:1px solid rgba(232,55,42,.25)}
-.badge.dry-run  {background:rgba(255,255,255,.05);color:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.1)}
+.badge.published  {background:rgba(42,154,92,.12);color:#2a9a5c;border:1px solid rgba(42,154,92,.25)}
+.badge.approved   {background:rgba(46,125,224,.12);color:#2e7de0;border:1px solid rgba(46,125,224,.25)}
+.badge.draft      {background:rgba(212,132,10,.12);color:#d4840a;border:1px solid rgba(212,132,10,.25)}
+.badge.failed     {background:rgba(232,55,42,.12) ;color:#e8372a;border:1px solid rgba(232,55,42,.25)}
+.badge.dry-run    {background:rgba(255,255,255,.05);color:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.1)}
+.badge.superseded {background:rgba(255,255,255,.03);color:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.07)}
+.badge.variant    {background:rgba(255,255,255,.05);color:rgba(255,255,255,.4); border:1px solid rgba(255,255,255,.1)}
+.variant-link{font-size:11px;color:rgba(255,255,255,.35);margin-top:4px;display:block;font-family:'DM Mono',monospace}
 
 .meta-right{margin-left:auto;display:flex;gap:8px;align-items:center}
 .model-tag{font-size:10px;background:rgba(129,140,248,.1);color:#818cf8;
@@ -241,11 +317,16 @@ a{color:inherit;text-decoration:none}
 .retries{font-size:11px;color:#d4840a;font-family:'DM Mono',monospace}
 
 .icon-btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
-          color:rgba(255,255,255,.4);font-size:11px;padding:5px 12px;border-radius:6px;
+          color:rgba(255,255,255,.7);font-size:11px;padding:5px 12px;border-radius:6px;
           cursor:pointer;transition:all .15s;min-height:32px;font-family:inherit;
           display:inline-flex;align-items:center;gap:5px}
 .icon-btn:hover{background:rgba(255,255,255,.07);color:#ede9e3;border-color:rgba(255,255,255,.15)}
 .icon-btn.copied{border-color:rgba(42,154,92,.4);color:#2a9a5c}
+.delete-btn{background:transparent;border:1px solid transparent;color:rgba(255,255,255,.22);
+            font-size:11px;padding:5px 10px;border-radius:6px;cursor:pointer;
+            transition:all .15s;min-height:32px;font-family:inherit;
+            display:inline-flex;align-items:center;gap:4px}
+.delete-btn:hover{background:rgba(232,55,42,.08);color:#e8372a;border-color:rgba(232,55,42,.25)}
 .li-link{font-size:11px;background:rgba(46,125,224,.08);color:#2e7de0;
          border:1px solid rgba(46,125,224,.2);border-radius:6px;padding:5px 11px;
          min-height:32px;display:inline-flex;align-items:center;gap:5px;
@@ -270,6 +351,10 @@ a{color:inherit;text-decoration:none}
              padding:7px 16px;border-radius:6px;cursor:pointer;transition:background .15s;
              min-height:32px;font-family:inherit}
 .approve-btn:hover{background:#c9301f}
+.approve-btn.over-limit{background:#b45309;border:1px solid #f59e0b}
+.approve-btn.over-limit:hover{background:#92400e}
+.approve-btn.variant-approve-btn{background:transparent;border:1px solid #e8372a;color:#e8372a}
+.approve-btn.variant-approve-btn:hover{background:rgba(232,55,42,.12)}
 
 /* Metrics row */
 .metrics-row{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-bottom:10px}
@@ -323,6 +408,10 @@ a{color:inherit;text-decoration:none}
 .modal-confirm:disabled{background:#333;color:rgba(255,255,255,.3);cursor:default}
 .modal-confirm.approve-green{background:#2a9a5c}
 .modal-confirm.approve-green:hover{background:#1d7a47}
+/* Destructive variant — outlined, so it's not visually confused with primary brand red. */
+.modal-confirm.destructive{background:transparent;color:#e8372a;border:1.5px solid #e8372a}
+.modal-confirm.destructive:hover{background:#e8372a;color:#fff}
+.modal-confirm.destructive:focus-visible{outline:2px solid #e8372a;outline-offset:2px}
 .modal-cancel{background:rgba(255,255,255,.05);color:rgba(255,255,255,.5);
               border:1px solid rgba(255,255,255,.1);padding:10px 18px;
               border-radius:7px;cursor:pointer;font-size:13px;min-height:40px;
@@ -452,28 +541,108 @@ footer a:hover{color:#ede9e3}
 @media(prefers-reduced-motion:reduce){.toast{transition:opacity .01s;transform:none}.toast.out{transform:none}}
 
 /* ── FILTER BAR ── */
-.filter-bar{max-width:840px;margin:0 auto;padding:16px 28px 4px;display:flex;flex-wrap:wrap;gap:6px}
+.filter-bar{max-width:840px;margin:0 auto;padding:16px 28px 4px;display:flex;flex-wrap:wrap;
+            gap:6px;width:100%}
 .filter-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;
              font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;
              background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);
-             color:rgba(255,255,255,.45);min-height:30px;font-family:inherit}
+             color:rgba(255,255,255,.72);min-height:30px;font-family:inherit}
 .filter-chip:hover{color:#ede9e3;border-color:rgba(255,255,255,.18)}
 .filter-chip.active{background:rgba(232,55,42,.1);border-color:rgba(232,55,42,.3);color:#e8372a}
 .filter-chip .count{font-size:10px;background:rgba(255,255,255,.07);padding:1px 6px;
                     border-radius:10px;font-family:'DM Mono',monospace;margin-left:2px}
 .filter-chip.active .count{background:rgba(232,55,42,.15)}
 
+/* ── SEARCH BAR ── */
+.search-bar{max-width:840px;margin:0 auto;padding:14px 28px 0;display:flex;gap:8px;align-items:center;width:100%}
+.search-wrap{position:relative;flex:1;display:flex;align-items:center}
+.search-icon{position:absolute;left:12px;font-size:13px;color:rgba(255,255,255,.35);pointer-events:none}
+.search-input{flex:1;padding:8px 36px 8px 34px;background:rgba(255,255,255,.04);
+              border:1px solid rgba(255,255,255,.09);border-radius:8px;color:#ede9e3;
+              font-size:13px;font-family:inherit;min-height:36px;outline:none;
+              transition:border-color .15s,background .15s}
+.search-input:hover{border-color:rgba(255,255,255,.18)}
+.search-input:focus{border-color:rgba(232,55,42,.5);background:rgba(255,255,255,.06)}
+.search-input::placeholder{color:rgba(255,255,255,.32)}
+.search-clear{position:absolute;right:8px;width:22px;height:22px;border:none;background:transparent;
+              color:rgba(255,255,255,.35);cursor:pointer;border-radius:4px;font-size:14px;
+              display:none;align-items:center;justify-content:center;line-height:1}
+.search-clear:hover{color:#ede9e3;background:rgba(255,255,255,.07)}
+.search-input:not(:placeholder-shown) + .search-clear{display:inline-flex}
+.search-count{font-size:11px;color:rgba(255,255,255,.4);font-family:'DM Mono',monospace;
+              white-space:nowrap;padding:0 2px}
+@media(max-width:640px){.search-bar{padding-left:16px;padding-right:16px}}
+
+/* ── SEGMENT BADGES ── */
+.seg-badge{font-size:9px;padding:2px 7px;border-radius:10px;font-weight:700;
+           font-family:'DM Mono',monospace;letter-spacing:.06em;text-transform:uppercase}
+.seg-badge.A{background:rgba(46,125,224,.12);color:#2e7de0;border:1px solid rgba(46,125,224,.25)}
+.seg-badge.B{background:rgba(129,140,248,.12);color:#818cf8;border:1px solid rgba(129,140,248,.25)}
+.seg-badge.C{background:rgba(6,182,212,.12);color:#06b6d4;border:1px solid rgba(6,182,212,.25)}
+.seg-chip:disabled{opacity:.4;cursor:not-allowed;pointer-events:none}
+
+/* ── KPI PANEL ── */
+.kpi-panel{max-width:840px;margin:0 auto;padding:0 28px 12px;width:100%}
+.kpi-toggle{background:none;border:none;color:rgba(255,255,255,.35);font-size:11px;
+            cursor:pointer;padding:6px 0;font-family:inherit;display:flex;align-items:center;gap:6px;
+            letter-spacing:.06em;text-transform:uppercase;transition:color .15s;min-height:32px}
+.kpi-toggle:hover{color:rgba(255,255,255,.65)}
+.kpi-toggle .kpi-chevron{font-size:9px;transition:transform .2s;display:inline-block}
+.kpi-toggle.open .kpi-chevron{transform:rotate(180deg)}
+.kpi-grid{display:none;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:8px;margin-top:8px}
+.kpi-grid.open{display:grid}
+.kpi-cell{background:#111113;border:1px solid rgba(255,255,255,.07);border-radius:8px;
+          padding:10px 14px;display:flex;flex-direction:column;gap:4px}
+.kpi-target{font-size:16px;font-weight:600;color:#ede9e3;font-family:'DM Mono',monospace;
+            letter-spacing:-.03em;line-height:1}
+.kpi-label{font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;
+           letter-spacing:.07em;line-height:1.3}
+.kpi-divider{background:transparent;border:none;padding:4px 0 0;justify-content:flex-end}
+
+/* ── BOOKINGS SECTION ── */
+.bookings-section{max-width:840px;margin:0 auto;padding:0 28px 12px;width:100%}
+.bookings-section h3{font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;
+                     letter-spacing:.1em;font-weight:600;margin-bottom:10px}
+.bookings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:8px}
+.bookings-kpi{background:#111113;border:1px solid rgba(255,255,255,.07);border-radius:8px;
+              padding:10px 14px;display:flex;flex-direction:column;gap:4px}
+.bookings-kpi .kpi-value{font-size:16px;font-weight:600;color:#ede9e3;
+                          font-family:'DM Mono',monospace;letter-spacing:-.03em;line-height:1}
+.bookings-kpi .kpi-label{font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;
+                          letter-spacing:.07em;line-height:1.3}
+.bookings-kpi .kpi-target{font-size:10px;color:rgba(46,125,224,.6);margin-top:2px}
+.bookings-kpi.highlight .kpi-value{color:#2e7de0}
+
+/* ── PAT REMEMBER CHECKBOX ── */
+.pat-remember{display:flex;align-items:center;gap:8px;margin-top:8px;
+              font-size:12px;color:rgba(255,255,255,.55);cursor:pointer;font-family:inherit}
+.pat-remember input[type=checkbox]{accent-color:#e8372a;cursor:pointer;margin:0}
+.pat-warn{color:rgba(232,55,42,.75);font-size:11px}
+
 /* ── RESPONSIVE ── */
+@media(max-width:860px){
+  .topbar-right .updated{display:none}
+}
+@media(max-width:720px){
+  .topbar-right .tb-btn:not(.primary){display:none}
+}
 @media(max-width:640px){
-  .topbar,.statsbar,.schedbar,.content,.filter-bar{padding-left:16px;padding-right:16px}
-  .topbar-right .updated,.topbar-right .tb-btn:not(.primary){display:none}
+  .topbar,.statsbar,.schedbar,.content,.filter-bar,.kpi-panel{padding-left:16px;padding-right:16px}
   .stat{padding:10px 14px}
   .modal-box{padding:20px 18px}
-  .filter-chip{font-size:11px;padding:4px 10px}
+  .filter-chip{font-size:11px;padding:6px 12px;min-height:36px}
   .card{padding:14px 14px}
   .review-actions{gap:5px}
-  .card-footer{gap:5px}
+  .card-footer{gap:6px}
   .meta-right{flex-wrap:wrap;gap:4px}
+  /* WCAG 2.5.5 — make every actionable element comfortably tappable on touch. */
+  .tb-btn,.icon-btn,.delete-btn,.li-link,.rev-btn,.approve-btn,.expand-btn,.modal-confirm,.modal-cancel{min-height:40px;min-width:40px}
+}
+
+/* Honor user motion preferences across all transitions, not just toasts. */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001s !important;animation-iteration-count:1 !important;transition-duration:.001s !important;scroll-behavior:auto !important}
+  .live-dot{animation:none !important}
 }
 """
 
@@ -483,9 +652,30 @@ footer a:hover{color:#ede9e3}
 # _REPO / _WORKFLOW / _BRANCH consts injected by generate().
 # ---------------------------------------------------------------------------
 JS_BODY = r"""
-var _approveSourceBtn = null;
-var _reviseSourceBtn  = null;
-var _editSourceBtn    = null;
+/* Early error filter: silence noise from browser extensions injecting scripts
+   into the page (they show up as cross-origin EXCEPTION at URL:0:0). Real
+   dashboard errors are re-logged so we still see them. */
+(function(){
+  window.addEventListener('error', function(e){
+    var f = e.filename || '';
+    var fromExtension = f.startsWith('chrome-extension://') || f.startsWith('moz-extension://') || f.startsWith('safari-extension://');
+    var fromSelf = f.indexOf(location.origin) === 0;
+    if (fromExtension || (!f && !fromSelf)) {
+      // Cross-origin / extension noise: prevent it from polluting the console.
+      e.stopImmediatePropagation && e.stopImmediatePropagation();
+      e.preventDefault && e.preventDefault();
+      return false;
+    }
+    // Real dashboard error — keep loud and add a tag so monitoring tools see it.
+    try { console.warn('[dashboard-error]', e.message, e.filename + ':' + e.lineno); } catch(_){}
+  }, true);
+})();
+
+var _approveSourceBtn  = null;
+var _reviseSourceBtn   = null;
+var _editSourceBtn     = null;
+var _recreateSourceBtn = null;
+var _deleteSourceBtn   = null;
 var _toastSeq = 0;
 
 /* Focus trap inside modals */
@@ -505,9 +695,13 @@ document.addEventListener('keydown', function(e) {
   if (e.key !== 'Escape') return;
   var open = document.querySelector('.modal-overlay.open');
   if (open) {
-    if (open.id === 'revise-modal')       closeReviseModal();
-    else if (open.id === 'edit-modal')    closeEditModal();
-    else if (open.id === 'approve-modal') closeApproveModal();
+    if (open.id === 'revise-modal')        closeReviseModal();
+    else if (open.id === 'edit-modal')     closeEditModal();
+    else if (open.id === 'approve-modal')  closeApproveModal();
+    else if (open.id === 'recreate-modal') closeRecreateModal();
+    else if (open.id === 'delete-modal')          closeDeleteModal();
+    else if (open.id === 'newsletter-approve-modal') closeNewsletterApproveModal();
+    else if (open.id === 'newsletter-test-modal') closeNewsletterTestModal();
   }
 });
 
@@ -542,10 +736,31 @@ function copyPost(i) {
   });
 }
 
-/* PAT helpers */
-function _getPat() { return localStorage.getItem('gh_pat') || ''; }
-function _setPat(v) { if (v) localStorage.setItem('gh_pat', v); }
-function clearPat() { localStorage.removeItem('gh_pat'); toast('GitHub token cleared.', { variant: 'info' }); }
+/* PAT helpers — session-scoped by default; persistent only if user opts in. */
+function _getPat() {
+  return sessionStorage.getItem('gh_pat') || localStorage.getItem('gh_pat') || '';
+}
+function _setPat(v, persist) {
+  if (!v) return;
+  if (persist) {
+    localStorage.setItem('gh_pat', v);
+    sessionStorage.removeItem('gh_pat');
+  } else {
+    sessionStorage.setItem('gh_pat', v);
+    localStorage.removeItem('gh_pat');
+  }
+}
+function clearPat() {
+  sessionStorage.removeItem('gh_pat');
+  localStorage.removeItem('gh_pat');
+  toast('GitHub token cleared from this browser.', { variant: 'info' });
+}
+function _patPersist() {
+  /* Look for the checked persist toggle in the currently open modal. */
+  var open = document.querySelector('.modal-overlay.open');
+  var el   = open && open.querySelector('input[data-pat-remember]');
+  return !!(el && el.checked);
+}
 
 /* ── REVISE MODAL ── */
 function showReviseModal(btn) {
@@ -575,7 +790,7 @@ async function confirmRevise() {
   var cb    = document.getElementById('revise-confirm-btn');
   if (!pat)   { st.textContent = 'Enter your GitHub PAT.'; st.style.color = '#e8372a'; return; }
   if (!notes) { st.textContent = 'Describe what needs to change.'; st.style.color = '#e8372a'; return; }
-  _setPat(pat);
+  _setPat(pat, _patPersist());
   cb.textContent = 'Triggering…'; cb.disabled = true; st.textContent = '';
   try {
     var resp = await fetch(
@@ -626,7 +841,7 @@ async function confirmEdit() {
   var cb      = document.getElementById('edit-confirm-btn');
   if (!pat)           { st.textContent = 'Enter your GitHub PAT.'; st.style.color = '#e8372a'; return; }
   if (!content.trim()){ st.textContent = 'Post text cannot be empty.'; st.style.color = '#e8372a'; return; }
-  _setPat(pat);
+  _setPat(pat, _patPersist());
   cb.textContent = 'Saving…'; cb.disabled = true; st.textContent = '';
   try {
     var metaResp = await fetch(
@@ -656,21 +871,137 @@ async function confirmEdit() {
   } catch(e) { st.textContent = 'Error: ' + e.message; st.style.color = '#e8372a'; cb.textContent = '💾 Save Edit'; cb.disabled = false; }
 }
 
-/* ── RECREATE ── */
-function confirmRecreate(btn) {
-  var pillar = btn.getAttribute('data-pillar') || 'same pillar';
-  if (!confirm('Regenerate a new draft for the ' + pillar + ' pillar?\nThe current draft stays in posts_history.')) return;
-  var pat = _getPat();
-  if (!pat) { pat = prompt('GitHub PAT (workflow scope):'); if (!pat) return; _setPat(pat); }
-  fetch('https://api.github.com/repos/' + _REPO + '/actions/workflows/' + _WORKFLOW + '/dispatches',
-    { method: 'POST',
-      headers: { 'Authorization': 'Bearer ' + pat, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ref: _BRANCH, inputs: { action: 'generate_draft', pillar: pillar } }) }
-  ).then(function(r) {
-    if (r.status === 204) toast('New ' + pillar + ' draft generating — refresh in ~60 s.', { variant: 'success' });
-    else r.json().then(function(e){ toast('Error ' + r.status + ': ' + (e.message || 'check PAT'), { variant: 'error' }); })
-         .catch(function(){ toast('Error ' + r.status, { variant: 'error' }); });
-  }).catch(function(e){ toast('Network error: ' + e.message, { variant: 'error' }); });
+/* ── RECREATE MODAL ── */
+function showRecreateModal(btn) {
+  _recreateSourceBtn = btn;
+  var pillar = btn.getAttribute('data-pillar') || 'this';
+  document.getElementById('recreate-pillar').value = pillar;
+  document.getElementById('recreate-pillar-display').textContent = pillar;
+  document.getElementById('recreate-pat').value = _getPat();
+  document.getElementById('recreate-status').textContent = '';
+  var cb = document.getElementById('recreate-confirm-btn');
+  cb.textContent = '&#8635; Regenerate'; cb.disabled = false;
+  document.getElementById('recreate-modal').classList.add('open');
+  setTimeout(function() {
+    var pat = document.getElementById('recreate-pat');
+    if (pat.value) document.getElementById('recreate-confirm-btn').focus();
+    else pat.focus();
+  }, 50);
+}
+function closeRecreateModal() {
+  document.getElementById('recreate-modal').classList.remove('open');
+  if (_recreateSourceBtn) { _recreateSourceBtn.focus(); _recreateSourceBtn = null; }
+}
+document.getElementById('recreate-modal').addEventListener('click', function(e) { if (e.target === this) closeRecreateModal(); });
+
+async function confirmRecreate() {
+  var pat    = document.getElementById('recreate-pat').value.trim();
+  var pillar = document.getElementById('recreate-pillar').value;
+  var st     = document.getElementById('recreate-status');
+  var cb     = document.getElementById('recreate-confirm-btn');
+  if (!pat) { st.textContent = 'Enter your GitHub PAT (workflow scope).'; st.style.color = '#e8372a'; return; }
+  _setPat(pat, _patPersist());
+  cb.innerHTML = 'Triggering…'; cb.disabled = true; st.textContent = '';
+  try {
+    var resp = await fetch(
+      'https://api.github.com/repos/' + _REPO + '/actions/workflows/' + _WORKFLOW + '/dispatches',
+      { method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + pat, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ref: _BRANCH, inputs: { action: 'generate_draft', pillar: pillar } }) }
+    );
+    if (resp.status === 204) {
+      closeRecreateModal();
+      toast('New ' + pillar + ' draft generating — refresh in ~60 s.', { variant: 'success' });
+    } else {
+      var e = await resp.json().catch(function() { return {}; });
+      st.textContent = 'Error ' + resp.status + ': ' + (e.message || 'check PAT has workflow scope');
+      st.style.color = '#e8372a'; cb.innerHTML = '&#8635; Regenerate'; cb.disabled = false;
+    }
+  } catch(e) {
+    st.textContent = 'Network error: ' + e.message;
+    st.style.color = '#e8372a'; cb.innerHTML = '&#8635; Regenerate'; cb.disabled = false;
+  }
+}
+
+/* ── DELETE MODAL ── */
+function showDeleteModal(btn) {
+  _deleteSourceBtn = btn;
+  var path     = btn.getAttribute('data-path');
+  var filename = btn.getAttribute('data-filename');
+  document.getElementById('delete-file-path').value = path;
+  document.getElementById('delete-filename-display').textContent = filename;
+  document.getElementById('delete-pat').value = _getPat();
+  document.getElementById('delete-status').textContent = '';
+  var cb = document.getElementById('delete-confirm-btn');
+  cb.innerHTML = '&#128465; Delete permanently'; cb.disabled = false;
+  document.getElementById('delete-modal').classList.add('open');
+  setTimeout(function() { document.getElementById('delete-pat').focus(); }, 50);
+}
+function closeDeleteModal() {
+  document.getElementById('delete-modal').classList.remove('open');
+  if (_deleteSourceBtn) { _deleteSourceBtn.focus(); _deleteSourceBtn = null; }
+}
+document.getElementById('delete-modal').addEventListener('click', function(e) { if (e.target === this) closeDeleteModal(); });
+
+async function confirmDelete() {
+  var pat      = document.getElementById('delete-pat').value.trim();
+  var filePath = document.getElementById('delete-file-path').value;
+  var st       = document.getElementById('delete-status');
+  var cb       = document.getElementById('delete-confirm-btn');
+  var sourceCard = _deleteSourceBtn ? _deleteSourceBtn.closest('.card') : null;
+  if (!pat) { st.textContent = 'Enter your GitHub PAT.'; st.style.color = '#e8372a'; return; }
+  _setPat(pat, _patPersist());
+  cb.innerHTML = 'Deleting…'; cb.disabled = true; st.textContent = '';
+  try {
+    var metaResp = await fetch(
+      'https://api.github.com/repos/' + _REPO + '/contents/' + filePath,
+      { headers: { 'Authorization': 'Bearer ' + pat, 'Accept': 'application/vnd.github.v3+json' } }
+    );
+    if (!metaResp.ok) {
+      var ge = await metaResp.json().catch(function() { return {}; });
+      throw new Error('Could not read file: ' + (ge.message || metaResp.status));
+    }
+    var meta = await metaResp.json();
+    var delResp = await fetch(
+      'https://api.github.com/repos/' + _REPO + '/contents/' + filePath,
+      { method: 'DELETE',
+        headers: { 'Authorization': 'Bearer ' + pat, 'Accept': 'application/vnd.github.v3+json',
+                   'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: 'delete: ' + filePath.split('/').pop(),
+                               sha: meta.sha, branch: _BRANCH }) }
+    );
+    if (delResp.status === 200) {
+      closeDeleteModal();
+      if (sourceCard) {
+        var status = sourceCard.getAttribute('data-status') || '';
+        _deleteStatUpdate(status);
+        sourceCard.remove();
+      }
+      toast('Draft deleted.', { variant: 'success' });
+    } else {
+      var e2 = await delResp.json().catch(function() { return {}; });
+      throw new Error('Error ' + delResp.status + ': ' + (e2.message || 'check PAT scope (needs repo or contents:write)'));
+    }
+  } catch(e) {
+    st.textContent = e.message; st.style.color = '#e8372a';
+    cb.innerHTML = '&#128465; Delete permanently'; cb.disabled = false;
+  }
+}
+
+function _deleteStatUpdate(statusKey) {
+  document.querySelectorAll('.stat .l').forEach(function(el) {
+    var n = el.previousElementSibling; if (!n) return;
+    var t = el.textContent.trim();
+    if (t === 'Total') n.textContent = Math.max(0, parseInt(n.textContent || '0') - 1);
+    if (t === 'Needs review' && statusKey === 'draft') n.textContent = Math.max(0, parseInt(n.textContent || '0') - 1);
+    if (t === 'Approved'     && statusKey === 'approved') n.textContent = Math.max(0, parseInt(n.textContent || '0') - 1);
+    if (t === 'Failed'       && statusKey === 'failed') n.textContent = Math.max(0, parseInt(n.textContent || '0') - 1);
+  });
+  var lbl = document.querySelector('.section-lbl');
+  if (lbl) {
+    var m = lbl.textContent.match(/\((\d+)\)/);
+    if (m) lbl.textContent = lbl.textContent.replace(/\(\d+\)/, '(' + Math.max(0, parseInt(m[1]) - 1) + ')');
+  }
 }
 
 /* ── APPROVE MODAL ── */
@@ -683,45 +1014,121 @@ function showApproveModal(btn) {
   document.getElementById('modal-path-display').textContent = path;
   document.getElementById('modal-preview').textContent = preview;
   document.getElementById('approve-modal-title').textContent = '✓ Approve — publishes ' + day;
-  var copyBtn = document.getElementById('modal-copy-path-btn');
-  if (copyBtn) { copyBtn.innerHTML = '&#128203; Copy path'; copyBtn.classList.remove('copied'); }
+  document.getElementById('approve-pat').value = _getPat();
+  document.getElementById('approve-status').textContent = '';
+  var cb = document.getElementById('approve-confirm-btn');
+  cb.textContent = '✓ Approve'; cb.disabled = false;
   document.getElementById('approve-modal').classList.add('open');
-  setTimeout(function() { if (copyBtn) copyBtn.focus(); }, 50);
+  setTimeout(function() {
+    var pat = document.getElementById('approve-pat');
+    if (pat.value) document.getElementById('approve-confirm-btn').focus();
+    else pat.focus();
+  }, 50);
 }
 function closeApproveModal() {
   document.getElementById('approve-modal').classList.remove('open');
-  if (_approveSourceBtn) _approveSourceBtn.focus();
+  if (_approveSourceBtn) { _approveSourceBtn.focus(); _approveSourceBtn = null; }
 }
 document.getElementById('approve-modal').addEventListener('click', function(e) { if (e.target === this) closeApproveModal(); });
 
-function copyApprovalPath() {
+async function confirmApprove() {
+  var pat  = document.getElementById('approve-pat').value.trim();
   var path = document.getElementById('modal-draft-path').value;
-  navigator.clipboard.writeText(path).then(function() {
-    var btn = document.getElementById('modal-copy-path-btn');
-    btn.innerHTML = '&#10003; Copied';
-    btn.classList.add('copied');
-    setTimeout(function() { btn.innerHTML = '&#128203; Copy path'; btn.classList.remove('copied'); }, 2200);
-    toast('Path copied — paste into the approve_draft workflow input.', { variant: 'success' });
-  });
+  var st   = document.getElementById('approve-status');
+  var cb   = document.getElementById('approve-confirm-btn');
+  if (!pat) { st.textContent = 'Enter your GitHub PAT (workflow scope).'; st.style.color = '#e8372a'; return; }
+  _setPat(pat, _patPersist());
+  cb.textContent = 'Approving…'; cb.disabled = true; st.textContent = '';
+  await _doApproveWorkflow(path, pat, st, cb);
 }
+
+async function _doApproveWorkflow(path, pat, statusEl, btnEl) {
+  try {
+    var resp = await fetch(
+      'https://api.github.com/repos/' + _REPO + '/actions/workflows/' + _WORKFLOW + '/dispatches',
+      { method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + pat, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ref: _BRANCH, inputs: { action: 'approve_draft', draft_file: path } }) }
+    );
+    if (resp.status === 204) {
+      if (statusEl) { statusEl.textContent = 'Approved!'; statusEl.style.color = '#2a9a5c'; }
+      if (btnEl)    { btnEl.textContent = '✓ Approved'; }
+      toast('Draft approved — will publish on next scheduled cron.', { variant: 'success' });
+      setTimeout(closeApproveModal, 1400);
+    } else {
+      var e = await resp.json().catch(function() { return {}; });
+      var msg = 'Error ' + resp.status + ': ' + (e.message || 'check PAT has workflow scope');
+      if (statusEl) { statusEl.textContent = msg; statusEl.style.color = '#e8372a'; }
+      if (btnEl)    { btnEl.textContent = '✓ Approve'; btnEl.disabled = false; }
+      toast(msg, { variant: 'error' });
+    }
+  } catch(e) {
+    var msg = 'Network error: ' + e.message;
+    if (statusEl) { statusEl.textContent = msg; statusEl.style.color = '#e8372a'; }
+    if (btnEl)    { btnEl.textContent = '✓ Approve'; btnEl.disabled = false; }
+    toast(msg, { variant: 'error' });
+  }
+}
+
+/* ── EMAIL LINK HANDLER — runs on page load ── */
+(function initFromEmailLink() {
+  var params      = new URLSearchParams(window.location.search);
+  var approvePath = params.get('approve');
+  var revisePath  = params.get('revise');
+  if (!approvePath && !revisePath) return;
+  history.replaceState({}, document.title, window.location.pathname);
+
+  if (approvePath) {
+    /* Always require an explicit click to confirm — never auto-dispatch the
+       workflow from a URL param. Otherwise a crafted ?approve=<path> link (e.g.
+       in an email) could silently trigger an approval using a persisted token. */
+    var pat = _getPat();
+    document.getElementById('modal-draft-path').value = approvePath;
+    document.getElementById('modal-path-display').textContent = approvePath;
+    document.getElementById('modal-preview').textContent = pat
+      ? 'Confirm the draft path above, then click Approve to publish on the next scheduled cron.'
+      : 'Enter your GitHub PAT to approve this draft.';
+    document.getElementById('approve-modal-title').textContent = '✓ Approve Draft';
+    document.getElementById('approve-pat').value = pat;
+    document.getElementById('approve-status').textContent = '';
+    var cb = document.getElementById('approve-confirm-btn');
+    cb.textContent = '✓ Approve'; cb.disabled = false;
+    document.getElementById('approve-modal').classList.add('open');
+    setTimeout(function() {
+      if (pat) cb.focus();
+      else document.getElementById('approve-pat').focus();
+    }, 80);
+  }
+
+  if (revisePath) {
+    var fakeBtn = document.createElement('button');
+    fakeBtn.setAttribute('data-path', revisePath);
+    fakeBtn.setAttribute('data-pillar', '');
+    document.body.appendChild(fakeBtn);
+    showReviseModal(fakeBtn);
+    fakeBtn.remove();
+  }
+})();
 
 function _hideReviewUI(card) {
   var ra = card.querySelector('.review-actions'); if (ra) ra.style.display = 'none';
   var ab = card.querySelector('.approve-btn');   if (ab) ab.style.display = 'none';
 }
-function _updateStats(reviewDelta, approvedDelta) {
+function _updateStats(reviewDelta, approvedDelta, publishedDelta) {
+  publishedDelta = publishedDelta || 0;
   document.querySelectorAll('.stat .l').forEach(function(el) {
     var n = el.previousElementSibling; if (!n) return;
     var t = el.textContent.trim();
     if (t === 'Needs review') n.textContent = Math.max(0, parseInt(n.textContent||'0') + reviewDelta);
     if (t === 'Approved')     n.textContent = Math.max(0, parseInt(n.textContent||'0') + approvedDelta);
+    if (t === 'Published')    n.textContent = Math.max(0, parseInt(n.textContent||'0') + publishedDelta);
   });
 }
 
 /* Auto-refresh draft cards on page load */
 async function refreshDraftCards() {
   var cards = document.querySelectorAll('.card');
-  var count = 0;
+  var publishedCount = 0, approvedCount = 0;
   for (var i = 0; i < cards.length; i++) {
     var card = cards[i];
     if (!card.querySelector('.badge.draft')) continue;
@@ -734,14 +1141,17 @@ async function refreshDraftCards() {
       var badge = card.querySelector('.badge.draft'); if (!badge) continue;
       if (data.published || data.status === 'published') {
         badge.className = 'badge published'; badge.innerHTML = '✓ Published';
-        _hideReviewUI(card); count++;
+        _hideReviewUI(card); publishedCount++;
       } else if (data.approved || data.status === 'approved') {
         badge.className = 'badge approved'; badge.textContent = 'Approved';
-        _hideReviewUI(card); count++;
+        _hideReviewUI(card); approvedCount++;
       }
     } catch(e) {}
   }
-  if (count > 0) _updateStats(-count, count);
+  /* Each card leaves "Needs review"; route it to the correct destination stat
+     (Published vs Approved) instead of always crediting Approved. */
+  var moved = publishedCount + approvedCount;
+  if (moved > 0) _updateStats(-moved, approvedCount, publishedCount);
 }
 window.addEventListener('load', refreshDraftCards);
 
@@ -793,7 +1203,7 @@ async function markReplied(filePath, commentId, btn) {
   if (!pat) {
     pat = prompt('GitHub PAT (repo scope) to update the outreach file:');
     if (!pat) return;
-    _setPat(pat);
+    _setPat(pat, _patPersist());
   }
   btn.disabled = true;
   btn.textContent = 'Updating…';
@@ -849,22 +1259,204 @@ function toggleLead(idx) {
   if (chevron) chevron.classList.toggle('open', !isOpen);
 }
 
-/* ── FILTER CHIPS ── */
-function filterCards(key) {
+/* ── FILTER CHIPS + SEARCH ── */
+var _activeFilterKey = 'all';
+
+function applyFilters() {
+  var key = _activeFilterKey;
+  var input = document.getElementById('post-search');
+  var q = (input ? input.value : '').trim().toLowerCase();
   document.querySelectorAll('.filter-chip').forEach(function(c) {
-    c.classList.toggle('active', c.getAttribute('data-filter') === key);
+    var active = c.getAttribute('data-filter') === key;
+    c.classList.toggle('active', active);
+    c.setAttribute('aria-pressed', active ? 'true' : 'false');
   });
   var cards = document.querySelectorAll('.card');
   var shown = 0;
   cards.forEach(function(card) {
-    var status = card.getAttribute('data-status') || '';
-    var pillar = card.getAttribute('data-pillar') || '';
-    var show = key === 'all' || key === status || key === pillar;
+    var status  = card.getAttribute('data-status') || '';
+    var pillar  = card.getAttribute('data-pillar') || '';
+    var isVariant = card.getAttribute('data-variant') === 'true';
+    var variantStatus = card.getAttribute('data-status') || '';
+    // Draft variants are hidden from all views except the explicit Variants chip.
+    // Approved/published variants remain visible in their own status view so the
+    // owner can see what was actually approved.
+    if (isVariant && key !== 'variant' && (variantStatus === 'draft' || variantStatus === 'dry-run')) {
+      card.style.display = 'none'; return;
+    }
+    var segment = card.getAttribute('data-segment') || '';
+    var isSegFilter = key.indexOf('seg:') === 0;
+    var chipOk  = key === 'all' || key === status || key === pillar
+                  || (key === 'variant' && isVariant)
+                  || (isSegFilter && key === 'seg:' + segment);
+    var searchOk = !q || card.textContent.toLowerCase().indexOf(q) !== -1;
+    var show = chipOk && searchOk;
     card.style.display = show ? '' : 'none';
     if (show) shown++;
   });
   var lbl = document.querySelector('.section-lbl');
   if (lbl) lbl.textContent = 'Post history (' + shown + ')';
+  var sc = document.getElementById('search-count');
+  if (sc) sc.textContent = q ? (shown + ' / ' + cards.length + ' match') : '';
+}
+
+function filterCards(key) { _activeFilterKey = key; applyFilters(); }
+
+function _bindSearch() {
+  var inp = document.getElementById('post-search');
+  if (!inp) return;
+  inp.addEventListener('input', applyFilters);
+  inp.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') { inp.value = ''; applyFilters(); inp.blur(); }
+  });
+  var clr = document.getElementById('search-clear');
+  if (clr) clr.addEventListener('click', function() { inp.value = ''; applyFilters(); inp.focus(); });
+
+  /* Global "/" shortcut: focus the search input from anywhere on the page.
+     Ignore if the user is already typing in a field or a modal is open,
+     so we don't hijack keystrokes. */
+  document.addEventListener('keydown', function(e) {
+    if (e.key !== '/' || e.ctrlKey || e.metaKey || e.altKey) return;
+    var t = e.target;
+    var typing = t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable);
+    if (typing) return;
+    if (document.querySelector('.modal-overlay.open')) return;
+    e.preventDefault();
+    inp.focus();
+    inp.select();
+  });
+}
+_bindSearch();
+
+/* ── NEWSLETTER APPROVE MODAL ── */
+var _nlApproveSourceBtn = null;
+function showNewsletterApproveModal(issueNum) {
+  _nlApproveSourceBtn = document.activeElement;
+  document.getElementById('nl-approve-issue-num').value = issueNum;
+  document.getElementById('nl-approve-issue-display').textContent = '#' + issueNum;
+  document.getElementById('nl-approve-pat').value = _getPat();
+  document.getElementById('nl-approve-status').textContent = '';
+  var cb = document.getElementById('nl-approve-confirm-btn');
+  cb.textContent = '✓ Approve & Test Send'; cb.disabled = false;
+  document.getElementById('newsletter-approve-modal').classList.add('open');
+  setTimeout(function() {
+    var pat = document.getElementById('nl-approve-pat');
+    if (pat.value) document.getElementById('nl-approve-confirm-btn').focus();
+    else pat.focus();
+  }, 50);
+}
+function closeNewsletterApproveModal() {
+  document.getElementById('newsletter-approve-modal').classList.remove('open');
+  if (_nlApproveSourceBtn) { _nlApproveSourceBtn.focus(); _nlApproveSourceBtn = null; }
+}
+document.getElementById('newsletter-approve-modal').addEventListener('click', function(e) { if (e.target === this) closeNewsletterApproveModal(); });
+
+async function confirmNewsletterApprove() {
+  var pat = document.getElementById('nl-approve-pat').value.trim();
+  var num = document.getElementById('nl-approve-issue-num').value;
+  var st  = document.getElementById('nl-approve-status');
+  var cb  = document.getElementById('nl-approve-confirm-btn');
+  if (!pat) { st.textContent = 'Enter your GitHub PAT (workflow scope).'; st.style.color = '#e8372a'; return; }
+  _setPat(pat, _patPersist());
+  cb.textContent = 'Triggering…'; cb.disabled = true; st.textContent = '';
+  try {
+    var resp = await fetch(
+      'https://api.github.com/repos/' + _REPO + '/actions/workflows/newsletter.yml/dispatches',
+      { method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + pat, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ref: _BRANCH, inputs: { action: 'generate_and_test', issue_number: num } }) }
+    );
+    if (resp.status === 204) {
+      closeNewsletterApproveModal();
+      toast('Newsletter issue #' + num + ' — test send triggered.', { variant: 'success' });
+    } else {
+      var e = await resp.json().catch(function() { return {}; });
+      st.textContent = 'Error ' + resp.status + ': ' + (e.message || 'check PAT has workflow scope');
+      st.style.color = '#e8372a'; cb.textContent = '✓ Approve & Test Send'; cb.disabled = false;
+    }
+  } catch(e) { st.textContent = 'Network error: ' + e.message; st.style.color = '#e8372a'; cb.textContent = '✓ Approve & Test Send'; cb.disabled = false; }
+}
+
+/* ── NEWSLETTER TEST SEND MODAL ── */
+var _nlTestSourceBtn = null;
+function showNewsletterTestModal(issueNum) {
+  _nlTestSourceBtn = document.activeElement;
+  document.getElementById('nl-test-issue-num').value = issueNum;
+  document.getElementById('nl-test-issue-display').textContent = '#' + issueNum;
+  document.getElementById('nl-test-pat').value = _getPat();
+  document.getElementById('nl-test-status').textContent = '';
+  var cb = document.getElementById('nl-test-confirm-btn');
+  cb.textContent = '📧 Send Test Email'; cb.disabled = false;
+  document.getElementById('newsletter-test-modal').classList.add('open');
+  setTimeout(function() {
+    var pat = document.getElementById('nl-test-pat');
+    if (pat.value) document.getElementById('nl-test-confirm-btn').focus();
+    else pat.focus();
+  }, 50);
+}
+function closeNewsletterTestModal() {
+  document.getElementById('newsletter-test-modal').classList.remove('open');
+  if (_nlTestSourceBtn) { _nlTestSourceBtn.focus(); _nlTestSourceBtn = null; }
+}
+document.getElementById('newsletter-test-modal').addEventListener('click', function(e) { if (e.target === this) closeNewsletterTestModal(); });
+
+async function confirmNewsletterTest() {
+  var pat = document.getElementById('nl-test-pat').value.trim();
+  var num = document.getElementById('nl-test-issue-num').value;
+  var st  = document.getElementById('nl-test-status');
+  var cb  = document.getElementById('nl-test-confirm-btn');
+  if (!pat) { st.textContent = 'Enter your GitHub PAT (workflow scope).'; st.style.color = '#e8372a'; return; }
+  _setPat(pat, _patPersist());
+  cb.textContent = 'Triggering…'; cb.disabled = true; st.textContent = '';
+  try {
+    var resp = await fetch(
+      'https://api.github.com/repos/' + _REPO + '/actions/workflows/newsletter.yml/dispatches',
+      { method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + pat, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ref: _BRANCH, inputs: { action: 'test_send', issue_number: num } }) }
+    );
+    if (resp.status === 204) {
+      closeNewsletterTestModal();
+      toast('Test email for issue #' + num + ' triggered — check your inbox.', { variant: 'success' });
+    } else {
+      var e = await resp.json().catch(function() { return {}; });
+      st.textContent = 'Error ' + resp.status + ': ' + (e.message || 'check PAT has workflow scope');
+      st.style.color = '#e8372a'; cb.textContent = '📧 Send Test Email'; cb.disabled = false;
+    }
+  } catch(e) { st.textContent = 'Network error: ' + e.message; st.style.color = '#e8372a'; cb.textContent = '📧 Send Test Email'; cb.disabled = false; }
+}
+
+/* ── CSV EXPORT ── */
+function _csvCell(v) {
+  v = (v == null) ? '' : String(v);
+  if (/[",\n\r]/.test(v)) v = '"' + v.replace(/"/g, '""') + '"';
+  return v;
+}
+function exportPostsCsv() {
+  var rows = [['date', 'pillar', 'status', 'model', 'topic', 'chars', 'post_text', 'file']];
+  document.querySelectorAll('.card').forEach(function(card) {
+    var pillar = card.getAttribute('data-pillar') || '';
+    var status = card.getAttribute('data-status') || '';
+    var date   = (card.querySelector('.date') || {}).textContent || '';
+    var model  = (card.querySelector('.model-tag') || {}).textContent || '';
+    var topic  = (card.querySelector('.topic') || {}).textContent || '';
+    var chars  = (card.querySelector('.chars') || {}).textContent || '';
+    var text   = (card.querySelector('.post-text') || {}).textContent || '';
+    var delBtn = card.querySelector('.delete-btn');
+    var file   = delBtn ? (delBtn.getAttribute('data-filename') || '') : '';
+    rows.push([date.trim(), pillar, status, model.trim(), topic.trim(),
+               chars.replace(/[^0-9]/g, ''), text.trim(), file]);
+  });
+  var csv = rows.map(function(r) { return r.map(_csvCell).join(','); }).join('\r\n');
+  var blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
+  var url  = URL.createObjectURL(blob);
+  var d    = new Date();
+  var pad  = function(n){return n<10?'0'+n:''+n};
+  var name = 'linkedin-posts-' + d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()) + '.csv';
+  var a = document.createElement('a');
+  a.href = url; a.download = name; document.body.appendChild(a); a.click();
+  setTimeout(function() { document.body.removeChild(a); URL.revokeObjectURL(url); }, 100);
+  toast('Exported ' + (rows.length - 1) + ' posts to CSV.', { variant: 'success' });
 }
 """
 
@@ -897,6 +1489,13 @@ def _card(post: dict, idx: int) -> str:
     elif post.get("approved") or status_value == "approved":
         status = _badge("Approved", "approved")
         status_key = "approved"
+    elif status_value == "scheduled":
+        pub_date_disp = post.get("publish_date", "")
+        status = _badge(f"&#128197; {pub_date_disp}" if pub_date_disp else "Scheduled", "approved")
+        status_key = "scheduled"  # data-status must be "scheduled" so JS filter works
+    elif status_value in ("superseded", "deleted"):
+        status = _badge("Superseded" if status_value == "superseded" else "Deleted", "superseded")
+        status_key = "superseded"
     elif post.get("dry_run"):
         status = _badge("Dry run", "dry-run")
         status_key = "dry-run"
@@ -904,23 +1503,28 @@ def _card(post: dict, idx: int) -> str:
         status = _badge("Needs review", "draft")
         status_key = "draft"
 
-    raw_date = post.get("published_at") or post.get("generated_at", "")
+    # Date: prefer published_at, then generated_at, then publish_date, then scored_at
+    raw_date = (post.get("published_at") or post.get("generated_at")
+                or post.get("publish_date") or post.get("scored_at", ""))
     try:
         dt       = datetime.fromisoformat(raw_date.replace("Z", "+00:00"))
         date_str = _to_muscat(dt)
     except Exception:
-        date_str = raw_date[:10]
+        date_str = raw_date[:10] if raw_date else ""
 
     model_short = post.get("model", "unknown").replace("claude-", "").split(":")[0]
     attempts    = post.get("attempts", 1)
-    char_count  = post.get("char_count", 0)
+    # char_count: prefer stored value, fall back to length of body/post content
+    body_text   = post.get("post", "") or post.get("body", "")
+    char_count  = post.get("char_count", 0) or len(body_text)
     char_pct    = min(100, (char_count / 1500) * 100)
     char_ok     = 800 <= char_count <= 1500
     char_cls    = "ok" if char_ok else "warn"
 
-    topic     = html.escape(post.get("topic", ""))
+    # topic: prefer stored 'topic', fall back to 'hook_text'
+    topic     = html.escape(post.get("topic", "") or post.get("hook_text", ""))
     fmt       = html.escape(post.get("format", ""))
-    post_text = html.escape(post.get("post", ""))
+    post_text = html.escape(body_text)
 
     alerts = ""
     if w := post.get("validation_warning"):
@@ -930,15 +1534,26 @@ def _card(post: dict, idx: int) -> str:
 
     metrics      = post.get("metrics") or {}
     metrics_html = ""
-    if metrics:
-        parts = []
-        if (r := metrics.get("reactions"))            is not None: parts.append(f'<span class="metric-item">&#128077; {r}</span>')
-        if (c := metrics.get("comments"))             is not None: parts.append(f'<span class="metric-item">&#128172; {c}</span>')
-        if (s := metrics.get("shares"))               is not None: parts.append(f'<span class="metric-item">&#8635; {s}</span>')
-        if (q := metrics.get("manual_quality_score")) is not None: parts.append(f'<span class="quality-score">&#9733; {q}/10</span>')
-        if hs := metrics.get("hook_style"):                        parts.append(f'<span class="hook-tag">{html.escape(hs)}</span>')
-        if parts:
-            metrics_html = '<div class="metrics-row">' + "".join(parts) + "</div>"
+    # Always build metrics row: top-level score/hook + engagement metrics
+    parts = []
+    # Score: top-level 'score' (float like 8.2) takes priority over metrics.manual_quality_score
+    top_score = post.get("score")
+    if top_score is not None:
+        parts.append(f'<span class="quality-score">&#9733; {top_score}</span>')
+    elif (q := metrics.get("manual_quality_score")) is not None:
+        parts.append(f'<span class="quality-score">&#9733; {q}/10</span>')
+    # Hook type from top-level 'hook' field
+    if hook_type := (post.get("hook") or metrics.get("hook_style", "")):
+        parts.append(f'<span class="hook-tag">{html.escape(hook_type)}</span>')
+    # Publish time
+    if pt := post.get("publish_time", ""):
+        parts.append(f'<span class="metric-item">&#128337; {html.escape(pt)}</span>')
+    # Engagement metrics
+    if (r := metrics.get("reactions"))  is not None: parts.append(f'<span class="metric-item">&#128077; {r}</span>')
+    if (c := metrics.get("comments"))   is not None: parts.append(f'<span class="metric-item">&#128172; {c}</span>')
+    if (s := metrics.get("shares"))     is not None: parts.append(f'<span class="metric-item">&#8635; {s}</span>')
+    if parts:
+        metrics_html = '<div class="metrics-row">' + "".join(parts) + "</div>"
 
     li_link = ""
     if post_id := post.get("post_id", ""):
@@ -949,12 +1564,26 @@ def _card(post: dict, idx: int) -> str:
             f'<span class="sr-only"> (opens in new tab)</span></a>'
         )
 
+    cta_indicator = ""
+    cta_result = post.get("cta_comment_posted")
+    if cta_result is True:
+        cta_indicator = '<span class="metric-item" title="Sanad CTA comment posted">&#128172; CTA &#10003;</span>'
+    elif cta_result is False and pillar in ("pain", "proof"):
+        cta_indicator = (
+            '<span class="metric-item" style="opacity:.6;border-color:rgba(232,55,42,.25);'
+            'color:#e8372a" title="Sanad CTA comment failed to post">&#128172; CTA &#10007;</span>'
+        )
+
     fmt_html      = (f'<span class="fmt-tag">&#9999; {fmt[:42]}{"&#8230;" if len(fmt)>42 else ""}</span>' if fmt else "")
     attempts_html = f'<span class="retries">&#8635; {attempts} retries</span>' if attempts > 1 else ""
 
     needs_review = (
         (post.get("status") == "draft" or post.get("approval_required"))
         and not post.get("published")
+        and not post.get("approved", False)
+        and not (post.get("dry_run", False) and not post.get("approval_required", False))
+        and status_value not in ("superseded", "deleted", "approved")
+        and not post.get("is_variant", False)
     )
     filename      = post.get("_filename", "")
     draft_path    = html.escape(f"posts_history/{filename}") if filename else ""
@@ -973,25 +1602,79 @@ def _card(post: dict, idx: int) -> str:
         review_actions = f"""
         <div class="review-actions">
           <span class="review-label">Review:</span>
-          <button class="rev-btn rev-changes" data-path="{draft_path}" data-pillar="{pillar_val}"
+          <button type="button" class="rev-btn rev-changes" data-path="{draft_path}" data-pillar="{pillar_val}"
                   onclick="showReviseModal(this)">&#9998; Request Changes</button>
-          <button class="rev-btn rev-edit" data-path="{draft_path}" data-preview="{preview_val}"
+          <button type="button" class="rev-btn rev-edit" data-path="{draft_path}" data-preview="{preview_val}"
                   onclick="showEditModal(this)">&#128393; Edit</button>
-          <button class="rev-btn rev-recreate" data-path="{draft_path}" data-pillar="{pillar_val}"
-                  onclick="confirmRecreate(this)">&#8635; Recreate</button>
+          <button type="button" class="rev-btn rev-recreate" data-path="{draft_path}" data-pillar="{pillar_val}"
+                  onclick="showRecreateModal(this)">&#8635; Recreate</button>
         </div>"""
-        approve_btn = (
-            f'<button class="approve-btn" '
-            f'data-path="{draft_path}" data-preview="{preview_val}" '
-            f'data-publish-day="{publish_day}" '
-            f'onclick="showApproveModal(this)">&#10003; Approve for {publish_day}</button>'
+        if char_count > 1500:
+            approve_btn = (
+                f'<button type="button" class="approve-btn over-limit" '
+                f'data-path="{draft_path}" data-preview="{preview_val}" '
+                f'data-publish-day="{publish_day}" '
+                f'title="&#9888; Post is {char_count} chars — exceeds 1500-char limit. Shorten before approving." '
+                f'onclick="showApproveModal(this)">&#9888; Approve for {publish_day} ({char_count - 1500}+ over limit)</button>'
+            )
+        else:
+            approve_btn = (
+                f'<button type="button" class="approve-btn" '
+                f'data-path="{draft_path}" data-preview="{preview_val}" '
+                f'data-publish-day="{publish_day}" '
+                f'onclick="showApproveModal(this)">&#10003; Approve for {publish_day}</button>'
+            )
+
+    is_variant  = post.get("is_variant", False)
+    has_variant = post.get("has_variant", False)
+
+    # Variant posts: allow approving the variant directly as an alternative to the original
+    variant_approve_btn = ""
+    if (is_variant and post.get("approval_required") and not post.get("published")
+            and not post.get("approved", False)
+            and status_value not in ("superseded", "deleted", "approved") and draft_path):
+        if char_count > 1500:
+            variant_approve_btn = (
+                f'<button type="button" class="approve-btn over-limit" '
+                f'data-path="{draft_path}" data-preview="{preview_val}" '
+                f'data-publish-day="{publish_day}" '
+                f'title="&#9888; Variant is {char_count} chars — exceeds 1500-char limit." '
+                f'onclick="showApproveModal(this)">&#9888; Approve variant ({char_count - 1500}+ over limit)</button>'
+            )
+        else:
+            variant_approve_btn = (
+                f'<button type="button" class="approve-btn variant-approve-btn" '
+                f'data-path="{draft_path}" data-preview="{preview_val}" '
+                f'data-publish-day="{publish_day}" '
+                f'onclick="showApproveModal(this)">&#10003; Approve variant for {publish_day}</button>'
+            )
+
+    delete_btn = ""
+    if not (post.get("published") or status_value == "published") and draft_path:
+        safe_filename = html.escape(filename)
+        delete_btn = (
+            f'<button type="button" class="delete-btn" data-path="{draft_path}" data-filename="{safe_filename}"'
+            f' onclick="showDeleteModal(this)" aria-label="Delete draft {safe_filename}" title="Delete this draft permanently">'
+            f'<span aria-hidden="true">&#128465;</span> Delete</button>'
         )
 
+    variant_attr = ' data-variant="true"' if is_variant else ""
+
+    segment      = post.get("segment", "")
+    segment_attr = f' data-segment="{html.escape(segment)}"' if segment else ""
+    segment_badge = (
+        f' <span class="seg-badge {html.escape(segment)}" title="Audience segment {html.escape(segment)}">Seg {html.escape(segment)}</span>'
+        if segment else ""
+    )
+
+    variant_badge = ' <span class="badge variant" title="This is a hook variant">Hook variant</span>' if is_variant else ""
+    variant_link  = '<span class="variant-link">&#8627; Hook variant available</span>' if has_variant else ""
+
     return f"""
-    <div class="card" id="post-{idx}" data-pillar="{pillar_val}" data-status="{status_key}">
+    <div class="card" id="post-{idx}" data-pillar="{pillar_val}" data-status="{status_key}"{variant_attr}{segment_attr}>
       <div class="card-header">
         <span class="pillar-tag {pillar_val}">{pillar}</span>
-        {status}
+        {segment_badge}{status}{variant_badge}
         <span class="meta-right">
           <span class="model-tag">{model_short}</span>
           <span class="date">{date_str}</span>
@@ -1002,16 +1685,19 @@ def _card(post: dict, idx: int) -> str:
       {alerts}
       {metrics_html}
       <div class="post-text collapsed" id="pt-{idx}">{post_text}</div>
-      <button class="expand-btn" aria-expanded="false" aria-controls="pt-{idx}"
+      <button type="button" class="expand-btn" aria-expanded="false" aria-controls="pt-{idx}"
               onclick="toggle({idx})">Show more &#9660;</button>
+      {variant_link}
       {review_actions}
       <div class="card-footer">
-        <div class="bar-track"><div class="bar-fill {char_cls}" style="width:{char_pct:.1f}%"></div></div>
+        <div class="bar-track" role="presentation"><div class="bar-fill {char_cls}" style="width:{char_pct:.1f}%"></div></div>
         <span class="chars {char_cls}">{char_count} chars</span>
         {attempts_html}
-        {approve_btn}
+        {approve_btn}{variant_approve_btn}
         {li_link}
-        <button class="icon-btn" id="copy-{idx}" onclick="copyPost({idx})">&#128203; Copy</button>
+        {cta_indicator}
+        <button type="button" class="icon-btn" id="copy-{idx}" aria-label="Copy post text to clipboard" onclick="copyPost({idx})"><span aria-hidden="true">&#128203;</span> Copy</button>
+        {delete_btn}
       </div>
     </div>"""
 
@@ -1115,47 +1801,155 @@ def _js_str(text: str) -> str:
 
 
 def _outreach_pipeline_section() -> str:
-    """Generate the Outreach Pipeline HTML block from outreach_history/ and leads.csv."""
+    """Generate the Outreach Pipeline HTML block.
+
+    Primary source: outreach_tracker.json (prospect CRM).
+    Secondary source: outreach_history/ comment files (auto-populated by workflow).
+    """
+    # ── Load outreach_tracker.json ──────────────────────────────────────────
+    tracker_path = Path(__file__).parent / "outreach_tracker.json"
+    prospects: list[dict] = []
+    if tracker_path.exists():
+        try:
+            prospects = json.loads(tracker_path.read_text(encoding="utf-8-sig"))
+        except Exception:
+            prospects = []
+
+    # ── Load outreach_history/ comment files (may be empty) ─────────────────
     outreach_dir = Path(__file__).parent / "outreach_history"
-    if not outreach_dir.exists():
+    all_comments: list[dict] = []
+    if outreach_dir.exists():
+        for f in sorted(outreach_dir.glob("*_comments.json"), reverse=True):
+            try:
+                data = json.loads(f.read_text(encoding="utf-8-sig"))
+                for c in data.get("comments", []):
+                    c["_file_path"]  = f"outreach_history/{f.name}"
+                    c["_post_topic"] = data.get("post_topic", "")
+                    c["_post_id"]    = data.get("post_id", "")
+                    all_comments.append(c)
+            except Exception:
+                continue
+
+    # If both sources are empty, bail
+    if not prospects and not all_comments:
         return ""
 
-    # ── Load all comment files ──────────────────────────────────────────────
-    all_comments: list[dict] = []
-    for f in sorted(outreach_dir.glob("*_comments.json"), reverse=True):
+    # ── Tracker-based stats ─────────────────────────────────────────────────
+    today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    total_prospects = len(prospects)
+    active    = [p for p in prospects if p.get("status") == "active"]
+    converted = [p for p in prospects if p.get("status") == "converted"]
+    seg_counts = Counter(p.get("segment", "?") for p in prospects)
+
+    # Steps 1–5: track how far each prospect is
+    step_totals = Counter(p.get("current_step", 1) for p in active)
+    max_step    = max(step_totals.keys(), default=1)
+
+    # Prospects that need action today (started_at + current_step - 1 days ≈ today)
+    due_today = 0
+    for p in active:
         try:
-            data = json.loads(f.read_text(encoding="utf-8"))
-            for c in data.get("comments", []):
-                c["_file_path"]  = f"outreach_history/{f.name}"
-                c["_post_topic"] = data.get("post_topic", "")
-                c["_post_id"]    = data.get("post_id", "")
-                all_comments.append(c)
+            start = datetime.strptime(p.get("started_at", ""), "%Y-%m-%d")
+            action_day = start + timedelta(days=p.get("current_step", 1) - 1)
+            if action_day.strftime("%Y-%m-%d") <= today_str:
+                due_today += 1
         except Exception:
-            continue
+            pass
 
-    # ── Stats ───────────────────────────────────────────────────────────────
-    qualified     = [c for c in all_comments
-                     if (c.get("qualification") or {}).get("intent") in ("high", "medium")]
+    # ── Comment-based stats ─────────────────────────────────────────────────
+    qualified       = [c for c in all_comments
+                       if (c.get("qualification") or {}).get("intent") in ("high", "medium")]
     replies_drafted = len([c for c in qualified if c.get("reply_drafts")])
-    dms_queued    = sum(1 for _ in outreach_dir.glob("*_dm_sequence.json"))
-    n_unscored    = len([c for c in all_comments if not c.get("qualification")])
+    dms_queued      = sum(1 for _ in outreach_dir.glob("*_dm_sequence.json")) if outreach_dir.exists() else 0
 
+    # ── Stats bar HTML ──────────────────────────────────────────────────────
     stats_html = f"""
 <div class="outreach-statsbar">
-  <span class="outreach-lbl">Outreach</span>
-  <div class="stat"><div class="n">{len(all_comments)}</div><div class="l">Comments</div></div>
-  <div class="stat amber"><div class="n">{len(qualified)}</div><div class="l">Qualified</div></div>
-  <div class="stat blue"><div class="n">{replies_drafted}</div><div class="l">Replies drafted</div></div>
-  <div class="stat"><div class="n">{dms_queued}</div><div class="l">DMs queued</div></div>
-  <div class="stat green"><div class="n">{len(qualified) - n_unscored if n_unscored < len(qualified) else len(qualified)}</div><div class="l">In pipeline</div></div>
+  <span class="outreach-lbl">Outreach Pipeline</span>
+  <div class="stat blue"><div class="n">{total_prospects}</div><div class="l">Prospects</div></div>
+  <div class="stat amber"><div class="n">{len(active)}</div><div class="l">Active</div></div>
+  <div class="stat red"><div class="n">{due_today}</div><div class="l">Due Today</div></div>
+  <div class="stat green"><div class="n">{len(converted)}</div><div class="l">Converted</div></div>
+  <div class="stat"><div class="n">Step {max_step}</div><div class="l">Furthest</div></div>
+  {''.join(f'<div class="stat"><div class="n">{seg_counts.get(s,0)}</div><div class="l">Seg {s}</div></div>' for s in ["A","B","C"])}
+</div>"""
+
+    # ── Prospects table (from outreach_tracker.json) ────────────────────────
+    STEP_LABELS = {
+        1: "Connection sent",
+        2: "Follow-up / comment",
+        3: "DM sent",
+        4: "Demo proposed",
+        5: "Converted",
+    }
+    SEG_COLOR = {"A": "#2e7de0", "B": "#818cf8", "C": "#06b6d4"}
+
+    prospect_rows = ""
+    for p in sorted(prospects, key=lambda x: (x.get("segment","Z"), x.get("id",""))):
+        pid    = html.escape(p.get("id", ""))
+        name   = html.escape(p.get("name", "Unknown"))
+        co     = html.escape(p.get("company", ""))
+        seg    = p.get("segment", "?")
+        step   = p.get("current_step", 1)
+        status = p.get("status", "active")
+        notes  = html.escape((p.get("notes", "")[:90] + "…") if len(p.get("notes","")) > 90 else p.get("notes",""))
+        seg_col = SEG_COLOR.get(seg, "#94a3b8")
+        step_lbl = STEP_LABELS.get(step, f"Step {step}")
+        status_cls = "green" if status == "converted" else ("amber" if status == "active" else "")
+        status_badge = f'<span class="badge {"published" if status=="converted" else "approved" if status=="active" else "draft"}">{status}</span>'
+
+        # Compute if due
+        due_badge = ""
+        try:
+            start = datetime.strptime(p.get("started_at", ""), "%Y-%m-%d")
+            action_day = start + timedelta(days=step - 1)
+            if action_day.strftime("%Y-%m-%d") <= today_str:
+                due_badge = '<span class="badge draft" style="background:#e8372a22;color:#e8372a;border:1px solid #e8372a44">⏰ Due</span>'
+        except Exception:
+            pass
+
+        prospect_rows += f"""
+    <tr>
+      <td style="font-size:11px;color:rgba(255,255,255,.4);font-family:'DM Mono',monospace">{pid}</td>
+      <td style="font-weight:600;font-size:13px">{name}</td>
+      <td style="font-size:12px;color:rgba(255,255,255,.55)">{co}</td>
+      <td><span style="color:{seg_col};font-weight:700;font-size:12px">Seg {seg}</span></td>
+      <td><span style="font-size:12px;color:#d4840a">{step_lbl}</span> {due_badge}</td>
+      <td>{status_badge}</td>
+      <td style="font-size:11px;color:rgba(255,255,255,.4);max-width:220px">{notes}</td>
+    </tr>"""
+
+    prospects_table = f"""
+<div class="content" style="margin-top:0;padding-top:18px">
+  <h2 class="section-lbl">Prospect Tracker — {total_prospects} contacts</h2>
+  <div style="overflow-x:auto;margin-top:12px">
+  <table style="width:100%;border-collapse:collapse;font-size:13px">
+    <thead>
+      <tr style="border-bottom:1px solid rgba(255,255,255,.1);text-align:left">
+        <th style="padding:8px 10px;font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.35);font-weight:500">ID</th>
+        <th style="padding:8px 10px;font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.35);font-weight:500">Name</th>
+        <th style="padding:8px 10px;font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.35);font-weight:500">Company</th>
+        <th style="padding:8px 10px;font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.35);font-weight:500">Seg</th>
+        <th style="padding:8px 10px;font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.35);font-weight:500">Step</th>
+        <th style="padding:8px 10px;font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.35);font-weight:500">Status</th>
+        <th style="padding:8px 10px;font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.35);font-weight:500">Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      {prospect_rows if prospect_rows else '<tr><td colspan="7" style="padding:20px;color:rgba(255,255,255,.3)">No prospects loaded</td></tr>'}
+    </tbody>
+  </table>
+  </div>
 </div>"""
 
     if not all_comments:
-        body = '<div class="empty" style="padding:24px">No comments fetched yet — run <code>python outreach.py fetch</code> or wait for the daily outreach workflow.</div>'
         return f"""{stats_html}
-<div class="content" style="margin-top:0;padding-top:18px">
-  <h2 class="section-lbl">Outreach Pipeline</h2>
-  {body}
+{prospects_table}
+<div class="content" style="padding-top:4px">
+  <div class="empty" style="padding:16px">
+    Comment-based leads will appear here once the daily outreach workflow runs &mdash;
+    <a href="{ACTIONS_URL}" target="_blank" rel="noopener noreferrer" style="color:#38bdf8">trigger it now</a>.
+  </div>
 </div>"""
 
     # ── Leads table ─────────────────────────────────────────────────────────
@@ -1196,7 +1990,7 @@ def _outreach_pipeline_section() -> str:
         dm_file = outreach_dir / f"{safe_id}_dm_sequence.json"
         if dm_file.exists():
             try:
-                dm_data = json.loads(dm_file.read_text(encoding="utf-8"))
+                dm_data = json.loads(dm_file.read_text(encoding="utf-8-sig"))
                 dm_items = ""
                 for msg in dm_data.get("dm_sequence", []):
                     day_label = "Immediately" if msg.get("day", 0) == 0 else f"Day {msg['day']}"
@@ -1296,6 +2090,7 @@ def _outreach_pipeline_section() -> str:
 
     return f"""
 {stats_html}
+{prospects_table}
 <div class="content" style="margin-top:0;padding-top:18px">
   <h2 class="section-lbl">Outreach Pipeline &mdash; Qualified Leads ({len(qualified)})</h2>
   {leads_section}
@@ -1305,14 +2100,120 @@ def _outreach_pipeline_section() -> str:
 
 
 # ---------------------------------------------------------------------------
+# Publish Calendar
+# ---------------------------------------------------------------------------
+def _publish_calendar_section(posts: list[dict]) -> str:
+    """Render a visual 44-day publish calendar (May 29 → Jul 11) colour-coded by pillar."""
+    scheduled = [
+        p for p in posts
+        if p.get("publish_date") and p.get("status") in ("scheduled", "approved", "draft")
+    ]
+    if not scheduled:
+        return ""
+
+    # Build date → list[post] lookup
+    from collections import defaultdict
+    by_date: dict[str, list[dict]] = defaultdict(list)
+    for p in scheduled:
+        by_date[p["publish_date"]].append(p)
+
+    # Date range
+    try:
+        all_dates = sorted(by_date.keys())
+        start_dt  = datetime.strptime(all_dates[0],  "%Y-%m-%d")
+        end_dt    = datetime.strptime(all_dates[-1], "%Y-%m-%d")
+    except Exception:
+        return ""
+
+    # Build calendar grid
+    day_cells = ""
+    cur = start_dt
+    while cur <= end_dt:
+        ds   = cur.strftime("%Y-%m-%d")
+        day_posts = by_date.get(ds, [])
+        label = cur.strftime("%b %d")
+        weekday = cur.strftime("%a")
+        is_today = ds == datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+        if day_posts:
+            pip = day_posts[0]
+            pillar    = pip.get("pillar", "?")
+            color     = PILLAR_COLOR.get(pillar, "#94a3b8")
+            seg       = pip.get("segment", "")
+            hook      = pip.get("hook", "")
+            score     = pip.get("score", "")
+            score_str = f"★{score}" if score else ""
+            seg_str   = f"Seg {seg}" if seg else ""
+            hook_title = html.escape((pip.get("hook_text") or "")[:80])
+            pillar_esc = html.escape(pillar)
+            hook_esc   = html.escape(hook) if hook else ""
+            sep        = " · " if seg_str and score_str else ""
+            more_html  = f'<div style="font-size:9px;color:rgba(255,255,255,.3)">+{len(day_posts)-1} more</div>' if len(day_posts) > 1 else ""
+            cell_inner = (
+                f'<div class="cal-pill" style="background:{color}22;border:1px solid {color}55;'
+                f'border-radius:6px;padding:4px 6px;font-size:10px;color:{color};'
+                f'white-space:nowrap;overflow:hidden;text-overflow:ellipsis" '
+                f'title="{hook_title}">'
+                f'{pillar_esc}'
+                + (f' · {hook_esc}' if hook_esc else "")
+                + '</div>'
+                f'<div style="font-size:9px;color:rgba(255,255,255,.35);margin-top:2px">'
+                f'{seg_str}{sep}{score_str}'
+                f'</div>'
+                + more_html
+            )
+        else:
+            cell_inner = '<div style="height:38px"></div>'
+
+        today_ring  = "box-shadow:0 0 0 2px #e8372a;" if is_today else ""
+        today_badge = '<span style="color:#e8372a;font-size:9px;margin-left:4px">TODAY</span>' if is_today else ""
+        day_cells += (
+            f'<div class="cal-day" style="background:#161618;border:1px solid rgba(255,255,255,.07);'
+            f'border-radius:8px;padding:6px 8px;min-width:0;{today_ring}">'
+            f'<div style="font-size:10px;color:rgba(255,255,255,.35);margin-bottom:4px">'
+            f'<span style="color:rgba(255,255,255,.5)">{weekday}</span> {label}'
+            + today_badge
+            + '</div>'
+            + cell_inner
+            + '</div>'
+        )
+        cur += timedelta(days=1)
+
+    # Legend
+    legend = "".join(
+        f'<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;'
+        f'color:{c};padding:2px 8px;border-radius:20px;'
+        f'background:{c}18;border:1px solid {c}40">{p}</span>'
+        for p, c in PILLAR_COLOR.items()
+    )
+
+    total_cal = (end_dt - start_dt).days + 1
+    return f"""
+<div class="content" style="padding-top:24px">
+  <h2 class="section-lbl">Publish Calendar &mdash; {len(scheduled)} posts · {total_cal} days</h2>
+  <div style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 16px">
+    {legend}
+  </div>
+  <div class="cal-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));
+       gap:6px;margin-top:4px">
+    {day_cells}
+  </div>
+</div>"""
+
+
+# ---------------------------------------------------------------------------
 # Main generator
 # ---------------------------------------------------------------------------
 def generate(posts: list[dict]) -> str:
-    total       = len(posts)
+    total       = sum(1 for p in posts if p.get("status") not in ("deleted", "superseded"))
     n_published = sum(1 for p in posts if p.get("published") or p.get("status") == "published")
-    n_drafts    = sum(1 for p in posts if (p.get("status") == "draft" or p.get("approval_required")) and not p.get("published"))
+    n_drafts    = sum(1 for p in posts if (p.get("status") == "draft" or p.get("approval_required")) and not p.get("published") and p.get("status") not in ("superseded", "deleted") and not p.get("is_variant", False))
     n_approved  = sum(1 for p in posts if (p.get("approved") or p.get("status") == "approved") and not p.get("published"))
     n_failed    = sum(1 for p in posts if p.get("publish_error") or p.get("status") == "failed")
+    approved_pillars = {
+        p.get("pillar") for p in posts
+        if (p.get("approved") or p.get("status") == "approved") and not p.get("published")
+    }
     success_pct = round((n_published / total * 100) if total else 0)
 
     scored_posts = [p for p in posts if (p.get("metrics") or {}).get("manual_quality_score") is not None]
@@ -1321,7 +2222,7 @@ def generate(posts: list[dict]) -> str:
         avg = round(sum(p["metrics"]["manual_quality_score"] for p in scored_posts) / len(scored_posts), 1)
         avg_score_html = f'<div class="stat"><div class="n">{avg}</div><div class="l">Avg score</div></div>'
 
-    counts = Counter(p.get("pillar", "?") for p in posts)
+    counts = Counter(p.get("pillar", "?") for p in posts if p.get("status") not in ("deleted", "superseded"))
     pillar_pills = "".join(
         f'<span class="pillar-pill" style="border-color:{PILLAR_COLOR.get(p,"#94a3b8")}55;'
         f'color:{PILLAR_COLOR.get(p,"#94a3b8")}">{p} <b>{c}</b></span>'
@@ -1330,6 +2231,9 @@ def generate(posts: list[dict]) -> str:
 
     from content_strategy import PILLARS
     gen_weekday_to_pillar = {c["generate_weekday"]: name for name, c in PILLARS.items()}
+    pub_weekday_to_pillar = {c["weekday"]: name for name, c in PILLARS.items()
+                             if c.get("weekday") in PUBLISH_WEEKDAYS
+                             and c.get("generate_weekday", -1) >= 0}
 
     def _run_html(r: datetime) -> str:
         pillar   = gen_weekday_to_pillar.get(r.weekday(), "?")
@@ -1346,7 +2250,28 @@ def generate(posts: list[dict]) -> str:
             f'</span>'
         )
 
-    runs_html = "".join(_run_html(r) for r in next_runs(3))
+    def _pub_run_html(r: datetime) -> str:
+        pillar = pub_weekday_to_pillar.get(r.weekday(), "?")
+        color  = PILLAR_COLOR.get(pillar, "#94a3b8")
+        date   = (r + timedelta(hours=MUSCAT_OFFSET)).strftime("%a %b %d").replace(" 0", " ")
+        ready  = pillar in approved_pillars
+        indicator = (
+            ' <span style="color:#2a9a5c;font-size:.68rem;font-weight:600">&#10003;&nbsp;ready</span>'
+            if ready else
+            ' <span style="color:rgba(255,255,255,.22);font-size:.68rem">&#9898;&nbsp;no draft</span>'
+        )
+        return (
+            f'<span class="run-item">'
+            f'<b>{date}</b> &middot; '
+            f'<span class="run-pillar" style="color:{color}">{pillar}</span>'
+            f'{indicator}'
+            f'</span>'
+        )
+
+    runs_html     = "".join(_run_html(r)     for r in next_runs(3))
+    pub_runs_html = "".join(_pub_run_html(r) for r in next_publish_runs(3))
+
+    n_variants = sum(1 for p in posts if p.get("is_variant") and p.get("status") not in ("deleted", "superseded"))
 
     _chip_defs = [
         ("All",          "all",       total),
@@ -1356,18 +2281,107 @@ def generate(posts: list[dict]) -> str:
     ]
     if n_failed:
         _chip_defs.append(("Failed", "failed", n_failed))
+    if n_variants:
+        _chip_defs.append(("Variants", "variant", n_variants))
     for _p, _c in sorted(counts.items(), key=lambda x: -x[1]):
-        _chip_defs.append((_p.capitalize(), _p, _c))
+        if _c > 0:
+            _chip_defs.append((_p.capitalize(), _p, _c))
+
+    # Segment chips (A/B/C) — always rendered; disabled (not hidden) when count == 0
+    seg_counts = Counter(p.get("segment", "") for p in posts if p.get("segment"))
+    _SEG_LABELS = {"A": "HR & Ops", "B": "Investors", "C": "Tech"}
+
+    def _seg_chip(seg: str) -> str:
+        count = seg_counts.get(seg, 0)
+        color = SEGMENT_COLOR.get(seg, "#94a3b8")
+        disabled_attr = " disabled" if count == 0 else ""
+        title = "No posts yet" if count == 0 else f"{count} posts"
+        onclick = f" onclick=\"filterCards('seg:{seg}')\"" if count > 0 else ""
+        label = f"{_SEG_LABELS[seg]} ({count})"
+        return (
+            f'<button type="button" class="filter-chip seg-chip seg-{seg}"{disabled_attr} '
+            f'data-filter="seg:{seg}" aria-pressed="false" aria-label="{label}" '
+            f'title="{title}"{onclick} '
+            f'style="border-color:{color}44;color:{color}">'
+            f'<span>{label}</span></button>'
+        )
+
     filter_bar_html = (
         '<div class="filter-bar" role="group" aria-label="Filter posts">'
         + "".join(
-            f'<button class="filter-chip{" active" if k == "all" else ""}" '
-            f'data-filter="{k}" onclick="filterCards(\'{k}\')">'
-            f'{n}<span class="count">{c}</span></button>'
+            f'<button type="button" class="filter-chip{" active" if k == "all" else ""}" '
+            f'data-filter="{k}" aria-pressed="{"true" if k == "all" else "false"}" '
+            f'aria-label="{n}, {c} posts" onclick="filterCards(\'{k}\')">'
+            f'<span>{n}</span><span class="count" aria-hidden="true">{c}</span></button>'
             for n, k, c in _chip_defs
         )
+        + "".join(_seg_chip(s) for s in ("A", "B", "C"))
         + "</div>"
     )
+
+    # KPI targets panel — static playbook targets + live outreach data
+    _kpi_items = [
+        ("50/wk",  "Followers target"),
+        ("3,000",  "Impressions/post target"),
+        ("100/wk", "Profile views target"),
+        ("20/wk",  "DMs target"),
+        ("30%",    "Reply rate target"),
+        ("2/wk",   "Demos booked target"),
+        ("30/wk",  "Newsletter subs target"),
+        ("60%",    "Connection accept target"),
+    ]
+    static_cells = "".join(
+        f'<div class="kpi-cell"><div class="kpi-target">{v}</div><div class="kpi-label">{l}</div></div>'
+        for v, l in _kpi_items
+    )
+
+    # Live outreach KPIs from outreach_tracker.py
+    _OUTREACH_DIVIDER = (
+        '<div class="kpi-cell kpi-divider" style="grid-column:1/-1">'
+        '<div class="kpi-label" style="font-size:10px;opacity:.5;text-transform:uppercase;'
+        'letter-spacing:.08em">Outreach tracker</div></div>'
+    )
+    outreach_cells = ""
+    try:
+        from outreach_tracker import kpi_summary as _kpi_summary
+        ok = _kpi_summary()
+        _conv = f'{ok["conversion_rate"]}%'
+        _due  = str(ok["due_today"]) if ok["due_today"] else "0"
+        _seg  = f'A:{ok["by_segment"].get("A",0)} B:{ok["by_segment"].get("B",0)} C:{ok["by_segment"].get("C",0)}'
+        outreach_rows = [
+            (str(ok["total"]),     "Prospects enrolled"),
+            (str(ok["active"]),    "Active in sequence"),
+            (str(ok["converted"]), "Converted"),
+            (_conv,                "Conversion rate"),
+            (_due,                 "Due today"),
+            (_seg,                 "By segment (A/B/C)"),
+        ]
+        outreach_cells = _OUTREACH_DIVIDER + "".join(
+            f'<div class="kpi-cell"><div class="kpi-target">{v}</div>'
+            f'<div class="kpi-label">{l}</div></div>'
+            for v, l in outreach_rows
+        )
+    except FileNotFoundError:
+        outreach_cells = (
+            _OUTREACH_DIVIDER
+            + '<div class="kpi-cell" style="grid-column:1/-1">'
+            '<div class="kpi-label" style="opacity:.6">'
+            'No outreach data yet — add your first prospect to outreach_tracker.py'
+            '</div></div>'
+        )
+    except Exception as e:
+        raise RuntimeError(
+            f"outreach_tracker.kpi_summary() failed unexpectedly: {e}"
+        ) from e
+
+    kpi_panel_html = f"""
+    <div class="kpi-panel">
+      <button type="button" class="kpi-toggle" aria-expanded="false" aria-controls="kpi-grid"
+              onclick="this.classList.toggle('open');var g=document.getElementById('kpi-grid');g.classList.toggle('open');this.setAttribute('aria-expanded',g.classList.contains('open'))">
+        <span class="kpi-chevron">&#9660;</span> KPI Targets &amp; Outreach
+      </button>
+      <div class="kpi-grid" id="kpi-grid">{static_cells}{outreach_cells}</div>
+    </div>"""
 
     token_msg, token_level = _token_health(posts)
     token_banner = ""
@@ -1389,8 +2403,43 @@ def generate(posts: list[dict]) -> str:
     now_muscat        = _to_muscat(datetime.now(timezone.utc))
     engagement_html   = _engagement_sections()
     outreach_html     = _outreach_pipeline_section()
+    calendar_html     = _publish_calendar_section(posts)
+    try:
+        from newsletter_section import newsletter_dashboard_section
+        newsletter_html = newsletter_dashboard_section()
+    except Exception:
+        newsletter_html = ""
     branch            = _current_branch()
     pillar_class_css  = _pillar_class_css()
+
+    bk = _booking_summary()
+    bookings_section_html = f"""
+    <div class="bookings-section">
+      <h3>Bookings from LinkedIn</h3>
+      <div class="bookings-grid">
+        <div class="bookings-kpi highlight">
+          <span class="kpi-value">{bk['this_week']}</span>
+          <span class="kpi-label">This week</span>
+          <span class="kpi-target">Target: 2+</span>
+        </div>
+        <div class="bookings-kpi">
+          <span class="kpi-value">{bk['from_linkedin']}</span>
+          <span class="kpi-label">Total from LinkedIn</span>
+        </div>
+        <div class="bookings-kpi">
+          <span class="kpi-value">{bk['demo_bookings']}</span>
+          <span class="kpi-label">Demo calls</span>
+        </div>
+        <div class="bookings-kpi">
+          <span class="kpi-value">{bk['investor_bookings']}</span>
+          <span class="kpi-label">Investor briefings</span>
+        </div>
+        <div class="bookings-kpi">
+          <span class="kpi-value">{html.escape(str(bk['top_campaign'] or '—'))}</span>
+          <span class="kpi-label">Top campaign</span>
+        </div>
+      </div>
+    </div>"""
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -1398,6 +2447,28 @@ def generate(posts: list[dict]) -> str:
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>LinkedIn Auto-Poster &middot; Dashboard</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self' https://api.github.com https://raw.githubusercontent.com; frame-ancestors 'none'; base-uri 'self'; form-action 'none'; object-src 'none'">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="description" content="Internal control panel for the LinkedIn Auto-Poster pipeline — review drafts, trigger publishing workflows, and track post engagement.">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0b0b0c">
+<meta name="color-scheme" content="dark">
+<link rel="canonical" href="https://abuali85.github.io/LINKEDIN_POSTS/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23e8372a'/%3E%3Ctext x='16' y='22' font-family='system-ui,sans-serif' font-size='16' font-weight='700' text-anchor='middle' fill='%23fff'%3ELI%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%23e8372a'/%3E%3Ctext x='90' y='118' font-family='system-ui,sans-serif' font-size='80' font-weight='700' text-anchor='middle' fill='%23fff'%3ELI%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&amp;family=DM+Mono:wght@400;500&amp;family=Instrument+Serif:ital@0;1&amp;display=swap">
+<meta property="og:title" content="LinkedIn Auto-Poster · Dashboard">
+<meta property="og:description" content="Internal control panel for the LinkedIn Auto-Poster pipeline.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://abuali85.github.io/LINKEDIN_POSTS/">
+<meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 630'%3E%3Crect width='1200' height='630' fill='%230b0b0c'/%3E%3Crect x='60' y='60' width='100' height='100' rx='22' fill='%23e8372a'/%3E%3Ctext x='110' y='130' font-family='system-ui,sans-serif' font-size='52' font-weight='700' text-anchor='middle' fill='%23fff'%3ELI%3C/text%3E%3Ctext x='60' y='340' font-family='system-ui,sans-serif' font-size='84' font-weight='600' fill='%23ede9e3'%3ELinkedIn Auto-Poster%3C/text%3E%3Ctext x='60' y='420' font-family='system-ui,sans-serif' font-size='40' fill='%23a09a92'%3EDashboard %C2%B7 Drafts %C2%B7 Workflow control%3C/text%3E%3C/svg%3E">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="LinkedIn Auto-Poster · Dashboard">
+<meta name="twitter:description" content="Internal control panel for the LinkedIn Auto-Poster pipeline.">
+<meta name="twitter:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 630'%3E%3Crect width='1200' height='630' fill='%230b0b0c'/%3E%3Crect x='60' y='60' width='100' height='100' rx='22' fill='%23e8372a'/%3E%3Ctext x='110' y='130' font-family='system-ui,sans-serif' font-size='52' font-weight='700' text-anchor='middle' fill='%23fff'%3ELI%3C/text%3E%3C/svg%3E">
 <style>{CSS_BASE}
 {pillar_class_css}
 </style>
@@ -1406,20 +2477,29 @@ def generate(posts: list[dict]) -> str:
 
 <a href="#main-content" class="skip-link">Skip to posts<span class="sr-only"> (main content)</span></a>
 
+<noscript>
+  <div style="background:#2d1800;color:#d4840a;border-bottom:1px solid rgba(212,132,10,.4);padding:10px 28px;font-size:13px;text-align:center">
+    JavaScript is required to filter, approve, edit, or delete drafts. Posts will still display, but actions are disabled.
+  </div>
+</noscript>
+
+<h1 class="sr-only">LinkedIn Auto-Poster Dashboard</h1>
+
 <div class="topbar">
   <div class="logo">
     <span class="logo-mark" aria-hidden="true">LI</span>
-    LinkedIn&nbsp;<em style="font-style:normal;color:#e8372a">Auto-Poster</em>
+    LinkedIn&nbsp;<span class="brand-accent">Auto-Poster</span>
     <span class="logo-sep">/</span>
     Dashboard
   </div>
   <div class="topbar-right">
-    <span class="updated">Updated {now_muscat}</span>
+    <span class="updated" title="Last refreshed: {now_muscat}">Updated {now_muscat}</span>
     <div class="live-dot" title="Live" aria-hidden="true"></div>
     <nav class="actions" aria-label="Site actions">
       <a class="tb-btn primary" href="{ACTIONS_URL}" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">&#9654;</span> Run workflow<span class="sr-only"> (opens in new tab)</span></a>
       <a class="tb-btn" href="https://github.com/{REPO}/actions" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">&#128200;</span> All runs<span class="sr-only"> (opens in new tab)</span></a>
-      <a class="tb-btn" href="https://www.linkedin.com/in/fahad-alamri-b9a809123/" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">&#128279;</span> LinkedIn<span class="sr-only"> (opens in new tab)</span></a>
+      <button type="button" class="tb-btn" onclick="exportPostsCsv()" aria-label="Export all posts as CSV"><span aria-hidden="true">&#11015;</span> Export CSV</button>
+      <a class="tb-btn" href="https://www.linkedin.com/in/fahad-alamri-smartpro/" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">&#128279;</span> LinkedIn<span class="sr-only"> (opens in new tab)</span></a>
     </nav>
   </div>
 </div>
@@ -1438,11 +2518,29 @@ def generate(posts: list[dict]) -> str:
 </div>
 
 <div class="schedbar">
-  <span class="lbl">Next draft generation &rarr;</span>
+  <span class="lbl">Drafts &rarr;</span>
   {runs_html}
+  <span class="lbl" style="margin-left:8px;border-left:1px solid rgba(255,255,255,.08);padding-left:18px">Publishes &rarr;</span>
+  {pub_runs_html}
+</div>
+
+<div class="search-bar">
+  <div class="search-wrap">
+    <span class="search-icon" aria-hidden="true">&#128270;</span>
+    <input type="search" id="post-search" class="search-input"
+           placeholder="Search posts by topic, content, or keyword…  (press / to focus)"
+           aria-label="Search posts. Press the slash key to focus." autocomplete="off"
+           autocapitalize="off" autocorrect="off" spellcheck="false">
+    <button type="button" id="search-clear" class="search-clear" aria-label="Clear search"><span aria-hidden="true">&times;</span></button>
+  </div>
+  <span class="search-count" id="search-count" aria-live="polite"></span>
 </div>
 
 {filter_bar_html}
+
+{kpi_panel_html}
+
+{bookings_section_html}
 
 <main id="main-content">
 <div class="content">
@@ -1450,17 +2548,25 @@ def generate(posts: list[dict]) -> str:
   {cards}
 </div>
 
+{calendar_html}
+
 {engagement_html}
+
+{newsletter_html}
 
 {outreach_html}
 
 </main>
 
 <footer>
-  Drafts generated <b>Sat &middot; Mon &middot; Wed</b> at <b>9:00 am Muscat</b> &rarr; publishes <b>Mon &middot; Wed &middot; Fri</b> after manual approval &nbsp;&middot;&nbsp;
+  <b>English</b> drafts: <b>Sat</b> (pain) &middot; <b>Mon</b> (proof) &middot; <b>Wed</b> (vision) at <b>9 am Muscat</b> &rarr; publishes <b>Mon &middot; Wed &middot; Fri</b>
+  &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+  <b>Arabic</b> drafts: <b>Fri</b> (pain_ar) &middot; <b>Sun</b> (sanad_pro_ar) at <b>9 am Muscat</b> &rarr; publishes <b>Sun &middot; Tue</b>
+  &nbsp;&nbsp;&middot;&nbsp;&nbsp; All require manual approval &nbsp;&middot;&nbsp;
   <a href="https://github.com/{REPO}" target="_blank" rel="noopener noreferrer">Source<span class="sr-only"> (opens in new tab)</span></a> &middot;
   <a href="https://github.com/{REPO}/blob/main/LINKEDIN_SETUP.md" target="_blank" rel="noopener noreferrer">Renew LinkedIn token<span class="sr-only"> (opens in new tab)</span></a> &middot;
-  <a href="{ACTIONS_URL}" target="_blank" rel="noopener noreferrer">Run workflow<span class="sr-only"> (opens in new tab)</span></a>
+  <a href="{ACTIONS_URL}" target="_blank" rel="noopener noreferrer">Run workflow<span class="sr-only"> (opens in new tab)</span></a> &middot;
+  <button type="button" class="link-btn" onclick="clearPat()" title="Remove stored GitHub token from this browser">Clear stored token</button>
 </footer>
 
 <!-- Request Changes modal -->
@@ -1481,12 +2587,13 @@ def generate(posts: list[dict]) -> str:
     <div class="modal-field">
       <label class="modal-label" for="revise-pat">GitHub Personal Access Token (workflow scope)</label>
       <input class="modal-input" id="revise-pat" type="password" placeholder="ghp_..." autocomplete="off" aria-describedby="revise-pat-hint">
-      <div class="modal-hint" id="revise-pat-hint">Used to trigger the revision workflow. Token saved in browser localStorage.</div>
+      <label class="pat-remember"><input type="checkbox" data-pat-remember> Keep token on this device <span class="pat-warn">(stored unencrypted — only on private devices)</span></label>
+      <div class="modal-hint" id="revise-pat-hint">By default, the token is held only for this tab and wiped when you close it.</div>
     </div>
     <div class="modal-status" id="revise-status" role="status" aria-live="polite"></div>
     <div class="modal-actions">
-      <button class="modal-confirm" id="revise-confirm-btn" onclick="confirmRevise()">&#9998; Request Changes</button>
-      <button class="modal-cancel" onclick="closeReviseModal()">Cancel</button>
+      <button type="button" class="modal-confirm" id="revise-confirm-btn" onclick="confirmRevise()">&#9998; Request Changes</button>
+      <button type="button" class="modal-cancel" onclick="closeReviseModal()">Cancel</button>
     </div>
   </div>
 </div>
@@ -1504,12 +2611,13 @@ def generate(posts: list[dict]) -> str:
     <div class="modal-field">
       <label class="modal-label" for="edit-pat">GitHub Personal Access Token (repo scope)</label>
       <input class="modal-input" id="edit-pat" type="password" placeholder="ghp_..." autocomplete="off" aria-describedby="edit-pat-hint">
-      <div class="modal-hint" id="edit-pat-hint">Saves the edit directly to the repo as a commit.</div>
+      <label class="pat-remember"><input type="checkbox" data-pat-remember> Keep token on this device <span class="pat-warn">(stored unencrypted — only on private devices)</span></label>
+      <div class="modal-hint" id="edit-pat-hint">Saves the edit directly to the repo as a commit. By default, the token only lives for this tab.</div>
     </div>
     <div class="modal-status" id="edit-status" role="status" aria-live="polite"></div>
     <div class="modal-actions">
-      <button class="modal-confirm" id="edit-confirm-btn" onclick="confirmEdit()">&#128190; Save Edit</button>
-      <button class="modal-cancel" onclick="closeEditModal()">Cancel</button>
+      <button type="button" class="modal-confirm" id="edit-confirm-btn" onclick="confirmEdit()">&#128190; Save Edit</button>
+      <button type="button" class="modal-cancel" onclick="closeEditModal()">Cancel</button>
     </div>
   </div>
 </div>
@@ -1520,34 +2628,155 @@ def generate(posts: list[dict]) -> str:
     <h3 id="approve-modal-title">&#10003; Approve Draft</h3>
     <input type="hidden" id="modal-draft-path">
     <div class="modal-field">
-      <span class="modal-label">Draft path</span>
+      <span class="modal-label">Draft</span>
       <code class="modal-path" id="modal-path-display"></code>
     </div>
     <div class="modal-field">
-      <span class="modal-label">Post preview</span>
+      <span class="modal-label">Preview</span>
       <div class="modal-preview" id="modal-preview"></div>
     </div>
     <div class="modal-field">
-      <span class="modal-label">Copy path for workflow input</span>
-      <div style="margin-top:6px">
-        <button class="icon-btn" id="modal-copy-path-btn" onclick="copyApprovalPath()">&#128203; Copy path</button>
-      </div>
-      <div class="modal-hint" style="margin-top:8px">
-        Approve no longer requires a token. Click <b>Open Actions</b> below, choose <b>approve_draft</b>,
-        paste the path above into the <em>draft_file</em> field, and run.
-        The workflow commits the approval automatically &mdash; <b>post does not publish immediately</b>.
+      <label class="modal-label" for="approve-pat">GitHub Personal Access Token (workflow scope)</label>
+      <input class="modal-input" id="approve-pat" type="password" placeholder="ghp_..."
+             autocomplete="off" aria-describedby="approve-pat-hint">
+      <label class="pat-remember"><input type="checkbox" data-pat-remember> Keep token on this device <span class="pat-warn">(stored unencrypted &mdash; only on private devices)</span></label>
+      <div class="modal-hint" id="approve-pat-hint">
+        Token needs <b>workflow</b> scope. By default, the token only lives for this tab.
+        <a href="{ACTIONS_URL}" target="_blank" rel="noopener noreferrer"
+           style="color:rgba(255,255,255,.35)">Open Actions directly &#8599;</a>
       </div>
     </div>
+    <div class="modal-status" id="approve-status" role="status" aria-live="polite"></div>
     <div class="modal-actions">
-      <a class="modal-confirm approve-green" href="{ACTIONS_URL}" target="_blank" rel="noopener noreferrer"
-         onclick="closeApproveModal()" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none">
-        Open Actions &#8599;<span class="sr-only"> (opens in new tab)</span></a>
-      <button class="modal-cancel" onclick="closeApproveModal()">Close</button>
+      <button type="button" class="modal-confirm approve-green" id="approve-confirm-btn"
+              onclick="confirmApprove()">&#10003; Approve</button>
+      <button type="button" class="modal-cancel" onclick="closeApproveModal()">Cancel</button>
     </div>
   </div>
 </div>
 
-<div id="toast-container" aria-label="Notifications"></div>
+<!-- Delete modal -->
+<div class="modal-overlay" id="delete-modal" role="dialog" aria-modal="true" aria-labelledby="delete-modal-title">
+  <div class="modal-box">
+    <h3 id="delete-modal-title">&#128465; Delete Draft</h3>
+    <input type="hidden" id="delete-file-path">
+    <div class="modal-field">
+      <span class="modal-label">File</span>
+      <code class="modal-path" id="delete-filename-display"></code>
+    </div>
+    <div class="modal-field">
+      <div class="alert warn" style="margin-bottom:0">
+        &#9888; This permanently removes the file from the repository. It cannot be undone.
+      </div>
+    </div>
+    <div class="modal-field">
+      <label class="modal-label" for="delete-pat">GitHub Personal Access Token (repo scope)</label>
+      <input class="modal-input" id="delete-pat" type="password" placeholder="ghp_..."
+             autocomplete="off" aria-describedby="delete-pat-hint">
+      <label class="pat-remember"><input type="checkbox" data-pat-remember> Keep token on this device <span class="pat-warn">(stored unencrypted &mdash; only on private devices)</span></label>
+      <div class="modal-hint" id="delete-pat-hint">
+        Needs <b>repo</b> scope (or a fine-grained PAT with <b>contents: write</b>).
+        By default, the token only lives for this tab.
+      </div>
+    </div>
+    <div class="modal-status" id="delete-status" role="status" aria-live="polite"></div>
+    <div class="modal-actions">
+      <button type="button" class="modal-confirm destructive" id="delete-confirm-btn"
+              onclick="confirmDelete()">&#128465; Delete permanently</button>
+      <button type="button" class="modal-cancel" onclick="closeDeleteModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Recreate modal -->
+<div class="modal-overlay" id="recreate-modal" role="dialog" aria-modal="true" aria-labelledby="recreate-modal-title">
+  <div class="modal-box">
+    <h3 id="recreate-modal-title">&#8635; Recreate Draft</h3>
+    <input type="hidden" id="recreate-pillar">
+    <div class="modal-field">
+      <span class="modal-label">Action</span>
+      <div style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.6">
+        Generate a fresh <b id="recreate-pillar-display" style="color:#ede9e3"></b> draft with Claude.
+        The current draft stays in <code style="font-family:'DM Mono',monospace;font-size:12px;
+        color:rgba(255,255,255,.4)">posts_history/</code> and will not be overwritten.
+      </div>
+    </div>
+    <div class="modal-field">
+      <label class="modal-label" for="recreate-pat">GitHub Personal Access Token (workflow scope)</label>
+      <input class="modal-input" id="recreate-pat" type="password" placeholder="ghp_..."
+             autocomplete="off" aria-describedby="recreate-pat-hint">
+      <label class="pat-remember"><input type="checkbox" data-pat-remember> Keep token on this device <span class="pat-warn">(stored unencrypted &mdash; only on private devices)</span></label>
+      <div class="modal-hint" id="recreate-pat-hint">
+        Token needs <b>workflow</b> scope. By default, the token only lives for this tab.
+      </div>
+    </div>
+    <div class="modal-status" id="recreate-status" role="status" aria-live="polite"></div>
+    <div class="modal-actions">
+      <button type="button" class="modal-confirm" id="recreate-confirm-btn"
+              onclick="confirmRecreate()">&#8635; Regenerate</button>
+      <button type="button" class="modal-cancel" onclick="closeRecreateModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Newsletter Approve & Test Send modal -->
+<div class="modal-overlay" id="newsletter-approve-modal" role="dialog" aria-modal="true" aria-labelledby="nl-approve-modal-title">
+  <div class="modal-box">
+    <h3 id="nl-approve-modal-title">&#10003; Approve Newsletter Issue</h3>
+    <input type="hidden" id="nl-approve-issue-num">
+    <div class="modal-field">
+      <span class="modal-label">Issue</span>
+      <code class="modal-path" id="nl-approve-issue-display"></code>
+    </div>
+    <div class="modal-field">
+      <div style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.6">
+        Triggers the <b>generate_and_test</b> workflow — drafts the next newsletter issue
+        and sends a test email to <code style="font-family:'DM Mono',monospace;font-size:12px;color:rgba(255,255,255,.4)">NEWSLETTER_TEST_TO</code>.
+      </div>
+    </div>
+    <div class="modal-field">
+      <label class="modal-label" for="nl-approve-pat">GitHub Personal Access Token (workflow scope)</label>
+      <input class="modal-input" id="nl-approve-pat" type="password" placeholder="ghp_..." autocomplete="off">
+      <label class="pat-remember"><input type="checkbox" data-pat-remember> Keep token on this device <span class="pat-warn">(stored unencrypted &mdash; only on private devices)</span></label>
+    </div>
+    <div class="modal-status" id="nl-approve-status" role="status" aria-live="polite"></div>
+    <div class="modal-actions">
+      <button type="button" class="modal-confirm approve-green" id="nl-approve-confirm-btn"
+              onclick="confirmNewsletterApprove()">&#10003; Approve &amp; Test Send</button>
+      <button type="button" class="modal-cancel" onclick="closeNewsletterApproveModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Newsletter Test Send modal -->
+<div class="modal-overlay" id="newsletter-test-modal" role="dialog" aria-modal="true" aria-labelledby="nl-test-modal-title">
+  <div class="modal-box">
+    <h3 id="nl-test-modal-title">&#128231; Send Test Email</h3>
+    <input type="hidden" id="nl-test-issue-num">
+    <div class="modal-field">
+      <span class="modal-label">Issue</span>
+      <code class="modal-path" id="nl-test-issue-display"></code>
+    </div>
+    <div class="modal-field">
+      <div style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.6">
+        Sends the existing draft to <code style="font-family:'DM Mono',monospace;font-size:12px;color:rgba(255,255,255,.4)">NEWSLETTER_TEST_TO</code> only — does not generate a new draft.
+      </div>
+    </div>
+    <div class="modal-field">
+      <label class="modal-label" for="nl-test-pat">GitHub Personal Access Token (workflow scope)</label>
+      <input class="modal-input" id="nl-test-pat" type="password" placeholder="ghp_..." autocomplete="off">
+      <label class="pat-remember"><input type="checkbox" data-pat-remember> Keep token on this device <span class="pat-warn">(stored unencrypted &mdash; only on private devices)</span></label>
+    </div>
+    <div class="modal-status" id="nl-test-status" role="status" aria-live="polite"></div>
+    <div class="modal-actions">
+      <button type="button" class="modal-confirm" id="nl-test-confirm-btn"
+              onclick="confirmNewsletterTest()">&#128231; Send Test Email</button>
+      <button type="button" class="modal-cancel" onclick="closeNewsletterTestModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container" role="region" aria-label="Notifications" aria-live="polite" aria-atomic="false"></div>
 
 <script>
 var _REPO     = '{REPO}';

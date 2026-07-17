@@ -1,0 +1,22 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "The white-label client portal \u2014 what a Sanad office's clients see when they log in",
+  "format": "Open with the specific operational problem, then show how one SmartPro Hub feature addresses it end-to-end",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "A Sanad office client calls at 9am asking about their employee's work permit status.\n\nThe office manager stops what they're doing, opens three different folders, checks a WhatsApp thread, and pieces together an answer 20 minutes later.\n\nThat same question, asked 15 times a week, eats hours the office simply doesn't have.\n\nSmartPro Hub's white-label client portal cuts that loop out completely.\n\nWhen a client logs in, they see their own branded dashboard \u2014 work permit statuses, visa timelines, document expiry alerts, open service requests. Live. Accurate. No call needed.\n\nThe portal carries the Sanad office's brand, not SmartPro Hub's. Clients get a dedicated, professional system. The office gets its afternoons back.\n\nFor HR managers on the client side, it's one place to check instead of waiting on replies. For the Sanad office, fewer status calls means actual capacity to take on more accounts.\n\nWe built this because office management software should help offices grow \u2014 not just move the same bottlenecks into a spreadsheet.\n\nThe offices using it have stopped answering the same question twice.\n\nWhat's the one client request your team handles manually that really shouldn't need a human involved at all?\n\nBook a 20-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#GCCBusiness\n#SMEOman",
+  "char_count": 1400,
+  "generated_at": "2026-06-20T07:49:27.808229+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "deleted",
+  "published": false,
+  "approved": false,
+  "approval_required": false,
+  "dry_run": true,
+  "has_variant": true,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
+}

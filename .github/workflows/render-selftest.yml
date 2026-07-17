@@ -1,0 +1,33 @@
+name: Render self-test
+
+# Renders an Arabic and an English quote card on the CI runner and fails if the
+# Arabic shaping dependencies aren't working — catches the "disconnected Arabic"
+# class of bug before any post is published.
+
+on:
+  push:
+    paths:
+      - "image_card.py"
+      - "verify_render.py"
+      - "requirements.txt"
+      - "fonts/**"
+      - ".github/workflows/render-selftest.yml"
+  workflow_dispatch:
+
+jobs:
+  verify:
+    name: render-selftest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install --no-cache-dir -r requirements.txt
+
+      - name: Verify card rendering (Arabic shaping + PNG output)
+        run: python verify_render.py

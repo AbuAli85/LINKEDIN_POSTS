@@ -1,0 +1,22 @@
+{
+  "pillar": "product_proof",
+  "topic": "From three disconnected systems to one platform \u2014 what the first 30 days of transition look like",
+  "format": "Open with a SmartPro Hub product capability, then show the real-world business outcome it enables",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "Three systems. Forty-seven open browser tabs. One operations manager losing her mind every Monday morning.\n\nThat was a GCC logistics company before they switched to SmartPro Hub. HR data in spreadsheets. Payroll through a separate vendor. PRO documents tracked on WhatsApp.\n\nDay one: employee records, WPS payroll Oman setup, and work permit tracking migrated into one platform.\n\nDay 14: first payroll run processed with direct bank integration. Zero calls to the bank. Zero follow-up emails.\n\nDay 30: Ministry of Labour filings submitted from the same dashboard their HR manager uses for onboarding. No tab-switching. No vendor chasing.\n\nThe operations manager's Monday? One screen.\n\nWe built SmartPro Hub because the real cost of disconnected systems isn't the extra hour spent copying data between tools \u2014 it's the SPF contributions that slip through, the Omanization ratios nobody's watching, the visa renewal that gets flagged because it was on a sticky note that fell behind someone's monitor.\n\nThose are the things that actually cost money.\n\nOne platform handles all of it. Bilingual. Built specifically for Oman and the GCC. Starter plans from OMR 12/month.\n\nIf you're still stitching systems together \u2014 which workflow is actually hurting you most right now?\n\nBook a 20-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#OmanBusiness\n#WPS\n#Omanization\n#GCCBusiness",
+  "char_count": 1446,
+  "generated_at": "2026-06-04T08:05:40.141519+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "deleted",
+  "published": false,
+  "approved": false,
+  "approval_required": false,
+  "dry_run": true,
+  "has_variant": true,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
+}

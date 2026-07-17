@@ -1,0 +1,23 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "The white-label client portal \u2014 what a Sanad office's clients see when they log in",
+  "format": "Open with the specific operational problem, then show how one SmartPRO Hub feature addresses it end-to-end",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "When a client has to call your office just to find out what's happening with their own visa \u2014 your systems are working against you.\n\nThe PRO doesn't know off the top of his head. He checks WhatsApp. Then a spreadsheet. Then calls back 40 minutes later.\n\nThat's not a staffing problem. It's a visibility problem.\n\nWhich is why SmartPRO Hub built the white-label client portal.\n\nWhen a Sanad office runs on SmartPRO Hub, clients log into a branded portal \u2014 the office's name, the office's look \u2014 and see their own data, live.\n\nActive work permits. Visa expiry dates. Open service requests. Documents ready to download. Invoice history.\n\nNo chasing. No waiting. No \"let me check and get back to you.\"\n\nThe PRO team fields fewer status calls. Clients feel in control. And the Sanad office looks like the professional operation it actually is.\n\nWe built this because offices that scale past 20 clients can't run on WhatsApp anymore. The information load breaks the system \u2014 not gradually, but suddenly, when something slips through.\n\nA portal removes a bottleneck that was quietly capping growth. Clients stop calling because they don't need to.\n\nIf your clients are still picking up the phone just to ask \"what's the status?\" \u2014 that's worth fixing.\n\nBook a 30-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#GCCBusiness\n#SMEOman\n#HRTech",
+  "char_count": 1427,
+  "generated_at": "2026-07-08T07:21:31.716456+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "deleted",
+  "published": false,
+  "approved": false,
+  "approval_required": false,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260708_072122_feature_spotlight.json",
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
+}

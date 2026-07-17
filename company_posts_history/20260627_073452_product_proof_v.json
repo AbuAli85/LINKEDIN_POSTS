@@ -1,0 +1,23 @@
+{
+  "pillar": "product_proof",
+  "topic": "A Sanad office in Muscat moved 40 client work permits off WhatsApp \u2014 no missed renewals in six months",
+  "format": "Before/after of a single workflow: same task, two completely different experiences",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "Zero missed renewals across 40 active work permits. Six months straight.\n\nBefore SmartPro Hub, it looked like most offices do: renewal deadlines buried in WhatsApp threads, reminders sent whenever someone remembered to send them, and one group admin holding the whole operation together through sheer memory.\n\nThat's not a process. That's a liability.\n\nSame 40 permits. Same team. The difference was that nothing depended on someone's memory anymore \u2014 every expiry date tracked automatically, deadlines flagged before they turn urgent, documents per client in one place rather than scattered across twelve chat threads.\n\nSanad office management built on a group admin's recall fails the moment that person is sick, busy, or just has a bad week.\n\nSmartPro Hub was built for how Oman businesses actually run \u2014 work permit tracking, PRO services workflows, client document management. Not a generic HR tool with the Gulf bolted on as an afterthought.\n\nStarter plans from OMR 12/month. 14-day free trial, no credit card required.\n\nIf your team is still tracking compliance deadlines on WhatsApp \u2014 what's actually stopping you from switching?\n\nBook a 30-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#GCCBusiness\n#SMEOman",
+  "char_count": 1316,
+  "generated_at": "2026-06-27T07:35:04.125799+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "deleted",
+  "published": false,
+  "approved": false,
+  "approval_required": false,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260627_073453_product_proof.json",
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
+}

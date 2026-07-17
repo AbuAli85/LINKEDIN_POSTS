@@ -1,0 +1,20 @@
+{
+  "pillar": "tech",
+  "topic": "What 4,000 tests and zero staging environment taught us about production confidence",
+  "format": "Describe a technical problem that took longer than it should have \u2014 what made it hard, what fixed it, what you'd do differently",
+  "language": "en",
+  "segment": "C",
+  "publish_day": "Saturday",
+  "post": "A bug in our WPS payroll logic took me six hours to find. The fix was four lines.\n\nWhat made it hard wasn't the code. It was that I didn't trust the tests \u2014 so I kept looking past them.\n\nWe had no staging environment when we shipped the first version of SmartPRO Hub. Oman's first multi-tenant HR intelligence platform, handling WPS payroll with direct bank integration and Ministry of Labour compliance, going straight to production.\n\nThat sounds reckless. Honestly, it was \u2014 right up until it wasn't.\n\nWhat kept us honest was 4,000+ automated tests across tRPC endpoints, Drizzle ORM mutations, and multi-tenant isolation logic. End-of-service gratuity calculations. Work permit expiry edge cases. Payroll cutoff timing for bank files. When there's no staging to hide in, those tests have to actually mean something. Not coverage numbers \u2014 real assertions against the scenarios your users will hit on a bad Tuesday.\n\nWhat shifted our confidence wasn't the deployment pipeline. It was writing tests that made us a little uncomfortable. Tests that assumed the worst from users. Tests where we already knew the right answer before we ran them, and ran them anyway.\n\nThe honest tradeoff: it's slower. Some features took twice as long to ship. We made that call deliberately and I'd make it again. We've never had a payroll calculation wrong in production. On a platform touching people's salaries and government compliance, that's not a KPI \u2014 it's the whole point.\n\nIf you're on a lean team in a market where one bad payroll run costs you everything, write the test you're most afraid to fail. Write it first.\n\nSee SmartPRO Hub in action \u2014 book a free 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=tech\n\n#BuildInPublic\n#SaaS\n#TypeScript\n#OmanTech\n#SmartPROHub",
+  "char_count": 1816,
+  "generated_at": "2026-07-16T08:05:39.046071+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 2,
+  "validation_warning": "too long (1598 chars, need <= 1500)",
+  "status": "approved",
+  "published": false,
+  "approved": true,
+  "approval_required": false,
+  "dry_run": false,
+  "approved_at": "2026-07-16T13:21:31.972890+00:00"
+}

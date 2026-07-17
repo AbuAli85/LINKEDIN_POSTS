@@ -1,0 +1,23 @@
+{
+  "pillar": "oman_market",
+  "topic": "GCC business growth and the operations infrastructure that has to scale with it",
+  "format": "Frame SmartPro Hub's roadmap or worldview in the context of Oman's broader business transformation",
+  "language": "en",
+  "segment": "B",
+  "publish_day": "Friday",
+  "post": "Oman's non-oil economy grew 4.6% last year. That's real momentum. But a lot of the companies driving that number are still managing payroll in spreadsheets and tracking work permits through WhatsApp reminders.\n\nGrowth exposes what you didn't fix.\n\nWhen a company goes from 20 to 80 employees in Oman, the product usually holds up. Sales keeps moving. What breaks is quieter \u2014 a WPS filing submitted late, an SPF contribution that slipped through, a work permit that expired because nobody owned the renewal date. Ministry of Labour deadlines sitting unread in someone's inbox. These aren't dramatic failures. They're the kind of friction that compounds until it becomes a serious problem.\n\nVision 2040 is doing its job at the macro level. But national ambition doesn't automatically translate into operational readiness at the company level. HR systems, WPS payroll, PRO services, Omanization compliance \u2014 that layer has to be built by each business, on its own timeline. A lot of growth quietly stalls in that gap.\n\nSmartPro Hub covers WPS payroll, work permit tracking, Sanad office management, government filings, and CRM \u2014 bilingual, starting at OMR 12/month. Built specifically for businesses operating in Oman's regulatory environment.\n\nThe companies that come out of this decade in good shape will mostly be the ones that sorted their back office before it became the bottleneck.\n\nInvestor and partnership inquiries: https://www.thesmartpro.io/investors?utm_source=linkedin&utm_medium=social&utm_campaign=oman-market\n\nBook a 20-minute demo at www.thesmartpro.io/demo\n\n#SmartPROHub\n#OmanVision2040\n#GCCBusiness\n#HRTech\n#SMEOman",
+  "char_count": 1633,
+  "generated_at": "2026-06-11T08:14:22.862172+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "deleted",
+  "published": false,
+  "approved": false,
+  "approval_required": false,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260611_081407_oman_market.json",
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
+}

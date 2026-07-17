@@ -3,14 +3,20 @@
 import json
 import os
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from dotenv import load_dotenv
 
-from content_strategy import pick_pillar
-from generator import generate_post, save_post
+from strategy_loader import history_dir as _history_dir, load_strategy
+from generator import generate_post, generate_job_post, generate_hook_variant, save_post
 from publisher import LinkedInError, publish_post
+
+# Audience-aware strategy module — defaults to content_strategy unless
+# LINKEDIN_AUDIENCE=company is set in the environment.
+_strategy = load_strategy()
+pick_pillar = _strategy.pick_pillar
+PILLARS = _strategy.PILLARS
 
 load_dotenv()
 
@@ -26,6 +32,7 @@ VALID_MODES = {
     "fetch_metrics",
     "fetch_comments",
     "post_reply",
+    "announce_jobs",   # process pending job queue from SmartPro Hub
 }
 
 
@@ -59,6 +66,8 @@ def main() -> int:
         return generate_and_publish_now()
     if mode == "revise_draft":
         return revise_saved_draft()
+    if mode == "announce_jobs":
+        return announce_pending_jobs()
     if mode == "fetch_metrics":
         from metrics import fetch_all_published
         fetch_all_published()
@@ -77,8 +86,20 @@ def main() -> int:
     return generate_draft()
 
 
+def _expire_stale_drafts() -> None:
+    """Reject drafts older than the queue-hygiene age cap (best-effort, never fatal)."""
+    try:
+        from queue_hygiene import expire_stale, MAX_AGE_DAYS
+        expired = expire_stale()
+        if expired:
+            print(f"[queue-hygiene] auto-expired {len(expired)} draft(s) older than {MAX_AGE_DAYS} days.")
+    except Exception as exc:
+        print(f"[queue-hygiene] expire step skipped: {exc}")
+
+
 def generate_draft() -> int:
     now = datetime.now(timezone.utc)
+    _expire_stale_drafts()
     force = os.environ.get("FORCE_PILLAR") or None
 
     pillar, config = pick_pillar(now.weekday(), force)
@@ -94,12 +115,67 @@ def generate_draft() -> int:
         "dry_run": True,
     })
     path = save_post(post)
+    if force:
+        _supersede_previous_draft(pillar, path)
     _notify_draft_ready(path, post, pillar)
 
     print(f"Saved draft -> {path}")
     _print_post(post)
+
+    # Generate hook variant (English pillars only — skipped for Arabic automatically)
+    print("Generating hook variant...")
+    variant = generate_hook_variant(post, config)
+    if variant is not None:
+        variant["variant_of"] = path.name
+        # Save variant with timestamp 1 s before the primary so it sorts AFTER
+        # the primary in the descending-timestamp dashboard list.
+        primary_parts = path.stem.split("_")  # ["20260516", "095923", "pain"]
+        primary_dt = datetime.strptime(
+            primary_parts[0] + "_" + primary_parts[1], "%Y%m%d_%H%M%S"
+        )
+        variant_ts = (primary_dt - timedelta(seconds=1)).strftime("%Y%m%d_%H%M%S")
+        variant_path = path.parent / f"{variant_ts}_{pillar}_v.json"
+        variant_path.write_text(json.dumps(variant, indent=2), encoding="utf-8")
+        # Tag primary draft with has_variant
+        post["has_variant"] = True
+        path.write_text(json.dumps(post, indent=2), encoding="utf-8")
+        print(f"Saved hook variant -> {variant_path}")
+    else:
+        print("hook_variant: no variant generated (skipped or failed)")
+
     print("Draft mode — not publishing to LinkedIn. Review the draft, then run POST_MODE=publish_draft with PUBLISH_DRAFT_PATH.")
     return 0
+
+
+def _supersede_previous_draft(pillar: str, new_path: Path) -> None:
+    """Mark the most recent unreviewed draft for *pillar* as superseded.
+
+    Called when Recreate generates a replacement draft so the old one stops
+    appearing as 'Needs review' in the dashboard.  Only affects drafts that
+    are not yet approved or published — approved drafts are left alone.
+    """
+    history = _history_dir()
+    for f in sorted(history.glob("*.json"), reverse=True):
+        if f.resolve() == new_path.resolve():
+            continue
+        try:
+            data = json.loads(f.read_text(encoding="utf-8-sig"))
+        except Exception:
+            continue
+        if (
+            data.get("pillar") == pillar
+            and not data.get("published")
+            and not data.get("approved")
+            and data.get("status") in ("draft", None)
+        ):
+            data.update({
+                "status":        "superseded",
+                "superseded_at": datetime.now(timezone.utc).isoformat(),
+                "superseded_by": new_path.name,
+            })
+            f.write_text(json.dumps(data, indent=2), encoding="utf-8")
+            print(f"Superseded old draft: {f.name}")
+            break  # only the most recent eligible draft
 
 
 def generate_and_publish_now() -> int:
@@ -138,49 +214,56 @@ def generate_and_publish_now() -> int:
 
 
 def publish_approved_for_today() -> int:
-    """Cron phase-2: find the most recent approved draft for today's publish pillar and publish it.
+    """Publish sweep: find the oldest approved draft whose publish_day matches today.
 
-    Runs Mon/Wed/Fri at 6am UTC. If no approved draft exists, exits cleanly — the owner
-    simply hasn't approved yet and the post will be skipped for this cycle.
+    Pillar-agnostic — publishes any approved post scheduled for today, regardless of
+    which pillar generated it.  Legacy posts with no publish_day are included so they
+    are never silently stuck.  Publishes at most one post per run to avoid bulk-publishing.
     """
-    from content_strategy import PILLARS
+    dry_run    = os.environ.get("DRY_RUN", "false").lower() == "true"
+    now        = datetime.now(timezone.utc)
+    today_name = now.strftime("%A")  # e.g. "Monday"
 
-    now     = datetime.now(timezone.utc)
-    weekday = now.weekday()  # 0=Mon … 6=Sun
+    # Auto-expire stale drafts BEFORE the sweep so a pre-fix/aged approved draft
+    # can never publish weeks after it was written.
+    _expire_stale_drafts()
 
-    # Identify which scheduled pillar publishes today (exclude conversion — manual only)
-    todays_pillar = next(
-        (name for name, cfg in PILLARS.items()
-         if cfg["weekday"] == weekday and cfg.get("generate_weekday", -1) >= 0),
-        None,
-    )
-    if todays_pillar is None:
-        print(f"No pillar scheduled to publish today (weekday={weekday}). Nothing to do.")
-        return 0
-
-    history = Path(__file__).parent / "posts_history"
+    history    = _history_dir()
     candidates: list[tuple[Path, dict]] = []
-    for f in sorted(history.glob("*.json"), reverse=True):
+
+    # Walk oldest-first so candidates[0] is the post that has waited longest
+    for f in sorted(history.glob("*.json")):
         try:
-            post = json.loads(f.read_text(encoding="utf-8"))
+            post = json.loads(f.read_text(encoding="utf-8-sig"))
         except Exception:
             continue
-        if (
-            post.get("pillar") == todays_pillar
-            and (post.get("approved") or post.get("status") == "approved")
-            and not post.get("published")
-        ):
-            candidates.append((f, post))
+        if not (post.get("approved") or post.get("status") == "approved"):
+            continue
+        if post.get("published"):
+            continue
+        # Never publish a draft that was rejected/removed — even if some path
+        # left approved=true on it (e.g. re-approving a stale notification email).
+        if post.get("rejected") or post.get("status") in ("superseded", "deleted"):
+            continue
+        post_publish_day = post.get("publish_day", "")
+        # Include posts whose publish_day matches today, or legacy posts with no publish_day
+        if post_publish_day and post_publish_day != today_name:
+            continue
+        candidates.append((f, post))
 
     if not candidates:
-        print(
-            f"No approved draft found for pillar={todays_pillar!r} (weekday={weekday}). "
-            "Owner has not approved a draft yet — skipping this publish cycle."
-        )
+        print(f"No approved posts scheduled for {today_name}. Nothing to publish.")
         return 0
 
-    path, _ = candidates[0]  # most recently generated approved draft
-    print(f"Auto-publishing approved {todays_pillar} draft: {path.name}")
+    path, post = candidates[0]
+    print(f"[publish_approved] Candidate: {path.name}  pillar={post.get('pillar')}  publish_day={post.get('publish_day', 'legacy')}")
+
+    if dry_run:
+        print(f"DRY_RUN=true — would publish {path.name}. Remaining candidates: {len(candidates) - 1}")
+        for p, _ in candidates[1:]:
+            print(f"  (queued) {p.name}")
+        return 0
+
     return _publish_post_file(path)
 
 
@@ -204,9 +287,18 @@ def approve_draft_file() -> int:
     if not path.exists():
         raise SystemExit(f"Draft not found: {path}")
 
-    post = json.loads(path.read_text(encoding="utf-8"))
-    if post.get("published"):
-        raise SystemExit(f"Post is already published — cannot re-approve: {path}")
+    post = json.loads(path.read_text(encoding="utf-8-sig"))
+    # Queue-hygiene guard: never approve a published post or an empty-body shell.
+    from queue_hygiene import can_approve
+    ok, why = can_approve(post)
+    if not ok:
+        # Idempotent "approve" behavior: stale approve links can target drafts that
+        # were already rejected/removed. Treat that as a safe no-op instead of a
+        # failed workflow run.
+        if post.get("rejected") or post.get("status") in ("superseded", "deleted"):
+            print(f"Skipping approval for {path.name}: {why}")
+            return 0
+        raise SystemExit(f"Cannot approve {path.name}: {why}")
 
     post.update({
         "status":           "approved",
@@ -238,12 +330,16 @@ def _publish_post_file(path: Path) -> int:
     if not path.exists():
         raise SystemExit(f"Draft file not found: {path}")
 
-    post = json.loads(path.read_text(encoding="utf-8"))
+    post = json.loads(path.read_text(encoding="utf-8-sig"))
     if not post.get("post"):
         raise SystemExit(f"Draft file does not contain a post body: {path}")
     if post.get("published"):
         print(f"Already published: {path}")
         return 0
+    # Never publish a rejected/removed draft directly (publish_draft / publish_now
+    # on a stale draft path). Same guard as approve — regenerate instead.
+    if post.get("rejected") or post.get("status") in ("deleted", "superseded"):
+        raise SystemExit(f"Draft was rejected/removed — cannot publish: {path}")
 
     post.update({
         "status": "approved",
@@ -259,10 +355,12 @@ def _publish_post_file(path: Path) -> int:
         result = publish_post(post["post"], pillar=post.get("pillar", ""))
         print(f"Published! Post ID: {result['post_id']}  image={result.get('image_path','')}")
         _update_json(path, {
-            "status": "published",
-            "published": True,
-            "post_id": result["post_id"],
-            "published_at": datetime.now(timezone.utc).isoformat(),
+            "status":              "published",
+            "published":           True,
+            "post_id":             result["post_id"],
+            "published_at":        datetime.now(timezone.utc).isoformat(),
+            "cta_comment_posted":  result.get("cta_comment_posted", False),
+            "cta_comment_url":     result.get("cta_comment_url", ""),
         })
         return 0
     except LinkedInError as e:
@@ -286,7 +384,7 @@ def revise_saved_draft() -> int:
     if not path.exists():
         raise SystemExit(f"Draft not found: {path}")
 
-    original = json.loads(path.read_text(encoding="utf-8"))
+    original = json.loads(path.read_text(encoding="utf-8-sig"))
     print(f"Revising draft: {path.name}")
     print(f"Feedback: {notes}")
 
@@ -298,6 +396,51 @@ def revise_saved_draft() -> int:
     return 0
 
 
+def announce_pending_jobs() -> int:
+    """Generate job announcement drafts for all pending (unannounced) jobs.
+
+    Run manually: POST_MODE=announce_jobs python main.py
+    This is completely separate from the 3x/week marketing schedule.
+    """
+    try:
+        from smartpro_data import get_pending_jobs, mark_job_announced
+    except ImportError:
+        print("smartpro_data.py not found — cannot process job queue.")
+        return 1
+
+    pending = get_pending_jobs()
+    if not pending:
+        print("No pending jobs to announce.")
+        return 0
+
+    jobs_config = PILLARS["jobs"]
+    announced = 0
+
+    for job in pending:
+        try:
+            print(f"\nGenerating announcement for: {job.get('title')} @ {job.get('company_name')}")
+            post = generate_job_post(job, jobs_config)
+            post.update({
+                "status": "draft",
+                "published": False,
+                "approved": False,
+                "approval_required": True,
+                "dry_run": True,
+            })
+            path = save_post(post)
+            mark_job_announced(job["id"])
+            _notify_draft_ready(path, post, "jobs")
+            print(f"Saved job draft -> {path}")
+            _print_post(post)
+            announced += 1
+        except Exception as e:
+            print(f"ERROR generating announcement for job {job.get('id')}: {e}")
+
+    print(f"\nDone — {announced}/{len(pending)} job announcement drafts created.")
+    print("Review and approve each draft, then publish with POST_MODE=publish_draft.")
+    return 0
+
+
 def _notify_draft_ready(path: Path, post: dict, pillar: str) -> None:
     """Send optional draft-ready alerts without blocking draft creation."""
     try:
@@ -305,7 +448,7 @@ def _notify_draft_ready(path: Path, post: dict, pillar: str) -> None:
 
         send_draft_ready(
             draft_path=str(path),
-            post_preview=post.get("post", "")[:200],
+            post_preview=post.get("post", ""),
             pillar=pillar,
             dashboard_url=os.environ.get("DASHBOARD_URL"),
         )
@@ -324,7 +467,7 @@ def _print_post(post: dict) -> None:
 
 
 def _update_json(path: Path, updates: dict) -> None:
-    data = json.loads(path.read_text(encoding="utf-8"))
+    data = json.loads(path.read_text(encoding="utf-8-sig"))
     data.update(updates)
     path.write_text(json.dumps(data, indent=2), encoding="utf-8")
 

@@ -1,0 +1,21 @@
+{
+  "pillar": "sanad_pro",
+  "topic": "How do you onboard a new PRO officer without losing track of open cases mid-handover?",
+  "format": "Walk through the exact day-in-the-life of a Sanad office manager handling 20+ client companies with no case tracking system \u2014 every painful step in sequence",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Thursday",
+  "post": "Your PRO officer resigned on Thursday. New person starts Sunday.\n\nSomewhere in his phone are 6 WhatsApp threads with client companies. Somewhere in his Excel is a tab called \"April renewals \u2014 FINAL v3.\" Somewhere in his head is the context for 40 open cases across 20 clients.\n\nYou have 48 hours to hand that over.\n\nThis is the real cost of running your Sanad office on personal tools. Not the daily inefficiency \u2014 you've made peace with that. It's the moment someone walks out, and the entire operation walks out with them.\n\nCases go quiet. Clients call asking for updates you don't have. A work permit renewal due in 5 days gets missed because nobody knew it existed.\n\nThat's not a documentation problem. It's a systems problem.\n\nWhen every case sits in a shared platform \u2014 assigned to an officer, timestamped, documents attached, expiry dates visible \u2014 a new PRO officer can open a laptop Sunday morning and actually know where things stand. No digging through chat histories. No guessing what \"FINAL v3\" means.\n\n924 licensed Sanad offices in Oman. Most of them one resignation away from a very bad week.\n\nDoes your office survive a handover right now \u2014 or does the knowledge leave with the person?\n\nTry the Sanad AI Assistant free \u2014 instant answers on work permits, visas & government fees: https://www.thesmartpro.io/sanad/assistant?utm_source=linkedin&utm_medium=social&utm_campaign=sanad-pro\n\n#OmanBusiness\n#HRManagement\n#SmartPROHub\n#Omanization\n#GCCBusiness",
+  "char_count": 1466,
+  "generated_at": "2026-07-14T07:03:11.791652+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "deleted",
+  "published": false,
+  "approved": false,
+  "approval_required": false,
+  "dry_run": true,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
+}

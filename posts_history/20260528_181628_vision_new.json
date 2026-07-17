@@ -1,0 +1,22 @@
+{
+  "pillar": "vision",
+  "segment": "B",
+  "status": "deleted",
+  "generated_at": "2026-05-28T18:16:28+04:00",
+  "model": "sonnet-4-6",
+  "hook": "bold-statement",
+  "score": 7.5,
+  "notes": "Bold observation: Oman's fast-growing companies need real HR infrastructure. Vision 2040 + market window.",
+  "title": "What modern HR looks like for a growing Oman company in 2026 \u2014 and who is building it",
+  "brief": "Bold observation: Oman's fast-growing companies need real HR infrastructure. Vision 2040 + market window.",
+  "body": "The companies that will lead Oman's private sector in 2030 are being built right now.\n\nMost of them are still running HR on Excel.\n\nThat's not a criticism \u2014 it's an observation about timing. The tools available to Omani businesses have changed faster in the last three years than in the previous decade. Government portals are real-time. WPS submissions are digital. Ministry of Labour inspections are data-driven. Omanisation compliance is increasingly tracked, compared, and published.\n\nThe infrastructure is there. The internal systems haven't caught up.\n\nModern HR for a growing Oman company in 2026 looks like this:\n\n\u2192 Payroll that closes in hours, not days \u2014 bank-integrated, WPS-validated before submission\n\u2192 Omanisation ratios visible in a dashboard, not calculated at quarter-end from a spreadsheet\n\u2192 Employment contracts signed digitally, searchable, audit-ready in 30 seconds\n\u2192 Work permit and visa renewals tracked automatically \u2014 alerts before expiry, not after\n\u2192 Employee self-service \u2014 leave requests, payslips, documents \u2014 without calling HR\n\nThe companies building on this infrastructure now will have a structural advantage in five years that their competitors will struggle to close.\n\nIt's not about technology for its own sake. It's about what your leadership team can see and decide when the data is current and in one place.\n\nThe window to build this foundation properly is open now. Vision 2040 compliance requirements are tightening. The businesses that move early won't scramble when they intensify.\n\nWhat does your HR infrastructure tell you about where your business is heading \u2014 and where does it go silent?\n\nRequest an investor briefing:\nhttps://www.thesmartpro.io/investors?utm_source=linkedin&utm_medium=social&utm_campaign=vision-en\n\n#OmanBusiness #Vision2040 #HRTech #SmartPROHub #FounderMindset",
+  "scored_at": "2026-05-28",
+  "publish_date": "2026-06-09",
+  "publish_time": "09:00 GST",
+  "_scheduled_at": "2026-05-28T18:00:00+00:00",
+  "approved": false,
+  "approval_required": false,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
+}

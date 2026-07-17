@@ -1,0 +1,23 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "The white-label client portal \u2014 what a Sanad office's clients see when they log in",
+  "format": "Open with the specific operational problem, then show how one SmartPro Hub feature addresses it end-to-end",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "20 minutes to answer a single status question. Multiplied 15 times a week. That's nearly a full workday gone \u2014 every week \u2014 just telling people where things stand.\n\nThe office manager stops mid-task, digs through three folders, checks a WhatsApp thread, pieces it together, sends a reply. Then does it again tomorrow for a different client asking the same thing.\n\nSmartPro Hub's white-label client portal cuts that out.\n\nWhen a client logs in, they see their own branded dashboard \u2014 work permit statuses, visa timelines, document expiry alerts, open service requests. Live and accurate. No call, no WhatsApp ping, no waiting.\n\nThe portal carries the Sanad office's brand, not SmartPro Hub's. So clients get a clean, professional system that feels like it belongs to the office they hired. And the office gets its afternoons back.\n\nFor HR managers on the client side, it's one place to check instead of chasing replies. For the Sanad office, fewer status calls means actual room to take on more accounts \u2014 which is the whole point.\n\nWe built this because office management software should help offices grow, not just relocate the same bottlenecks into a slightly tidier spreadsheet.\n\nThe offices using it have stopped answering the same question twice.\n\nWhat's one client request your team handles manually that really shouldn't need a human involved at all?\n\nBook a 20-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#GCCBusiness\n#SMEOman",
+  "char_count": 1540,
+  "generated_at": "2026-06-20T07:49:39.544629+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "deleted",
+  "published": false,
+  "approved": false,
+  "approval_required": false,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260620_074927_feature_spotlight.json",
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
+}

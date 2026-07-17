@@ -1,0 +1,20 @@
+{
+  "pillar": "pain",
+  "segment": "hr_managers",
+  "hook": "bold-statement",
+  "hook_text": "Oman's payroll compliance isn't getting easier. It's getting stricter. And most companies aren't ready.",
+  "body": "The Ministry of Manpower has digitized inspection workflows.\n\nWhat used to be a paper audit trail is now a data comparison:\nYour submitted records vs. Ministry-held records vs. WPS bank data.\n\nDiscrepancies that used to slip through now create automatic flags.\n\nThree areas where standards are tightening:\n\n1. Profession code accuracy\nThe gap between registered code and actual job function is now a priority audit item. Companies with mismatches are being flagged proactively.\n\n2. Omanization ratio reporting\nManual self-reporting is being cross-referenced against WPS data. Inconsistencies trigger review.\n\n3. End-of-service fund compliance\nFor companies subject to new requirements, documentation must match payment records exactly.\n\nThe companies struggling aren't negligent. They're running on tools built for the old compliance model.\n\nSpreadsheets worked when inspectors came once a year and checked paper files.\n\nThey don't work when Ministry systems are cross-referencing your data automatically.\n\n---\n\nIs your HR stack built for today's compliance environment \u2014 or 2018's?",
+  "cta": "DM \"COMPLIANCE\" for a free gap analysis.",
+  "score": 8.0,
+  "scored_at": "2026-05-28",
+  "status": "deleted",
+  "publish_date": "2026-07-07",
+  "publish_time": "09:00 GST",
+  "lang": "en",
+  "notes": "Q3 batch generated 2026-05-28",
+  "approved": false,
+  "approval_required": false,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
+}

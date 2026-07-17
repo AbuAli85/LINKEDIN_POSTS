@@ -1,0 +1,23 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "Automated invoicing per service for PRO firms \u2014 billing 30 clients in the time it used to take to bill three",
+  "format": "Lead with a quote or question from a customer, then explain the feature built in response",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "PRO firms billing 30 clients in the same time it used to take to bill three. The difference isn't extra staff \u2014 it's invoicing that's built around how PRO work actually runs.\n\nWe hear this from PRO service firms across Oman and the GCC. A lot. So we built automated invoicing per service, and it's genuinely changed how our customers close out their month.\n\nHere's the actual problem: most PRO firms handle a mix of services \u2014 visa processing, work permits, Omanization filings, Sanad office management. Every client uses a different combination. Billing manually means digging through notes, chasing approvals, and rebuilding the same invoice logic from scratch. Thirty clients. Every month.\n\nIn SmartPro Hub, each service carries its own billing rule. When work is completed, the invoice generates automatically \u2014 right fee, right client, right service line. No reconstruction, no hunting through old notes.\n\nThat's how you get to 30 clients in the time it once took to handle three.\n\nThis isn't a standalone add-on either. It sits inside a broader PRO automation platform connected to your client portal, contracts, and compliance workflows \u2014 so everything talks to each other.\n\nIf your team is still losing days to invoicing every month, that time has better uses.\n\nBook a 20-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#PRO services automation Oman\n#GCCBusiness\n#SMEOman",
+  "char_count": 1473,
+  "generated_at": "2026-05-27T07:52:07.856798+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "deleted",
+  "published": false,
+  "approved": false,
+  "approval_required": false,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260527_075156_feature_spotlight.json",
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
+}

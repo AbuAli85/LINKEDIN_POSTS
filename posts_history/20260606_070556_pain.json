@@ -1,0 +1,27 @@
+{
+  "pillar": "pain",
+  "topic": "The work permit that expired because no one was tracking the renewal date",
+  "format": "Before/after: describe exactly what this problem looks like unsolved versus what changes when it is solved",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "The permit was valid. Until it wasn't.\n\nOne missed renewal date. The employee gets flagged. Work stops. Now you're on the phone explaining to a client why their project is delayed — not because of something that went wrong today, but something no one caught six months ago.\n\nThis is what happens when work permit tracking lives in a spreadsheet nobody opens.\n\nThe expiry date was right there. Column G. It just sat quietly until it became a crisis.\n\nI've talked to HR managers in Oman handling 50, 80, 100+ employees this way. Not because they're careless — because nothing is telling them when to act. WhatsApp threads don't send reminders. Excel doesn't escalate. It just holds data and waits.\n\nWhen tracking is automated, the reminder comes 90 days before expiry. Then 60. Then 30. The right person gets notified. The renewal gets filed. Nothing stops.\n\nThat's the gap. Not effort. Not intention. Just a system that actually follows up.\n\nSmartPRO Hub tracks permits, visas, and Ministry of Labour Oman compliance deadlines in one place, with automated alerts before anything expires.\n\nBook a free 20-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=pain\nOr WhatsApp +96879665522\n\nHow many renewal dates are sitting untracked in your team right now?\n\n#OmanBusiness\n#HRManagement\n#SmartPROHub\n#Omanization\n#GCCBusiness",
+  "char_count": 1366,
+  "generated_at": "2026-06-06T07:05:56.864662+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "published",
+  "published": true,
+  "approved": true,
+  "approval_required": false,
+  "dry_run": false,
+  "has_variant": true,
+  "approved_at": "2026-06-08T06:31:28.981291+00:00",
+  "post_id": "urn:li:share:7469637209860784129",
+  "published_at": "2026-06-08T06:31:30.931968+00:00",
+  "cta_comment_posted": false,
+  "cta_comment_url": "",
+  "metrics": {
+    "hook_style": "bold-statement"
+  }
+}

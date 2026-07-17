@@ -1,16 +1,30 @@
 {
   "pillar": "proof",
   "topic": "What the HR team said after their first fully automated payroll run",
-  "format": "Walk through the before and after in precise detail — same task, completely different experience from start to finish",
-  "post": "Before SmartPro: 2 days to run payroll. Manual attendance checks, Excel cross-referencing, chasing department heads for approvals, formatting the WPS file, praying the bank upload goes through.\n\nAfter SmartPro: 23 minutes. One HR manager. Zero rejections.\n\nThat's not an estimate. That's what the HR team at a 74-person company in Muscat reported after their first fully automated payroll run.\n\nHere's what actually changed:\n\nAttendance data pulled directly from the system — no manual entry. Approvals routed and completed inside the platform. WPS file generated automatically and submitted straight to the bank. Ministry of Manpower records updated without a separate login.\n\nThe HR manager's words: \"I kept waiting for something to go wrong.\"\n\nNothing did.\n\nThe part that surprised them most wasn't the speed. It was the silence. No calls from finance asking where the file was. No last-minute fixes. No Sunday night anxiety about Monday morning.\n\nIf your payroll still takes days and involves three people and two spreadsheets — that's not a workflow problem. That's a tooling problem.\n\nWhat does your payroll process actually cost you in hours per month?\n\nDM me or WhatsApp +96879665522 to book a free 20-minute demo of SmartPro.\nthesmartpro.io\n\n#Payroll\n#HRManagement\n#WPS\n#SmartPro\n#Oman",
+  "format": "Walk through the before and after in precise detail \u2014 same task, completely different experience from start to finish",
+  "post": "Before SmartPro: 2 days to run payroll. Manual attendance checks, Excel cross-referencing, chasing department heads for approvals, formatting the WPS file, praying the bank upload goes through.\n\nAfter SmartPro: 23 minutes. One HR manager. Zero rejections.\n\nThat's not an estimate. That's what the HR team at a 74-person company in Muscat reported after their first fully automated payroll run.\n\nHere's what actually changed:\n\nAttendance data pulled directly from the system \u2014 no manual entry. Approvals routed and completed inside the platform. WPS file generated automatically and submitted straight to the bank. Ministry of Manpower records updated without a separate login.\n\nThe HR manager's words: \"I kept waiting for something to go wrong.\"\n\nNothing did.\n\nThe part that surprised them most wasn't the speed. It was the silence. No calls from finance asking where the file was. No last-minute fixes. No Sunday night anxiety about Monday morning.\n\nIf your payroll still takes days and involves three people and two spreadsheets \u2014 that's not a workflow problem. That's a tooling problem.\n\nWhat does your payroll process actually cost you in hours per month?\n\nDM me or WhatsApp +96879665522 to book a free 20-minute demo of SmartPro.\nthesmartpro.io\n\n#Payroll\n#HRManagement\n#WPS\n#SmartPro\n#Oman",
   "char_count": 1294,
   "generated_at": "2026-05-04T07:03:26.179311+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 1,
-  "status": "approved",
-  "published": false,
+  "status": "published",
+  "published": true,
   "approved": true,
   "approval_required": false,
   "dry_run": false,
-  "approved_at": "2026-05-07T20:10:40.994Z"
+  "approved_at": "2026-05-18T06:25:28.503495+00:00",
+  "post_id": "urn:li:share:7462025552460394496",
+  "published_at": "2026-05-18T06:25:30.089320+00:00",
+  "cta_comment_posted": false,
+  "cta_comment_url": "",
+  "score": 8,
+  "hook": "story",
+  "notes": "Monday morning story - very relatable for founders, high share",
+  "scored_at": "2026-05-28",
+  "metrics": {
+    "manual_quality_score": 8,
+    "hook_style": "story",
+    "review_notes": "Monday morning founder story - very relatable",
+    "updated_at": "2026-05-28T18:11:29.336684+00:00"
+  }
 }

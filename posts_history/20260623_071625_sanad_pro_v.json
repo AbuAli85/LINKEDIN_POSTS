@@ -1,0 +1,28 @@
+{
+  "pillar": "sanad_pro",
+  "topic": "How do you onboard a new PRO officer without losing track of open cases mid-handover?",
+  "format": "Build a sharp before/after: managing government services with WhatsApp and Excel versus SmartPRO Hub case tracking and a client portal — show the same week, completely different experience",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Thursday",
+  "post": "Every Sanad office has a version of this story: a PRO officer leaves, and suddenly nobody knows where 40 open cases stand.\n\nBy 10:30 AM, three clients are calling about cases the old officer was handling. Nobody knows where the files are. The handover \"notes\" are a WhatsApp thread with 340 messages.\n\nThat's not a staffing problem. That's a systems problem.\n\nWhen you're running on WhatsApp and Excel, you don't have a case management system. You have a memory system. And memory walks out the door with every officer change.\n\nSame Monday, on SmartPRO Hub:\n\nNew officer opens the platform. Every client company is there. Every open case — work permits, visa renewals, MOL filings — has a status, a deadline, and the last action logged. Nothing lives in someone's head. Nothing disappears.\n\nHandover drops from three days of chaos to 20 minutes of orientation.\n\nOnce you're past 15 clients, this stops being optional. Work permit tracking in Oman can't run on whoever happens to remember what. I've seen what happens when it does — and it's always the client who pays for it.\n\nThe question isn't whether to fix this. It's how many more Monday mornings you can absorb before you do.\n\nTry the Sanad AI Assistant free — instant answers on work permits, visas & government fees: https://www.thesmartpro.io/sanad/assistant?utm_source=linkedin&utm_medium=social&utm_campaign=sanad-pro\n\n#OmanBusiness\n#HRManagement\n#SmartPROHub\n#Omanization\n#GCCBusiness",
+  "char_count": 1446,
+  "generated_at": "2026-06-23T07:16:37.888714+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "published",
+  "published": true,
+  "approved": true,
+  "approval_required": false,
+  "dry_run": false,
+  "is_variant": true,
+  "variant_of": "20260623_071626_sanad_pro.json",
+  "approved_at": "2026-06-25T06:35:07.531635+00:00",
+  "post_id": "urn:li:share:7475798721834737664",
+  "published_at": "2026-06-25T06:35:09.606443+00:00",
+  "cta_comment_posted": false,
+  "cta_comment_url": "",
+  "metrics": {
+    "hook_style": "bold-statement"
+  }
+}

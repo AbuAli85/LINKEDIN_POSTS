@@ -1,0 +1,20 @@
+{
+  "pillar": "leadership",
+  "segment": "founders",
+  "hook": "story",
+  "hook_text": "I gave a presentation to 12 Oman HR directors. Only 2 were tracking their own data.",
+  "body": "Last October. An HR networking event in Muscat.\n\nI asked the room a simple question: \"How many of you know your company's average time-to-hire?\"\n\n2 hands out of 12.\n\nSecond question: \"Average sick leave days per employee per year?\"\n\n1 hand.\n\nThird: \"WPS first-pass approval rate?\"\n\nZero hands.\n\nThese weren't bad HR professionals. Several had 15+ years of experience.\n\nBut they were operating on intuition, not data.\n\nThe reason: their tools don't produce metrics. Excel tracks transactions, not trends.\n\nHR in Oman is shifting from administrative to strategic \u2014 but strategic decisions require data.\n\nYou cannot argue for headcount investment without attrition data.\nYou cannot defend payroll process changes without compliance metrics.\nYou cannot benchmark benefits without knowing your cost per employee.\n\nThe HR leaders who will have a seat at the leadership table in 2027 are the ones building their data practices now.\n\n---\n\nWhat's one HR metric you wish you could track \u2014 but can't with your current tools?",
+  "cta": "",
+  "score": 8.8,
+  "scored_at": "2026-05-28",
+  "status": "deleted",
+  "publish_date": "2026-07-08",
+  "publish_time": "09:00 GST",
+  "lang": "en",
+  "notes": "Q3 batch generated 2026-05-28",
+  "approved": false,
+  "approval_required": false,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
+}

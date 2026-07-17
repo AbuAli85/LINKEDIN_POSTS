@@ -1,12 +1,14 @@
 """Lead detection and outreach pipeline for SmartPro LinkedIn automation.
 
 Commands:
-  python outreach.py fetch          # fetch all new comments from LinkedIn
-  python outreach.py qualify        # run Claude qualification on unscored comments
-  python outreach.py draft-replies  # draft replies for qualified leads
-  python outreach.py draft-dms      # draft DM sequences for high-intent replied leads
-  python outreach.py export         # export leads.csv
-  python outreach.py run-all        # run all steps in sequence
+  python outreach.py fetch            # fetch all new comments from LinkedIn
+  python outreach.py qualify          # run Claude qualification on unscored comments
+  python outreach.py enrich           # enrich qualified leads via Bright Data + Apollo
+  python outreach.py draft-replies    # draft replies for qualified leads
+  python outreach.py draft-dms        # draft DM sequences for high-intent replied leads
+  python outreach.py export           # export leads.csv
+  python outreach.py send-sequences   # send due sequence steps to all tracker leads
+  python outreach.py run-all          # run all steps in sequence (incl. enrich)
 """
 
 import argparse
@@ -16,15 +18,17 @@ import os
 import sys
 import time
 import urllib.parse
-from datetime import datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 import anthropic
 import requests
 
-HISTORY_DIR  = Path(__file__).parent / "posts_history"
-OUTREACH_DIR = Path(__file__).parent / "outreach_history"
-LEADS_CSV    = Path(__file__).parent / "leads.csv"
+HISTORY_DIR     = Path(__file__).parent / "posts_history"
+OUTREACH_DIR    = Path(__file__).parent / "outreach_history"
+LEADS_CSV       = Path(__file__).parent / "leads.csv"
+TRACKER_FILE    = Path(__file__).parent / "outreach_tracker.json"
+TEMPLATES_FILE  = Path(__file__).parent / "sequence_templates.json"
 
 OUTREACH_DIR.mkdir(exist_ok=True)
 
@@ -39,9 +43,22 @@ RETRY_BASE_DELAY = 60  # seconds
 # ---------------------------------------------------------------------------
 
 def _li_headers() -> dict:
-    token = (os.environ.get("LINKEDIN_ACCESS_TOKEN") or "").strip()
+    """LinkedIn auth headers — prefers the dedicated read token if present.
+
+    The Community Management API can't co-exist with Share on LinkedIn on the same app
+    (LinkedIn policy), so reads use a separate app + token. We prefer LINKEDIN_READ_TOKEN
+    when set, falling back to LINKEDIN_ACCESS_TOKEN so single-app setups still work.
+    """
+    token = (
+        os.environ.get("LINKEDIN_READ_TOKEN")
+        or os.environ.get("LINKEDIN_ACCESS_TOKEN")
+        or ""
+    ).strip()
     if not token:
-        raise RuntimeError("LINKEDIN_ACCESS_TOKEN not set.")
+        raise RuntimeError(
+            "Neither LINKEDIN_READ_TOKEN nor LINKEDIN_ACCESS_TOKEN is set. "
+            "See LINKEDIN_SETUP.md."
+        )
     return {
         "Authorization": f"Bearer {token}",
         "X-Restli-Protocol-Version": "2.0.0",
@@ -54,7 +71,7 @@ def _encode(urn: str) -> str:
 
 
 def _li_get(url: str) -> dict | None:
-    """GET with exponential backoff on 429/5xx. Returns None on 401 (logs and continues)."""
+    """GET with exponential backoff on 429/5xx. Returns None on 401/403 (logs and continues)."""
     for attempt in range(MAX_RETRIES):
         try:
             resp = requests.get(url, headers=_li_headers(), timeout=15)
@@ -67,7 +84,20 @@ def _li_get(url: str) -> dict | None:
         if resp.status_code == 200:
             return resp.json()
         if resp.status_code == 401:
-            print("  WARNING: LinkedIn token expired (401) — skipping.", file=sys.stderr)
+            print("  WARNING: LinkedIn token expired (401) — re-run LINKEDIN_SETUP.md OAuth.",
+                  file=sys.stderr)
+            return None
+        if resp.status_code == 403:
+            # Most common cause: token is missing `r_member_social` scope, which is
+            # gated behind the Community Management API product approval. See
+            # LINKEDIN_SETUP.md — without this scope, /v2/socialActions/.../comments
+            # returns 403 on every call and outreach silently produces zero leads.
+            print(
+                "  WARNING: LinkedIn returned 403 — token is missing `r_member_social` scope.\n"
+                "  Apply for the Community Management API product in the LinkedIn Developer\n"
+                "  Console, then re-OAuth with that scope added. See LINKEDIN_SETUP.md.",
+                file=sys.stderr,
+            )
             return None
         if resp.status_code == 429 or resp.status_code >= 500:
             delay = RETRY_BASE_DELAY * (2 ** attempt)
@@ -75,7 +105,8 @@ def _li_get(url: str) -> dict | None:
                   file=sys.stderr)
             time.sleep(delay)
             continue
-        print(f"  WARNING: LinkedIn API returned {resp.status_code} — skipping.", file=sys.stderr)
+        print(f"  WARNING: LinkedIn API returned {resp.status_code} — skipping. "
+              f"Body: {resp.text[:200]}", file=sys.stderr)
         return None
     return None
 
@@ -143,7 +174,7 @@ def _save_json(path: Path, data: dict) -> None:
 
 
 def _load_json(path: Path) -> dict:
-    return json.loads(path.read_text(encoding="utf-8"))
+    return json.loads(path.read_text(encoding="utf-8-sig"))
 
 
 def _all_comment_files() -> list[Path]:
@@ -318,12 +349,57 @@ def draft_dm_sequence(comment: dict, post_topic: str, qualification: dict) -> li
 # Commands
 # ---------------------------------------------------------------------------
 
+def _preflight_scope_check() -> bool:
+    """Verify the token has `r_member_social` before iterating 20 posts.
+
+    Hits a single sample socialActions endpoint. 403 here means the token is missing
+    the Community Management API scope — known silent-failure mode. Returns True
+    if comment-reading appears to work, False otherwise (with a clear message).
+    """
+    # Pick the most recent published post to probe with.
+    for f in sorted(HISTORY_DIR.glob("*.json"), reverse=True):
+        try:
+            p = json.loads(f.read_text(encoding="utf-8-sig"))
+        except Exception:
+            continue
+        if not p.get("post_id"):
+            continue
+        url = f"{LI_BASE}/socialActions/{_encode(p['post_id'])}/comments?count=1"
+        try:
+            resp = requests.get(url, headers=_li_headers(), timeout=15)
+        except Exception as exc:
+            print(f"  Preflight network error: {exc}", file=sys.stderr)
+            return True  # don't block on transient network — let the real loop log it
+        if resp.status_code == 200:
+            return True
+        if resp.status_code == 403:
+            print(
+                "\n  ⚠ PREFLIGHT FAILED — token cannot read comments (HTTP 403).\n"
+                "    Cause: missing `r_member_social` scope (Community Management API).\n"
+                "    Fix:   Apply for the product in LinkedIn Developer Console, then\n"
+                "           re-OAuth with `r_member_social` in the scope string. See\n"
+                "           LINKEDIN_SETUP.md. Until then, outreach.fetch will produce\n"
+                "           0 results regardless of how many posts are published.\n",
+                file=sys.stderr,
+            )
+            return False
+        if resp.status_code == 401:
+            print("\n  ⚠ PREFLIGHT FAILED — LinkedIn token expired (401).\n", file=sys.stderr)
+            return False
+        # Any other status — let the main loop handle it normally.
+        return True
+    return True  # no published posts to probe; nothing to do anyway
+
+
 def cmd_fetch() -> None:
     """Fetch all new comments from all published posts."""
+    if not _preflight_scope_check():
+        return
+
     published = []
     for f in sorted(HISTORY_DIR.glob("*.json")):
         try:
-            p = json.loads(f.read_text(encoding="utf-8"))
+            p = json.loads(f.read_text(encoding="utf-8-sig"))
             if p.get("post_id"):
                 published.append((f, p))
         except Exception:
@@ -411,6 +487,64 @@ def cmd_qualify() -> None:
             _save_json(f, data)
 
     print(f"\nQualified {total} comment(s).")
+
+
+def cmd_enrich() -> None:
+    """Enrich high/medium-intent qualified leads via Bright Data + Apollo.
+
+    Runs after qualify, before draft-replies. Idempotent — leads.csv dedup by
+    linkedin_url means re-running is safe. Silently skips if API keys missing,
+    so the rest of the pipeline keeps working.
+    """
+    if not os.environ.get("BRIGHTDATA_API_KEY") and not os.environ.get("APOLLO_API_KEY"):
+        print("  Skipped — neither BRIGHTDATA_API_KEY nor APOLLO_API_KEY set.")
+        print("  See ENRICH_LEADS.md for setup. (Pipeline continues.)")
+        return
+
+    try:
+        from enrich_leads import enrich_one  # local module
+    except ImportError as exc:
+        print(f"  enrich_leads module unavailable: {exc}", file=sys.stderr)
+        return
+
+    enriched = 0
+    skipped  = 0
+    failed   = 0
+
+    for f in _all_comment_files():
+        try:
+            data = _load_json(f)
+        except Exception:
+            continue
+
+        modified = False
+        for comment in data.get("comments", []):
+            qual = comment.get("qualification") or {}
+            if qual.get("intent", "low") not in ("high", "medium"):
+                continue
+            if comment.get("enriched"):
+                skipped += 1
+                continue
+            li_url = comment.get("commenter_linkedin_url", "").strip()
+            if not li_url:
+                continue
+
+            name = comment.get("commenter_name", "Unknown")
+            print(f"  Enriching: {name} — {li_url}")
+            try:
+                enrich_one(li_url, dry_run=False)
+                comment["enriched"]    = True
+                comment["enriched_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+                enriched += 1
+                modified = True
+            except Exception as exc:
+                print(f"    ERROR: {exc}", file=sys.stderr)
+                failed += 1
+
+        if modified:
+            _save_json(f, data)
+
+    print(f"\nEnriched {enriched}, skipped {skipped} (already done), failed {failed}.")
 
 
 def cmd_draft_replies() -> None:
@@ -599,10 +733,12 @@ def cmd_export() -> None:
 def cmd_run_all() -> None:
     """Run all pipeline steps in sequence (DM drafting skipped if no replied comments)."""
     steps = [
-        ("Fetch comments",   cmd_fetch),
-        ("Qualify leads",    cmd_qualify),
-        ("Draft replies",    cmd_draft_replies),
-        ("Export leads.csv", cmd_export),
+        ("Fetch comments",    cmd_fetch),
+        ("Qualify leads",     cmd_qualify),
+        ("Enrich leads",      cmd_enrich),
+        ("Draft replies",     cmd_draft_replies),
+        ("Export leads.csv",  cmd_export),
+        ("Send sequences",    cmd_send_sequences),
     ]
     for label, fn in steps:
         print(f"\n=== {label} ===")
@@ -610,6 +746,424 @@ def cmd_run_all() -> None:
             fn()
         except Exception as exc:
             print(f"  ERROR in {label}: {exc}", file=sys.stderr)
+
+
+# ---------------------------------------------------------------------------
+# Manual capture — workaround for missing r_member_social scope
+# ---------------------------------------------------------------------------
+
+def cmd_manual_capture(urls: list[str]) -> None:
+    """Add leads manually by LinkedIn profile URL — no r_member_social needed.
+
+    Usage:
+        python outreach.py manual-capture https://linkedin.com/in/name-here
+        python outreach.py manual-capture url1 url2 url3
+
+    Each URL is looked up via the public LinkedIn API (basic profile only).
+    Falls back to name extraction from the URL slug if the API is inaccessible.
+    Leads are written to outreach_tracker.json and leads.csv via import_leads.py logic.
+    """
+    import re
+    import csv
+    from datetime import date
+
+    TRACKER = Path(__file__).parent / "outreach_tracker.json"
+    LEADS   = Path(__file__).parent / "leads.csv"
+    TODAY   = date.today().isoformat()
+
+    SEG_B = ["investor","investment","fund","venture","capital","vc","angel"]
+    SEG_C = ["cto","tech","developer","engineer","saas","digital","software"]
+
+    PAIN_MAP = {
+        "sanad":             "Multi-client work permit tracking",
+        "pro":               "MOL submissions manual 15+ clients",
+        "hr manager":        "WPS payroll file 2+ days every month",
+        "hr director":       "Omanisation ratios no real-time data",
+        "hr specialist":     "HR and PRO hats too much manual admin",
+        "ceo":               "3+ hrs Monday HR admin",
+        "cfo":               "Payroll errors employee disputes",
+        "managing director": "HR PRO across multiple companies no unified view",
+        "owner":             "Single HR person single point of failure",
+        "founder":           "Client updates via WhatsApp, clients feel abandoned",
+        "investor":          "Oman HR tech market pitch Vision 2040",
+        "cto":               "Multi-tenant GCC compliance peer angle",
+        "default":           "Manual HR/payroll admin taking too long",
+    }
+
+    def slug_to_name(url: str) -> str:
+        slug = url.rstrip("/").split("/in/")[-1].split("?")[0]
+        parts = re.sub(r"-\w{4,}$", "", slug).replace("-", " ").title()
+        return parts
+
+    def detect_segment(title: str) -> str:
+        t = title.lower()
+        if any(k in t for k in SEG_B): return "B"
+        if any(k in t for k in SEG_C): return "C"
+        return "A"
+
+    def detect_pain(title: str) -> str:
+        t = title.lower()
+        for k, v in PAIN_MAP.items():
+            if k in t: return v
+        return PAIN_MAP["default"]
+
+    def next_id(tracker: list) -> str:
+        nums = [int(m.group(1)) for p in tracker
+                for m in [re.match(r"OA-(\d+)", p.get("id",""))] if m]
+        return f"OA-{(max(nums)+1 if nums else 21):03d}"
+
+    TRACKER = Path(__file__).parent / "outreach_tracker.json"
+    LEADS   = Path(__file__).parent / "leads.csv"
+    TODAY   = date.today().isoformat()
+
+    tracker = json.loads(TRACKER.read_text(encoding="utf-8-sig")) if TRACKER.exists() else []
+    existing_urls = {p.get("linkedin_url","").rstrip("/") for p in tracker}
+
+    csv_urls: set = set()
+    if LEADS.exists():
+        with open(LEADS, encoding="utf-8", newline="") as f:
+            for row in csv.DictReader(f):
+                u = row.get("linkedin_url","").rstrip("/")
+                if u: csv_urls.add(u)
+
+    added = []
+    skipped = []
+
+    for raw_url in urls:
+        url = raw_url.strip().rstrip("/")
+        if not url.startswith("https://www.linkedin.com/in/"):
+            if "/in/" in url:
+                url = "https://www.linkedin.com" + url[url.index("/in/"):]
+            else:
+                print(f"  WARNING: Skipping (not a /in/ profile URL): {url}")
+                continue
+
+        if url in existing_urls or url in csv_urls:
+            print(f"  Duplicate, skipping: {url}")
+            skipped.append(url)
+            continue
+
+        name    = slug_to_name(url)
+        title   = "HR Manager"
+        company = "Unknown Company"
+        city    = "Muscat"
+
+        seg    = detect_segment(title)
+        pain   = detect_pain(title)
+        new_id = next_id(tracker)
+
+        entry = {
+            "id": new_id,
+            "name": name,
+            "linkedin_url": url,
+            "company": company,
+            "segment": seg,
+            "started_at": TODAY,
+            "status": "active",
+            "current_step": 1,
+            "notes": f"Manually captured | Title: {title} | Location: {city} | Pain: {pain}",
+            "tags": ["manual-capture", city.lower(), "priority-1"],
+            "converted_at": "",
+        }
+        tracker.append(entry)
+        existing_urls.add(url)
+
+        csv_row = {
+            "name": name, "linkedin_url": url, "company": company,
+            "title_guess": title, "intent": "high" if seg == "A" else "medium",
+            "post_topic": "", "comment_text": "", "reply_status": "pending",
+            "dm_status": "step_1", "first_seen": TODAY, "last_touchpoint": TODAY,
+            "demo_requested": "", "demo_date": "", "demo_outcome": "",
+            "deal_value": "", "notes": entry["notes"],
+        }
+        added.append((entry, csv_row))
+        seg_label = {"A": "Buyer (Seg A)", "B": "Investor (Seg B)", "C": "Tech Peer (Seg C)"}[seg]
+        print(f"  Added  {new_id}  {name}  |  {seg_label}")
+        print(f"         {url}")
+
+    if not added:
+        print(f"\n  Nothing added. {len(skipped)} duplicate(s) skipped.")
+        return
+
+    TRACKER.write_text(json.dumps(tracker, indent=2, ensure_ascii=False), encoding="utf-8")
+
+    fieldnames = ["name","linkedin_url","company","title_guess","intent","post_topic",
+                  "comment_text","reply_status","dm_status","first_seen","last_touchpoint",
+                  "demo_requested","demo_date","demo_outcome","deal_value","notes"]
+    with open(LEADS, "a", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=fieldnames)
+        for _, row in added:
+            w.writerow(row)
+
+    print(f"\nAdded {len(added)} lead(s) to outreach_tracker.json + leads.csv")
+    print("  Note: name/title/company guessed from URL slug.")
+    print("  Edit outreach_tracker.json to correct details before the sequence fires.")
+
+
+# ---------------------------------------------------------------------------
+# Sequence send — outreach_tracker.json → LinkedIn DMs
+# ---------------------------------------------------------------------------
+
+def _load_tracker() -> list[dict]:
+    """Load outreach_tracker.json; return [] if missing."""
+    if TRACKER_FILE.exists():
+        return json.loads(TRACKER_FILE.read_text(encoding="utf-8-sig"))
+    return []
+
+
+def _save_tracker(tracker: list[dict]) -> None:
+    TRACKER_FILE.write_text(json.dumps(tracker, indent=2, ensure_ascii=False), encoding="utf-8")
+
+
+def _load_templates() -> dict:
+    if not TEMPLATES_FILE.exists():
+        raise RuntimeError(
+            "sequence_templates.json not found — run from repo root or check path."
+        )
+    return json.loads(TEMPLATES_FILE.read_text(encoding="utf-8-sig"))
+
+
+def _render_template(template: str, lead: dict) -> str:
+    """Replace {{first_name}} and {{company}} placeholders."""
+    first_name = (lead.get("name") or "").split()[0] or "there"
+    company    = lead.get("company") or "your company"
+    return template.replace("{{first_name}}", first_name).replace("{{company}}", company)
+
+
+
+def _is_due(lead: dict, step_data: dict) -> bool:
+    """Return True if this lead is due for the given step today or overdue."""
+    today      = date.today()
+    last_sent  = (lead.get("last_sent_at") or "").strip()
+    days_after = int(step_data.get("days_after_prev", 0))
+
+    if not last_sent:
+        started_raw = (lead.get("started_at") or today.isoformat()).strip()
+        try:
+            started = date.fromisoformat(started_raw)
+        except ValueError:
+            started = today
+        return today >= started + timedelta(days=days_after)
+
+    try:
+        last_date = date.fromisoformat(last_sent)
+    except ValueError:
+        return True
+    return today >= last_date + timedelta(days=days_after)
+
+
+def _li_post_json(url: str, payload: dict) -> dict | None:
+    """POST JSON to LinkedIn API with exponential backoff. Returns parsed body or None."""
+    token = (os.environ.get("LINKEDIN_ACCESS_TOKEN") or "").strip()
+    if not token:
+        raise RuntimeError("LINKEDIN_ACCESS_TOKEN is not set.")
+    headers = {
+        "Authorization":             f"Bearer {token}",
+        "X-Restli-Protocol-Version": "2.0.0",
+        "Content-Type":              "application/json",
+    }
+    for attempt in range(MAX_RETRIES):
+        try:
+            resp = requests.post(url, headers=headers, json=payload, timeout=15)
+        except Exception as exc:
+            print(f"  Network error: {exc}", file=sys.stderr)
+            if attempt < MAX_RETRIES - 1:
+                time.sleep(RETRY_BASE_DELAY * (2 ** attempt))
+            continue
+        if resp.status_code in (200, 201):
+            try:
+                return resp.json()
+            except Exception:
+                return {"status": "ok"}
+        if resp.status_code == 401:
+            print("  WARNING: LinkedIn token expired (401) — re-run OAuth.", file=sys.stderr)
+            return None
+        if resp.status_code == 403:
+            print(
+                f"  WARNING: LinkedIn returned 403 — missing scope or API not approved.\n"
+                f"  Body: {resp.text[:300]}",
+                file=sys.stderr,
+            )
+            return None
+        if resp.status_code == 429 or resp.status_code >= 500:
+            delay = RETRY_BASE_DELAY * (2 ** attempt)
+            print(f"  Rate limit ({resp.status_code}), retrying in {delay}s...", file=sys.stderr)
+            time.sleep(delay)
+            continue
+        print(f"  WARNING: POST {url} -> {resp.status_code}: {resp.text[:200]}", file=sys.stderr)
+        return None
+    return None
+
+
+def _li_resolve_urn(linkedin_url: str) -> str | None:
+    """Resolve a LinkedIn profile URL to a person URN (urn:li:person:<id>).
+
+    Requires r_liteprofile or r_basicprofile scope.
+    Returns None on failure.
+    """
+    vanity = linkedin_url.rstrip("/").split("/in/")[-1].split("?")[0]
+    url    = f"{LI_BASE}/people/(vanityName:{urllib.parse.quote(vanity)})?projection=(id)"
+    data   = _li_get(url)
+    if data and data.get("id"):
+        return f"urn:li:person:{data['id']}"
+    return None
+
+
+def _li_send_connection(lead: dict, message: str, dry_run: bool = False) -> bool:
+    """Send a LinkedIn connection request with personalised note (step 1).
+
+    Returns True on success or in dry-run mode.
+    Requires w_member_social scope.
+    """
+    if dry_run:
+        return True
+    person_urn = _li_resolve_urn(lead.get("linkedin_url", ""))
+    if not person_urn:
+        print(
+            f"  WARNING: Could not resolve URN for {lead.get('name')} "
+            f"({lead.get('linkedin_url')}) — skipping.",
+            file=sys.stderr,
+        )
+        return False
+    payload = {
+        "invitee": {
+            "com.linkedin.relationships.invitation.InviteeProfile": {
+                "profileUrn": person_urn
+            }
+        },
+        "message": message[:300],
+    }
+    return _li_post_json(f"{LI_BASE}/invitations", payload) is not None
+
+
+def _li_send_message(lead: dict, message: str, dry_run: bool = False) -> bool:
+    """Send a LinkedIn DM to an existing connection (steps 2-5).
+
+    Returns True on success or in dry-run mode.
+    Requires w_member_messaging scope (Member Data Portability API product).
+    """
+    if dry_run:
+        return True
+    person_urn = _li_resolve_urn(lead.get("linkedin_url", ""))
+    if not person_urn:
+        print(
+            f"  WARNING: Could not resolve URN for {lead.get('name')} — skipping.",
+            file=sys.stderr,
+        )
+        return False
+    payload = {
+        "recipients":  [person_urn],
+        "subject":     "",
+        "body":        message,
+        "messageType": "MEMBER_TO_MEMBER",
+    }
+    return _li_post_json(f"{LI_BASE}/messages", payload) is not None
+
+
+def cmd_send_sequences() -> int:
+    """Send due outreach sequence steps to all active leads in outreach_tracker.json.
+
+    For each active lead:
+      1. Checks whether current_step is due based on last_sent_at + per-step interval.
+      2. Renders the template ({{first_name}}, {{company}} substitution).
+      3. Sends via LinkedIn API:
+           step 1    -> connection request  (POST /v2/invitations, w_member_social)
+           steps 2-5 -> direct message      (POST /v2/messages, w_member_messaging)
+      4. On success: advances current_step and records last_sent_at in tracker.
+      5. Saves an audit record to outreach_history/ regardless of outcome.
+
+    Dry-run mode (tracker advances, nothing sent):
+        LINKEDIN_DRY_RUN=true python outreach.py send-sequences
+
+    Returns the number of messages successfully sent/simulated.
+    """
+    dry_run = os.environ.get("LINKEDIN_DRY_RUN", "").lower() in ("1", "true", "yes")
+    if dry_run:
+        print("  [DRY RUN -- messages will NOT be sent, but tracker WILL advance]")
+
+    daily_limit = int(os.environ.get("OUTREACH_DAILY_LIMIT", "15"))
+    print(f"  Daily cap: {daily_limit} messages")
+
+    templates = _load_templates()
+    step_map  = {s["step"]: s for s in templates["steps"]}
+    max_step  = max(step_map.keys())
+
+    tracker   = _load_tracker()
+    today_str = date.today().isoformat()
+
+    sent = skipped = errors = 0
+
+    for lead in tracker:
+        if lead.get("status") != "active" or lead.get("converted_at"):
+            skipped += 1
+            continue
+
+        step_num = int(lead.get("current_step", 1))
+        if step_num > max_step:
+            if lead.get("status") == "active":
+                lead["status"] = "sequence_complete"
+            skipped += 1
+            continue
+
+        step_data = step_map.get(step_num)
+        if not step_data:
+            print(f"  WARNING: No template for step {step_num} -- skipping {lead.get('id')}",
+                  file=sys.stderr)
+            skipped += 1
+            continue
+
+        if not _is_due(lead, step_data):
+            skipped += 1
+            continue
+
+        rendered  = _render_template(step_data["template"], lead)
+        lead_id   = lead.get("id", "?")
+        name      = lead.get("name", "?")
+        step_type = step_data.get("type", "message")
+
+        print(f"  {lead_id}  {name}  ->  Step {step_num} [{step_type}]")
+        if dry_run:
+            print(f"    Preview: {rendered[:120].replace(chr(10), ' ')}...")
+
+        # Audit record saved regardless of send outcome
+        audit_path = OUTREACH_DIR / f"{lead_id}_step{step_num}_{today_str}.json"
+        _save_json(audit_path, {
+            "lead_id":      lead_id,
+            "name":         name,
+            "company":      lead.get("company", ""),
+            "linkedin_url": lead.get("linkedin_url", ""),
+            "step":         step_num,
+            "step_type":    step_type,
+            "sent_at":      today_str,
+            "dry_run":      dry_run,
+            "message":      rendered,
+        })
+
+        if step_type == "connection_request":
+            success = _li_send_connection(lead, rendered, dry_run=dry_run)
+        else:
+            success = _li_send_message(lead, rendered, dry_run=dry_run)
+
+        if success:
+            lead["last_sent_at"] = today_str
+            lead["current_step"] = step_num + 1
+            if step_num == max_step:
+                lead["status"] = "sequence_complete"
+            sent += 1
+            print(f"    OK {'[DRY RUN] ' if dry_run else ''}Step {step_num} sent")
+            if sent >= daily_limit:
+                print(f"\n  Daily cap of {daily_limit} reached — stopping. "
+                      f"Remaining leads will be picked up on the next run.")
+                break
+        else:
+            errors += 1
+            print(f"    FAIL Step {step_num} -- tracker NOT advanced", file=sys.stderr)
+
+    if sent > 0 or dry_run:
+        _save_tracker(tracker)
+
+    print(f"\nDone -- {sent} sent, {skipped} not due / skipped, {errors} error(s).")
+    return sent
 
 
 # ---------------------------------------------------------------------------
@@ -621,24 +1175,42 @@ def _cli() -> None:
         description="Lead detection and outreach pipeline for SmartPro LinkedIn automation."
     )
     sub = parser.add_subparsers(dest="cmd", required=True)
-    sub.add_parser("fetch",         help="Fetch all new comments from LinkedIn")
-    sub.add_parser("qualify",       help="Run Claude qualification on unscored comments")
-    sub.add_parser("draft-replies", help="Draft replies for qualified leads")
-    sub.add_parser("draft-dms",     help="Draft DM sequences for high-intent replied leads")
-    sub.add_parser("export",        help="Export leads.csv")
-    sub.add_parser("run-all",       help="Run all pipeline steps in sequence")
+    sub.add_parser("fetch",           help="Fetch all new comments from LinkedIn")
+    sub.add_parser("qualify",         help="Run Claude qualification on unscored comments")
+    sub.add_parser("enrich",          help="Enrich qualified leads via Bright Data + Apollo")
+    sub.add_parser("draft-replies",   help="Draft replies for qualified leads")
+    sub.add_parser("draft-dms",       help="Draft DM sequences for high-intent replied leads")
+    sub.add_parser("export",          help="Export leads.csv")
+    p_seq = sub.add_parser("send-sequences",
+                           help="Send due sequence steps (LINKEDIN_DRY_RUN=true to preview)")
+    p_seq.add_argument("--limit", type=int, default=None,
+                       help="Max messages to send this run (overrides OUTREACH_DAILY_LIMIT env var, default 15)")
+    sub.add_parser("run-all",         help="Run all pipeline steps in sequence")
+    p_manual = sub.add_parser("manual-capture",
+        help="Add leads by LinkedIn profile URL (no r_member_social needed)")
+    p_manual.add_argument("urls", nargs="+", help="One or more LinkedIn profile URLs")
 
     args = parser.parse_args()
 
+    if args.cmd == "manual-capture":
+        cmd_manual_capture(args.urls)
+        return
+
     dispatch = {
-        "fetch":         cmd_fetch,
-        "qualify":       cmd_qualify,
-        "draft-replies": cmd_draft_replies,
-        "draft-dms":     cmd_draft_dms,
-        "export":        cmd_export,
-        "run-all":       cmd_run_all,
+        "fetch":          cmd_fetch,
+        "qualify":        cmd_qualify,
+        "enrich":         cmd_enrich,
+        "draft-replies":  cmd_draft_replies,
+        "draft-dms":      cmd_draft_dms,
+        "export":         cmd_export,
+        "run-all":        cmd_run_all,
     }
-    dispatch[args.cmd]()
+    if args.cmd == "send-sequences":
+        if getattr(args, "limit", None) is not None:
+            os.environ["OUTREACH_DAILY_LIMIT"] = str(args.limit)
+        cmd_send_sequences()
+    else:
+        dispatch[args.cmd]()
 
 
 if __name__ == "__main__":

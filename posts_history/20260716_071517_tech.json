@@ -1,0 +1,19 @@
+{
+  "pillar": "tech",
+  "topic": "Why we didn't use Next.js: our boring stack decision and how it's aged",
+  "format": "A sprint retrospective: what shipped, what slipped, what surprised you \u2014 honest, specific, no PR spin",
+  "language": "en",
+  "segment": "C",
+  "publish_day": "Saturday",
+  "post": "We almost picked Next.js. Everyone on the team had used it. The ecosystem is mature. The docs are solid.\n\nWe went with a plain React SPA instead.\n\nEighteen months later, that call still looks right \u2014 though not for the reasons I thought it would be.\n\nThe actual reason we skipped Next.js: our product is deeply authenticated. Every screen is behind a login. SEO is irrelevant. SSR would have added real complexity for zero user-facing gain. A SPA with tRPC gave us end-to-end type safety from the database call to the UI component, and that matters when you're processing WPS payroll for Oman businesses with direct bank integration and Ministry of Labour compliance baked into every calculation.\n\nWe now have 4,000+ automated tests. That number wasn't planned \u2014 it grew because the domain demanded it. End-of-service gratuity, work permit tracking, Sanad office management. Each rule is a law, not a preference. You don't guess. You test.\n\nWhat surprised me most: Drizzle ORM aged better than I expected. MySQL over a managed cloud DB felt almost embarrassingly boring in 2023. In 2025, boring is exactly what you want when a payroll run kicks off at 6am and nobody should be thinking about the database.\n\nThe stack nobody writes about is usually the stack that actually ships.\n\nWhat's a boring technical choice you made early that you'd make again?\n\nSee SmartPRO Hub in action \u2014 book a free 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=tech\n\n#BuildInPublic\n#SaaS\n#GCCTech\n#TypeScript\n#SmartPROHub",
+  "char_count": 1558,
+  "generated_at": "2026-07-16T07:15:17.302734+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 2,
+  "status": "approved",
+  "published": false,
+  "approved": true,
+  "approval_required": false,
+  "dry_run": false,
+  "approved_at": "2026-07-16T13:15:15.658445+00:00"
+}

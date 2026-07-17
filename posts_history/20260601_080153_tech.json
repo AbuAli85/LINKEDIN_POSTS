@@ -1,0 +1,27 @@
+{
+  "pillar": "tech",
+  "topic": "Multi-tenant architecture: how we isolate 200+ company workspaces without per-company databases",
+  "format": "Before/after: a technical approach you changed and why — show the old code in words, the new approach, and the measurable difference",
+  "language": "en",
+  "segment": "C",
+  "publish_day": "Saturday",
+  "post": "We started with one database per company.\n\nClean. Isolated. Easy to reason about. Schema migrations ran once per tenant — no cross-contamination risk, nothing to second-guess.\n\nThen we hit 40 companies.\n\nProvisioning a new workspace meant spinning up a DB, running migrations, updating connection strings. 3-4 minutes per onboarding. Ops overhead was growing faster than the customer list, which is a bad sign at any stage.\n\nSo we moved to row-level tenancy — every table gets a `workspace_id` column. One MySQL instance. Drizzle ORM enforces tenant scope at the query layer. TypeScript makes it genuinely hard to accidentally drop the filter, not just awkward.\n\nThe real problem to solve: accidental data bleed.\n\nWe built a middleware layer that injects `workspace_id` into every Drizzle query context. No workspace ID, no query — it fails loudly. 4,000+ automated tests catch regressions before anything ships.\n\nOnboarding a new company now takes under 8 seconds. We're running 200+ workspaces on a single cluster.\n\nThe complexity didn't disappear. It moved into the query layer and test suite. We'd make that trade again without much debate.\n\nFor an HR platform handling WPS payroll that Oman businesses depend on — where a payroll error has real Ministry of Labour consequences — \"fails loudly\" isn't a nice architectural property. It's the requirement.\n\nWhat isolation strategy are you running for your multi-tenant SaaS?\n\nSee SmartPRO Hub in action — book a free 20-min demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}\n\n#BuildInPublic\n#SaaS\n#GCCTech\n#TypeScript\n#SmartPROHub",
+  "char_count": 1631,
+  "generated_at": "2026-06-01T08:01:53.426691+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 2,
+  "validation_warning": "too long (1547 chars, need <= 1500)",
+  "status": "published",
+  "published": true,
+  "approved": true,
+  "approval_required": false,
+  "dry_run": false,
+  "approved_at": "2026-06-06T06:11:00.646351+00:00",
+  "post_id": "urn:li:share:7468907281309634561",
+  "published_at": "2026-06-06T06:11:01.881324+00:00",
+  "cta_comment_posted": false,
+  "cta_comment_url": "",
+  "metrics": {
+    "hook_style": "story"
+  }
+}

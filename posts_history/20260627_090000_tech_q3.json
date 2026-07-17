@@ -1,0 +1,20 @@
+{
+  "pillar": "tech",
+  "segment": "founders",
+  "hook": "story",
+  "hook_text": "We rebuilt our leave engine three times. The third version is why clients don't leave us.",
+  "body": "Version 1: Simple accrual. Days earned per month, balance tracked.\n\nIt worked \u2014 until an employee worked a public holiday, took unpaid leave, and was on a fixed-term contract.\n\nThree edge cases. Zero correct outputs.\n\nVersion 2: Rule-based with exceptions. We coded every Labour Law clause we could find.\n\nIt worked \u2014 until a client had employees across two Oman governorates with different local holiday calendars.\n\nMore edge cases. Partial failure.\n\nVersion 3: We stopped trying to anticipate edge cases.\n\nWe built a configurability layer \u2014 the admin sets the rules for their company, and the engine enforces whatever they configure, while hard-coding the non-negotiable Labour Law floors.\n\nResult:\n- Handles fixed-term, open-ended, and part-time contracts\n- Supports company-specific holiday calendars\n- Enforces Ministry minimums regardless of config\n- Audit log of every rule change with timestamp\n\nNo client has churned because of leave calculation errors since Version 3.\n\n---\n\nThe best software doesn't anticipate every edge case. It lets the customer define theirs.\n\nWhat's the hardest edge case in your HR process?",
+  "cta": "",
+  "score": 7.7,
+  "scored_at": "2026-05-28",
+  "status": "deleted",
+  "publish_date": "2026-06-27",
+  "publish_time": "09:00 GST",
+  "lang": "en",
+  "notes": "Q3 batch generated 2026-05-28",
+  "approved": false,
+  "approval_required": false,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
+}

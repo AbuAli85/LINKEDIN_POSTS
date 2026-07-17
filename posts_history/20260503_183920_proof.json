@@ -14,5 +14,15 @@
   "dry_run": false,
   "approved_at": "2026-05-06T06:00:52.058476+00:00",
   "post_id": "urn:li:share:7457670702654050305",
-  "published_at": "2026-05-06T06:00:52.564994+00:00"
+  "published_at": "2026-05-06T06:00:52.564994+00:00",
+  "score": 7,
+  "hook": "bold-statement",
+  "notes": "Proof variant - strong numbers",
+  "scored_at": "2026-05-28",
+  "metrics": {
+    "manual_quality_score": 7,
+    "hook_style": "bold-statement",
+    "review_notes": "Proof variant - strong numbers",
+    "updated_at": "2026-05-28T18:11:29.137096+00:00"
+  }
 }

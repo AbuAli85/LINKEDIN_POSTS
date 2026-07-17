@@ -1,0 +1,126 @@
+{
+  "generated_at": "2026-07-13T08:33:35.801412+00:00",
+  "total_posts_analyzed": 55,
+  "pillar_performance": {
+    "sanad_pro": {
+      "posts": 9,
+      "total_reactions": 0,
+      "total_comments": 0,
+      "total_shares": 0,
+      "avg_engagement_rate": 0.0
+    },
+    "tech": {
+      "posts": 8,
+      "total_reactions": 0,
+      "total_comments": 0,
+      "total_shares": 0,
+      "avg_engagement_rate": 0.0
+    },
+    "marketing": {
+      "posts": 1,
+      "total_reactions": 0,
+      "total_comments": 0,
+      "total_shares": 0,
+      "avg_engagement_rate": 0.0
+    },
+    "proof": {
+      "posts": 11,
+      "total_reactions": 0,
+      "total_comments": 0,
+      "total_shares": 0,
+      "avg_engagement_rate": 0.0
+    },
+    "sanad_pro_ar": {
+      "posts": 4,
+      "total_reactions": 0,
+      "total_comments": 0,
+      "total_shares": 0,
+      "avg_engagement_rate": 0.0
+    },
+    "vision": {
+      "posts": 5,
+      "total_reactions": 0,
+      "total_comments": 0,
+      "total_shares": 0,
+      "avg_engagement_rate": 0.0
+    },
+    "pain": {
+      "posts": 9,
+      "total_reactions": 0,
+      "total_comments": 0,
+      "total_shares": 0,
+      "avg_engagement_rate": 0.0
+    },
+    "leadership": {
+      "posts": 2,
+      "total_reactions": 0,
+      "total_comments": 0,
+      "total_shares": 0,
+      "avg_engagement_rate": 0.0
+    },
+    "feasibility": {
+      "posts": 5,
+      "total_reactions": 0,
+      "total_comments": 0,
+      "total_shares": 0,
+      "avg_engagement_rate": 0.0
+    },
+    "pain_ar": {
+      "posts": 1,
+      "total_reactions": 0,
+      "total_comments": 0,
+      "total_shares": 0,
+      "avg_engagement_rate": 0.0
+    }
+  },
+  "hook_performance": {
+    "story": 0.0,
+    "bold-statement": 0.0,
+    "question": 0.0,
+    "numbered-list": 0.0,
+    "data-lead": 0.0,
+    "observation": 0.0,
+    "contrast": 0.0
+  },
+  "frequency_multipliers": {
+    "sanad_pro": 1.0,
+    "tech": 1.0,
+    "marketing": 1.0,
+    "proof": 1.0,
+    "sanad_pro_ar": 1.0,
+    "vision": 1.0,
+    "pain": 1.0,
+    "leadership": 1.0,
+    "feasibility": 1.0,
+    "pain_ar": 1.0
+  },
+  "best_pillar": "sanad_pro",
+  "best_hook_style": "story",
+  "recommended_emphasis": [
+    "sanad_pro",
+    "tech",
+    "marketing",
+    "proof",
+    "sanad_pro_ar",
+    "vision",
+    "pain",
+    "leadership",
+    "feasibility",
+    "pain_ar"
+  ],
+  "demo_pipeline": {
+    "total_qualified_leads": 22,
+    "total_demos": 0,
+    "total_converted": 0,
+    "per_pillar": {
+      "unknown": {
+        "leads": 22,
+        "demos": 0,
+        "converted": 0,
+        "deal_value_omr": 0.0,
+        "demo_rate": 0.0,
+        "close_rate": 0.0
+      }
+    }
+  }
+}

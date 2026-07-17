@@ -1,0 +1,22 @@
+{
+  "pillar": "product_proof",
+  "topic": "The HR manager who finally stopped processing leave requests on WhatsApp \u2014 what changed in week one",
+  "format": "Tight case study: company profile, problem, what changed, the one number that proves it worked",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "47 leave requests in one month. All on WhatsApp. None tracked.\n\nThat was the reality for an HR manager at a 60-person trading company in Muscat. No system, no paper trail \u2014 just a group chat where requests got buried between supplier invoices and weekend plans.\n\nWeek one on SmartPRO Hub changed three things:\n\nEmployees submitted leave through a self-service portal. The manager approved or declined in one tap. Oman-compliant records were auto-generated \u2014 no manual logging.\n\nThe number that actually mattered: 0 missed requests by end of week one. Down from an average of 6 per month falling through the cracks.\n\nNo chaser messages. No \"did you see my request?\" conversations. No end-of-month scramble to figure out who took what.\n\nSmartPRO Hub replaces the patchwork \u2014 WhatsApp threads, spreadsheets, disconnected vendor tools \u2014 with one bilingual platform built for Oman and GCC businesses. HR, WPS payroll, work permit tracking, SPF compliance, all connected. Starting at OMR 12/month.\n\nOne question worth sitting with: how many requests fell through last month that you still don't know about?\n\nBook a 30-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#WPS\n#SMEOman",
+  "char_count": 1271,
+  "generated_at": "2026-07-06T08:03:35.939722+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "deleted",
+  "published": false,
+  "approved": false,
+  "approval_required": false,
+  "dry_run": true,
+  "has_variant": true,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
+}

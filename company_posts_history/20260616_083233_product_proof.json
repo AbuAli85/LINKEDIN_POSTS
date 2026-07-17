@@ -1,0 +1,22 @@
+{
+  "pillar": "product_proof",
+  "topic": "How a multi-branch operation manages payroll for four locations from one screen",
+  "format": "Lead with a specific customer outcome \u2014 time saved, errors eliminated, hours recovered \u2014 then describe what changed",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "Four locations. One payroll run. Zero calls between branches.\n\nThat's what actually changed for a multi-branch business in Oman after switching to SmartPro Hub.\n\nBefore: payroll for each site lived in separate spreadsheets. HR spent days reconciling hours, chasing managers for approvals, manually calculating WPS transfers per branch \u2014 then hoping nothing was off before the bank deadline.\n\nAfter consolidating onto one platform, all four locations showed up on a single screen. WPS payroll ran with direct bank integration. SPF deductions calculated automatically. No spreadsheets. No branch-to-branch WhatsApp threads.\n\nThe payroll manager got back nearly a full working day every month.\n\nSmartPro Hub was built for this specific problem \u2014 Oman and GCC businesses running multi-site operations where fragmented tools keep breaking down. WPS payroll compliance, Ministry of Labour filings, Omanization tracking, bilingual Arabic and English. One place.\n\nStarting at OMR 25/month. 14-day free trial, no credit card needed.\n\nIf you're still stitching payroll together across locations by hand, the real cost isn't the hours. It's the errors sitting quietly in last month's run.\n\nBook a 20-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#WPS\n#PayrollOman\n#OmanBusiness\n#GCCBusiness",
+  "char_count": 1357,
+  "generated_at": "2026-06-16T08:32:33.078256+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "deleted",
+  "published": false,
+  "approved": false,
+  "approval_required": false,
+  "dry_run": true,
+  "has_variant": true,
+  "rejected": true,
+  "rejected_at": "2026-07-15T08:50:54.992916+00:00",
+  "rejected_reason": "stale pricing / stacked CTA \u2014 Link & Pricing fix sprint 2026-07-15"
+}

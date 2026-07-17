@@ -1,0 +1,21 @@
+{
+  "pillar": "product_proof",
+  "topic": "What zero WPS rejections in twelve months actually means for a 200-person business",
+  "format": "Tight case study: company profile, problem, what changed, the one number that proves it worked",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "Zero WPS rejections. Twelve months. 200 employees.\n\nA mid-sized Omani trading company was averaging 3\u20134 rejections every payroll cycle before switching to SmartPro Hub. Each rejection meant delayed salaries, hours of finance manager time spent on resubmission, and staff frustration that doesn't just disappear once the money lands.\n\nThe answer wasn't hiring more people to double-check the work. It was cutting out the steps where errors happen in the first place.\n\nSmartPro Hub connects HR records, contracts, and bank files in a single system. When employee data changes, the payroll file updates automatically \u2014 no copy-pasting between spreadsheets, no version mismatches, no rejection email from the bank at 5pm on salary day.\n\nTheir HR manager now closes payroll in under an hour. It used to take most of a working day.\n\nTwelve months of clean submissions later, the number that stands out isn't just zero rejections \u2014 it's what didn't happen. No delayed salaries. No staff tension. No credibility damage with employees who depend on being paid on time.\n\nFor a 200-person business, WPS compliance isn't back-office admin. It sits right at the center of whether people trust the company they work for.\n\nOne question worth sitting with: when you add up the resubmission time, the delayed salaries, and the downstream fallout \u2014 what does a single WPS rejection actually cost?\n\nBook a 30-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#WPS\n#PayrollOman\n#OmanBusiness\n#HRTech",
+  "char_count": 1553,
+  "generated_at": "2026-06-22T08:35:33.435741+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "deleted",
+  "published": false,
+  "approved": false,
+  "approval_required": false,
+  "dry_run": true,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
+}

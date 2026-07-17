@@ -14,5 +14,15 @@
   "dry_run": false,
   "approved_at": "2026-04-30T13:43:49.853596+00:00",
   "post_id": "urn:li:share:7455612883721228289",
-  "published_at": "2026-04-30T13:43:50.266774+00:00"
+  "published_at": "2026-04-30T13:43:50.266774+00:00",
+  "score": 7,
+  "hook": "story",
+  "notes": "Content repurposing framework - broad appeal, good engagement potential",
+  "scored_at": "2026-05-28",
+  "metrics": {
+    "manual_quality_score": 7,
+    "hook_style": "story",
+    "review_notes": "Content repurposing framework - broad appeal",
+    "updated_at": "2026-05-28T18:11:28.162611+00:00"
+  }
 }

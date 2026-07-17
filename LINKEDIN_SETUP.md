@@ -19,14 +19,13 @@ In your app dashboard, go to the **Products** tab and request access to:
 
 - **Share on LinkedIn** (`w_member_social` scope) — needed to publish posts
 - **Sign In with LinkedIn using OpenID Connect** (`openid`, `profile`, `email`) — needed for auth
-- **Community Management API** (`r_member_social` scope) — **needed to read post comments**
 
-> **Why `r_member_social` matters:** without it, `python outreach.py fetch` silently returns 0
-> comments for every post (HTTP 403, logged but not fatal). Everything looks like it worked —
-> it didn't. Fetch this scope now even if you don't plan to use the outreach pipeline yet.
+Both are auto-approved within minutes.
 
-Share on LinkedIn and Sign In are auto-approved within minutes. Community Management API
-may require a brief review — usually approved same day for personal developer accounts.
+> **Note on Community Management API.** LinkedIn requires the Community Management API
+> (which unlocks `r_member_social` for reading comments) to be the **only** product on its
+> app, for legal and security reasons. It cannot be added to this app. To enable
+> `outreach.py fetch`, create a second dedicated app — see **Step 7** below.
 
 ## Step 3: Get Your Author URN (your LinkedIn user ID)
 
@@ -37,13 +36,8 @@ may require a brief review — usually approved same day for personal developer 
 Then visit (replace `CLIENT_ID`):
 
 ```
-https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=CLIENT_ID&redirect_uri=https%3A%2F%2Fwww.linkedin.com%2Fdevelopers%2Ftools%2Foauth%2Fredirect&scope=openid%20profile%20email%20w_member_social%20r_member_social
+https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=77oxpmdoa8qe2k&redirect_uri=https%3A%2F%2Fwww.linkedin.com%2Fdevelopers%2Ftools%2Foauth%2Fredirect&scope=openid%20profile%20email%20w_member_social
 ```
-
-> **`r_member_social` is in the scope string above.** If you previously ran the authorization
-> URL without it, the resulting token cannot read comments. You must complete this OAuth
-> round-trip again — adding the scope in the app dashboard is not enough, you need a fresh
-> `code` and a new token exchange.
 
 After authorizing, LinkedIn redirects back with a `code=...` in the URL. Copy that code.
 
@@ -116,13 +110,48 @@ That's it. The cron will start posting Mon/Wed/Fri at 9 AM UTC.
 
 LinkedIn access tokens expire after 60 days. To renew:
 
-1. Repeat Step 3 — use the full OAuth URL **with `r_member_social` in the scope string**
-   (the URL above already includes it; paste that exact URL, just replace `CLIENT_ID`)
+1. Repeat Step 3 — paste the OAuth URL above, replace `CLIENT_ID`
 2. Repeat Step 4 (exchange the new `code` for a new token)
 3. Update the `LINKEDIN_ACCESS_TOKEN` secret in GitHub
 
-**Do not** just generate a new token without completing the OAuth round-trip — scopes are
-bound to the authorization grant, not the app settings. An incomplete renewal produces a
-token that can post but cannot read comments.
-
 You can request a refresh token too (LinkedIn supports it for some apps) — see https://learn.microsoft.com/en-us/linkedin/shared/authentication/programmatic-refresh-tokens
+
+---
+
+## Step 7: (Optional) Second app for comment reading — `r_member_social`
+
+`outreach.py` reads comments on your published posts to drive lead qualification. That endpoint requires the `r_member_social` scope, which is gated behind the **Community Management API** product. LinkedIn requires this product to be the **only** product on its app — so it can't go on the main posting app. The fix is a dedicated second app.
+
+### Why two apps?
+
+- **App A — posting** (Share on LinkedIn): `w_member_social` token → `LINKEDIN_ACCESS_TOKEN`
+- **App B — reading** (Community Management API): `r_member_social` token → `LINKEDIN_READ_TOKEN`
+
+`outreach.py` prefers `LINKEDIN_READ_TOKEN` when set, and falls back to `LINKEDIN_ACCESS_TOKEN` otherwise — so single-app setups keep working (just with 0 comment results until App B is wired up).
+
+### Steps
+
+1. **Create the second app** at https://www.linkedin.com/developers/apps/new
+   - App name: e.g. `SmartPro Outreach Reader`
+   - LinkedIn Page: same Company Page as App A
+   - Tick the terms checkbox, click **Create app**
+2. **Verify the Page association** — Settings → next to the Page name, click **Verify** → Generate URL → open the URL as a Page Admin → Approve.
+3. **Request access to Community Management API** — Products tab → click **Request access** on Community Management API.
+   - Verify your business email when prompted (you'll get a 6-digit code by email).
+   - Tick the legal agreement checkbox.
+   - Fill out the external Qualtrics form (~5 minutes): legal name, alternate name, website, registered address, and check **Profile management** as the use case.
+4. **Wait for approval** (1–14 days). Microsoft Vetting Services will email your business email; respond promptly to keep the review moving.
+5. **OAuth with `r_member_social` scope** — once approved, use the second app's Client ID and this scope string:
+
+   ```
+   https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=SECOND_APP_CLIENT_ID&redirect_uri=https%3A%2F%2Fwww.linkedin.com%2Fdevelopers%2Ftools%2Foauth%2Fredirect&scope=openid%20profile%20email%20r_member_social
+   ```
+
+6. **Exchange the code** for a token using `oauth_helper.py` (same as Step 4 above) — but with the **second app's** Client ID and Secret.
+7. **Add a new GitHub secret**:
+
+   | Name | Value |
+   |---|---|
+   | `LINKEDIN_READ_TOKEN` | the access token from the second app |
+
+The workflow already passes this env var to the outreach job (`auto-post.yml` → outreach-sequence step). The next 06:00 UTC cron will start populating `outreach_history/` and `leads.csv` with real comment data.

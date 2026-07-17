@@ -1,0 +1,16 @@
+# BATCH 2 — Real Omani HR Managers & SME CEOs
+# Format: URL | Full Name | Job Title | Company Name | City
+# -----------------------------------------------------------------------
+https://www.linkedin.com/in/abdullah-alfarsi/ | Abdullah Al Farsi | Country HR Manager | NOV Oman | Muscat
+https://www.linkedin.com/in/hamed-al-yaqoobi-311a1822/ | Hamed Al Yaqoobi | HR & Administration Manager | Alsafa ETS | Muscat
+https://www.linkedin.com/in/mohammed-al-harrasi-5174a14b/ | Mohammed Al-Harrasi | HR Manager | Diamond Developers Oman | Muscat
+https://www.linkedin.com/in/humaid-al-kharusi-15093130/ | Humaid Al Kharusi | Group HR Manager | Composite Pipes Industry | Muscat
+https://www.linkedin.com/in/khamis-said-al-ghafri-50130696/ | Khamis Al Ghafri | HR & Omanisation Manager | Sterling International | Muscat
+https://www.linkedin.com/in/salim-al-harthy-490b623b/ | Salim Al Harthy | Senior HR Manager | Weatherford Oman | Muscat
+https://www.linkedin.com/in/nasreen-al-balushi-8b694a24/ | Nasreen Al Balushi | HR Manager | ABAQ AL EBDAA Trading | Muscat
+https://www.linkedin.com/in/rashid-al-hashmi-648592295/ | Rashid Al Hashmi | HR General Manager | Oman | Muscat
+https://www.linkedin.com/in/saeed-al-madany-almadany-967a4831/ | Saeed Al Madany | HR & Payroll Manager | Al-Mutawaa Group | Muscat
+https://www.linkedin.com/in/faisal-al-mamari-37091971/ | Faisal Al-Mamari | Chief People Officer | Oman | Muscat
+https://www.linkedin.com/in/ahmed-alshanfari-9207986b/ | Ahmed Al-Shanfari | CEO & Managing Director | Muscat International Bitumen | Muscat
+https://www.linkedin.com/in/ahmedajmi/ | Ahmed Al Ajmi | CEO & Managing Director | Oman Metal Industries & Contracting | Muscat
+https://www.linkedin.com/in/ghasan-al-maamari-5610a33a/ | Ghasan Al Maamari | CEO & Founder | Zawad Development & Consultancy | Muscat

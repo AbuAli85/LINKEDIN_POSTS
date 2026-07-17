@@ -74,7 +74,7 @@ def fetch_linkedin_stats(post_id: str) -> dict:
 # ---------------------------------------------------------------------------
 
 def _load(path: Path) -> dict:
-    return json.loads(path.read_text(encoding="utf-8"))
+    return json.loads(path.read_text(encoding="utf-8-sig"))
 
 
 def _save(path: Path, post: dict) -> None:
@@ -189,6 +189,46 @@ def get_performance_summary() -> dict:
 # CLI
 # ---------------------------------------------------------------------------
 
+def check_token_scope() -> None:
+    """Diagnose whether the current LinkedIn token has social read scope.
+
+    Checks /v2/me (basic auth) then probes /v2/socialActions with a dummy URN.
+    A 403 on the social probe means r_member_social is missing from the token.
+    """
+    import requests as _req
+    token = (os.environ.get("LINKEDIN_ACCESS_TOKEN") or "").strip()
+    if not token:
+        print("ERROR: LINKEDIN_ACCESS_TOKEN is not set.")
+        return
+
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "X-Restli-Protocol-Version": "2.0.0",
+    }
+
+    me = _req.get("https://api.linkedin.com/v2/me", headers=headers, timeout=10)
+    if me.status_code == 200:
+        data = me.json()
+        name = f"{data.get('localizedFirstName', '')} {data.get('localizedLastName', '')}".strip()
+        print(f"Token valid — authenticated as: {name or '(name unavailable)'}")
+    else:
+        print(f"WARNING: /v2/me returned {me.status_code}. Token may be expired or invalid.")
+
+    # Probe social scope with a known-invalid URN — 403 = missing scope, 404 = scope present but URN unknown
+    probe = _req.get(
+        "https://api.linkedin.com/v2/socialActions/urn:li:share:000000000000",
+        headers=headers,
+        timeout=10,
+    )
+    if probe.status_code == 403:
+        print("FAIL: r_member_social scope missing — engagement fetch will return 0 counts.")
+        print("      Re-run OAuth and add 'r_member_social' to the requested scopes.")
+    elif probe.status_code in (404, 200):
+        print("OK: r_member_social scope confirmed (probe returned expected non-403 response).")
+    else:
+        print(f"UNKNOWN: social probe returned {probe.status_code} — check manually.")
+
+
 def _cli() -> None:
     parser = argparse.ArgumentParser(description="LinkedIn post performance tracking.")
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -210,6 +250,9 @@ def _cli() -> None:
     # summary — print performance summary
     sub.add_parser("summary", help="Print aggregated performance summary.")
 
+    # check-scope — diagnose LinkedIn token permissions
+    sub.add_parser("check-scope", help="Check whether the token has r_member_social scope.")
+
     args = parser.parse_args()
 
     if args.cmd == "fetch":
@@ -224,6 +267,8 @@ def _cli() -> None:
             print("Not enough scored posts yet (need at least 3).")
         else:
             print(json.dumps(summary, indent=2))
+    elif args.cmd == "check-scope":
+        check_token_scope()
 
 
 if __name__ == "__main__":

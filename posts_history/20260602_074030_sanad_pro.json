@@ -1,0 +1,27 @@
+{
+  "pillar": "sanad_pro",
+  "topic": "Government digitisation in Oman is accelerating. The Sanad offices that connect to it early will own the compliance services market.",
+  "format": "Build a sharp before/after: managing government services with WhatsApp and Excel versus SmartPRO Hub case tracking and a client portal — show the same week, completely different experience",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Thursday",
+  "post": "Monday, 7:45 AM. WhatsApp: 31 unread messages across 9 client groups.\n\nThree work permits expiring this week. Two clients asking for updates you don't have ready. One MOL filing that was supposed to go Friday. And a new client starting today — which means opening Excel, creating a new tab, and hoping nothing slips through while you're setting them up.\n\nThat was the job six months ago.\n\nSame Monday now: you open SmartPRO Hub. Every expiry is already flagged. Each client has their own portal — the \"what's the status?\" messages stop coming because clients can see for themselves. Your PRO officers have their tasks. Invoices tie to actual services delivered.\n\nSame client load. Completely different week.\n\nOman's digitisation is moving whether Sanad offices are ready or not. eVisa integrations, digital MOL submissions, Civil Status Authority upgrades — the compliance requirements are stacking up fast. Manual tracking wasn't built for this environment. It was barely holding up before.\n\n924 licensed Sanad offices in Oman. The ones that control the compliance market in three years aren't necessarily the biggest right now — they're the ones that got their operations in order while others were still copying cells in Excel.\n\nTry the Sanad AI Assistant free — instant answers on work permits, visas & government fees: www.thesmartpro.io/sanad/assistant\n\nBook a free 20-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=sanad-pro\nOr WhatsApp +96879665522\n\nWhere does your current process break first when your client count doubles?\n\n#OmanBusiness\n#SmartPROHub\n#Omanization\n#GCCBusiness\n#HRManagement",
+  "char_count": 1650,
+  "generated_at": "2026-06-02T07:40:30.055161+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 2,
+  "validation_warning": "too long (1512 chars, need <= 1500)",
+  "status": "published",
+  "published": true,
+  "approved": true,
+  "approval_required": false,
+  "dry_run": false,
+  "approved_at": "2026-06-11T06:32:30.096004+00:00",
+  "post_id": "urn:li:share:7470724630220075009",
+  "published_at": "2026-06-11T06:32:31.564800+00:00",
+  "cta_comment_posted": false,
+  "cta_comment_url": "",
+  "metrics": {
+    "hook_style": "bold-statement"
+  }
+}

@@ -14,5 +14,15 @@
   "dry_run": false,
   "approved_at": "2026-05-03T14:40:48.980983+00:00",
   "post_id": "urn:li:share:7456714387991543808",
-  "published_at": "2026-05-03T14:40:49.848388+00:00"
+  "published_at": "2026-05-03T14:40:49.848388+00:00",
+  "score": 9,
+  "hook": "story",
+  "notes": "Accountability without fear - strong personal story, broad resonance",
+  "scored_at": "2026-05-28",
+  "metrics": {
+    "manual_quality_score": 9,
+    "hook_style": "story",
+    "review_notes": "Accountability without fear - best leadership post",
+    "updated_at": "2026-05-28T18:11:28.498839+00:00"
+  }
 }

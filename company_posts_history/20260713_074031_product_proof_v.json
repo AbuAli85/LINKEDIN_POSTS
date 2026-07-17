@@ -1,0 +1,23 @@
+{
+  "pillar": "product_proof",
+  "topic": "A Sanad office in Muscat moved 40 client work permits off WhatsApp \u2014 no missed renewals in six months",
+  "format": "Open with a SmartPRO Hub product capability, then show the real-world business outcome it enables",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "40 client work permits. 7 WhatsApp groups. One Sanad office in Muscat trying to hold it all together through threads, manual reminders, and hope.\n\nThat's not a workflow. That's a compliance incident waiting to be filed.\n\nSix months after moving to SmartPRO Hub: zero missed renewals. All 40 permits in one dashboard. Automated deadline alerts. A client portal that updates stakeholders without anyone having to chase anyone down.\n\nNo spreadsheets. No group chats. No follow-up calls.\n\nHere's the thing about WhatsApp \u2014 it works at 5 clients. At 25, it starts failing quietly. A message gets buried. A reminder doesn't land. And you don't always know something went wrong until the client is already wondering whether you're actually on top of their file. By then, the renewal isn't the only thing at risk.\n\nSanad offices were growing their client lists faster than their systems could keep up. That's a good problem, until it isn't. SmartPRO Hub was built specifically for that gap \u2014 permit tracking, renewal timelines, and client communication in one place. When everything lives in the same system, things stop falling through the cracks because there are no cracks to fall through.\n\nIf you're still running this through messages, the exposure is real. It's just easy to miss until you can't anymore.\n\nHow are you currently tracking renewal deadlines across multiple clients?\n\nBook a 30-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#SMEOman\n#GCCBusiness",
+  "char_count": 1556,
+  "generated_at": "2026-07-13T07:40:45.398769+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "deleted",
+  "published": false,
+  "approved": false,
+  "approval_required": false,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260713_074032_product_proof.json",
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
+}

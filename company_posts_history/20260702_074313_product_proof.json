@@ -1,0 +1,22 @@
+{
+  "pillar": "product_proof",
+  "topic": "How a multi-branch operation manages payroll for four locations from one screen",
+  "format": "Lead with a specific customer outcome \u2014 time saved, errors eliminated, hours recovered \u2014 then describe what changed",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "Payroll day used to take one finance manager two full days \u2014 across four branches, four spreadsheets, and four chances to get it wrong.\n\nAfter switching to SmartPRO Hub, that same process runs in under three hours. One screen. All locations. No back-and-forth.\n\nWhat actually changed:\n\nWPS submissions, bank transfers, and end-of-service calculations for every branch \u2014 pulled into a single workflow. When one location's data updates, it reflects everywhere. No manual reconciliation. No chasing the right version of a file.\n\nMulti-branch customers in Oman tell us the same thing: the hours they recover aren't just time back on the calendar. They're errors that never happen, compliance gaps that never open, payroll that actually closes on time.\n\nWe built SmartPRO Hub because GCC businesses shouldn't need a separate system for every location \u2014 or a separate person to manage each one. Most of the complexity in multi-branch payroll isn't complexity at all. It's just fragmentation. Fix that, and the process gets fast.\n\nIf your payroll still lives across tabs and group chats, that's not a minor inconvenience. It's a liability with a deadline every month.\n\nHow many people does it currently take your team to run payroll across multiple sites?\n\nBook a 30-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#WPS\n#PayrollOman\n#OmanBusiness\n#GCCBusiness",
+  "char_count": 1428,
+  "generated_at": "2026-07-02T07:43:13.079057+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "deleted",
+  "published": false,
+  "approved": false,
+  "approval_required": false,
+  "dry_run": true,
+  "has_variant": true,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
+}

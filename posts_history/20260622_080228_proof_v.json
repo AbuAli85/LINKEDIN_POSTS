@@ -1,0 +1,28 @@
+{
+  "pillar": "proof",
+  "topic": "A quotation built, sent, and accepted in the same afternoon — what that pipeline looks like in SmartPRO Hub",
+  "format": "Build a tight case study: type of company, the problem they had, what changed, the one number that proves it worked",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "A two-day quote cycle dropped to four hours. Same team. Same tools.\n\nNo extra hires. No software overhaul.\n\nHere's what their pipeline looked like that day:\n\nCRM deal flagged as ready → quote built inside SmartPRO Hub in under 10 minutes → sent to the client portal → client reviewed, e-signed, confirmed → invoice triggered automatically.\n\nFour steps. One system. Finished before end of business.\n\nBefore this, their sales manager was copy-pasting numbers into Word, emailing PDFs, then calling around to check whether the client had even opened it. Two days for something that should take an afternoon.\n\nThe speed wasn't the real issue. It was the gaps between steps — that's where deals go quiet and never come back.\n\nIf your team is still quoting on spreadsheets and chasing approvals over WhatsApp, the bottleneck isn't your people. It's the process.\n\nSmartPRO Hub is OMR 25/month for most businesses. 14-day free trial. No credit card required.\n\nWhat does your current quote-to-close cycle actually cost you in lost time each week?\n\nBook a free 30-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=proof\nOr WhatsApp +96879665522\n\n#OmanBusiness\n#GCCBusiness\n#HRManagement\n#SmartPROHub",
+  "char_count": 1235,
+  "generated_at": "2026-06-22T08:02:39.202901+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "published",
+  "published": true,
+  "approved": true,
+  "approval_required": false,
+  "dry_run": false,
+  "is_variant": true,
+  "variant_of": "20260622_080229_proof.json",
+  "approved_at": "2026-06-24T06:19:32.275282+00:00",
+  "post_id": "urn:li:share:7475432408557817858",
+  "published_at": "2026-06-24T06:19:33.946731+00:00",
+  "cta_comment_posted": false,
+  "cta_comment_url": "",
+  "metrics": {
+    "hook_style": "bold-statement"
+  }
+}

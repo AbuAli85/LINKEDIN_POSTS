@@ -2,6 +2,23 @@
 
 Draft-first LinkedIn content system — generates posts with Claude, requires owner approval before publishing, and tracks performance to improve future content.
 
+> **New here? Read [`START_HERE.md`](./START_HERE.md) first.** It's the 2‑minute daily
+> routine. Day to day, you only need one command: `python panel.py`.
+
+## Daily control panel
+
+```bash
+python panel.py            # what needs you right now
+python panel.py review     # list drafts waiting for review
+python panel.py show 1     # read a draft in full
+python panel.py approve 1  # approve it (publishes on schedule)
+python panel.py publish 1  # publish to LinkedIn now (with confirmation)
+python panel.py reject 1   # remove it from the queue
+```
+
+The panel reuses the same approve/publish logic as the GitHub Actions workflow and
+stays in sync with the dashboard at `docs/index.html`.
+
 ## Content strategy
 
 | Publish day | Pillar | What it covers | Generated |
@@ -58,8 +75,10 @@ By default, scheduled runs are **draft-first**. This protects your LinkedIn repu
 2. **Get a LinkedIn access token.** Follow [`LINKEDIN_SETUP.md`](./LINKEDIN_SETUP.md) — it's a step-by-step OAuth walkthrough.
 3. **Add 3 secrets to GitHub** (Settings → Secrets and variables → Actions):
    - `ANTHROPIC_API_KEY` — from https://console.anthropic.com/
-   - `LINKEDIN_ACCESS_TOKEN` — from the OAuth setup
+   - `LINKEDIN_ACCESS_TOKEN` — posting token (Share on LinkedIn / `w_member_social`)
    - `LINKEDIN_AUTHOR_URN` — your LinkedIn URN (`urn:li:person:xxx`)
+   - **Optional:** `LINKEDIN_READ_TOKEN` — comment-reading token from a second app (Community Management API / `r_member_social`). See `LINKEDIN_SETUP.md` Step 7. Without it, `outreach.py fetch` returns 0 results.
+   - **Optional:** `APOLLO_API_KEY` + `BRIGHTDATA_API_KEY` — lead enrichment. See `ENRICH_LEADS.md`.
 4. **Enable GitHub Actions** for the repo (Actions tab → enable).
 5. **Optional: enable draft-ready notifications** so you do not need to manually check the dashboard. Add `RESEND_API_KEY` and `NOTIFY_EMAIL` for email, `NOTIFY_WEBHOOK_URL` for webhook alerts, or both.
 

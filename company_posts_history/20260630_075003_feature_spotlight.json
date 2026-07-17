@@ -1,0 +1,22 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "Growth partner commission tracking \u2014 what gets logged automatically and what no longer needs a spreadsheet",
+  "format": "Lead with a quote or question from a customer, then explain the feature built in response",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "\"We had three partners bringing in referrals. Nobody knew who was owed what until month-end \u2014 and by then, someone was always upset.\"\n\nThat's what one ops director told us before switching to SmartPRO Hub.\n\nPartner commissions are one of those problems businesses underreport. The spreadsheet holds together until it doesn't, and when it breaks, it breaks in front of the person you least want to disappoint.\n\nSo here's how we handle it:\n\nThe moment a deal is created in your CRM pipeline, the referral gets logged. Commission rates live at the partner and tier level \u2014 no manual math. When an invoice is paid, the commission entry updates on its own.\n\nGone from your ops team's plate: calculating partner totals, chasing payment status, figuring out deal attribution, running the monthly reconciliation. What stays: actual visibility into who's owed what, without a two-day email chain to get there.\n\nFor HR managers and ops directors already using SmartPRO Hub for WPS payroll Oman and workforce management \u2014 this is already in your platform. No separate tool, no CSV exports, no \"which version is current\" conversations.\n\nStarts at OMR 12/month. 14-day free trial, no credit card required.\n\nIf your partner program still lives in a shared sheet \u2014 how many hours does reconciliation eat every month?\n\nBook a 30-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#GCCBusiness\n#SMEOman",
+  "char_count": 1484,
+  "generated_at": "2026-06-30T07:50:03.311559+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "deleted",
+  "published": false,
+  "approved": false,
+  "approval_required": false,
+  "dry_run": true,
+  "has_variant": true,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
+}

@@ -14,5 +14,15 @@
   "dry_run": false,
   "approved_at": "2026-05-04T06:01:50.021004+00:00",
   "post_id": "urn:li:share:7456946169810837504",
-  "published_at": "2026-05-04T06:01:50.540527+00:00"
+  "published_at": "2026-05-04T06:01:50.540527+00:00",
+  "score": 6,
+  "hook": "question",
+  "notes": "WPS pain - good but hook could be sharper",
+  "scored_at": "2026-05-28",
+  "metrics": {
+    "manual_quality_score": 6,
+    "hook_style": "question",
+    "review_notes": "WPS pain - hook could be sharper",
+    "updated_at": "2026-05-28T18:11:28.862992+00:00"
+  }
 }

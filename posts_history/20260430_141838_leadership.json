@@ -14,5 +14,15 @@
   "dry_run": false,
   "approved_at": "2026-04-30T14:20:24.979151+00:00",
   "post_id": "urn:li:share:7455622091032215552",
-  "published_at": "2026-04-30T14:20:25.472485+00:00"
+  "published_at": "2026-04-30T14:20:25.472485+00:00",
+  "score": 8,
+  "hook": "numbered-list",
+  "notes": "Salary conversation topic - high share potential among managers",
+  "scored_at": "2026-05-28",
+  "metrics": {
+    "manual_quality_score": 8,
+    "hook_style": "numbered-list",
+    "review_notes": "Salary conversation - high share among managers",
+    "updated_at": "2026-05-28T18:11:28.332256+00:00"
+  }
 }

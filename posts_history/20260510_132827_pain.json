@@ -14,5 +14,15 @@
   "dry_run": false,
   "approved_at": "2026-05-11T06:15:54.524121+00:00",
   "post_id": "urn:li:share:7459486429576900608",
-  "published_at": "2026-05-11T06:15:55.622296+00:00"
+  "published_at": "2026-05-11T06:15:55.622296+00:00",
+  "score": 6,
+  "hook": "question",
+  "notes": "WhatsApp leave requests - good pain but CTA missing",
+  "scored_at": "2026-05-28",
+  "metrics": {
+    "manual_quality_score": 6,
+    "hook_style": "question",
+    "review_notes": "WhatsApp leave requests - CTA missing",
+    "updated_at": "2026-05-28T18:11:29.721305+00:00"
+  }
 }

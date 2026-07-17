@@ -1,0 +1,20 @@
+{
+  "pillar": "conversion",
+  "segment": "founders",
+  "hook": "numbered-list",
+  "hook_text": "5 reasons Omani companies delay HR software \u2014 and why each one costs more than the software.",
+  "body": "We've had the same conversation dozens of times.\n\nHere's what we hear \u2014 and what the math actually says:\n\n1. \"We're too small to need it\" (30-50 employees)\nReality: WPS compliance requirements don't scale with size. One MOL fine (OMR 150-500) often exceeds 3 months of software cost.\n\n2. \"Our process is working fine\"\nReality: 9 of 12 companies we've audited had end-of-service calculation errors. \"Working fine\" often means \"uncaught errors.\"\n\n3. \"We'll implement it after our busy season\"\nReality: The busy season is when compliance errors happen. Implementation before the rush = protection during it.\n\n4. \"Our team will take time to learn new software\"\nReality: Average SmartPRO Hub onboarding: 3 days. Average time spent fixing a WPS rejection manually: 4-6 hours. The math inverts quickly.\n\n5. \"We're waiting to see if the software proves itself in the market\"\nReality: Every month of delay is another month of exposure. The software proves itself in your environment in 14 days.\n\nThe cost of waiting isn't zero. It's compounding.\n\n---\n\nWhich of these have you told yourself? (No judgment \u2014 I've heard them all)",
+  "cta": "DM \"READY\" if the math has finally shifted for you.",
+  "score": 7.9,
+  "scored_at": "2026-05-28",
+  "status": "deleted",
+  "publish_date": "2026-07-11",
+  "publish_time": "09:00 GST",
+  "lang": "en",
+  "notes": "Q3 batch generated 2026-05-28",
+  "approved": false,
+  "approval_required": false,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
+}

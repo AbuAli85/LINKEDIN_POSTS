@@ -1,0 +1,26 @@
+{
+  "pillar": "tech",
+  "topic": "The performance problem that wasn't: diagnosing a slow dashboard in production",
+  "format": "Share a specific architectural decision — what the options were, what you chose, and what you've learned 6 months later",
+  "language": "en",
+  "segment": "C",
+  "publish_day": "Saturday",
+  "post": "4.2 seconds to load the dashboard. Users were complaining. My first instinct was wrong.\n\nI assumed it was the ORM. We use Drizzle with MySQL, so I went straight to query inspection — added logging, checked execution plans, found nothing. Queries were fast. Under 80ms each.\n\nThe actual problem: 23 separate queries firing on page load.\n\nEvery widget on the HR dashboard — headcount, WPS payroll status, work permit tracking, end-of-service gratuity summaries — was fetching independently. tRPC makes it so easy to wire up endpoints that we never stopped to count the cumulative cost. The code looked clean. Runtime behavior was a mess.\n\nThe fix wasn't clever. We batched the critical-path queries into one aggregated loader and deferred the secondary widgets. Load time dropped to 900ms. No caching layer, no infra changes.\n\nWhat I took from this: tRPC's composability is genuinely useful, and it will quietly punish you for it. You build fast, you ship fast, and then production shows you what your architecture actually costs.\n\nWe have 4,000+ automated tests. None of them caught this. Tests don't simulate the shape of real user sessions — that's just a gap you have to accept and work around.\n\nIf your dashboard feels fine in dev, profile it in production. Seriously, do it before your users do it for you.\n\nBook a free 20-min demo to see SmartPRO Hub in action: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign={campaign}\n\n#BuildInPublic\n#SaaS\n#GCCTech\n#TypeScript\n#SmartPROHub",
+  "char_count": 1516,
+  "generated_at": "2026-06-11T07:42:21.211172+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "published",
+  "published": true,
+  "approved": true,
+  "approval_required": false,
+  "dry_run": false,
+  "approved_at": "2026-06-13T06:26:11.106495+00:00",
+  "post_id": "urn:li:share:7471447816154869760",
+  "published_at": "2026-06-13T06:26:12.956456+00:00",
+  "cta_comment_posted": false,
+  "cta_comment_url": "",
+  "metrics": {
+    "hook_style": "data-lead"
+  }
+}

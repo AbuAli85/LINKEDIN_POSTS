@@ -1,0 +1,30 @@
+{
+  "pillar": "proof",
+  "topic": "How payroll accuracy changed employee trust at one Oman business",
+  "format": "Open with a data point about Oman businesses and explain the root cause behind it",
+  "post": "68% of employees in Oman say payroll errors have made them question whether to stay at their job.\n\nThe root cause is almost never bad intent. It's disconnected systems \u2014 attendance in one place, approvals in another, WPS submissions done manually the night before the deadline.\n\nOne retail business in Muscat came to SmartPro after three consecutive months of salary disputes. Different amounts, wrong overtime calculations, late WPS submissions.\n\nTheir HR manager was spending 14 hours a month just reconciling payroll. And still getting it wrong.\n\nAfter switching to SmartPro:\n\nPayroll processing dropped from 14 hours to under 2. WPS submissions went out on time, every month, directly integrated with their bank. Salary disputes in the first 90 days: zero.\n\nThe HR manager told us the biggest change wasn't the software. It was that employees stopped asking \"is my salary going to be right this month?\"\n\nThat question disappearing \u2014 that's trust.\n\nPayroll accuracy isn't a finance metric. It's the baseline your people use to decide if they can count on you.\n\nIf your team is still asking that question on payday, something in your process needs to change.\n\nBook a free 20-minute demo \u2014 DM me here or WhatsApp +96879665522. Website: thesmartpro.io\n\nWhat's the one payroll issue your team keeps running into?\n\n#Payroll\n#HROman\n#WPS\n#SmartPro\n#HumanResources",
+  "char_count": 1360,
+  "generated_at": "2026-05-11T07:13:12.797280+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "published",
+  "published": true,
+  "approved": true,
+  "approval_required": false,
+  "dry_run": false,
+  "approved_at": "2026-05-13T06:07:12.797705+00:00",
+  "post_id": "urn:li:share:7460209015898300416",
+  "published_at": "2026-05-13T06:07:13.742334+00:00",
+  "cta_comment_posted": false,
+  "cta_comment_url": "",
+  "score": 8,
+  "hook": "data-lead",
+  "notes": "68% stat opener - data lead performs well for proof pillar",
+  "scored_at": "2026-05-28",
+  "metrics": {
+    "manual_quality_score": 8,
+    "hook_style": "data-lead",
+    "review_notes": "68% stat opener - data lead performs well",
+    "updated_at": "2026-05-28T18:11:29.918407+00:00"
+  }
+}

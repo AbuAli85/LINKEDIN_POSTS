@@ -1,0 +1,20 @@
+{
+  "pillar": "vision",
+  "segment": "founders",
+  "hook": "bold-statement",
+  "hook_text": "Oman's compliance infrastructure is being rebuilt. The companies that digitize now will own the next decade.",
+  "body": "The Ministry of Labour's digital transformation isn't optional. It's accelerating.\n\nWPS is already digital. Sanad is digital. Labour inspections are increasingly data-driven.\n\nWhat's next:\n- Mandatory digital employment contracts by 2027\n- Real-time payroll reporting to MOL (pilot already running in Gulf neighbors)\n- Integrated Sanad-PASI-MOL data exchange\n- Automated Omanization ratio tracking per establishment\n\nCompanies that run on spreadsheets in 2024 will not be compliant by 2027. The infrastructure gap is too large to bridge in 12 months.\n\nCompanies that digitize now get:\n- The learning curve behind them\n- Clean historical data for future reporting requirements\n- The ability to adapt fast when new mandates drop\n\nWe're not selling software. We're selling readiness.\n\nThe Omani companies that own their data by 2026 will be positioned for every digital mandate that follows.\n\n---\n\nWhat digital compliance shift are you watching most closely?",
+  "cta": "",
+  "score": 7.5,
+  "scored_at": "2026-05-28",
+  "status": "deleted",
+  "publish_date": "2026-06-29",
+  "publish_time": "09:00 GST",
+  "lang": "en",
+  "notes": "Q3 batch generated 2026-05-28",
+  "approved": false,
+  "approval_required": false,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
+}

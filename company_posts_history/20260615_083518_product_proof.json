@@ -1,0 +1,21 @@
+{
+  "pillar": "product_proof",
+  "topic": "A PRO services firm scaled from 15 to 60 client companies without adding admin headcount",
+  "format": "Tight case study: company profile, problem, what changed, the one number that proves it worked",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "A PRO services firm in Muscat had 15 client companies and one admin holding everything together with spreadsheets and WhatsApp threads.\n\nAt 20 clients, response times started slipping. At 25, they nearly missed a Ministry of Labour filing. The ceiling wasn't ambition \u2014 it was operations.\n\nThey moved to SmartPro Hub.\n\nWork permit tracking, government filings, WPS payroll, client updates \u2014 all running from one place instead of scattered across folders and group chats.\n\nTwelve months later: 60 active client companies. Same admin headcount.\n\n4x growth. Zero additional overhead.\n\nThat number is worth sitting with for a second. Most firms at 25 clients are already thinking about hiring. This one tripled past that without adding a single person to the team.\n\nSmartPro Hub handles the operational load that usually forces that hire \u2014 automated filing workflows, visa and permit tracking, client portals, WPS payroll with direct bank integration. Built specifically for Oman and GCC businesses, not retrofitted from some generic HR tool.\n\nWe built it because firms growing fast in Oman shouldn't have to pick between winning new clients and actually serving the ones they have.\n\nIf your operations are the ceiling on your growth, it's worth 20 minutes to see what changes.\n\nBook a demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#OmanBusiness\n#PRO services automation Oman\n#WPS\n#GCCBusiness",
+  "char_count": 1460,
+  "generated_at": "2026-06-15T08:35:18.636223+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "deleted",
+  "published": false,
+  "approved": false,
+  "approval_required": false,
+  "dry_run": true,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
+}

@@ -1,0 +1,33 @@
+{
+  "pillar": "pain",
+  "topic": "Tracking 80 leave balances in a shared spreadsheet \u2014 someone always gets the wrong number",
+  "format": "Write a numbered list of 4-5 warning signs \u2014 make them specific enough that most readers recognise at least three of them",
+  "language": "en",
+  "post": "80 employees. One shared spreadsheet. Zero confidence the numbers are right.\n\n1. Someone asks for their leave balance \u2014 you open the file, scroll through 80 rows, and still aren't sure what to tell them.\n2. Two managers edited it on the same day. Now there are two versions and neither is dated.\n3. An employee took 3 days in March. Nobody updated the sheet. You found out during their annual review.\n4. A staff member disputed their balance. You couldn't prove the correct figure. You gave in.\n5. Someone is on leave right now and you're not fully sure it was ever formally approved.\n\nThis isn't really a spreadsheet problem.\n\nIt's a trust problem. When the records are unreliable, every leave conversation becomes a negotiation. HR chases numbers instead of doing actual work. Employees start questioning the process. And payroll can't close cleanly because nothing quite lines up.\n\nOne shared file with no audit trail isn't a system. It's a liability \u2014 and it usually surfaces at the worst possible time.\n\nSmartPro Hub tracks every balance automatically, logs every request, and keeps one version of the truth \u2014 visible to HR, managers, and employees in real time.\n\nStarts at OMR 12/month. 14-day free trial, no credit card needed.\n\nWhich of the five hits closest to home? Drop it in the comments.\n\nBook a 20-minute demo at www.thesmartpro.io \u2014 or WhatsApp +96879665522 to see SmartPro live.\n\n#HRManagement\n#SmallBusinessOman\n#PayrollOman\n#WorkforceManagement\n#OmanBusiness",
+  "char_count": 1476,
+  "generated_at": "2026-05-16T05:59:29.789605+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "published",
+  "published": true,
+  "approved": true,
+  "approval_required": false,
+  "dry_run": false,
+  "is_variant": true,
+  "variant_of": "20260516_055920_pain.json",
+  "approved_at": "2026-05-21T06:22:22.893868+00:00",
+  "post_id": "urn:li:share:7463111937300750336",
+  "published_at": "2026-05-21T06:22:24.768682+00:00",
+  "cta_comment_posted": false,
+  "cta_comment_url": "",
+  "score": 7,
+  "hook": "numbered-list",
+  "notes": "Pain variant - solid list format",
+  "scored_at": "2026-05-28",
+  "metrics": {
+    "manual_quality_score": 7,
+    "hook_style": "numbered-list",
+    "review_notes": "Pain variant solid",
+    "updated_at": "2026-05-28T18:11:31.072396+00:00"
+  }
+}

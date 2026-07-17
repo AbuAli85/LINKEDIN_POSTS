@@ -1,0 +1,458 @@
+{
+  "generated": "2026-05-28T21:35:25Z",
+  "total": 45,
+  "queue_start": "2026-05-29",
+  "queue_end": "2026-07-11",
+  "schedule": [
+    {
+      "date": "2026-05-29",
+      "time": "09:00 GST",
+      "file": "posts_history/20260525_090000_proof.json",
+      "pillar": "proof",
+      "hook": "story",
+      "score": 9,
+      "lang": "en",
+      "preview": ""
+    },
+    {
+      "date": "2026-05-29",
+      "time": "09:00 GST",
+      "file": "posts_history/20260529_090000_proof.json",
+      "pillar": "proof",
+      "hook": "story",
+      "score": 9,
+      "lang": "en",
+      "preview": ""
+    },
+    {
+      "date": "2026-05-30",
+      "time": "09:00 GST",
+      "file": "posts_history/20260526_090000_sanad_pro.json",
+      "pillar": "sanad_pro",
+      "hook": "numbered-list",
+      "score": 8,
+      "lang": "en",
+      "preview": ""
+    },
+    {
+      "date": "2026-05-31",
+      "time": "09:00 GST",
+      "file": "posts_history/20260527_090000_vision.json",
+      "pillar": "vision",
+      "hook": "bold-statement",
+      "score": 8,
+      "lang": "en",
+      "preview": ""
+    },
+    {
+      "date": "2026-06-01",
+      "time": "09:00 GST",
+      "file": "posts_history/fixed_20260526_071417_sanad_pro.json",
+      "pillar": "sanad_pro",
+      "hook": "story",
+      "score": 8,
+      "lang": "en",
+      "preview": ""
+    },
+    {
+      "date": "2026-06-02",
+      "time": "09:00 GST",
+      "file": "posts_history/new_20260526_194946_tech.json",
+      "pillar": "tech",
+      "hook": "story",
+      "score": 8,
+      "lang": "en",
+      "preview": ""
+    },
+    {
+      "date": "2026-06-03",
+      "time": "09:00 GST",
+      "file": "posts_history/new_20260526_194946_vision.json",
+      "pillar": "vision",
+      "hook": "bold-statement",
+      "score": 7,
+      "lang": "en",
+      "preview": ""
+    },
+    {
+      "date": "2026-06-04",
+      "time": "09:00 GST",
+      "file": "posts_history/20260528_072217_tech.json",
+      "pillar": "tech",
+      "hook": "story",
+      "score": 7.8,
+      "lang": "en",
+      "preview": ""
+    },
+    {
+      "date": "2026-06-05",
+      "time": "09:00 GST",
+      "file": "posts_history/20260528_181628_pain_new.json",
+      "pillar": "pain",
+      "hook": "story",
+      "score": 8.3,
+      "lang": "en",
+      "preview": ""
+    },
+    {
+      "date": "2026-06-06",
+      "time": "09:00 GST",
+      "file": "posts_history/20260528_181628_proof_new.json",
+      "pillar": "proof",
+      "hook": "story",
+      "score": 8.5,
+      "lang": "en",
+      "preview": ""
+    },
+    {
+      "date": "2026-06-07",
+      "time": "09:00 GST",
+      "file": "posts_history/20260528_181628_sanad_pro_new.json",
+      "pillar": "sanad_pro",
+      "hook": "data-lead",
+      "score": 7.9,
+      "lang": "en",
+      "preview": ""
+    },
+    {
+      "date": "2026-06-08",
+      "time": "09:00 GST",
+      "file": "posts_history/20260528_181628_tech_new.json",
+      "pillar": "tech",
+      "hook": "story",
+      "score": 7.7,
+      "lang": "en",
+      "preview": ""
+    },
+    {
+      "date": "2026-06-09",
+      "time": "09:00 GST",
+      "file": "posts_history/20260528_181628_vision_new.json",
+      "pillar": "vision",
+      "hook": "bold-statement",
+      "score": 7.5,
+      "lang": "en",
+      "preview": ""
+    },
+    {
+      "date": "2026-06-10",
+      "time": "09:00 GST",
+      "file": "posts_history/20260529_090000_conversion.json",
+      "pillar": "conversion",
+      "hook": "story",
+      "score": 8.3,
+      "lang": "en",
+      "preview": ""
+    },
+    {
+      "date": "2026-06-11",
+      "time": "09:00 GST",
+      "file": "posts_history/20260530_090000_pain_carousel.json",
+      "pillar": "pain",
+      "hook": "numbered-list",
+      "score": 7.9,
+      "lang": "en",
+      "preview": ""
+    },
+    {
+      "date": "2026-06-12",
+      "time": "09:00 GST",
+      "file": "posts_history/20260531_090000_sanad_pro_ar.json",
+      "pillar": "sanad_pro_ar",
+      "hook": "story",
+      "score": 8.2,
+      "lang": "en",
+      "preview": ""
+    },
+    {
+      "date": "2026-06-13",
+      "time": "09:00 GST",
+      "file": "posts_history/20260613_090000_leadership_q2.json",
+      "pillar": "leadership",
+      "hook": "story",
+      "score": 8.5,
+      "lang": "en",
+      "preview": ""
+    },
+    {
+      "date": "2026-06-14",
+      "time": "09:00 GST",
+      "file": "posts_history/20260614_090000_pain_q2.json",
+      "pillar": "pain",
+      "hook": "data-lead",
+      "score": 7.9,
+      "lang": "en",
+      "preview": ""
+    },
+    {
+      "date": "2026-06-15",
+      "time": "09:00 GST",
+      "file": "posts_history/20260615_090000_proof_q2.json",
+      "pillar": "proof",
+      "hook": "story",
+      "score": 8.8,
+      "lang": "en",
+      "preview": ""
+    },
+    {
+      "date": "2026-06-16",
+      "time": "09:00 GST",
+      "file": "posts_history/20260616_090000_vision_q2.json",
+      "pillar": "vision",
+      "hook": "bold-statement",
+      "score": 7.8,
+      "lang": "en",
+      "preview": ""
+    },
+    {
+      "date": "2026-06-17",
+      "time": "09:00 GST",
+      "file": "posts_history/20260617_090000_pain_q2.json",
+      "pillar": "pain",
+      "hook": "question",
+      "score": 7.6,
+      "lang": "en",
+      "preview": ""
+    },
+    {
+      "date": "2026-06-18",
+      "time": "09:00 GST",
+      "file": "posts_history/20260618_090000_tech_q2.json",
+      "pillar": "tech",
+      "hook": "story",
+      "score": 7.7,
+      "lang": "en",
+      "preview": ""
+    },
+    {
+      "date": "2026-06-19",
+      "time": "09:00 GST",
+      "file": "posts_history/20260619_090000_sanad_pro_q2.json",
+      "pillar": "sanad_pro",
+      "hook": "data-lead",
+      "score": 8.0,
+      "lang": "en",
+      "preview": ""
+    },
+    {
+      "date": "2026-06-20",
+      "time": "09:00 GST",
+      "file": "posts_history/20260620_090000_conversion_q2.json",
+      "pillar": "conversion",
+      "hook": "story",
+      "score": 8.4,
+      "lang": "en",
+      "preview": ""
+    },
+    {
+      "date": "2026-06-21",
+      "time": "09:00 GST",
+      "file": "posts_history/20260621_090000_proof_q3.json",
+      "pillar": "proof",
+      "hook": "story",
+      "score": 8.5,
+      "lang": "en",
+      "preview": "The finance director wanted to fire our software. What happened next changed eve"
+    },
+    {
+      "date": "2026-06-22",
+      "time": "09:00 GST",
+      "file": "posts_history/20260622_090000_pain_q3.json",
+      "pillar": "pain",
+      "hook": "data-lead",
+      "score": 8.1,
+      "lang": "en",
+      "preview": "Oman HR managers waste 11 hours per month on one task that should take 11 minute"
+    },
+    {
+      "date": "2026-06-23",
+      "time": "09:00 GST",
+      "file": "posts_history/20260623_090000_leadership_q3.json",
+      "pillar": "leadership",
+      "hook": "story",
+      "score": 8.8,
+      "lang": "en",
+      "preview": "I almost hired an HR consultant for OMR 2,000/month. Then I built the software i"
+    },
+    {
+      "date": "2026-06-24",
+      "time": "09:00 GST",
+      "file": "posts_history/20260624_090000_sanad_pro_ar_q3.json",
+      "pillar": "sanad_pro_ar",
+      "hook": "story",
+      "score": 8.2,
+      "lang": "ar",
+      "preview": "قضى مسؤول الموارد البشرية 3 سنوات يتصل بسناد كل أسبوع. لم يكن يعرف أن هناك طريقة"
+    },
+    {
+      "date": "2026-06-25",
+      "time": "09:00 GST",
+      "file": "posts_history/20260625_090000_conversion_q3.json",
+      "pillar": "conversion",
+      "hook": "bold-statement",
+      "score": 8.0,
+      "lang": "en",
+      "preview": "Free trials fail. Proof of value doesn't."
+    },
+    {
+      "date": "2026-06-26",
+      "time": "09:00 GST",
+      "file": "posts_history/20260626_090000_pain_q3.json",
+      "pillar": "pain",
+      "hook": "question",
+      "score": 7.8,
+      "lang": "en",
+      "preview": "What happens to your Omani employees' end-of-service if your company closes tomo"
+    },
+    {
+      "date": "2026-06-27",
+      "time": "09:00 GST",
+      "file": "posts_history/20260627_090000_tech_q3.json",
+      "pillar": "tech",
+      "hook": "story",
+      "score": 7.7,
+      "lang": "en",
+      "preview": "We rebuilt our leave engine three times. The third version is why clients don't "
+    },
+    {
+      "date": "2026-06-28",
+      "time": "09:00 GST",
+      "file": "posts_history/20260628_090000_proof_q3.json",
+      "pillar": "proof",
+      "hook": "data-lead",
+      "score": 8.3,
+      "lang": "en",
+      "preview": "3 Omani companies. 1 WPS rejection between them in 12 months. Here's what they h"
+    },
+    {
+      "date": "2026-06-29",
+      "time": "09:00 GST",
+      "file": "posts_history/20260629_090000_vision_q3.json",
+      "pillar": "vision",
+      "hook": "bold-statement",
+      "score": 7.5,
+      "lang": "en",
+      "preview": "Oman's compliance infrastructure is being rebuilt. The companies that digitize n"
+    },
+    {
+      "date": "2026-06-30",
+      "time": "09:00 GST",
+      "file": "posts_history/20260630_090000_sanad_pro_q3.json",
+      "pillar": "sanad_pro",
+      "hook": "numbered-list",
+      "score": 7.7,
+      "lang": "en",
+      "preview": "7 Sanad compliance checks every Omani employer should run this month."
+    },
+    {
+      "date": "2026-07-01",
+      "time": "09:00 GST",
+      "file": "posts_history/20260701_090000_leadership_q3.json",
+      "pillar": "leadership",
+      "hook": "story",
+      "score": 8.8,
+      "lang": "en",
+      "preview": "The best HR director I ever met quit her job to become a client. This is why."
+    },
+    {
+      "date": "2026-07-02",
+      "time": "09:00 GST",
+      "file": "posts_history/20260702_090000_pain_q3.json",
+      "pillar": "pain",
+      "hook": "story",
+      "score": 8.3,
+      "lang": "en",
+      "preview": "The MOL inspector arrived at 9am. The HR file was ready at 9:02am. Here's how."
+    },
+    {
+      "date": "2026-07-03",
+      "time": "09:00 GST",
+      "file": "posts_history/20260703_090000_conversion_q3.json",
+      "pillar": "conversion",
+      "hook": "story",
+      "score": 8.3,
+      "lang": "en",
+      "preview": "They said our pricing was too high. Six months later, they called back. Same pri"
+    },
+    {
+      "date": "2026-07-04",
+      "time": "09:00 GST",
+      "file": "posts_history/20260704_090000_proof_q3.json",
+      "pillar": "proof",
+      "hook": "story",
+      "score": 8.5,
+      "lang": "en",
+      "preview": "One client. Three entities. Six nationalities. One HR manager. Zero payroll erro"
+    },
+    {
+      "date": "2026-07-05",
+      "time": "09:00 GST",
+      "file": "posts_history/20260705_090000_tech_q3.json",
+      "pillar": "tech",
+      "hook": "data-lead",
+      "score": 7.5,
+      "lang": "en",
+      "preview": "We process 14,000+ payroll records per month. Here's what the data tells us abou"
+    },
+    {
+      "date": "2026-07-06",
+      "time": "09:00 GST",
+      "file": "posts_history/20260706_090000_sanad_pro_ar_q3.json",
+      "pillar": "sanad_pro_ar",
+      "hook": "story",
+      "score": 8.2,
+      "lang": "ar",
+      "preview": "مديرة الموارد البشرية قالت: «ما أعرف كم عامل عندنا في سناد بالضبط». الجواب كان م"
+    },
+    {
+      "date": "2026-07-07",
+      "time": "09:00 GST",
+      "file": "posts_history/20260707_090000_pain_q3.json",
+      "pillar": "pain",
+      "hook": "bold-statement",
+      "score": 8.0,
+      "lang": "en",
+      "preview": "Oman's payroll compliance isn't getting easier. It's getting stricter. And most "
+    },
+    {
+      "date": "2026-07-08",
+      "time": "09:00 GST",
+      "file": "posts_history/20260708_090000_leadership_q3.json",
+      "pillar": "leadership",
+      "hook": "story",
+      "score": 8.8,
+      "lang": "en",
+      "preview": "I gave a presentation to 12 Oman HR directors. Only 2 were tracking their own da"
+    },
+    {
+      "date": "2026-07-09",
+      "time": "09:00 GST",
+      "file": "posts_history/20260709_090000_vision_q3.json",
+      "pillar": "vision",
+      "hook": "question",
+      "score": 7.3,
+      "lang": "en",
+      "preview": "When Oman mandates digital employment contracts — is your company ready to compl"
+    },
+    {
+      "date": "2026-07-10",
+      "time": "09:00 GST",
+      "file": "posts_history/20260710_090000_sanad_pro_q3.json",
+      "pillar": "sanad_pro",
+      "hook": "story",
+      "score": 8.1,
+      "lang": "en",
+      "preview": "The call we get every March from companies who ignored our October demo."
+    },
+    {
+      "date": "2026-07-11",
+      "time": "09:00 GST",
+      "file": "posts_history/20260711_090000_conversion_q3.json",
+      "pillar": "conversion",
+      "hook": "numbered-list",
+      "score": 7.9,
+      "lang": "en",
+      "preview": "5 reasons Omani companies delay HR software — and why each one costs more than t"
+    }
+  ]
+}

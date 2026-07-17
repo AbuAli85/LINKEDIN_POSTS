@@ -1,0 +1,21 @@
+{
+  "pillar": "product_proof",
+  "topic": "End-of-service calculations that used to take a spreadsheet morning now run in seconds",
+  "format": "Open with a SmartPRO Hub product capability, then show the real-world business outcome it enables",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "2.5 hours to calculate one end-of-service payment.\n\nThat's what it was costing an HR manager in Muscat \u2014 every time a contract ended. Pull the file. Check the join date. Count the years. Apply the formula. Verify against Ministry of Labour rules. Repeat for every employee.\n\nSmartPRO Hub automated it.\n\nNow that same calculation runs in seconds. Joining date, contract type, leave balances, deductions \u2014 the system reads the employee record and returns a compliant figure. No checking, no second-guessing.\n\nNo spreadsheet. No back-and-forth. No Sunday morning lost to manual math.\n\nCustomers processing end-of-service for 50+ employees used to block out half a day for it. Now it's a two-minute confirmation before they move on to work that actually needs their attention.\n\nWe built this because WPS payroll Oman compliance doesn't forgive errors \u2014 and spreadsheets make errors inevitable. One wrong formula, one missed service year, and you're exposed. That's not a hypothetical. It happens.\n\nThe calculation itself isn't complicated. What's hard is doing it correctly, every single time, across a full headcount, without it eating your HR team's week. That's the problem SmartPRO Hub solves.\n\nHow many hours does your team spend on end-of-service calculations each month? Drop a number in the comments.\n\nBook a 30-minute demo: https://www.thesmartpro.io/demo?utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#OmanBusiness\n#PayrollOman\n#WPS\n#HRTech",
+  "char_count": 1479,
+  "generated_at": "2026-07-12T07:22:08.307709+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "deleted",
+  "published": false,
+  "approved": false,
+  "approval_required": false,
+  "dry_run": true,
+  "rejected": true,
+  "rejected_at": "2026-07-15T11:18:01.309322+00:00",
+  "rejected_reason": "pre-PR#12 backlog purge \u2014 queue hygiene 2026-07-15 (regenerate via corrected pipeline)"
+}

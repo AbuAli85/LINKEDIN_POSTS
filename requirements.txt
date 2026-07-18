@@ -6,4 +6,4 @@ pillow==12.3.0
 arabic-reshaper==3.0.1
 # Pure-Python bidi (0.4.x). The 0.6.x rewrite is a Rust extension whose wheel can
 # fail to import on the CI runner, which silently broke Arabic shaping.
-python-bidi==0.4.2
+python-bidi==0.6.11

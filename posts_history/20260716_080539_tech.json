@@ -11,10 +11,14 @@
   "model": "claude-sonnet-4-6",
   "attempts": 2,
   "validation_warning": "too long (1598 chars, need <= 1500)",
-  "status": "approved",
-  "published": false,
+  "status": "published",
+  "published": true,
   "approved": true,
   "approval_required": false,
   "dry_run": false,
-  "approved_at": "2026-07-16T13:21:31.972890+00:00"
+  "approved_at": "2026-07-18T07:10:42.859601+00:00",
+  "post_id": "urn:li:share:7484142597083561984",
+  "published_at": "2026-07-18T07:10:44.588521+00:00",
+  "cta_comment_posted": false,
+  "cta_comment_url": ""
 }

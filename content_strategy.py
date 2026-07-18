@@ -372,11 +372,12 @@ PILLARS = {
     # Ambitious, forward-looking. Makes the reader want to be part of what is coming.
     "vision": {
         "weight":          1.0,  # brand positioning; lowest direct conversion — generate least
+        "cta":             "none",  # no link — ends on engagement question only
         "segment":         "B",
         "post_type":       ["Story", "Data/Insight"],
         "day":             "Friday",
         "weekday":         4,
-        "generate_weekday": 2,   # Wednesday — 2 days before Friday publish
+        "generate_weekday": -1,  # manual only — off auto-schedule (cadence cap)
         "publish_day":     "Friday",
         "generate_day":    "Wednesday",
         "tone":            "forward-looking, strategic, confident — speak to founders and leaders thinking about the next 3-5 years, not just today's problems",
@@ -864,11 +865,12 @@ PILLARS = {
     # Generate Thursday (2 days before Saturday publish).
     "tech": {
         "weight":           1.5,
+        "cta":              "none",  # no link — engagement post, ends on question
         "segment":          "C",
         "post_type":        ["Story", "Data/Insight", "Carousel"],
         "day":              "Saturday",
         "weekday":          5,       # Python: Saturday = 5
-        "generate_weekday": 3,       # Python: Thursday = 3
+        "generate_weekday": -1,      # manual only — off auto-schedule (cadence cap)
         "publish_day":      "Saturday",
         "generate_day":     "Thursday",
         "language":         "en",

@@ -19,6 +19,8 @@ Usage:
 from __future__ import annotations
 
 import json
+import re
+from datetime import date, timedelta
 from pathlib import Path
 
 ROOT = Path(__file__).parent
@@ -61,6 +63,46 @@ def _stale_prices(body: str) -> list[str]:
 
 def _link_count(body: str) -> int:
     return body.count("https://")
+
+
+def _trigrams(text: str) -> set[str]:
+    words = re.findall(r"\w+", text.lower())
+    return {" ".join(words[i:i+3]) for i in range(len(words) - 2)}
+
+
+def is_topic_recent(topic: str, days: int = 14) -> tuple[bool, str]:
+    """Return (True, matching_file) if a published post covers the same topic
+    within the last `days` days (>= 70% trigram overlap). Used as a pre-generate
+    similarity gate to prevent near-duplicate posts.
+    """
+    cutoff = date.today() - timedelta(days=days)
+    new_tri = _trigrams(topic)
+    if not new_tri:
+        return False, ""
+
+    for d in HISTORY_DIRS:
+        if not d.exists():
+            continue
+        for path in sorted(d.glob("*.json"), reverse=True):
+            post = _load(path)
+            if not post:
+                continue
+            published_str = post.get("published_at", "") or post.get("created_at", "")
+            if published_str:
+                try:
+                    pub_date = date.fromisoformat(published_str[:10])
+                    if pub_date < cutoff:
+                        continue
+                except ValueError:
+                    pass
+            existing_tri = _trigrams(post.get("topic", "") + " " + post.get("post", "")[:300])
+            if not existing_tri:
+                continue
+            overlap = len(new_tri & existing_tri) / len(new_tri)
+            if overlap >= 0.70:
+                rel = str(path.relative_to(ROOT)).replace("\\", "/")
+                return True, rel
+    return False, ""
 
 
 def scan() -> list[dict]:

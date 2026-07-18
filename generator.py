@@ -301,7 +301,7 @@ def _cta_block(pillar_config: dict) -> str:
         _s = load_strategy()
         CTA_DEMO, CTA_DEMO_AR = _s.CTA_DEMO, _s.CTA_DEMO_AR
         CTA_INVESTORS, CTA_INVESTORS_AR = _s.CTA_INVESTORS, _s.CTA_INVESTORS_AR
-        CTA_TECH        = "See SmartPRO Hub in action — book a free 30-minute demo: " + links.book_template("demo")
+        CTA_TECH = getattr(_s, "CTA_TECH", None)
     except (ImportError, AttributeError):
         return ""
     segment  = (pillar_config.get("segment") or "A").strip().upper()
@@ -309,6 +309,8 @@ def _cta_block(pillar_config: dict) -> str:
     campaign = (pillar_config.get("name") or "general").replace("_", "-")
     override = (pillar_config.get("cta") or "").strip().lower()
 
+    if override == "none":
+        return ""
     if override == "feasibility":
         template = getattr(_s, "CTA_FEASIBILITY_AR" if language == "ar" else "CTA_FEASIBILITY", None)
     elif override == "sanad":
@@ -318,7 +320,9 @@ def _cta_block(pillar_config: dict) -> str:
     elif segment == "B":
         template = CTA_INVESTORS_AR if language == "ar" else CTA_INVESTORS
     elif segment == "C":
-        return f"CTA: {CTA_TECH.format(campaign=campaign)}\n"
+        if CTA_TECH:
+            return f"CTA: {CTA_TECH.format(campaign=campaign)}\n"
+        return ""
     else:
         template = CTA_DEMO_AR if language == "ar" else CTA_DEMO
 
@@ -548,6 +552,18 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
 
     if topic is None:
         topic = pick_topic(pillar_config, recent_posts)
+
+    # Similarity gate — skip generation if a recent post covers this topic
+    try:
+        from flag_stale_content import is_topic_recent
+        too_similar, similar_file = is_topic_recent(topic, days=14)
+        if too_similar:
+            raise ValueError(
+                f"Topic too similar to a recent post ({similar_file}). "
+                "Pick a different topic or wait 14 days."
+            )
+    except ImportError:
+        pass
 
     fmt = pick_format(pillar_config, recent_posts)
     model = os.environ.get("ANTHROPIC_MODEL") or DEFAULT_MODEL

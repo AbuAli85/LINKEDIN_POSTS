@@ -227,12 +227,46 @@ def publish_post(text: str, pillar: str = "", attach_image: bool = True) -> dict
         "visibility": {"com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"},
     }
 
+    refreshed = False
     for attempt in range(1, MAX_RETRIES + 1):
-        t0       = time.monotonic()
-        response = requests.post(LINKEDIN_API, headers=headers, json=payload, timeout=30)
+        t0 = time.monotonic()
+        try:
+            response = requests.post(LINKEDIN_API, headers=headers, json=payload, timeout=30)
+        except requests.exceptions.Timeout:
+            # Ambiguous outcome: the request may have already reached LinkedIn and
+            # created the post even though we never saw the response. Retrying
+            # blind here risks a duplicate publish, so fail fast instead.
+            raise LinkedInError(
+                "LinkedIn publish request timed out waiting for a response — the post "
+                "may or may not have gone live. Check the LinkedIn feed before "
+                "re-publishing to avoid a duplicate."
+            )
+        except requests.exceptions.RequestException as exc:
+            # Connection-level failure before anything reached LinkedIn — safe to retry.
+            if attempt == MAX_RETRIES:
+                raise LinkedInError(
+                    f"LinkedIn publish failed after {MAX_RETRIES} attempts (network error): {exc}"
+                )
+            wait = 2 ** attempt
+            logger.warning(
+                "LinkedIn network error on attempt %d/%d (%s) - retrying in %ds",
+                attempt, MAX_RETRIES, exc, wait,
+            )
+            time.sleep(wait)
+            continue
         elapsed  = time.monotonic() - t0
 
         if response.status_code == 401:
+            if not refreshed:
+                from oauth_helper import try_refresh_access_token
+                new_token = try_refresh_access_token()
+                if new_token:
+                    refreshed = True
+                    token = new_token
+                    os.environ[token_var] = new_token
+                    headers["Authorization"] = f"Bearer {token}"
+                    logger.info("LinkedIn token refreshed after 401 - retrying publish.")
+                    continue
             audience = get_audience()
             setup_doc = "COMPANY_SETUP.md" if audience == "company" else "LINKEDIN_SETUP.md"
             raise LinkedInError(
@@ -254,7 +288,14 @@ def publish_post(text: str, pillar: str = "", attach_image: bool = True) -> dict
         if response.status_code not in (200, 201):
             raise LinkedInError(f"LinkedIn API error {response.status_code}: {response.text}")
 
-        post_id = response.headers.get("x-restli-id") or response.json().get("id")
+        post_id = response.headers.get("x-restli-id")
+        if not post_id:
+            try:
+                post_id = response.json().get("id")
+            except ValueError:
+                # 201 with a non-JSON body — don't let a parse error masquerade
+                # as a publish failure; the post already went live.
+                post_id = None
         logger.info("Published post_id=%s chars=%d elapsed=%.2fs attempt=%d image=%s",
                     post_id, len(text), elapsed, attempt, image_path)
         cta_posted = post_cta_comment(post_id, pillar, token)

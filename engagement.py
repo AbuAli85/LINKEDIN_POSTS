@@ -12,6 +12,8 @@ from pathlib import Path
 import anthropic
 import requests
 
+from atomic_io import write_json
+
 HISTORY_DIR    = Path(__file__).parent / "posts_history"
 ENGAGEMENT_DIR = Path(__file__).parent / "engagement_history"
 ENGAGEMENT_DIR.mkdir(exist_ok=True)
@@ -173,7 +175,7 @@ def _load(path: Path) -> dict:
 
 
 def _save(path: Path, data: dict) -> None:
-    path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+    write_json(path, data)
 
 
 def _existing_comment_ids() -> set[str]:

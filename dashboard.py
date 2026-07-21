@@ -247,7 +247,7 @@ nav.actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
 .schedbar{background:#111113;border-bottom:1px solid rgba(255,255,255,.07);
           padding:10px 28px;display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;
           font-size:12px;min-height:40px}
-.schedbar .lbl{font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;
+.schedbar .lbl{font-size:10px;color:rgba(255,255,255,.5);text-transform:uppercase;
                letter-spacing:.08em;white-space:nowrap;flex-shrink:0}
 .run-item{color:rgba(255,255,255,.4);white-space:nowrap}.run-item b{color:#ede9e3}
 .run-pillar{text-transform:uppercase;font-size:.7rem;letter-spacing:.06em;font-weight:600}
@@ -255,14 +255,15 @@ nav.actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
 
 /* ── CONTENT ── */
 .content{max-width:840px;margin:0 auto;padding:24px 28px 60px;width:100%}
-.section-lbl{font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;
+.section-lbl{font-size:10px;color:rgba(255,255,255,.5);text-transform:uppercase;
              letter-spacing:.1em;margin-bottom:14px;font-weight:600}
 
 /* ── CARD ── */
 .card{background:#111113;border:1px solid rgba(255,255,255,.07);
       border-left:3px solid rgba(255,255,255,.07);border-radius:12px;
       padding:16px 18px;margin-bottom:10px;transition:border-color .15s;
-      overflow:hidden;min-width:0;word-break:break-word}
+      overflow:hidden;min-width:0;word-break:break-word;
+      content-visibility:auto;contain-intrinsic-size:auto 260px}
 .card:hover{border-color:rgba(255,255,255,.13)}
 .card-header{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:10px;
              min-width:0}
@@ -285,7 +286,7 @@ nav.actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
 .model-tag{font-size:10px;background:rgba(129,140,248,.1);color:#818cf8;
            border:1px solid rgba(129,140,248,.2);padding:2px 8px;border-radius:4px;
            font-family:'DM Mono',monospace}
-.date{font-size:11px;color:rgba(255,255,255,.3);font-family:'DM Mono',monospace}
+.date{font-size:11px;color:rgba(255,255,255,.5);font-family:'DM Mono',monospace}
 
 .topic{font-size:14px;font-weight:500;color:#ede9e3;margin-bottom:8px;line-height:1.4}
 .fmt-row{margin-bottom:8px}
@@ -336,7 +337,7 @@ nav.actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
 /* Review actions */
 .review-actions{display:flex;flex-wrap:wrap;align-items:center;gap:7px;
                 padding:10px 0 4px;border-top:1px solid rgba(255,255,255,.06);margin-top:8px}
-.review-label{font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;
+.review-label{font-size:10px;color:rgba(255,255,255,.5);text-transform:uppercase;
               letter-spacing:.08em;margin-right:2px}
 .rev-btn{border:none;font-size:11px;font-weight:500;padding:6px 13px;border-radius:6px;
          cursor:pointer;transition:all .15s;min-height:32px;font-family:inherit}
@@ -369,7 +370,7 @@ nav.actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
           font-family:'DM Mono',monospace}
 
 /* Empty state */
-.empty{text-align:center;padding:60px 20px;color:rgba(255,255,255,.3);font-size:14px;line-height:2.4}
+.empty{text-align:center;padding:60px 20px;color:rgba(255,255,255,.5);font-size:14px;line-height:2.4}
 .empty a{color:#e8372a;border-bottom:1px solid rgba(232,55,42,.4)}
 
 /* ── MODALS ── */
@@ -405,7 +406,7 @@ nav.actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
                border-radius:7px;cursor:pointer;font-size:13px;font-weight:600;
                min-height:40px;font-family:inherit;transition:background .15s}
 .modal-confirm:hover{background:#c9301f}
-.modal-confirm:disabled{background:#333;color:rgba(255,255,255,.3);cursor:default}
+.modal-confirm:disabled{background:#333;color:rgba(255,255,255,.5);cursor:default}
 .modal-confirm.approve-green{background:#2a9a5c}
 .modal-confirm.approve-green:hover{background:#1d7a47}
 /* Destructive variant — outlined, so it's not visually confused with primary brand red. */
@@ -417,7 +418,7 @@ nav.actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
               border-radius:7px;cursor:pointer;font-size:13px;min-height:40px;
               font-family:inherit;transition:all .15s}
 .modal-cancel:hover{color:#ede9e3;border-color:rgba(255,255,255,.2)}
-.char-counter{font-size:11px;color:rgba(255,255,255,.3);margin-top:4px;
+.char-counter{font-size:11px;color:rgba(255,255,255,.5);margin-top:4px;
               font-family:'DM Mono',monospace;text-align:right}
 
 /* ── ENGAGEMENT ── */
@@ -426,7 +427,7 @@ nav.actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
 .eng-header{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-bottom:8px}
 .eng-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;
            font-family:'DM Mono',monospace}
-.eng-meta{font-size:11px;color:rgba(255,255,255,.3);margin-left:auto}
+.eng-meta{font-size:11px;color:rgba(255,255,255,.5);margin-left:auto}
 .eng-comment{font-size:13px;color:rgba(255,255,255,.55);background:rgba(255,255,255,.04);
              border-radius:6px;padding:9px 12px;margin-bottom:8px;line-height:1.6}
 .eng-risk-note{font-size:11px;color:#d4840a;background:rgba(212,132,10,.1);
@@ -435,8 +436,8 @@ nav.actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
 .reply-opt{font-size:12px;color:rgba(255,255,255,.4);background:rgba(255,255,255,.04);
            border:1px solid rgba(255,255,255,.07);border-radius:5px;padding:7px 11px;line-height:1.6}
 .reply-optrec{border-color:rgba(129,140,248,.35);color:#c7d2fe}
-.reply-idx{font-size:11px;color:rgba(255,255,255,.3);font-weight:600;margin-right:4px}
-.eng-cmd{font-size:11px;color:rgba(255,255,255,.3)}
+.reply-idx{font-size:11px;color:rgba(255,255,255,.5);font-weight:600;margin-right:4px}
+.eng-cmd{font-size:11px;color:rgba(255,255,255,.5)}
 .eng-cmd code{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);
               border-radius:4px;padding:2px 7px;font-family:'DM Mono',monospace}
 .rp-item{font-size:12px;color:#2a9a5c;background:rgba(42,154,92,.08);border-radius:5px;
@@ -454,7 +455,7 @@ nav.actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
 /* ── OUTREACH PIPELINE ── */
 .outreach-statsbar{background:#111113;border-bottom:1px solid rgba(255,255,255,.07);
                    padding:16px 28px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-.outreach-lbl{font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;
+.outreach-lbl{font-size:10px;color:rgba(255,255,255,.5);text-transform:uppercase;
               letter-spacing:.08em;font-weight:600;margin-right:4px;align-self:center}
 
 /* Lead table */
@@ -468,7 +469,7 @@ nav.actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
 .lead-intent.high  {background:rgba(232,55,42,.12); color:#e8372a;border:1px solid rgba(232,55,42,.25)}
 .lead-intent.medium{background:rgba(212,132,10,.12);color:#d4840a;border:1px solid rgba(212,132,10,.25)}
 .lead-intent.low   {background:rgba(255,255,255,.05);color:rgba(255,255,255,.35);border:1px solid rgba(255,255,255,.1)}
-.lead-chevron{color:rgba(255,255,255,.3);font-size:11px;margin-left:auto;flex-shrink:0;
+.lead-chevron{color:rgba(255,255,255,.5);font-size:11px;margin-left:auto;flex-shrink:0;
               transition:transform .2s ease}
 .lead-chevron.open{transform:rotate(180deg)}
 .lead-body{padding:12px 14px;border-top:1px solid rgba(255,255,255,.06);display:none}
@@ -479,7 +480,7 @@ nav.actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
 .dm-seq{display:flex;flex-direction:column;gap:6px;margin-top:10px}
 .dm-msg{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
         border-radius:6px;padding:8px 12px;font-size:12px;color:rgba(255,255,255,.5);line-height:1.6}
-.dm-msg-day{font-size:10px;font-family:'DM Mono',monospace;color:rgba(255,255,255,.3);
+.dm-msg-day{font-size:10px;font-family:'DM Mono',monospace;color:rgba(255,255,255,.5);
             margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em}
 
 /* Pending replies */
@@ -515,7 +516,7 @@ nav.actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
 footer{max-width:840px;margin:20px auto 0;padding:18px 28px 32px;
        border-top:1px solid rgba(255,255,255,.06);
        color:rgba(255,255,255,.25);font-size:12px;line-height:1.8}
-footer a{color:rgba(255,255,255,.3);border-bottom:1px dotted rgba(255,255,255,.15)}
+footer a{color:rgba(255,255,255,.5);border-bottom:1px dotted rgba(255,255,255,.15)}
 footer a:hover{color:#ede9e3}
 
 /* ── TOAST ── */
@@ -601,7 +602,7 @@ footer a:hover{color:#ede9e3}
 
 /* ── BOOKINGS SECTION ── */
 .bookings-section{max-width:840px;margin:0 auto;padding:0 28px 12px;width:100%}
-.bookings-section h3{font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;
+.bookings-section h3{font-size:10px;color:rgba(255,255,255,.5);text-transform:uppercase;
                      letter-spacing:.1em;font-weight:600;margin-bottom:10px}
 .bookings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:8px}
 .bookings-kpi{background:#111113;border:1px solid rgba(255,255,255,.07);border-radius:8px;
@@ -612,12 +613,6 @@ footer a:hover{color:#ede9e3}
                           letter-spacing:.07em;line-height:1.3}
 .bookings-kpi .kpi-target{font-size:10px;color:rgba(46,125,224,.6);margin-top:2px}
 .bookings-kpi.highlight .kpi-value{color:#2e7de0}
-
-/* ── PAT REMEMBER CHECKBOX ── */
-.pat-remember{display:flex;align-items:center;gap:8px;margin-top:8px;
-              font-size:12px;color:rgba(255,255,255,.55);cursor:pointer;font-family:inherit}
-.pat-remember input[type=checkbox]{accent-color:#e8372a;cursor:pointer;margin:0}
-.pat-warn{color:rgba(232,55,42,.75);font-size:11px}
 
 /* ── RESPONSIVE ── */
 @media(max-width:860px){
@@ -736,30 +731,26 @@ function copyPost(i) {
   });
 }
 
-/* PAT helpers — session-scoped by default; persistent only if user opts in. */
+/* PAT helpers — session-only, always. A GitHub PAT is a long-lived credential;
+   this page is served from public GitHub Pages, so it never persists one to
+   localStorage (survives browser restarts, readable by any future XSS) —
+   only sessionStorage (cleared when the tab closes). */
 function _getPat() {
-  return sessionStorage.getItem('gh_pat') || localStorage.getItem('gh_pat') || '';
-}
-function _setPat(v, persist) {
-  if (!v) return;
-  if (persist) {
-    localStorage.setItem('gh_pat', v);
-    sessionStorage.removeItem('gh_pat');
-  } else {
-    sessionStorage.setItem('gh_pat', v);
+  var v = sessionStorage.getItem('gh_pat') || '';
+  if (!v && localStorage.getItem('gh_pat')) {
+    // Migrate away from a token persisted by an older version of this page.
     localStorage.removeItem('gh_pat');
   }
+  return v;
+}
+function _setPat(v) {
+  if (!v) return;
+  sessionStorage.setItem('gh_pat', v);
 }
 function clearPat() {
   sessionStorage.removeItem('gh_pat');
   localStorage.removeItem('gh_pat');
   toast('GitHub token cleared from this browser.', { variant: 'info' });
-}
-function _patPersist() {
-  /* Look for the checked persist toggle in the currently open modal. */
-  var open = document.querySelector('.modal-overlay.open');
-  var el   = open && open.querySelector('input[data-pat-remember]');
-  return !!(el && el.checked);
 }
 
 /* ── REVISE MODAL ── */
@@ -790,11 +781,11 @@ async function confirmRevise() {
   var cb    = document.getElementById('revise-confirm-btn');
   if (!pat)   { st.textContent = 'Enter your GitHub PAT.'; st.style.color = '#e8372a'; return; }
   if (!notes) { st.textContent = 'Describe what needs to change.'; st.style.color = '#e8372a'; return; }
-  _setPat(pat, _patPersist());
+  _setPat(pat);
   cb.textContent = 'Triggering…'; cb.disabled = true; st.textContent = '';
   try {
     var resp = await fetch(
-      'https://api.github.com/repos/' + _REPO + '/actions/workflows/' + _WORKFLOW + '/dispatches',
+      'https://api.github.com/repos/' + _REPO + '/actions/workflows/' + _workflowForPath(path) + '/dispatches',
       { method: 'POST',
         headers: { 'Authorization': 'Bearer ' + pat, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
         body: JSON.stringify({ ref: _BRANCH, inputs: { action: 'revise_draft', draft_file: path, revision_notes: notes } }) }
@@ -841,7 +832,7 @@ async function confirmEdit() {
   var cb      = document.getElementById('edit-confirm-btn');
   if (!pat)           { st.textContent = 'Enter your GitHub PAT.'; st.style.color = '#e8372a'; return; }
   if (!content.trim()){ st.textContent = 'Post text cannot be empty.'; st.style.color = '#e8372a'; return; }
-  _setPat(pat, _patPersist());
+  _setPat(pat);
   cb.textContent = 'Saving…'; cb.disabled = true; st.textContent = '';
   try {
     var metaResp = await fetch(
@@ -900,7 +891,7 @@ async function confirmRecreate() {
   var st     = document.getElementById('recreate-status');
   var cb     = document.getElementById('recreate-confirm-btn');
   if (!pat) { st.textContent = 'Enter your GitHub PAT (workflow scope).'; st.style.color = '#e8372a'; return; }
-  _setPat(pat, _patPersist());
+  _setPat(pat);
   cb.innerHTML = 'Triggering…'; cb.disabled = true; st.textContent = '';
   try {
     var resp = await fetch(
@@ -950,7 +941,7 @@ async function confirmDelete() {
   var cb       = document.getElementById('delete-confirm-btn');
   var sourceCard = _deleteSourceBtn ? _deleteSourceBtn.closest('.card') : null;
   if (!pat) { st.textContent = 'Enter your GitHub PAT.'; st.style.color = '#e8372a'; return; }
-  _setPat(pat, _patPersist());
+  _setPat(pat);
   cb.innerHTML = 'Deleting…'; cb.disabled = true; st.textContent = '';
   try {
     var metaResp = await fetch(
@@ -1037,7 +1028,7 @@ async function confirmApprove() {
   var st   = document.getElementById('approve-status');
   var cb   = document.getElementById('approve-confirm-btn');
   if (!pat) { st.textContent = 'Enter your GitHub PAT (workflow scope).'; st.style.color = '#e8372a'; return; }
-  _setPat(pat, _patPersist());
+  _setPat(pat);
   cb.textContent = 'Approving…'; cb.disabled = true; st.textContent = '';
   await _doApproveWorkflow(path, pat, st, cb);
 }
@@ -1045,7 +1036,7 @@ async function confirmApprove() {
 async function _doApproveWorkflow(path, pat, statusEl, btnEl) {
   try {
     var resp = await fetch(
-      'https://api.github.com/repos/' + _REPO + '/actions/workflows/' + _WORKFLOW + '/dispatches',
+      'https://api.github.com/repos/' + _REPO + '/actions/workflows/' + _workflowForPath(path) + '/dispatches',
       { method: 'POST',
         headers: { 'Authorization': 'Bearer ' + pat, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
         body: JSON.stringify({ ref: _BRANCH, inputs: { action: 'approve_draft', draft_file: path } }) }
@@ -1127,27 +1118,33 @@ function _updateStats(reviewDelta, approvedDelta, publishedDelta) {
 
 /* Auto-refresh draft cards on page load */
 async function refreshDraftCards() {
-  var cards = document.querySelectorAll('.card');
+  var cards = Array.prototype.filter.call(document.querySelectorAll('.card'), function(card) {
+    var ab = card.querySelector('.approve-btn');
+    return card.querySelector('.badge.draft') && ab && ab.getAttribute('data-path');
+  });
+  /* Fetch every card's status in parallel instead of one-at-a-time — with
+     dozens of cards a serial await-per-card loop turns page load into a
+     network waterfall. */
+  var results = await Promise.all(cards.map(function(card) {
+    var draftPath = card.querySelector('.approve-btn').getAttribute('data-path');
+    var url = 'https://raw.githubusercontent.com/' + _REPO + '/' + _BRANCH + '/' + draftPath + '?t=' + Date.now();
+    return fetch(url, { cache: 'no-store' })
+      .then(function(r) { return r.ok ? r.json() : null; })
+      .then(function(data) { return { card: card, data: data }; })
+      .catch(function() { return { card: card, data: null }; });
+  }));
   var publishedCount = 0, approvedCount = 0;
-  for (var i = 0; i < cards.length; i++) {
-    var card = cards[i];
-    if (!card.querySelector('.badge.draft')) continue;
-    var ab = card.querySelector('.approve-btn'); if (!ab) continue;
-    var draftPath = ab.getAttribute('data-path'); if (!draftPath) continue;
-    try {
-      var url = 'https://raw.githubusercontent.com/' + _REPO + '/' + _BRANCH + '/' + draftPath + '?t=' + Date.now();
-      var r = await fetch(url, { cache: 'no-store' }); if (!r.ok) continue;
-      var data = await r.json();
-      var badge = card.querySelector('.badge.draft'); if (!badge) continue;
-      if (data.published || data.status === 'published') {
-        badge.className = 'badge published'; badge.innerHTML = '✓ Published';
-        _hideReviewUI(card); publishedCount++;
-      } else if (data.approved || data.status === 'approved') {
-        badge.className = 'badge approved'; badge.textContent = 'Approved';
-        _hideReviewUI(card); approvedCount++;
-      }
-    } catch(e) {}
-  }
+  results.forEach(function(res) {
+    var data = res.data; if (!data) return;
+    var badge = res.card.querySelector('.badge.draft'); if (!badge) return;
+    if (data.published || data.status === 'published') {
+      badge.className = 'badge published'; badge.innerHTML = '✓ Published';
+      _hideReviewUI(res.card); publishedCount++;
+    } else if (data.approved || data.status === 'approved') {
+      badge.className = 'badge approved'; badge.textContent = 'Approved';
+      _hideReviewUI(res.card); approvedCount++;
+    }
+  });
   /* Each card leaves "Needs review"; route it to the correct destination stat
      (Published vs Approved) instead of always crediting Approved. */
   var moved = publishedCount + approvedCount;
@@ -1203,7 +1200,7 @@ async function markReplied(filePath, commentId, btn) {
   if (!pat) {
     pat = prompt('GitHub PAT (repo scope) to update the outreach file:');
     if (!pat) return;
-    _setPat(pat, _patPersist());
+    _setPat(pat);
   }
   btn.disabled = true;
   btn.textContent = 'Updating…';
@@ -1253,10 +1250,12 @@ async function markReplied(filePath, commentId, btn) {
 function toggleLead(idx) {
   var body    = document.getElementById('lead-body-' + idx);
   var chevron = document.querySelector('#lead-row-' + idx + ' .lead-chevron');
+  var header  = document.querySelector('#lead-row-' + idx + ' .lead-tbl-header');
   if (!body) return;
   var isOpen = body.classList.contains('open');
   body.classList.toggle('open', !isOpen);
   if (chevron) chevron.classList.toggle('open', !isOpen);
+  if (header) header.setAttribute('aria-expanded', String(!isOpen));
 }
 
 /* ── FILTER CHIPS + SEARCH ── */
@@ -1357,7 +1356,7 @@ async function confirmNewsletterApprove() {
   var st  = document.getElementById('nl-approve-status');
   var cb  = document.getElementById('nl-approve-confirm-btn');
   if (!pat) { st.textContent = 'Enter your GitHub PAT (workflow scope).'; st.style.color = '#e8372a'; return; }
-  _setPat(pat, _patPersist());
+  _setPat(pat);
   cb.textContent = 'Triggering…'; cb.disabled = true; st.textContent = '';
   try {
     var resp = await fetch(
@@ -1406,7 +1405,7 @@ async function confirmNewsletterTest() {
   var st  = document.getElementById('nl-test-status');
   var cb  = document.getElementById('nl-test-confirm-btn');
   if (!pat) { st.textContent = 'Enter your GitHub PAT (workflow scope).'; st.style.color = '#e8372a'; return; }
-  _setPat(pat, _patPersist());
+  _setPat(pat);
   cb.textContent = 'Triggering…'; cb.disabled = true; st.textContent = '';
   try {
     var resp = await fetch(
@@ -1936,7 +1935,7 @@ def _outreach_pipeline_section() -> str:
       </tr>
     </thead>
     <tbody>
-      {prospect_rows if prospect_rows else '<tr><td colspan="7" style="padding:20px;color:rgba(255,255,255,.3)">No prospects loaded</td></tr>'}
+      {prospect_rows if prospect_rows else '<tr><td colspan="7" style="padding:20px;color:rgba(255,255,255,.5)">No prospects loaded</td></tr>'}
     </tbody>
   </table>
   </div>
@@ -2010,19 +2009,19 @@ def _outreach_pipeline_section() -> str:
         lead_rows_html += f"""
         <div class="lead-tbl-row" id="lead-row-{idx}">
           <div class="lead-tbl-header" onclick="toggleLead({idx})"
-               role="button" tabindex="0"
-               onkeydown="if(event.key==='Enter'||event.key===' ')toggleLead({idx})">
+               role="button" tabindex="0" aria-expanded="false" aria-controls="lead-body-{idx}"
+               onkeydown="if(event.key==='Enter'||event.key===' '){{event.preventDefault();toggleLead({idx});}}">
             <span class="lead-intent {html.escape(intent)}">{html.escape(intent)}</span>
             <span style="font-size:13px;font-weight:600;color:#ede9e3">{name}{li_icon}</span>
             {f'<span style="font-size:11px;color:rgba(255,255,255,.4)">{company}</span>' if company else ''}
-            {f'<span style="font-size:11px;color:rgba(255,255,255,.3)">{title}</span>' if title else ''}
+            {f'<span style="font-size:11px;color:rgba(255,255,255,.5)">{title}</span>' if title else ''}
             <span class="badge {rs_badge_cls}" style="margin-left:auto;flex-shrink:0">{reply_status}</span>
-            <span style="font-size:11px;color:rgba(255,255,255,.3);max-width:180px;overflow:hidden;
+            <span style="font-size:11px;color:rgba(255,255,255,.5);max-width:180px;overflow:hidden;
                          text-overflow:ellipsis;white-space:nowrap">{comment_preview}</span>
             <span class="lead-chevron">&#9660;</span>
           </div>
           <div class="lead-body" id="lead-body-{idx}">
-            <div style="font-size:10px;color:rgba(255,255,255,.3);margin-bottom:6px">Post: {topic}</div>
+            <div style="font-size:10px;color:rgba(255,255,255,.5);margin-bottom:6px">Post: {topic}</div>
             <div class="lead-comment-full">{comment_full_esc}</div>
             {reply_opts_html}
             {dm_html}
@@ -2148,7 +2147,7 @@ def _publish_calendar_section(posts: list[dict]) -> str:
             pillar_esc = html.escape(pillar)
             hook_esc   = html.escape(hook) if hook else ""
             sep        = " · " if seg_str and score_str else ""
-            more_html  = f'<div style="font-size:9px;color:rgba(255,255,255,.3)">+{len(day_posts)-1} more</div>' if len(day_posts) > 1 else ""
+            more_html  = f'<div style="font-size:9px;color:rgba(255,255,255,.5)">+{len(day_posts)-1} more</div>' if len(day_posts) > 1 else ""
             cell_inner = (
                 f'<div class="cal-pill" style="background:{color}22;border:1px solid {color}55;'
                 f'border-radius:6px;padding:4px 6px;font-size:10px;color:{color};'
@@ -2207,7 +2206,15 @@ def _publish_calendar_section(posts: list[dict]) -> str:
 def generate(posts: list[dict]) -> str:
     total       = sum(1 for p in posts if p.get("status") not in ("deleted", "superseded"))
     n_published = sum(1 for p in posts if p.get("published") or p.get("status") == "published")
-    n_drafts    = sum(1 for p in posts if (p.get("status") == "draft" or p.get("approval_required")) and not p.get("published") and p.get("status") not in ("superseded", "deleted") and not p.get("is_variant", False))
+    n_drafts    = sum(
+        1 for p in posts
+        if (p.get("status") == "draft" or p.get("approval_required"))
+        and not p.get("published")
+        and not p.get("approved", False)
+        and not (p.get("dry_run", False) and not p.get("approval_required", False))
+        and p.get("status") not in ("superseded", "deleted")
+        and not p.get("is_variant", False)
+    )
     n_approved  = sum(1 for p in posts if (p.get("approved") or p.get("status") == "approved") and not p.get("published"))
     n_failed    = sum(1 for p in posts if p.get("publish_error") or p.get("status") == "failed")
     approved_pillars = {
@@ -2459,7 +2466,8 @@ def generate(posts: list[dict]) -> str:
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23e8372a'/%3E%3Ctext x='16' y='22' font-family='system-ui,sans-serif' font-size='16' font-weight='700' text-anchor='middle' fill='%23fff'%3ELI%3C/text%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%23e8372a'/%3E%3Ctext x='90' y='118' font-family='system-ui,sans-serif' font-size='80' font-weight='700' text-anchor='middle' fill='%23fff'%3ELI%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&amp;family=DM+Mono:wght@400;500&amp;family=Instrument+Serif:ital@0;1&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&amp;family=DM+Mono:wght@400;500&amp;family=Instrument+Serif:ital@0;1&amp;display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&amp;family=DM+Mono:wght@400;500&amp;family=Instrument+Serif:ital@0;1&amp;display=swap"></noscript>
 <meta property="og:title" content="LinkedIn Auto-Poster · Dashboard">
 <meta property="og:description" content="Internal control panel for the LinkedIn Auto-Poster pipeline.">
 <meta property="og:type" content="website">
@@ -2587,7 +2595,6 @@ def generate(posts: list[dict]) -> str:
     <div class="modal-field">
       <label class="modal-label" for="revise-pat">GitHub Personal Access Token (workflow scope)</label>
       <input class="modal-input" id="revise-pat" type="password" placeholder="ghp_..." autocomplete="off" aria-describedby="revise-pat-hint">
-      <label class="pat-remember"><input type="checkbox" data-pat-remember> Keep token on this device <span class="pat-warn">(stored unencrypted — only on private devices)</span></label>
       <div class="modal-hint" id="revise-pat-hint">By default, the token is held only for this tab and wiped when you close it.</div>
     </div>
     <div class="modal-status" id="revise-status" role="status" aria-live="polite"></div>
@@ -2611,7 +2618,6 @@ def generate(posts: list[dict]) -> str:
     <div class="modal-field">
       <label class="modal-label" for="edit-pat">GitHub Personal Access Token (repo scope)</label>
       <input class="modal-input" id="edit-pat" type="password" placeholder="ghp_..." autocomplete="off" aria-describedby="edit-pat-hint">
-      <label class="pat-remember"><input type="checkbox" data-pat-remember> Keep token on this device <span class="pat-warn">(stored unencrypted — only on private devices)</span></label>
       <div class="modal-hint" id="edit-pat-hint">Saves the edit directly to the repo as a commit. By default, the token only lives for this tab.</div>
     </div>
     <div class="modal-status" id="edit-status" role="status" aria-live="polite"></div>
@@ -2639,7 +2645,6 @@ def generate(posts: list[dict]) -> str:
       <label class="modal-label" for="approve-pat">GitHub Personal Access Token (workflow scope)</label>
       <input class="modal-input" id="approve-pat" type="password" placeholder="ghp_..."
              autocomplete="off" aria-describedby="approve-pat-hint">
-      <label class="pat-remember"><input type="checkbox" data-pat-remember> Keep token on this device <span class="pat-warn">(stored unencrypted &mdash; only on private devices)</span></label>
       <div class="modal-hint" id="approve-pat-hint">
         Token needs <b>workflow</b> scope. By default, the token only lives for this tab.
         <a href="{ACTIONS_URL}" target="_blank" rel="noopener noreferrer"
@@ -2673,7 +2678,6 @@ def generate(posts: list[dict]) -> str:
       <label class="modal-label" for="delete-pat">GitHub Personal Access Token (repo scope)</label>
       <input class="modal-input" id="delete-pat" type="password" placeholder="ghp_..."
              autocomplete="off" aria-describedby="delete-pat-hint">
-      <label class="pat-remember"><input type="checkbox" data-pat-remember> Keep token on this device <span class="pat-warn">(stored unencrypted &mdash; only on private devices)</span></label>
       <div class="modal-hint" id="delete-pat-hint">
         Needs <b>repo</b> scope (or a fine-grained PAT with <b>contents: write</b>).
         By default, the token only lives for this tab.
@@ -2705,7 +2709,6 @@ def generate(posts: list[dict]) -> str:
       <label class="modal-label" for="recreate-pat">GitHub Personal Access Token (workflow scope)</label>
       <input class="modal-input" id="recreate-pat" type="password" placeholder="ghp_..."
              autocomplete="off" aria-describedby="recreate-pat-hint">
-      <label class="pat-remember"><input type="checkbox" data-pat-remember> Keep token on this device <span class="pat-warn">(stored unencrypted &mdash; only on private devices)</span></label>
       <div class="modal-hint" id="recreate-pat-hint">
         Token needs <b>workflow</b> scope. By default, the token only lives for this tab.
       </div>
@@ -2737,7 +2740,6 @@ def generate(posts: list[dict]) -> str:
     <div class="modal-field">
       <label class="modal-label" for="nl-approve-pat">GitHub Personal Access Token (workflow scope)</label>
       <input class="modal-input" id="nl-approve-pat" type="password" placeholder="ghp_..." autocomplete="off">
-      <label class="pat-remember"><input type="checkbox" data-pat-remember> Keep token on this device <span class="pat-warn">(stored unencrypted &mdash; only on private devices)</span></label>
     </div>
     <div class="modal-status" id="nl-approve-status" role="status" aria-live="polite"></div>
     <div class="modal-actions">
@@ -2765,7 +2767,6 @@ def generate(posts: list[dict]) -> str:
     <div class="modal-field">
       <label class="modal-label" for="nl-test-pat">GitHub Personal Access Token (workflow scope)</label>
       <input class="modal-input" id="nl-test-pat" type="password" placeholder="ghp_..." autocomplete="off">
-      <label class="pat-remember"><input type="checkbox" data-pat-remember> Keep token on this device <span class="pat-warn">(stored unencrypted &mdash; only on private devices)</span></label>
     </div>
     <div class="modal-status" id="nl-test-status" role="status" aria-live="polite"></div>
     <div class="modal-actions">
@@ -2779,9 +2780,16 @@ def generate(posts: list[dict]) -> str:
 <div id="toast-container" role="region" aria-label="Notifications" aria-live="polite" aria-atomic="false"></div>
 
 <script>
-var _REPO     = '{REPO}';
-var _WORKFLOW = '{WORKFLOW_FILE}';
+var _REPO            = '{REPO}';
+var _WORKFLOW        = '{WORKFLOW_FILE}';
+var _WORKFLOW_COMPANY = 'auto-post-company.yml';
 var _BRANCH   = '{branch}';
+function _workflowForPath(path) {{
+  /* Email deep-links (?approve=, ?revise=) can point at either pipeline's
+     history dir. Dispatching a company draft to the personal workflow would
+     run it under the personal LinkedIn token/URN instead of the org one. */
+  return (path && path.indexOf('company_posts_history/') === 0) ? _WORKFLOW_COMPANY : _WORKFLOW;
+}}
 {JS_BODY}
 </script>
 </body>

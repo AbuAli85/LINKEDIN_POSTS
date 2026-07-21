@@ -934,7 +934,12 @@ def get_pillar_weights() -> dict[str, float]:
         if analysis.exists():
             data        = json.loads(analysis.read_text(encoding="utf-8"))
             multipliers = data.get("frequency_multipliers", {})
-            if multipliers:
+            # A flat multiplier across every pillar means no engagement signal
+            # has accumulated yet (content_feedback.analyze() degenerates to
+            # 1.0x for all when avg_engagement_rate is ~0 everywhere) — that's
+            # not "real data," so keep the evidence-based defaults instead of
+            # discarding them in favor of an undifferentiated placeholder.
+            if multipliers and len({round(v, 2) for v in multipliers.values()}) > 1:
                 return {k: float(multipliers.get(k, defaults.get(k, 1.0))) for k in defaults}
     except Exception:
         pass
@@ -964,22 +969,7 @@ def _recent_pillar_counts(days: int = 21) -> dict[str, int]:
     return counts
 
 
-def _pick_by_weight(
-    schedulable: dict[str, dict],
-    weights: dict[str, float],
-    recent: dict[str, int],
-) -> tuple[str, dict]:
-    """Pick the schedulable pillar most under-represented relative to its weight target."""
-    total_w = sum(weights.get(k, 1.0) for k in schedulable) or 1.0
-    total_r = sum(recent.get(k, 0) for k in schedulable) or 1
-    name = max(
-        schedulable,
-        key=lambda k: weights.get(k, 1.0) / total_w - recent.get(k, 0) / total_r,
-    )
-    return name, PILLARS[name]
-
-
-def pick_pillar(weekday: int, force: str | None = None) -> tuple[str, dict]:
+def pick_pillar(weekday: int, force: str | None = None) -> tuple[str, dict] | None:
     """Return the pillar for the given weekday, weighted by conversion performance.
 
     The scheduled pillar (from generate_weekday) is used by default. If the
@@ -989,6 +979,12 @@ def pick_pillar(weekday: int, force: str | None = None) -> tuple[str, dict]:
     pain 2×, vision 1×) without breaking the fixed cron schedule.
 
     Conversion pillar (weight=0.0, generate_weekday=-1) is always manual-only.
+
+    Returns None when no pillar is scheduled for this weekday and `force` was
+    not given — callers must treat that as "skip generation today" (this is
+    how the cadence cap works: days with no scheduled pillar, e.g. after
+    vision/tech opted out of auto-generation, are not backfilled with a
+    substitute pillar).
     """
     if force and force in PILLARS:
         return force, PILLARS[force]
@@ -1003,8 +999,8 @@ def pick_pillar(weekday: int, force: str | None = None) -> tuple[str, dict]:
         None,
     )
     if scheduled is None:
-        # Off-schedule trigger — pick most under-represented high-weight pillar
-        return _pick_by_weight(schedulable, weights, recent)
+        # No pillar scheduled today — cadence cap: skip rather than substitute.
+        return None
 
     # Biweekly Feasibility Studio rotation: on even ISO weeks, hand the vision
     # slot to the (manual-only) feasibility pillar. This promotes Feasibility

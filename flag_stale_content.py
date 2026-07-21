@@ -85,16 +85,15 @@ def is_topic_recent(topic: str, days: int = 14) -> tuple[bool, str]:
             continue
         for path in sorted(d.glob("*.json"), reverse=True):
             post = _load(path)
-            if not post:
+            if not post or not post.get("published"):
                 continue
-            published_str = post.get("published_at", "") or post.get("created_at", "")
-            if published_str:
-                try:
-                    pub_date = date.fromisoformat(published_str[:10])
-                    if pub_date < cutoff:
-                        continue
-                except ValueError:
-                    pass
+            published_str = post.get("published_at") or post.get("generated_at", "")
+            try:
+                pub_date = date.fromisoformat(published_str[:10])
+            except (ValueError, TypeError):
+                continue
+            if pub_date < cutoff:
+                continue
             existing_tri = _trigrams(post.get("topic", "") + " " + post.get("post", "")[:300])
             if not existing_tri:
                 continue

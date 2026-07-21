@@ -62,7 +62,7 @@ def _issue_card(issue: dict) -> str:
     if status == "draft":
         draft_actions = f"""
       <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06)">
-        <span style="font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.08em;align-self:center;margin-right:2px">Newsletter:</span>
+        <span style="font-size:10px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.08em;align-self:center;margin-right:2px">Newsletter:</span>
         <button type="button" class="approve-btn" style="font-size:11px;padding:6px 14px"
                 onclick="showNewsletterApproveModal('{num_esc}')">&#10003; Approve &amp; Test Send</button>
         <button type="button" class="rev-btn rev-recreate"
@@ -88,7 +88,7 @@ def _issue_card(issue: dict) -> str:
       {draft_actions}
       <div class="card-footer" style="margin-top:14px">
         <span class="chars" style="color:rgba(255,255,255,.45)">Issue #{num_esc}</span>
-        <span style="color:rgba(255,255,255,.3);font-size:11px;font-family:'DM Mono',monospace">
+        <span style="color:rgba(255,255,255,.5);font-size:11px;font-family:'DM Mono',monospace">
           newsletter_history/{html.escape(issue.get("_filename", ""))}
         </span>
       </div>

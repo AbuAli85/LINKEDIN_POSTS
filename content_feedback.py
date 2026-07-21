@@ -15,6 +15,8 @@ from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+from atomic_io import write_json
+
 HISTORY_DIR   = Path(__file__).parent / "posts_history"
 ANALYSIS_FILE = Path(__file__).parent / "content_analysis.json"
 LEADS_CSV     = Path(__file__).parent / "leads.csv"
@@ -82,7 +84,7 @@ def _load(path: Path) -> dict:
 
 
 def _save(path: Path, data: dict) -> None:
-    path.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+    write_json(path, data)
 
 
 def _is_aged(post: dict, days: int = 7) -> bool:

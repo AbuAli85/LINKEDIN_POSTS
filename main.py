@@ -8,6 +8,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+from atomic_io import write_json
 from strategy_loader import history_dir as _history_dir, load_strategy
 from generator import generate_post, generate_job_post, generate_hook_variant, save_post
 from publisher import LinkedInError, publish_post
@@ -102,11 +103,19 @@ def generate_draft() -> int:
     _expire_stale_drafts()
     force = os.environ.get("FORCE_PILLAR") or None
 
-    pillar, config = pick_pillar(now.weekday(), force)
+    pillar_pick = pick_pillar(now.weekday(), force)
+    if pillar_pick is None:
+        print(f"[{now.isoformat()}] No pillar scheduled for today (cadence cap) — skipping generation.")
+        return 0
+    pillar, config = pillar_pick
     print(f"[{now.isoformat()}] Pillar: {pillar} ({config['day']})")
     print("Generating draft with Claude...")
 
-    post = generate_post(pillar, config)
+    try:
+        post = generate_post(pillar, config)
+    except ValueError as exc:
+        print(f"Skipping this run — {exc}")
+        return 0
     post.update({
         "status": "draft",
         "published": False,
@@ -135,10 +144,10 @@ def generate_draft() -> int:
         )
         variant_ts = (primary_dt - timedelta(seconds=1)).strftime("%Y%m%d_%H%M%S")
         variant_path = path.parent / f"{variant_ts}_{pillar}_v.json"
-        variant_path.write_text(json.dumps(variant, indent=2), encoding="utf-8")
+        write_json(variant_path, variant)
         # Tag primary draft with has_variant
         post["has_variant"] = True
-        path.write_text(json.dumps(post, indent=2), encoding="utf-8")
+        write_json(path, post)
         print(f"Saved hook variant -> {variant_path}")
     else:
         print("hook_variant: no variant generated (skipped or failed)")
@@ -173,7 +182,7 @@ def _supersede_previous_draft(pillar: str, new_path: Path) -> None:
                 "superseded_at": datetime.now(timezone.utc).isoformat(),
                 "superseded_by": new_path.name,
             })
-            f.write_text(json.dumps(data, indent=2), encoding="utf-8")
+            write_json(f, data)
             print(f"Superseded old draft: {f.name}")
             break  # only the most recent eligible draft
 
@@ -190,11 +199,34 @@ def generate_and_publish_now() -> int:
     force = os.environ.get("FORCE_PILLAR") or None
     dry_run = os.environ.get("DRY_RUN", "false").lower() == "true"
 
-    pillar, config = pick_pillar(now.weekday(), force)
+    pillar_pick = pick_pillar(now.weekday(), force)
+    if pillar_pick is None:
+        raise SystemExit(
+            "No pillar is scheduled for today. Pass FORCE_PILLAR=<pillar> to generate manually."
+        )
+    pillar, config = pillar_pick
     print(f"[{now.isoformat()}] Pillar: {pillar} ({config['day']})")
     print("Generating post with Claude for explicit publish_now run...")
 
     post = generate_post(pillar, config)
+    if post.get("validation_warning"):
+        # Never auto-publish a post that failed its own safety checks — force
+        # it into the normal review queue instead of skipping straight to
+        # approved/published just because this is the "publish_now" path.
+        post.update({
+            "status": "draft",
+            "published": False,
+            "approved": False,
+            "approval_required": True,
+            "dry_run": True,
+        })
+        path = save_post(post)
+        print(
+            f"Validation failed ({post['validation_warning']}) — saved as a draft "
+            f"for review instead of auto-publishing: {path}"
+        )
+        _print_post(post)
+        return 0
     post.update({
         "status": "draft" if dry_run else "approved",
         "published": False,
@@ -307,7 +339,7 @@ def approve_draft_file() -> int:
         "approved_at":      datetime.now(timezone.utc).isoformat(),
         "dry_run":          False,
     })
-    path.write_text(json.dumps(post, indent=2), encoding="utf-8")
+    write_json(path, post)
     print(f"Approved: {path.name}  (will publish on next scheduled {post.get('pillar', '')} cron)")
     return 0
 
@@ -348,7 +380,7 @@ def _publish_post_file(path: Path) -> int:
         "approval_required": False,
         "dry_run": False,
     })
-    path.write_text(json.dumps(post, indent=2), encoding="utf-8")
+    write_json(path, post)
 
     print(f"Publishing approved draft -> {path}")
     try:
@@ -390,7 +422,7 @@ def revise_saved_draft() -> int:
 
     from generator import revise_post
     revised = revise_post(original, notes)
-    path.write_text(json.dumps(revised, indent=2), encoding="utf-8")
+    write_json(path, revised)
     print(f"Draft revised → {path}")
     _print_post(revised)
     return 0
@@ -469,7 +501,7 @@ def _print_post(post: dict) -> None:
 def _update_json(path: Path, updates: dict) -> None:
     data = json.loads(path.read_text(encoding="utf-8-sig"))
     data.update(updates)
-    path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+    write_json(path, data)
 
 
 if __name__ == "__main__":

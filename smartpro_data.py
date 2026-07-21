@@ -8,6 +8,8 @@ from pathlib import Path
 
 import requests
 
+from atomic_io import write_json
+
 SMARTPRO_API = os.environ.get("SMARTPRO_API_URL", "https://thesmartpro.io")
 PENDING_JOBS_FILE = Path(__file__).parent / "smartpro_feed" / "pending_jobs.json"
 
@@ -97,7 +99,7 @@ def mark_job_announced(job_id: int) -> None:
             if j.get("id") == job_id:
                 j["announced"] = True
                 j["announced_at"] = datetime.now(timezone.utc).isoformat()
-        PENDING_JOBS_FILE.write_text(json.dumps(jobs, indent=2), encoding="utf-8")
+        write_json(PENDING_JOBS_FILE, jobs)
     except Exception as e:
         print(f"[smartpro-bridge] mark_job_announced failed: {e}")
 

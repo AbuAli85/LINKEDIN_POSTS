@@ -24,6 +24,9 @@ from pathlib import Path
 import anthropic
 import requests
 
+from atomic_io import load_json, write_json
+from outreach_tracker import next_oa_id
+
 HISTORY_DIR     = Path(__file__).parent / "posts_history"
 OUTREACH_DIR    = Path(__file__).parent / "outreach_history"
 LEADS_CSV       = Path(__file__).parent / "leads.csv"
@@ -170,7 +173,7 @@ def fetch_comments_for_post(post_id: str) -> list[dict]:
 # ---------------------------------------------------------------------------
 
 def _save_json(path: Path, data: dict) -> None:
-    path.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+    write_json(path, data)
 
 
 def _load_json(path: Path) -> dict:
@@ -807,11 +810,6 @@ def cmd_manual_capture(urls: list[str]) -> None:
             if k in t: return v
         return PAIN_MAP["default"]
 
-    def next_id(tracker: list) -> str:
-        nums = [int(m.group(1)) for p in tracker
-                for m in [re.match(r"OA-(\d+)", p.get("id",""))] if m]
-        return f"OA-{(max(nums)+1 if nums else 21):03d}"
-
     TRACKER = Path(__file__).parent / "outreach_tracker.json"
     LEADS   = Path(__file__).parent / "leads.csv"
     TODAY   = date.today().isoformat()
@@ -850,7 +848,7 @@ def cmd_manual_capture(urls: list[str]) -> None:
 
         seg    = detect_segment(title)
         pain   = detect_pain(title)
-        new_id = next_id(tracker)
+        new_id = next_oa_id(tracker)
 
         entry = {
             "id": new_id,
@@ -885,7 +883,7 @@ def cmd_manual_capture(urls: list[str]) -> None:
         print(f"\n  Nothing added. {len(skipped)} duplicate(s) skipped.")
         return
 
-    TRACKER.write_text(json.dumps(tracker, indent=2, ensure_ascii=False), encoding="utf-8")
+    write_json(TRACKER, tracker)
 
     fieldnames = ["name","linkedin_url","company","title_guess","intent","post_topic",
                   "comment_text","reply_status","dm_status","first_seen","last_touchpoint",
@@ -905,14 +903,12 @@ def cmd_manual_capture(urls: list[str]) -> None:
 # ---------------------------------------------------------------------------
 
 def _load_tracker() -> list[dict]:
-    """Load outreach_tracker.json; return [] if missing."""
-    if TRACKER_FILE.exists():
-        return json.loads(TRACKER_FILE.read_text(encoding="utf-8-sig"))
-    return []
+    """Load outreach_tracker.json; return [] if missing or corrupt."""
+    return load_json(TRACKER_FILE, default=[])
 
 
 def _save_tracker(tracker: list[dict]) -> None:
-    TRACKER_FILE.write_text(json.dumps(tracker, indent=2, ensure_ascii=False), encoding="utf-8")
+    write_json(TRACKER_FILE, tracker)
 
 
 def _load_templates() -> dict:
@@ -962,6 +958,7 @@ def _li_post_json(url: str, payload: dict) -> dict | None:
         "X-Restli-Protocol-Version": "2.0.0",
         "Content-Type":              "application/json",
     }
+    refreshed = False
     for attempt in range(MAX_RETRIES):
         try:
             resp = requests.post(url, headers=headers, json=payload, timeout=15)
@@ -976,6 +973,15 @@ def _li_post_json(url: str, payload: dict) -> dict | None:
             except Exception:
                 return {"status": "ok"}
         if resp.status_code == 401:
+            if not refreshed:
+                from oauth_helper import try_refresh_access_token
+                new_token = try_refresh_access_token()
+                if new_token:
+                    refreshed = True
+                    os.environ["LINKEDIN_ACCESS_TOKEN"] = new_token
+                    headers["Authorization"] = f"Bearer {new_token}"
+                    print("  LinkedIn token refreshed after 401 — retrying.", file=sys.stderr)
+                    continue
             print("  WARNING: LinkedIn token expired (401) — re-run OAuth.", file=sys.stderr)
             return None
         if resp.status_code == 403:
@@ -1150,6 +1156,10 @@ def cmd_send_sequences() -> int:
             if step_num == max_step:
                 lead["status"] = "sequence_complete"
             sent += 1
+            # Save after every send, not just once at the end of the loop --
+            # a mid-loop crash must not lose already-sent leads' advanced
+            # state, or the next run would re-send to them.
+            _save_tracker(tracker)
             print(f"    OK {'[DRY RUN] ' if dry_run else ''}Step {step_num} sent")
             if sent >= daily_limit:
                 print(f"\n  Daily cap of {daily_limit} reached — stopping. "
@@ -1158,9 +1168,6 @@ def cmd_send_sequences() -> int:
         else:
             errors += 1
             print(f"    FAIL Step {step_num} -- tracker NOT advanced", file=sys.stderr)
-
-    if sent > 0 or dry_run:
-        _save_tracker(tracker)
 
     print(f"\nDone -- {sent} sent, {skipped} not due / skipped, {errors} error(s).")
     return sent

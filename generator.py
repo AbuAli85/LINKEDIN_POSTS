@@ -8,12 +8,14 @@ drafts to company_posts_history/. Defaults to personal pipeline.
 import json
 import os
 import random
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 
 import anthropic
 
 import links
+from atomic_io import write_json
 from strategy_loader import history_dir as _history_dir, load_strategy
 
 HISTORY_DIR = _history_dir()
@@ -33,6 +35,34 @@ MAX_LINKS = 2
 def count_links(post: str) -> int:
     """Count clickable https:// URLs in a post body (the CTA-stacking guard)."""
     return post.count("https://")
+
+
+_WWW_CTA_RE = re.compile(r"https://www\.(thesmartpro\.io\S*)")
+
+
+def _normalize_cta_urls(text: str) -> str:
+    """Strip an accidental 'www.' the model prepended to the CTA host.
+
+    links.py's canonical CTA host is the bare apex (thesmartpro.io); www still
+    301s there, but publishing the redirect form pollutes UTM-host analytics.
+    """
+    return _WWW_CTA_RE.sub(r"https://\1", text)
+
+
+_URL_RE = re.compile(r"https://\S+")
+_LRI = "⁦"  # LEFT-TO-RIGHT ISOLATE
+_PDI = "⁩"  # POP DIRECTIONAL ISOLATE
+
+
+def _isolate_rtl_urls(text: str) -> str:
+    """Wrap embedded URLs in bidi isolate marks for RTL (Arabic) posts.
+
+    Without isolation, the bidi algorithm can reorder an LTR URL's characters
+    (and neighboring Arabic punctuation) when it's embedded in RTL text,
+    scrambling the link visually even though the underlying string is fine.
+    """
+    return _URL_RE.sub(lambda m: f"{_LRI}{m.group()}{_PDI}", text)
+
 
 BANNED_PHRASES = [
     "in today's fast-paced",
@@ -383,7 +413,13 @@ def _performance_block(language: str = "en") -> str:
             lines.append(f"- أفضل محور: {bp} (متوسط {score}/10) — ركّز عليه.")
         if bh := summary.get("best_hook_style"):
             score = summary["hook_avg_score"].get(bh, "?")
-            lines.append(f"- أفضل أسلوب افتتاح: {bh} (متوسط {score}/10) — استخدمه.")
+            if random.random() < 0.5:
+                lines.append(f"- أفضل أسلوب افتتاح: {bh} (متوسط {score}/10) — استخدمه.")
+            else:
+                lines.append(
+                    f"- أفضل أسلوب افتتاح سابقاً: {bh} (متوسط {score}/10) — "
+                    "لكن جرّب افتتاحاً مختلفاً هذه المرة لتنويع المحتوى."
+                )
         if tp := summary.get("top_topics"):
             lines.append(f"- أعلى الموضوعات تقييماً: {', '.join(tp[:2])}")
         if preview := summary.get("top_posts_preview"):
@@ -397,7 +433,13 @@ def _performance_block(language: str = "en") -> str:
             lines.append(f"- Highest-scoring pillar: {bp} (avg {score}/10) — lean into this.")
         if bh := summary.get("best_hook_style"):
             score = summary["hook_avg_score"].get(bh, "?")
-            lines.append(f"- Best-performing hook style: {bh} (avg {score}/10) — prefer this opening format.")
+            if random.random() < 0.5:
+                lines.append(f"- Best-performing hook style: {bh} (avg {score}/10) — prefer this opening format.")
+            else:
+                lines.append(
+                    f"- Best-performing hook style so far: {bh} (avg {score}/10) — "
+                    "but vary your opening this time so the feed doesn't repeat."
+                )
         if tp := summary.get("top_topics"):
             lines.append(f"- Top-rated topics so far: {', '.join(tp[:2])}")
         if preview := summary.get("top_posts_preview"):
@@ -405,6 +447,32 @@ def _performance_block(language: str = "en") -> str:
             for line in preview:
                 lines.append(f"  • {line}")
     return "\n".join(lines) + "\n\n"
+
+
+def _hook_diversity_block(recent_posts: list[dict], language: str = "en") -> str:
+    """Return an instruction to open differently if one hook style has
+    dominated recent posts (>=50% of the last 8), so the feed doesn't read
+    as repetitive. English only — detect_hook_style's patterns are English.
+    """
+    if language == "ar":
+        return ""
+    sample = [p for p in recent_posts[:8] if p.get("post")]
+    if len(sample) < 4:
+        return ""
+    try:
+        from content_feedback import detect_hook_style
+    except ImportError:
+        return ""
+    from collections import Counter
+    styles = [detect_hook_style(p["post"].strip().splitlines()[0]) for p in sample]
+    dominant, count = Counter(styles).most_common(1)[0]
+    if count / len(styles) < 0.5:
+        return ""
+    return (
+        f"VARIETY: {count} of your last {len(styles)} posts opened with a "
+        f"'{dominant}' hook. Do NOT use a {dominant} opening this time — open "
+        "differently.\n\n"
+    )
 
 
 def pick_topic(pillar_config: dict, recent_posts: list[dict]) -> str:
@@ -434,12 +502,16 @@ def _sanitize(text: str) -> str:
         return text
 
 
-def _validate(post: str, language: str = "en") -> str | None:
+def _validate(post: str, language: str = "en", require_link: bool = False) -> str | None:
     n = len(post)
     if n < MIN_CHARS:
         return f"too short ({n} chars, need >= {MIN_CHARS})"
     if n > MAX_CHARS:
         return f"too long ({n} chars, need <= {MAX_CHARS})"
+    if "{" in post or "}" in post:
+        return "contains an un-interpolated placeholder ('{' or '}' in text) — will retry"
+    if require_link and count_links(post) == 0:
+        return "CTA link was dropped from the generated post — will retry"
     for marker in _MOJIBAKE_MARKERS:
         if marker in post:
             return f"encoding corruption detected ({marker!r}) — will retry"
@@ -542,6 +614,25 @@ def _apply_humanizer(post_text: str, pillar: str, tone: str) -> str:
         return post_text
 
 
+def _finalize_post(
+    post_text: str, pillar: str, pillar_config: dict, language: str, require_link: bool
+) -> str:
+    """Humanize last, then re-validate — the humanizer runs after every safety
+    check, so it must be re-checked itself instead of trusted blindly. Falls
+    back to the pre-humanize (already-validated) text if humanizing broke it.
+    """
+    humanized = _apply_humanizer(post_text, pillar, pillar_config.get("tone", ""))
+    humanized = _normalize_cta_urls(_sanitise_hashtags(humanized))
+    if _validate(humanized, language, require_link=require_link) is None:
+        final = humanized
+    else:
+        print("WARNING: humanizer output failed re-validation — keeping pre-humanize text.")
+        final = post_text
+    if language == "ar":
+        final = _isolate_rtl_urls(final)
+    return final
+
+
 def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) -> dict:
     """Generate a LinkedIn post. Validates output and retries once if needed."""
     ALL_PILLARS = load_strategy().ALL_PILLARS
@@ -550,20 +641,32 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
     # Load recent posts once — reused for topic/format dedup and recent_block
     recent_posts = _load_recent_posts(20)
 
-    if topic is None:
+    auto_topic = topic is None
+    if auto_topic:
         topic = pick_topic(pillar_config, recent_posts)
 
-    # Similarity gate — skip generation if a recent post covers this topic
+    # Similarity gate — skip generation if a recent post covers this topic.
+    # When we picked the topic ourselves, try the pillar's other topics before
+    # giving up, so one stale match doesn't abort the whole scheduled run.
     try:
         from flag_stale_content import is_topic_recent
-        too_similar, similar_file = is_topic_recent(topic, days=14)
-        if too_similar:
-            raise ValueError(
-                f"Topic too similar to a recent post ({similar_file}). "
-                "Pick a different topic or wait 14 days."
-            )
     except ImportError:
-        pass
+        is_topic_recent = None
+
+    if is_topic_recent is not None:
+        remaining = [t for t in pillar_config.get("topics", []) if t != topic]
+        while True:
+            too_similar, similar_file = is_topic_recent(topic, days=14)
+            if not too_similar:
+                break
+            if not auto_topic or not remaining:
+                raise ValueError(
+                    f"Topic too similar to a recent post ({similar_file}). "
+                    "Pick a different topic or wait 14 days."
+                )
+            print(f"Topic '{topic}' too similar to {similar_file} — trying another.")
+            topic = random.choice(remaining)
+            remaining = [t for t in remaining if t != topic]
 
     fmt = pick_format(pillar_config, recent_posts)
     model = os.environ.get("ANTHROPIC_MODEL") or DEFAULT_MODEL
@@ -571,7 +674,7 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
     language = pillar_config.get("language", "en")
     segment  = pillar_config.get("segment", "A")
     rb = _recent_block(recent_posts, language)
-    pb = _performance_block(language)
+    pb = _performance_block(language) + _hook_diversity_block(recent_posts, language)
     hb = _hashtag_block(segment)
     sb = _seo_block()
 
@@ -589,19 +692,18 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
     if bb:
         bb = f"Brand connection: {bb}\n"
 
+    require_link = bool(cb)
     last_error: str | None = None
     last_result: tuple[str, str] | None = None
     for attempt in range(2):
         post_text, model_used = _generate_once(
             client, model, pillar, pillar_config, topic, fmt, rb, pb, mb, hb, sb, cb, bb
         )
-        post_text = _sanitise_hashtags(post_text)
+        post_text = _normalize_cta_urls(_sanitise_hashtags(post_text))
         last_result = (post_text, model_used)
-        err = _validate(post_text, language)
+        err = _validate(post_text, language, require_link=require_link)
         if err is None:
-            post_text = _apply_humanizer(post_text, pillar, pillar_config.get("tone", ""))
-            # Re-sanitize after humanizer in case it mangled hashtags.
-            post_text = _sanitise_hashtags(post_text)
+            post_text = _finalize_post(post_text, pillar, pillar_config, language, require_link)
             return {
                 "pillar": pillar,
                 "topic": topic,
@@ -621,10 +723,8 @@ def generate_post(pillar: str, pillar_config: dict, topic: str | None = None) ->
     if last_result is None:
         raise RuntimeError("generate_once was never called — retry loop did not execute")
     post_text, model_used = last_result
-    post_text = _apply_humanizer(post_text, pillar, pillar_config.get("tone", ""))
-    # Re-sanitize after humanizer in case it mangled hashtags.
-    post_text = _sanitise_hashtags(post_text)
-    print(f"WARNING: publishing despite validation issue: {last_error}")
+    post_text = _finalize_post(post_text, pillar, pillar_config, language, require_link)
+    print(f"WARNING: could not produce a fully valid post after retries: {last_error}")
     return {
         "pillar": pillar,
         "topic": topic,
@@ -903,7 +1003,7 @@ def generate_hook_variant(original: dict, pillar_config: dict) -> dict | None:
 def save_post(post_data: dict) -> Path:
     ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     path = HISTORY_DIR / f"{ts}_{post_data['pillar']}.json"
-    path.write_text(json.dumps(post_data, indent=2), encoding="utf-8")
+    write_json(path, post_data)
     return path
 
 
@@ -912,7 +1012,10 @@ if __name__ == "__main__":
 
     weekday = datetime.now(timezone.utc).weekday()
     force = os.environ.get("FORCE_PILLAR") or None
-    pillar, config = pick_pillar(weekday, force)
+    pillar_pick = pick_pillar(weekday, force)
+    if pillar_pick is None:
+        raise SystemExit("No pillar is scheduled for today. Pass FORCE_PILLAR=<pillar>.")
+    pillar, config = pillar_pick
 
     print(f"Generating {pillar} post...")
     post = generate_post(pillar, config)

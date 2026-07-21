@@ -13,11 +13,14 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from dataclasses import asdict, dataclass, field
 from datetime import date, datetime, timedelta, timezone
 from enum import Enum
 from pathlib import Path
 from typing import Any
+
+from atomic_io import write_json
 
 
 # ---------------------------------------------------------------------------
@@ -182,10 +185,20 @@ def load_tracker(path: str = TRACKER_FILE) -> list[Prospect]:
 
 
 def save_tracker(prospects: list[Prospect], path: str = TRACKER_FILE) -> None:
-    Path(path).write_text(
-        json.dumps([p.to_dict() for p in prospects], indent=2, ensure_ascii=False),
-        encoding="utf-8",
-    )
+    write_json(path, [p.to_dict() for p in prospects])
+
+
+def next_oa_id(tracker: list[dict]) -> str:
+    """Return the next unused OA-### id for a raw list-of-dicts tracker.
+
+    Shared by every writer of outreach_tracker.json (outreach.py, lead_intake.py,
+    import_leads.py) so they can't independently compute a colliding id.
+    """
+    nums = [
+        int(m.group(1)) for p in tracker
+        for m in [re.match(r"OA-(\d+)", p.get("id", ""))] if m
+    ]
+    return f"OA-{(max(nums) + 1 if nums else 21):03d}"
 
 
 # ---------------------------------------------------------------------------

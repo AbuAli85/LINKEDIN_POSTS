@@ -24,6 +24,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import links
+from atomic_io import load_json, write_json
+from outreach_tracker import next_oa_id
 
 ROOT = Path(__file__).resolve().parent
 BOOKINGS = ROOT / "bookings.json"
@@ -52,7 +54,7 @@ def _load_bookings() -> list[dict]:
 
 
 def _save_bookings(bookings: list[dict]) -> None:
-    BOOKINGS.write_text(json.dumps(bookings, indent=2, ensure_ascii=False), encoding="utf-8")
+    write_json(BOOKINGS, bookings)
 
 
 def _has_contact(b: dict) -> bool:
@@ -169,15 +171,7 @@ def _segment(b: dict) -> str:
 
 
 def _load_tracker() -> list[dict]:
-    if TRACKER_FILE.exists():
-        return json.loads(TRACKER_FILE.read_text(encoding="utf-8-sig"))
-    return []
-
-
-def _next_oa_id(tracker: list[dict]) -> str:
-    nums = [int(m.group(1)) for p in tracker
-            for m in [re.match(r"OA-(\d+)", p.get("id", ""))] if m]
-    return f"OA-{(max(nums) + 1 if nums else 21):03d}"
+    return load_json(TRACKER_FILE, default=[])
 
 
 def _csv_keys() -> tuple[set[str], set[str]]:
@@ -233,7 +227,7 @@ def _push_to_outreach(b: dict) -> str:
     if any((p.get("linkedin_url", "").rstrip("/") == url) for p in tracker):
         return "already in sequence"
     tracker.append({
-        "id": _next_oa_id(tracker),
+        "id": next_oa_id(tracker),
         "name": name or "Demo lead",
         "linkedin_url": url,
         "company": b.get("company", ""),
@@ -245,7 +239,7 @@ def _push_to_outreach(b: dict) -> str:
         "tags": ["demo-booked", f"seg-{seg.lower()}", "priority-1"],
         "converted_at": "",
     })
-    TRACKER_FILE.write_text(json.dumps(tracker, indent=2, ensure_ascii=False), encoding="utf-8")
+    write_json(TRACKER_FILE, tracker)
     return f"queued in sequence (Seg {seg})"
 
 
@@ -284,8 +278,7 @@ def cmd_intake() -> int:
             "followups": channels,
             "status": "draft",
         }
-        (FOLLOWUPS_DIR / fname).write_text(
-            json.dumps(record, indent=2, ensure_ascii=False), encoding="utf-8")
+        write_json(FOLLOWUPS_DIR / fname, record)
         outreach_status = _push_to_outreach(b)
         b["followup_drafted"] = True
         b["followup_file"] = f"lead_followups/{fname}"

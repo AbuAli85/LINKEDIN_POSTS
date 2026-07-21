@@ -1,5 +1,9 @@
 name: LinkedIn Analytics Pull
 
+concurrency:
+  group: git-push-${{ github.ref_name }}
+  cancel-in-progress: false
+
 on:
   schedule:
     - cron: '30 7 * * 1'   # Every Monday 07:30 UTC — after weekend posts settle

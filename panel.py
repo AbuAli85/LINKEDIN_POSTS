@@ -27,6 +27,8 @@ import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+from atomic_io import write_json
+
 ROOT = Path(__file__).resolve().parent
 HISTORY_DIR = ROOT / "posts_history"
 
@@ -275,7 +277,7 @@ def cmd_reject(selector: str) -> int:
         "rejected_at": datetime.now(timezone.utc).isoformat(),
         "rejected_reason": reason,
     })
-    p["_path"].write_text(json.dumps(post, indent=2), encoding="utf-8")
+    write_json(p["_path"], post)
     print(f"\n  Removed from the queue: {p['_filename']}")
     print(f"  Reason: {reason}\n")
     return 0

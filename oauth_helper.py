@@ -80,6 +80,40 @@ def refresh(refresh_token: str) -> dict:
     )
 
 
+def try_refresh_access_token() -> str | None:
+    """Best-effort refresh of the LinkedIn access token from LINKEDIN_REFRESH_TOKEN.
+
+    Returns the new access token on success, or None if refresh isn't
+    configured (no refresh token / client credentials) or the refresh call
+    itself fails. Never raises — callers should fall back to their original
+    401 handling rather than crashing the whole run over a refresh attempt.
+    """
+    refresh_token = (os.environ.get("LINKEDIN_REFRESH_TOKEN") or "").strip()
+    client_id = (os.environ.get("LINKEDIN_CLIENT_ID") or "").strip()
+    client_secret = (os.environ.get("LINKEDIN_CLIENT_SECRET") or "").strip()
+    if not refresh_token or not client_id or not client_secret:
+        return None
+    try:
+        response = requests.post(
+            TOKEN_URL,
+            data={
+                "grant_type": "refresh_token",
+                "refresh_token": refresh_token,
+                "client_id": client_id,
+                "client_secret": client_secret,
+            },
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
+            timeout=30,
+        )
+    except requests.exceptions.RequestException as exc:
+        print(f"WARNING: token refresh network error: {exc}")
+        return None
+    if response.status_code != 200:
+        print(f"WARNING: token refresh failed HTTP {response.status_code}: {response.text[:200]}")
+        return None
+    return response.json().get("access_token")
+
+
 def main(argv: list[str]) -> int:
     if len(argv) >= 2 and argv[1] == "--refresh":
         token = (os.environ.get("LINKEDIN_REFRESH_TOKEN") or "").strip()

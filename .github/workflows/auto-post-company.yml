@@ -192,7 +192,7 @@ jobs:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           NOTIFY_EMAIL: ${{ secrets.NOTIFY_EMAIL }}
           NOTIFY_WEBHOOK_URL: ${{ secrets.NOTIFY_WEBHOOK_URL }}
-          NOTIFY_FROM: ${{ vars.NOTIFY_FRON }}
+          NOTIFY_FROM: ${{ vars.NOTIFY_FROM }}
           NOTIFY_ON_DRAFT: ${{ vars.NOTIFY_ON_DRAFT }}
           DASHBOARD_URL: ${{ vars.DASHBOARD_URL }}
           POST_MODE: publish_approved

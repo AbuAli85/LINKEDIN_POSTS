@@ -1,5 +1,9 @@
 name: record-booking
 
+concurrency:
+  group: git-push-${{ github.ref_name }}
+  cancel-in-progress: false
+
 on:
   repository_dispatch:
     types: [cal_booking]

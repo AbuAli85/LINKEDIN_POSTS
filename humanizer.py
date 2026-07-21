@@ -5,12 +5,15 @@ Arabic posts:  enforce correct Omani terminology, improve authentic Gulf voice.
 """
 
 import os
+import re
 
 import anthropic
 
 DEFAULT_MODEL = "claude-sonnet-4-6"
-MAX_TOKENS = 1200
+MAX_TOKENS = 2000
 MIN_OUTPUT_CHARS = 400
+
+_HASHTAG_RE = re.compile(r"#\w+")
 
 _ARABIC_PILLARS = {"pain_ar", "sanad_pro_ar"}
 
@@ -116,6 +119,14 @@ def humanize(text: str, pillar: str = "", tone: str = "") -> str:
 
         if len(result) < MIN_OUTPUT_CHARS:
             print(f"humanizer: SKIP - output too short ({len(result)} chars)")
+            return text
+
+        # Tail-integrity guard: hashtags sit at the end of the post, so a
+        # response that got cut off mid-generation loses them first. If the
+        # original had hashtags and none survived, the output is truncated —
+        # fall back rather than publish a post missing its hashtag block.
+        if _HASHTAG_RE.search(text) and not _HASHTAG_RE.search(result):
+            print("humanizer: SKIP - output dropped all hashtags (likely truncated)")
             return text
 
         lang_tag = "ar" if is_arabic else "en"

@@ -11,13 +11,14 @@ Format of input file (one lead per line, skip # comments and blank lines):
     URL | Full Name | Job Title | Company Name | City
 """
 
-import json
 import csv
 import argparse
-import re
 import sys
 from datetime import date
 from pathlib import Path
+
+from atomic_io import load_json, write_json
+from outreach_tracker import next_oa_id
 
 BASE = Path(__file__).parent
 TRACKER_FILE = BASE / "outreach_tracker.json"
@@ -93,18 +94,6 @@ def detect_tags(title: str, city: str) -> list:
     return tags
 
 
-def next_id(tracker: list) -> str:
-    if not tracker:
-        return "OA-021"
-    nums = []
-    for p in tracker:
-        m = re.match(r"OA-(\d+)", p.get("id", ""))
-        if m:
-            nums.append(int(m.group(1)))
-    nxt = max(nums) + 1 if nums else 21
-    return f"OA-{nxt:03d}"
-
-
 def parse_input_file(path: Path) -> list:
     leads = []
     errors = []
@@ -170,15 +159,13 @@ def build_csv_row(lead: dict, entry: dict) -> dict:
 
 
 def load_tracker() -> list:
-    with open(TRACKER_FILE, encoding="utf-8") as f:
-        return json.load(f)
+    return load_json(TRACKER_FILE, default=[])
 
 
 def save_tracker(tracker: list, dry_run: bool):
     if dry_run:
         return
-    with open(TRACKER_FILE, "w", encoding="utf-8") as f:
-        json.dump(tracker, f, indent=2, ensure_ascii=False)
+    write_json(TRACKER_FILE, tracker)
 
 
 def load_csv_urls() -> set:
@@ -247,7 +234,7 @@ def main():
         if url in existing_tracker_urls or url in existing_csv_urls:
             skipped.append(lead["name"])
             continue
-        new_id = next_id(tracker)
+        new_id = next_oa_id(tracker)
         entry = build_tracker_entry(lead, new_id)
         csv_row = build_csv_row(lead, entry)
         tracker.append(entry)

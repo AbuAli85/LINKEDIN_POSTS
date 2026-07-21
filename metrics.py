@@ -10,6 +10,8 @@ from pathlib import Path
 
 import requests
 
+from atomic_io import write_json
+
 HISTORY_DIR = Path(__file__).parent / "posts_history"
 
 HOOK_STYLES = [
@@ -78,7 +80,7 @@ def _load(path: Path) -> dict:
 
 
 def _save(path: Path, post: dict) -> None:
-    path.write_text(json.dumps(post, indent=2), encoding="utf-8")
+    write_json(path, post)
 
 
 def _merge_metrics(path: Path, updates: dict) -> dict:

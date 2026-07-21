@@ -551,13 +551,20 @@ def validate_arabic_terms(text: str) -> str | None:
     Caps at 3 violations to keep the warning readable.
     """
     found: list[str] = []
+    # Mask out every correct term first. A "wrong" alternative that happens to
+    # be a substring/prefix of its own correct term (e.g. wrong "إجازة الأب"
+    # is a prefix of correct "إجازة الأبوة") would otherwise false-positive
+    # against text that actually used the correct term.
+    masked = text
+    for correct in OFFICIAL_TERMS:
+        masked = masked.replace(correct, " " * len(correct))
     for correct, info in OFFICIAL_TERMS.items():
         for wrong in info.get("wrong", []):
             # Exact substring match — sufficient for LinkedIn post body text.
             # Skip very short wrong-terms (≤2 chars) to avoid false positives.
             if len(wrong) <= 2:
                 continue
-            if wrong in text:
+            if wrong in masked:
                 found.append(f"'{wrong}' ← يجب أن تكون '{correct}'")
         if len(found) >= 3:
             break

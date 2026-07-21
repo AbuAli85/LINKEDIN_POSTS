@@ -21,6 +21,8 @@ import re
 from datetime import datetime, timezone
 from pathlib import Path
 
+from atomic_io import write_json
+
 ROOT = Path(__file__).parent
 HISTORY_DIRS = [ROOT / "posts_history", ROOT / "company_posts_history"]
 MAX_AGE_DAYS = 14
@@ -135,7 +137,7 @@ def expire_stale(
                             now,
                         )
                     )
-                    f.write_text(json.dumps(post, indent=2), encoding="utf-8")
+                    write_json(f, post)
                 expired.append(str(f))
     return expired
 

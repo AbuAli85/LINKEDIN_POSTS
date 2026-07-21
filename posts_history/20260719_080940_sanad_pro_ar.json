@@ -10,10 +10,11 @@
   "generated_at": "2026-07-19T08:09:40.278205+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 1,
-  "status": "approved",
+  "status": "failed",
   "published": false,
   "approved": true,
   "approval_required": false,
   "dry_run": false,
-  "approved_at": "2026-07-20T17:51:09.094475+00:00"
+  "approved_at": "2026-07-21T06:11:16.625735+00:00",
+  "publish_error": "LinkedIn rejected the access token (401). Re-run the OAuth flow in LINKEDIN_SETUP.md and update the LINKEDIN_ACCESS_TOKEN secret. Raw response: {\"status\":401,\"serviceErrorCode\":65602,\"code\":\"EXPIRED_ACCESS_TOKEN\",\"message\":\"The token used in the request has expired\"}"
 }

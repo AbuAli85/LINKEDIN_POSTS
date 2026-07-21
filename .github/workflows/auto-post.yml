@@ -87,7 +87,7 @@ jobs:
       (github.event_name == 'schedule' && (github.event.schedule == '0 5 * * *' || github.event.schedule == '0 6 * * *')) ||
       (github.event_name == 'workflow_dispatch' && github.event.inputs.action != 'run_outreach')
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-python@v5
         with:
@@ -187,7 +187,7 @@ jobs:
       (github.event_name == 'schedule' && github.event.schedule == '0 6 * * *') ||
       (github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'run_outreach')
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-python@v5
         with:
@@ -290,7 +290,7 @@ jobs:
       contents: write
     if: github.event_name == 'schedule' && github.event.schedule == '15 5 * * *'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-python@v5
         with:
@@ -360,7 +360,7 @@ jobs:
       contents: write
     if: github.event_name == 'schedule' && github.event.schedule == '0 6 * * 0'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-python@v5
         with:

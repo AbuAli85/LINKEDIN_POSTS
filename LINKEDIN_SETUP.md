@@ -36,7 +36,7 @@ Both are auto-approved within minutes.
 Then visit (replace `CLIENT_ID`):
 
 ```
-https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=77oxpmdoa8qe2k&redirect_uri=https%3A%2F%2Fwww.linkedin.com%2Fdevelopers%2Ftools%2Foauth%2Fredirect&scope=openid%20profile%20email%20w_member_social
+https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=YOUR_CLIENT_ID&redirect_uri=https%3A%2F%2Fwww.linkedin.com%2Fdevelopers%2Ftools%2Foauth%2Fredirect&scope=openid%20profile%20email%20w_member_social
 ```
 
 After authorizing, LinkedIn redirects back with a `code=...` in the URL. Copy that code.
@@ -108,13 +108,45 @@ That's it. The cron will start posting Mon/Wed/Fri at 9 AM UTC.
 
 ## Renewing the token
 
-LinkedIn access tokens expire after 60 days. To renew:
+LinkedIn access tokens expire after 60 days. To renew manually:
 
 1. Repeat Step 3 — paste the OAuth URL above, replace `CLIENT_ID`
 2. Repeat Step 4 (exchange the new `code` for a new token)
 3. Update the `LINKEDIN_ACCESS_TOKEN` secret in GitHub
 
-You can request a refresh token too (LinkedIn supports it for some apps) — see https://learn.microsoft.com/en-us/linkedin/shared/authentication/programmatic-refresh-tokens
+### Optional: set up auto-refresh so you stop doing this every 60 days
+
+`oauth_helper.try_refresh_access_token()` already auto-refreshes on a 401 during
+publish (`publisher.py`) and outreach sends (`outreach.py`) — it just needs
+credentials to refresh *with*, which requires LinkedIn's Programmatic Refresh
+Tokens feature on your app:
+https://learn.microsoft.com/en-us/linkedin/shared/authentication/programmatic-refresh-tokens
+
+**This is not a self-serve toggle.** Requesting `offline_access` in the
+authorization scope on an app that doesn't have this feature fails immediately
+with `invalid_scope_error` (confirmed on this project's original app) — you
+have to request access to the feature from LinkedIn first (via their
+developer support/partner program). Until that's granted,
+skip this section and keep renewing manually every 60 days above; nothing
+breaks by leaving `LINKEDIN_REFRESH_TOKEN`/`LINKEDIN_CLIENT_ID`/
+`LINKEDIN_CLIENT_SECRET` unset — the code just falls back to the same clear
+"re-run the OAuth flow" error it always gave.
+
+Once/if LinkedIn grants the feature for this app:
+
+1. Add `offline_access` to the authorization URL's `scope` param (Step 3), e.g.:
+   `...&scope=openid%20profile%20email%20w_member_social%20offline_access`
+2. Exchange the code as in Step 4 — the response now also includes
+   `refresh_token` (valid ~365 days) alongside `access_token`.
+3. Add three more GitHub secrets: `LINKEDIN_REFRESH_TOKEN` (from the response),
+   `LINKEDIN_CLIENT_ID`, `LINKEDIN_CLIENT_SECRET` (from the Auth tab — same
+   values you already used in Step 4).
+
+The workflows already pass these three through to every step that publishes
+or sends, so no further code changes are needed once the secrets exist. From
+then on, a 401 mid-run refreshes the token in place instead of failing the
+run; you only need to redo the full manual flow if the refresh token itself
+expires or is revoked.
 
 ---
 

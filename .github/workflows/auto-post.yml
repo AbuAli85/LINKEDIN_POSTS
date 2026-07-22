@@ -183,9 +183,17 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    if: >
-      (github.event_name == 'schedule' && github.event.schedule == '0 6 * * *') ||
-      (github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'run_outreach')
+    # Disabled 2026-07-22: LINKEDIN_READ_TOKEN was never set (Community
+    # Management API / r_member_social not approved on this app), so
+    # outreach:fetch has been failing every run since the honesty fix in
+    # this same commit series -- 10+ days of "22 leads, 0 replies" before
+    # that was the same problem hidden by `|| echo`. Re-enable by restoring
+    # the two conditions below once Community Management API is approved
+    # AND LINKEDIN_READ_TOKEN is set as a repo secret.
+    if: false
+    # if: >
+    #   (github.event_name == 'schedule' && github.event.schedule == '0 6 * * *') ||
+    #   (github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'run_outreach')
     steps:
       - uses: actions/checkout@v7
 

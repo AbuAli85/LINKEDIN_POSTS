@@ -197,6 +197,23 @@ jobs:
       - name: Install dependencies
         run: pip install --no-cache-dir -r requirements.txt
 
+      - name: Init step-failure tracking
+        run: |
+          echo -n "" > "$RUNNER_TEMP/step_failures.txt"
+          cat > "$RUNNER_TEMP/run_step.sh" <<'EOF'
+          #!/usr/bin/env bash
+          # usage: run_step.sh <label> <command...>
+          LABEL="$1"; shift
+          if "$@"; then
+            echo "ok   | $LABEL"
+          else
+            CODE=$?
+            echo "FAIL | $LABEL (exit $CODE)"
+            echo "$LABEL (exit $CODE)" >> "$RUNNER_TEMP/step_failures.txt"
+          fi
+          EOF
+          chmod +x "$RUNNER_TEMP/run_step.sh"
+
       - name: Fetch new comments
         # LINKEDIN_READ_TOKEN comes from the second app (Community Management API,
         # r_member_social scope). outreach.py prefers it; falls back to ACCESS_TOKEN
@@ -204,28 +221,28 @@ jobs:
         env:
           LINKEDIN_READ_TOKEN: ${{ secrets.LINKEDIN_READ_TOKEN }}
           LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
-        run: python outreach.py fetch || echo "fetch completed (errors logged above)"
+        run: $RUNNER_TEMP/run_step.sh "outreach:fetch" python outreach.py fetch
 
       - name: Qualify leads with Claude
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           LINKEDIN_READ_TOKEN: ${{ secrets.LINKEDIN_READ_TOKEN }}
           LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
-        run: python outreach.py qualify || echo "qualify completed"
+        run: $RUNNER_TEMP/run_step.sh "outreach:qualify" python outreach.py qualify
 
       - name: Enrich qualified leads (Apollo + Bright Data)
         env:
           APOLLO_API_KEY: ${{ secrets.APOLLO_API_KEY }}
           BRIGHTDATA_API_KEY: ${{ secrets.BRIGHTDATA_API_KEY }}
-        run: python outreach.py enrich || echo "enrich completed (errors logged above)"
+        run: $RUNNER_TEMP/run_step.sh "outreach:enrich" python outreach.py enrich
 
       - name: Draft replies for qualified leads
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: python outreach.py draft-replies || echo "draft-replies completed"
+        run: $RUNNER_TEMP/run_step.sh "outreach:draft-replies" python outreach.py draft-replies
 
       - name: Export leads.csv
-        run: python outreach.py export || echo "export completed"
+        run: $RUNNER_TEMP/run_step.sh "outreach:export" python outreach.py export
 
       - name: Send due sequence steps to tracker leads
         # Sends connection request (step 1) or DM (steps 2-5) to each lead that is due today.
@@ -238,16 +255,16 @@ jobs:
           LINKEDIN_REFRESH_TOKEN: ${{ secrets.LINKEDIN_REFRESH_TOKEN }}
           LINKEDIN_CLIENT_ID: ${{ secrets.LINKEDIN_CLIENT_ID }}
           LINKEDIN_CLIENT_SECRET: ${{ secrets.LINKEDIN_CLIENT_SECRET }}
-        run: python outreach.py send-sequences || echo "send-sequences completed (errors logged above)"
+        run: $RUNNER_TEMP/run_step.sh "outreach:send-sequences" python outreach.py send-sequences
 
       - name: Fetch post engagement metrics (aged posts ≥7 days)
         env:
           LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: python content_feedback.py fetch-aged || echo "⚠ metrics fetch failed, continuing"
+        run: $RUNNER_TEMP/run_step.sh "feedback:fetch-aged" python content_feedback.py fetch-aged
 
       - name: Analyse pillar performance
-        run: python content_feedback.py analyze || echo "⚠ analysis failed, continuing"
+        run: $RUNNER_TEMP/run_step.sh "feedback:analyze" python content_feedback.py analyze
 
       - name: Commit outreach data and dashboard
         if: always()
@@ -276,6 +293,22 @@ jobs:
             git add docs/
             git diff --cached --quiet || git commit -m "dashboard: update $(date -u '+%Y-%m-%d %H:%M UTC')"
           done
+
+      - name: Report step failures
+        if: always()
+        run: |
+          if [ -s "$RUNNER_TEMP/step_failures.txt" ]; then
+            {
+              echo "## Failed steps"
+              echo ""
+              while IFS= read -r line; do echo "- \`$line\`"; done < "$RUNNER_TEMP/step_failures.txt"
+              echo ""
+              echo "Data commit still ran. Job marked failed so this is visible."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::error::$(wc -l < "$RUNNER_TEMP/step_failures.txt") step(s) failed — see job summary."
+            exit 1
+          fi
+          echo "## All steps completed cleanly" >> "$GITHUB_STEP_SUMMARY"
 
   # ──────────────────────────────────────────────────────────────────────────
   # Publish Sweep — runs daily at 05:15 UTC (09:15 Muscat)
@@ -370,11 +403,28 @@ jobs:
       - name: Install dependencies
         run: pip install --no-cache-dir -r requirements.txt
 
+      - name: Init step-failure tracking
+        run: |
+          echo -n "" > "$RUNNER_TEMP/step_failures.txt"
+          cat > "$RUNNER_TEMP/run_step.sh" <<'EOF'
+          #!/usr/bin/env bash
+          # usage: run_step.sh <label> <command...>
+          LABEL="$1"; shift
+          if "$@"; then
+            echo "ok   | $LABEL"
+          else
+            CODE=$?
+            echo "FAIL | $LABEL (exit $CODE)"
+            echo "$LABEL (exit $CODE)" >> "$RUNNER_TEMP/step_failures.txt"
+          fi
+          EOF
+          chmod +x "$RUNNER_TEMP/run_step.sh"
+
       - name: Fetch LinkedIn engagement for all published posts
         env:
           LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
           LINKEDIN_AUTHOR_URN: ${{ secrets.LINKEDIN_AUTHOR_URN }}
-        run: python metrics.py fetch-all || echo "⚠ metrics fetch failed, continuing"
+        run: $RUNNER_TEMP/run_step.sh "metrics:fetch-all" python metrics.py fetch-all
 
       - name: Rebuild dashboard with updated metrics
         run: python dashboard.py
@@ -396,3 +446,19 @@ jobs:
             git add docs/
             git diff --cached --quiet || git commit -m "dashboard: update $(date -u '+%Y-%m-%d %H:%M UTC')"
           done
+
+      - name: Report step failures
+        if: always()
+        run: |
+          if [ -s "$RUNNER_TEMP/step_failures.txt" ]; then
+            {
+              echo "## Failed steps"
+              echo ""
+              while IFS= read -r line; do echo "- \`$line\`"; done < "$RUNNER_TEMP/step_failures.txt"
+              echo ""
+              echo "Data commit still ran. Job marked failed so this is visible."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::error::$(wc -l < "$RUNNER_TEMP/step_failures.txt") step(s) failed — see job summary."
+            exit 1
+          fi
+          echo "## All steps completed cleanly" >> "$GITHUB_STEP_SUMMARY"

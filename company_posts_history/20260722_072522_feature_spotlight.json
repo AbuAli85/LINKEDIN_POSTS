@@ -1,0 +1,19 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "Growth partner commission tracking — what gets logged automatically and what no longer needs a spreadsheet",
+  "format": "Walk through a feature in 4-5 steps: what triggers it, what it does, what it prevents, who saves time",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "A growth partner refers three clients in one month.\n\nTwo deals close. One is still negotiating.\n\nWithout a system, someone has to remember all of that — usually in a spreadsheet that's already two weeks behind.\n\nSmartPRO Hub's partner commission tracking changes how this works.\n\nWhen a referral is logged, the partner is linked to the deal automatically. As the deal moves through the pipeline, commission status moves with it. When the deal closes, the commission record is created — no manual entry, no chasing the sales team for confirmation.\n\nWhat gets prevented: missed payouts, disputes over amounts, and the back-and-forth that strains partner relationships before they've had a chance to grow.\n\nWho saves time: ops directors who used to reconcile partner payments manually each month, and HR managers roped in to verify figures they never had full visibility into.\n\nWe built this because growth partner programs fail quietly — not from bad intent, but from bad tracking.\n\nSmartPRO Hub is the operations platform built for Oman and GCC businesses that want their partner programs to scale without adding admin.\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\nHow are you currently tracking partner commissions — and how many hours a month does it cost you?\n\n#SmartPROHub\n#OmanBusiness\n#GCCBusiness\n#HRTech\n#SMEOman",
+  "char_count": 1406,
+  "generated_at": "2026-07-22T07:25:22.864966+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "has_variant": true
+}

@@ -1,0 +1,20 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "Growth partner commission tracking — what gets logged automatically and what no longer needs a spreadsheet",
+  "format": "Walk through a feature in 4-5 steps: what triggers it, what it does, what it prevents, who saves time",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "Most partner commission disputes don't start with bad intent. They start with a spreadsheet that nobody updated for two weeks.\n\nThat's usually when things get messy — someone followed up, someone didn't, numbers don't match, and now a partner relationship that took months to build is strained over a payouts conversation that should have been automatic.\n\nSmartPRO Hub tracks partner commissions without the manual work in between.\n\nWhen a referral gets logged, the partner is linked to the deal right then. As the deal moves through your pipeline, the commission status moves with it. When it closes, the commission record is already there — no chasing the sales team, no manual entry, no \"can you just confirm the amount?\" emails.\n\nThe people this actually helps: ops directors who've been reconciling partner payments by hand every month, and HR managers pulled into commission reviews for numbers they never had full visibility into in the first place. Neither of them should be spending time on this.\n\nPartner programs fail quietly. Not because of dishonesty — because the tracking couldn't keep up with the growth, and nobody noticed until a partner brought it up.\n\nSmartPRO Hub is built for Oman and GCC businesses that want partner programs to scale without piling on admin to match.\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\nHow are you currently tracking partner commissions — and how many hours a month does it actually cost you?\n\n#SmartPROHub\n#OmanBusiness\n#GCCBusiness\n#HRTech\n#SMEOman",
+  "char_count": 1588,
+  "generated_at": "2026-07-22T07:25:35.474873+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260722_072522_feature_spotlight.json"
+}

@@ -22,28 +22,41 @@ jobs:
         env:
           LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
           LINKEDIN_TOKEN_RENEWED_DATE: ${{ vars.LINKEDIN_TOKEN_RENEWED_DATE }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPO: ${{ github.repository }}
+          LINKEDIN_HEALTH_ENDPOINT: ${{ vars.LINKEDIN_HEALTH_ENDPOINT }}
         run: |
-          # 1. Live API ping
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+          set -uo pipefail
+
+          # 1. Live API ping. /v2/userinfo (OpenID Connect) is the default --
+          # it works with the openid/profile scopes this app already requests,
+          # unlike the legacy /v2/me REST endpoint. Overridable via the
+          # LINKEDIN_HEALTH_ENDPOINT repo variable without editing this file.
+          ENDPOINT="${LINKEDIN_HEALTH_ENDPOINT:-https://api.linkedin.com/v2/userinfo}"
+
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 20 \
             -H "Authorization: Bearer $LINKEDIN_ACCESS_TOKEN" \
-            "https://api.linkedin.com/v2/me")
+            "$ENDPOINT") || STATUS="000"
 
-          echo "HTTP status: $STATUS"
+          echo "HTTP status: $STATUS (endpoint: $ENDPOINT)"
 
+          # Three states instead of a alive/dead binary, so a scope mismatch,
+          # rate limit, or transient 5xx (403/429/5xx/network failure) can't
+          # get reported as a confirmed "alive" -- it wasn't actually verified.
           if [ "$STATUS" = "401" ]; then
-            TOKEN_ALIVE="false"
-            HEALTH_MSG="Token EXPIRED or REVOKED (HTTP 401). Renew immediately."
+            TOKEN_STATE="dead"
+            HEALTH_MSG="Token EXPIRED or REVOKED (HTTP 401 from $ENDPOINT). Renew immediately."
+          elif [[ "$STATUS" =~ ^2[0-9][0-9]$ ]]; then
+            TOKEN_STATE="alive"
+            HEALTH_MSG="Token alive (HTTP $STATUS from $ENDPOINT)"
           else
-            TOKEN_ALIVE="true"
-            HEALTH_MSG="Token alive (HTTP $STATUS)"
+            TOKEN_STATE="inconclusive"
+            HEALTH_MSG="Health check inconclusive (HTTP $STATUS from $ENDPOINT) -- not a confirmed failure, but this run did not verify the token is working. If this persists, check the app's OAuth scopes or set LINKEDIN_HEALTH_ENDPOINT to a reachable endpoint."
           fi
 
-          echo "token_alive=$TOKEN_ALIVE" >> $GITHUB_OUTPUT
-          echo "health_msg=$HEALTH_MSG"   >> $GITHUB_OUTPUT
+          echo "token_state=$TOKEN_STATE" >> "$GITHUB_OUTPUT"
+          echo "health_msg=$HEALTH_MSG"   >> "$GITHUB_OUTPUT"
 
-          # 2. Expiry countdown
+          # 2. Expiry countdown (unchanged) -- independent of the live ping,
+          # since it's derived from the renewal date, not a network call.
           DAYS_UNTIL_EXPIRY=99
           EXPIRY_MSG="LINKEDIN_TOKEN_RENEWED_DATE not set - cannot compute expiry countdown."
 
@@ -53,11 +66,11 @@ jobs:
               NOW_TS=$(date +%s)
               DAYS_ELAPSED=$(( (NOW_TS - RENEWED_TS) / 86400 ))
               DAYS_UNTIL_EXPIRY=$(( 60 - DAYS_ELAPSED ))
-              if [ $DAYS_UNTIL_EXPIRY -le 0 ]; then
+              if [ "$DAYS_UNTIL_EXPIRY" -le 0 ]; then
                 EXPIRY_MSG="Token EXPIRED $((DAYS_UNTIL_EXPIRY * -1)) days ago based on renewal date."
-              elif [ $DAYS_UNTIL_EXPIRY -le 7 ]; then
+              elif [ "$DAYS_UNTIL_EXPIRY" -le 7 ]; then
                 EXPIRY_MSG="Token expires in ${DAYS_UNTIL_EXPIRY} days - RENEW NOW."
-              elif [ $DAYS_UNTIL_EXPIRY -le 14 ]; then
+              elif [ "$DAYS_UNTIL_EXPIRY" -le 14 ]; then
                 EXPIRY_MSG="Token expires in ${DAYS_UNTIL_EXPIRY} days - schedule renewal."
               else
                 EXPIRY_MSG="Token valid for ~${DAYS_UNTIL_EXPIRY} more days (renewed: $LINKEDIN_TOKEN_RENEWED_DATE)"
@@ -67,24 +80,29 @@ jobs:
             fi
           fi
 
-          echo "days_until_expiry=$DAYS_UNTIL_EXPIRY" >> $GITHUB_OUTPUT
-          echo "expiry_msg=$EXPIRY_MSG"               >> $GITHUB_OUTPUT
+          echo "days_until_expiry=$DAYS_UNTIL_EXPIRY" >> "$GITHUB_OUTPUT"
+          echo "expiry_msg=$EXPIRY_MSG"               >> "$GITHUB_OUTPUT"
           echo "Health: $HEALTH_MSG"
           echo "Expiry: $EXPIRY_MSG"
 
       - name: Create or update alert issue
+        # Only a confirmed-dead token (401) or the date-based countdown opens/
+        # updates an alert. "inconclusive" never does -- it isn't a confirmed
+        # problem, and spamming an issue for a scope mismatch or a transient
+        # 403/429/5xx would just train the owner to ignore these.
         if: |
-          steps.health.outputs.token_alive == 'false' ||
+          steps.health.outputs.token_state == 'dead' ||
           steps.health.outputs.days_until_expiry <= 7
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
         run: |
+          set -uo pipefail
           HEALTH_MSG="${{ steps.health.outputs.health_msg }}"
           EXPIRY_MSG="${{ steps.health.outputs.expiry_msg }}"
           DAYS="${{ steps.health.outputs.days_until_expiry }}"
 
-          if [ "${{ steps.health.outputs.token_alive }}" = "false" ]; then
+          if [ "${{ steps.health.outputs.token_state }}" = "dead" ]; then
             TITLE="LinkedIn token EXPIRED - action required"
             URGENCY="CRITICAL"
           else
@@ -119,14 +137,22 @@ jobs:
             gh issue create --repo "$REPO" --title "$TITLE" --body "$BODY" --label "linkedin-token"
           fi
 
+      - name: Report inconclusive check (no issue created/closed)
+        if: steps.health.outputs.token_state == 'inconclusive'
+        run: |
+          echo "::warning::${{ steps.health.outputs.health_msg }}"
+
       - name: Close resolved issue
+        # Only a confirmed-alive token (real 2xx) closes an existing alert --
+        # "inconclusive" must never be read as "healthy" here.
         if: |
-          steps.health.outputs.token_alive == 'true' &&
+          steps.health.outputs.token_state == 'alive' &&
           steps.health.outputs.days_until_expiry > 7
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
         run: |
+          set -uo pipefail
           EXISTING=$(gh issue list \
             --repo "$REPO" \
             --label "linkedin-token" \
@@ -145,11 +171,12 @@ jobs:
       - name: Summary
         if: always()
         run: |
-          echo "## LinkedIn Token Health Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Check | Result |" >> $GITHUB_STEP_SUMMARY
-          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
-          echo "| API ping | ${{ steps.health.outputs.health_msg }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Expiry countdown | ${{ steps.health.outputs.expiry_msg }} |" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Run completed: $(date -u +'%Y-%m-%d %H:%M UTC')" >> $GITHUB_STEP_SUMMARY
+          echo "## LinkedIn Token Health Summary" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Check | Result |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|-------|--------|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| State | ${{ steps.health.outputs.token_state }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| API ping | ${{ steps.health.outputs.health_msg }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Expiry countdown | ${{ steps.health.outputs.expiry_msg }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "Run completed: $(date -u +'%Y-%m-%d %H:%M UTC')" >> "$GITHUB_STEP_SUMMARY"

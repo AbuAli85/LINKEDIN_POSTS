@@ -356,7 +356,7 @@ def _email_html(context: dict[str, Any]) -> str:
 
     <!-- Hint -->
     <p style="color:rgba(255,255,255,.22);font-size:11px;text-align:center;margin:14px 0 0 0;line-height:1.6">
-      Clicking Approve opens the dashboard and triggers the workflow automatically.<br>First time: you&rsquo;ll be asked for a GitHub PAT once &mdash; saved in your browser after that.
+      Clicking Approve opens the dashboard and triggers the workflow automatically.<br>You&rsquo;ll be asked for a GitHub PAT &mdash; held only for that browser tab, never saved.
     </p>
 
   </td></tr>

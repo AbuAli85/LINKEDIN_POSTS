@@ -71,7 +71,7 @@ jobs:
           fi
 
       - name: Commit updated metrics and analytics
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "chore: update LinkedIn engagement metrics [skip ci]"
           file_pattern: "posts_history/*.json content_analysis.json docs/analytics_summary.json"

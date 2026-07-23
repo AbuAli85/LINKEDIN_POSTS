@@ -13,6 +13,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 HISTORY_DIR = Path(__file__).parent / "posts_history"
+COMPANY_HISTORY_DIR = Path(__file__).parent / "company_posts_history"
 DOCS_DIR    = Path(__file__).parent / "docs"
 DOCS_DIR.mkdir(exist_ok=True)
 
@@ -76,6 +77,120 @@ def load_posts() -> list[dict]:
         except Exception:
             continue
     return posts
+
+
+def load_company_drafts() -> list[dict]:
+    """Return pending company drafts from company_posts_history/.
+
+    The company pipeline writes to its own folder that the main dashboard
+    (built from posts_history/) never scans, so company drafts previously had
+    no card here — their only review surface was the notification email. This
+    surfaces them as approve/revise cards. Variants (*_v.json) and anything
+    already published/approved are skipped.
+    """
+    if not COMPANY_HISTORY_DIR.exists():
+        return []
+    drafts = []
+    for f in sorted(COMPANY_HISTORY_DIR.glob("*.json"), reverse=True):
+        if f.name.endswith("_v.json"):
+            continue  # hook variant — skip; the main draft carries the pair
+        try:
+            p = json.loads(f.read_text(encoding="utf-8-sig"))
+        except Exception:
+            continue
+        status = p.get("status", "")
+        pending = (
+            not p.get("published")
+            and not p.get("approved", False)
+            and status not in ("published", "superseded", "deleted", "approved")
+            and (p.get("approval_required") or status in ("draft", "pending"))
+        )
+        if not pending:
+            continue
+        p["_filename"] = f.name
+        drafts.append(p)
+    return drafts
+
+
+def _company_draft_card(post: dict) -> str:
+    """Render a single pending company draft as an approve/revise card.
+
+    Reuses the .card / .approve-btn / .badge.draft / .rev-btn classes so the
+    existing approve & revise modals, and the on-load refreshDraftCards()
+    status check, work without any extra JS. data-path carries the full
+    company_posts_history/ path, which _workflowForPath() routes to the
+    company workflow.
+    """
+    filename   = post.get("_filename", "")
+    draft_path = html.escape(f"company_posts_history/{filename}")
+    pillar     = post.get("pillar", "?")
+    color      = PILLAR_COLOR.get(pillar, "#94a3b8")
+    body       = post.get("post", "")
+    char_count = post.get("char_count") or len(body)
+    preview_val = html.escape(body[:400].replace("\n", " "))
+    topic      = html.escape(post.get("topic", ""))
+    lang       = html.escape(str(post.get("language", "")).upper())
+    dry_badge  = (
+        ' <span class="badge" style="background:rgba(148,163,184,.12);color:#94a3b8;'
+        'border:1px solid rgba(148,163,184,.3)">dry run</span>'
+        if post.get("dry_run") else ""
+    )
+
+    try:
+        from content_strategy import PILLARS as _PILLARS
+        publish_day = html.escape(_PILLARS.get(pillar, {}).get("publish_day", "next scheduled day"))
+    except Exception:
+        publish_day = "next scheduled day"
+
+    over = char_count > 1500
+    approve_btn = (
+        f'<button type="button" class="approve-btn{" over-limit" if over else ""}" '
+        f'data-path="{draft_path}" data-preview="{preview_val}" data-publish-day="{publish_day}" '
+        + (f'title="&#9888; {char_count} chars — exceeds 1500-char limit." '
+           f'onclick="showApproveModal(this)">&#9888; Approve for {publish_day} '
+           f'({char_count - 1500}+ over)</button>'
+           if over else
+           f'onclick="showApproveModal(this)">&#10003; Approve for {publish_day}</button>')
+    )
+    revise_btn = (
+        f'<button type="button" class="rev-btn rev-changes" data-path="{draft_path}" '
+        f'data-pillar="{html.escape(pillar)}" onclick="showReviseModal(this)">'
+        f'&#9998; Request Changes</button>'
+    )
+
+    body_html = html.escape(body)
+    return f"""
+    <div class="card" data-status="draft">
+      <div class="card-head">
+        <span class="badge" style="background:{color}22;color:{color};border:1px solid {color}55">{html.escape(pillar)}</span>
+        <span class="badge draft">Needs Review</span>{dry_badge}
+        {f'<span class="badge" style="background:rgba(255,255,255,.05);color:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.15)">{lang}</span>' if lang else ''}
+        <span style="margin-left:auto;font-size:11px;color:rgba(255,255,255,.35);font-family:'DM Mono',monospace">{char_count} chars</span>
+      </div>
+      {f'<div class="card-topic" style="font-size:13px;color:rgba(255,255,255,.6);margin:6px 0 4px">{topic}</div>' if topic else ''}
+      <pre style="white-space:pre-wrap;word-break:break-word;font-family:inherit;font-size:13px;line-height:1.75;color:rgba(255,255,255,.78);background:#0b0b0c;border-radius:8px;padding:14px 16px;margin:8px 0">{body_html}</pre>
+      <div class="review-actions">
+        <span class="review-label">Review:</span>
+        {revise_btn}
+      </div>
+      {approve_btn}
+      <div class="variant-link">{draft_path}</div>
+    </div>"""
+
+
+def render_company_drafts(drafts: list[dict]) -> str:
+    """Build the 'Company drafts' section, or empty string when none pending."""
+    if not drafts:
+        return ""
+    cards = "".join(_company_draft_card(d) for d in drafts)
+    return f"""
+<div class="content" style="margin-bottom:8px">
+  <h2 class="section-lbl">Company drafts &mdash; pending approval ({len(drafts)})</h2>
+  <p style="font-size:12px;color:rgba(255,255,255,.4);margin:-4px 0 14px">
+    Company-voice drafts awaiting your review. Approve or request changes here, or from the notification email.
+  </p>
+  {cards}
+</div>"""
 
 
 def next_runs(n: int = 3) -> list[datetime]:
@@ -2204,6 +2319,7 @@ def _publish_calendar_section(posts: list[dict]) -> str:
 # Main generator
 # ---------------------------------------------------------------------------
 def generate(posts: list[dict]) -> str:
+    company_drafts_html = render_company_drafts(load_company_drafts())
     total       = sum(1 for p in posts if p.get("status") not in ("deleted", "superseded"))
     n_published = sum(1 for p in posts if p.get("published") or p.get("status") == "published")
     n_drafts    = sum(
@@ -2551,6 +2667,7 @@ def generate(posts: list[dict]) -> str:
 {bookings_section_html}
 
 <main id="main-content">
+{company_drafts_html}
 <div class="content">
   <h2 class="section-lbl">Post history ({total})</h2>
   {cards}

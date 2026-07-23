@@ -1,19 +1,20 @@
 {
   "pillar": "feature_spotlight",
-  "topic": "Growth partner commission tracking \u2014 what gets logged automatically and what no longer needs a spreadsheet",
+  "topic": "Growth partner commission tracking — what gets logged automatically and what no longer needs a spreadsheet",
   "format": "Walk through a feature in 4-5 steps: what triggers it, what it does, what it prevents, who saves time",
   "language": "en",
   "segment": "A",
   "publish_day": "Wednesday",
-  "post": "A growth partner refers a client. The deal closes. Commission is owed.\n\nMost businesses track that in a spreadsheet someone last updated three weeks ago.\n\nSmartPRO Hub logs it automatically \u2014 from the moment a referred deal moves to \"won\" in the CRM pipeline.\n\nWhat that looks like in practice:\n\nThe referral source gets tagged at deal creation. Commission rate pulls from the partner's pre-set agreement. When the invoice is marked paid, the liability is calculated and recorded. The partner's earnings summary updates in real time.\n\nNo chasing down who referred whom. No reconciling payment dates at month-end. No partner calling to ask why their number doesn't match yours.\n\nWe built this because ops directors and finance managers at GCC businesses were spending hours every month on something that should take minutes \u2014 and making avoidable errors when deals moved fast.\n\nCustomers running partner programs alongside HR software on the Oman side tell us the biggest win isn't the automation. It's what it does for partner relationships. When someone can log in and see exactly where they stand, the disputes stop before they start.\n\nIf commission conversations keep coming up in your business, that's a systems problem. Not a people problem.\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#GCCBusiness\n#SMEOman",
+  "post": "A growth partner refers a client. The deal closes. Commission is owed.\n\nMost businesses track that in a spreadsheet someone last updated three weeks ago.\n\nSmartPRO Hub logs it automatically — from the moment a referred deal moves to \"won\" in the CRM pipeline.\n\nWhat that looks like in practice:\n\nThe referral source gets tagged at deal creation. Commission rate pulls from the partner's pre-set agreement. When the invoice is marked paid, the liability is calculated and recorded. The partner's earnings summary updates in real time.\n\nNo chasing down who referred whom. No reconciling payment dates at month-end. No partner calling to ask why their number doesn't match yours.\n\nWe built this because ops directors and finance managers at GCC businesses were spending hours every month on something that should take minutes — and making avoidable errors when deals moved fast.\n\nCustomers running partner programs alongside HR software on the Oman side tell us the biggest win isn't the automation. It's what it does for partner relationships. When someone can log in and see exactly where they stand, the disputes stop before they start.\n\nIf commission conversations keep coming up in your business, that's a systems problem. Not a people problem.\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#GCCBusiness\n#SMEOman",
   "char_count": 1435,
   "generated_at": "2026-07-15T08:55:54.211000+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 1,
-  "status": "draft",
+  "status": "approved",
   "published": false,
-  "approved": false,
-  "approval_required": true,
-  "dry_run": true,
-  "has_variant": true
+  "approved": true,
+  "approval_required": false,
+  "dry_run": false,
+  "has_variant": true,
+  "approved_at": "2026-07-23T15:15:18.502353+00:00"
 }

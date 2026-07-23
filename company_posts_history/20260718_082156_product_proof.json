@@ -1,19 +1,20 @@
 {
   "pillar": "product_proof",
   "topic": "A PRO services firm scaled from 15 to 60 client companies without adding admin headcount",
-  "format": "Lead with a specific customer outcome \u2014 time saved, errors eliminated, hours recovered \u2014 then describe what changed",
+  "format": "Lead with a specific customer outcome — time saved, errors eliminated, hours recovered — then describe what changed",
   "language": "en",
   "segment": "A",
   "publish_day": "Monday",
-  "post": "One PRO services firm grew from 15 to 60 client companies.\n\nSame admin team. Not one new hire.\n\nNo burnout. No WhatsApp thread with 200 unread messages split across six groups that nobody's actually reading.\n\nWhat changed was simple: they stopped running the business on spreadsheets and scattered trackers and started using SmartPRO Hub. Work permit tracking, Ministry of Labour filings, SPF and Omanization compliance, WPS payroll, client billing \u2014 all of it in one place, connected.\n\nNew client onboards? The workflow runs. Deadlines get tracked. Documents get filed. Invoices go out. Nobody has to remind anyone.\n\nThe team went from chasing tasks to actually running them.\n\nOMR 49/month. The Business plan does what most firms are currently paying a part-time employee to fumble through.\n\nIf your admin load is growing and your headcount can't keep up, you don't have a hiring problem. You have a systems problem.\n\nHow many client deadlines is your team tracking in a spreadsheet right now?\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#WPS\n#Omanization",
+  "post": "One PRO services firm grew from 15 to 60 client companies.\n\nSame admin team. Not one new hire.\n\nNo burnout. No WhatsApp thread with 200 unread messages split across six groups that nobody's actually reading.\n\nWhat changed was simple: they stopped running the business on spreadsheets and scattered trackers and started using SmartPRO Hub. Work permit tracking, Ministry of Labour filings, SPF and Omanization compliance, WPS payroll, client billing — all of it in one place, connected.\n\nNew client onboards? The workflow runs. Deadlines get tracked. Documents get filed. Invoices go out. Nobody has to remind anyone.\n\nThe team went from chasing tasks to actually running them.\n\nOMR 49/month. The Business plan does what most firms are currently paying a part-time employee to fumble through.\n\nIf your admin load is growing and your headcount can't keep up, you don't have a hiring problem. You have a systems problem.\n\nHow many client deadlines is your team tracking in a spreadsheet right now?\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#WPS\n#Omanization",
   "char_count": 1175,
   "generated_at": "2026-07-18T08:21:56.265138+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 1,
-  "status": "draft",
+  "status": "approved",
   "published": false,
-  "approved": false,
-  "approval_required": true,
-  "dry_run": true,
-  "has_variant": true
+  "approved": true,
+  "approval_required": false,
+  "dry_run": false,
+  "has_variant": true,
+  "approved_at": "2026-07-23T15:06:45.735311+00:00"
 }

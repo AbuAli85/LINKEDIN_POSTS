@@ -157,6 +157,12 @@ def _company_draft_card(post: dict) -> str:
         f'data-pillar="{html.escape(pillar)}" onclick="showReviseModal(this)">'
         f'&#9998; Request Changes</button>'
     )
+    delete_btn = (
+        f'<button type="button" class="delete-btn" data-path="{draft_path}" '
+        f'data-filename="{html.escape(filename)}" onclick="showDeleteModal(this)" '
+        f'aria-label="Delete draft {html.escape(filename)}" '
+        f'title="Delete this draft permanently"><span aria-hidden="true">&#128465;</span> Delete</button>'
+    )
 
     body_html = html.escape(body)
     return f"""
@@ -172,6 +178,7 @@ def _company_draft_card(post: dict) -> str:
       <div class="review-actions">
         <span class="review-label">Review:</span>
         {revise_btn}
+        {delete_btn}
       </div>
       {approve_btn}
       <div class="variant-link">{draft_path}</div>

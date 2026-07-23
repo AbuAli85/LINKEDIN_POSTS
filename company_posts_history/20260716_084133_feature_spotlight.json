@@ -5,8 +5,8 @@
   "language": "en",
   "segment": "A",
   "publish_day": "Wednesday",
-  "post": "Most Oman HR teams close a cross-border employment contract like this:\n\nPrint. Sign. Scan. WhatsApp to candidate. Wait. Chase. Receive a blurry PDF. File it somewhere.\n\nThree signatories across Oman and the UAE? That process takes days. Sometimes weeks.\n\nSmartPRO Hub customers skip all of it.\n\nOne contract. Three signatories. Two countries. Every signature collected, timestamped, and stored inside the same platform already handling their WPS payroll, Ministry of Labour filings, and work permit tracking.\n\nNo printing. No WhatsApp chasing. No \"wait, which version did they sign?\"\n\nWe added e-signature because HR managers kept telling us the same thing: writing the contract was never the hard part. Getting it signed and filed without losing three days to back-and-forth \u2014 that was the problem.\n\nThe moment the last signature lands, the contract is audit-ready. Nothing to chase down later, nothing to re-scan, nothing to dig out of someone's email when compliance asks for it.\n\nFor companies hiring across GCC borders, that matters more than it might sound. A candidate who receives a clean, professional contract and signs it in minutes starts their first day feeling like they joined a real company. One who spends a week chasing a readable PDF starts their first day with a small but nagging doubt.\n\nOne platform. One source of truth. Starting from OMR 12/month.\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#GCCBusiness\n#SMEOman",
-  "char_count": 1560,
+  "post": "Most Oman HR teams close a cross-border employment contract like this:\n\nPrint. Sign. Scan. WhatsApp to candidate. Wait. Chase. Receive a blurry PDF. File it somewhere.\n\nThree signatories across Oman and the UAE? That process takes days, sometimes weeks.\n\nSmartPRO Hub customers skip all of it.\n\nOne contract. Three signatories. Two countries. Every signature collected, timestamped, and stored inside the same platform already handling their WPS payroll, Ministry of Labour filings, and work permit tracking.\n\nNo printing. No WhatsApp chasing. No wait, which version did they sign.\n\nWe added e-signature because HR managers kept telling us the same thing: writing the contract was never the hard part. Getting it signed and filed without losing three days to back-and-forth was the problem.\n\nThe moment the last signature lands, the contract is audit-ready. Nothing to chase down later, nothing to re-scan, nothing to dig out of someone's email when compliance asks for it.\n\nFor companies hiring across GCC borders, that matters. A candidate who signs a clean contract in minutes starts day one feeling like they joined a real company. One who chases a readable PDF for a week starts with a small, nagging doubt.\n\nOne platform. One source of truth. Starting from OMR 12/month.\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#GCCBusiness\n#SMEOman",
+  "char_count": 1465,
   "generated_at": "2026-07-16T08:41:33.078024+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 1,
@@ -14,5 +14,6 @@
   "published": false,
   "approved": false,
   "approval_required": true,
-  "dry_run": true
+  "dry_run": true,
+  "edited_by": "manual-trim"
 }

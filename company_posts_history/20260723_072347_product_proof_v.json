@@ -1,0 +1,20 @@
+{
+  "pillar": "product_proof",
+  "topic": "The HR manager who finally stopped processing leave requests on WhatsApp — what changed in week one",
+  "format": "Before/after of a single workflow: same task, two completely different experiences",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "23 leave requests. Zero WhatsApp pings. Five days after go-live.\n\nAn HR manager at a mid-size trading company in Muscat had been running approvals across three group chats and 47 unread voice notes. That was her system. That was her job.\n\nShe wasn't asking for anything radical. She just wanted to stop being a human message-sorting service and actually do HR work.\n\nSmartPRO Hub replaced the group chats with a structured HR and workforce module — leave requests, approvals, attendance, and WPS payroll all in one place. No more digging through chat history to figure out who approved what and when.\n\nBy day five: 23 leave requests processed. Not one WhatsApp ping.\n\nThe requests didn't disappear. The chaos did.\n\nWe built SmartPRO Hub because HR software Oman businesses actually use shouldn't require a manual or an IT person on standby. It runs in Arabic or English, from day one. That's it.\n\nIf your HR team is still managing approvals through chat, that's not a communication problem. That's a systems problem.\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#WPS\n#GCCBusiness",
+  "char_count": 1197,
+  "generated_at": "2026-07-23T07:23:59.444327+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260723_072348_product_proof.json"
+}

@@ -1,0 +1,19 @@
+{
+  "pillar": "product_proof",
+  "topic": "How a multi-branch operation manages payroll for four locations from one screen",
+  "format": "Before/after of a single workflow: same task, two completely different experiences",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "Before SmartPRO Hub: four branches, four spreadsheets, four payroll runs — and a finance manager burning the last week of every month chasing reconciliation errors across all of them.\n\nAfter: one screen, one payroll run, all four locations processed together. WPS files sent directly to the bank. SPF contributions calculated automatically. Omanization ratios verified before submission.\n\nSame company. Same team. Half the time.\n\nMulti-branch payroll in Oman has a problem most owners don't say out loud. Every location runs a little differently. Headcounts shift. Overtime varies. One branch manager submits late and the whole cycle slips. Then someone in finance spends three days finding out why.\n\nSmartPRO Hub puts it all in one place. Every employee, every branch, one dashboard — with WPS compliance, Ministry of Labour filings, and SPF calculations built in. No exporting to another tool. No re-entering data someone already entered somewhere else. No 9pm calls before salary day.\n\nWe built it this way because fragmented tools push accountability into the cracks between them. In payroll, that's where the money goes.\n\nIf your finance team is still manually stitching branch payrolls together each month, that's the first thing worth fixing.\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#PayrollOman\n#WPS\n#OmanBusiness\n#GCCBusiness",
+  "char_count": 1435,
+  "generated_at": "2026-07-26T07:25:08.012905+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "has_variant": true
+}

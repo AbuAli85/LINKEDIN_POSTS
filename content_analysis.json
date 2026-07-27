@@ -1,29 +1,36 @@
 {
-  "generated_at": "2026-07-22T06:53:27.820300+00:00",
-  "total_posts_analyzed": 58,
+  "generated_at": "2026-07-27T08:44:46.591074+00:00",
+  "total_posts_analyzed": 62,
   "pillar_performance": {
-    "tech": {
+    "proof": {
+      "posts": 12,
+      "total_reactions": 0,
+      "total_comments": 0,
+      "total_shares": 0,
+      "avg_engagement_rate": 0.0
+    },
+    "pain": {
       "posts": 9,
       "total_reactions": 0,
       "total_comments": 0,
       "total_shares": 0,
       "avg_engagement_rate": 0.0
     },
-    "proof": {
-      "posts": 11,
-      "total_reactions": 0,
-      "total_comments": 0,
-      "total_shares": 0,
-      "avg_engagement_rate": 0.0
-    },
     "sanad_pro": {
+      "posts": 12,
+      "total_reactions": 0,
+      "total_comments": 0,
+      "total_shares": 0,
+      "avg_engagement_rate": 0.0
+    },
+    "tech": {
       "posts": 11,
       "total_reactions": 0,
       "total_comments": 0,
       "total_shares": 0,
       "avg_engagement_rate": 0.0
     },
-    "vision": {
+    "feasibility": {
       "posts": 5,
       "total_reactions": 0,
       "total_comments": 0,
@@ -37,8 +44,8 @@
       "total_shares": 0,
       "avg_engagement_rate": 0.0
     },
-    "pain": {
-      "posts": 9,
+    "vision": {
+      "posts": 5,
       "total_reactions": 0,
       "total_comments": 0,
       "total_shares": 0,
@@ -51,8 +58,8 @@
       "total_shares": 0,
       "avg_engagement_rate": 0.0
     },
-    "feasibility": {
-      "posts": 5,
+    "marketing": {
+      "posts": 1,
       "total_reactions": 0,
       "total_comments": 0,
       "total_shares": 0,
@@ -64,49 +71,42 @@
       "total_comments": 0,
       "total_shares": 0,
       "avg_engagement_rate": 0.0
-    },
-    "marketing": {
-      "posts": 1,
-      "total_reactions": 0,
-      "total_comments": 0,
-      "total_shares": 0,
-      "avg_engagement_rate": 0.0
     }
   },
   "hook_performance": {
     "story": 0.0,
-    "data-lead": 0.0,
-    "bold-statement": 0.0,
-    "question": 0.0,
-    "contrast": 0.0,
     "numbered-list": 0.0,
+    "bold-statement": 0.0,
+    "contrast": 0.0,
+    "data-lead": 0.0,
+    "question": 0.0,
     "observation": 0.0
   },
   "frequency_multipliers": {
-    "tech": 1.0,
     "proof": 1.0,
-    "sanad_pro": 1.0,
-    "vision": 1.0,
-    "sanad_pro_ar": 1.0,
     "pain": 1.0,
-    "leadership": 1.0,
+    "sanad_pro": 1.0,
+    "tech": 1.0,
     "feasibility": 1.0,
-    "pain_ar": 1.0,
-    "marketing": 1.0
+    "sanad_pro_ar": 1.0,
+    "vision": 1.0,
+    "leadership": 1.0,
+    "marketing": 1.0,
+    "pain_ar": 1.0
   },
-  "best_pillar": "tech",
+  "best_pillar": "proof",
   "best_hook_style": "story",
   "recommended_emphasis": [
-    "tech",
     "proof",
-    "sanad_pro",
-    "vision",
-    "sanad_pro_ar",
     "pain",
-    "leadership",
+    "sanad_pro",
+    "tech",
     "feasibility",
-    "pain_ar",
-    "marketing"
+    "sanad_pro_ar",
+    "vision",
+    "leadership",
+    "marketing",
+    "pain_ar"
   ],
   "demo_pipeline": {
     "total_qualified_leads": 22,

@@ -1,0 +1,20 @@
+{
+  "pillar": "proof",
+  "topic": "The direct bank integration that eliminated manual WPS submission permanently",
+  "format": "State the result first, then walk backwards step by step to show exactly what made it possible",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "Four months. Zero manual WPS portal logins.\n\nOne finance team in Muscat hasn't logged into the Ministry of Labour portal once since they switched. That's not a rounding error — that's four consecutive payroll cycles without touching it.\n\nBefore SmartPRO Hub, the routine looked like this: log into the portal, format salary files by hand, chase bank confirmations, and wait to see if anything bounced. Every month. One formatting error meant a full rejection. Start the whole thing over.\n\nAfter connecting SmartPRO Hub's direct bank integration, payroll data goes straight from the HR module to WPS submission. No export. No reformatting. No portal login. The bank confirms, the record updates, and that's it.\n\nEmployee contracts, end-of-service gratuity calculations, SPF contributions — all in one place. Nothing falls through the cracks on payday because there's no manual handoff where something can go wrong.\n\nAt OMR 49/month on the Business plan, most teams recover that cost in the first hour they're not spending fixing a rejected WPS file.\n\nIf your current WPS process still involves a spreadsheet and a silent prayer, sort it out before next payday.\n\nBook a free 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=proof\nOr WhatsApp: https://wa.me/96879665522?text=Hi%2C%20I%20saw%20your%20LinkedIn%20post%20and%20want%20to%20learn%20more%20about%20SmartPRO%20Hub.\n\n#OmanBusiness\n#HRManagement\n#PayrollOman\n#WPS\n#SmartPROHub",
+  "char_count": 1487,
+  "generated_at": "2026-07-27T07:09:40.078269+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 2,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260727_070928_proof.json"
+}

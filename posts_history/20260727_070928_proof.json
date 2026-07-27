@@ -1,0 +1,19 @@
+{
+  "pillar": "proof",
+  "topic": "The direct bank integration that eliminated manual WPS submission permanently",
+  "format": "State the result first, then walk backwards step by step to show exactly what made it possible",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "A finance manager in Muscat told me last month: \"I haven't touched the WPS portal manually in four months.\"\n\nHere's exactly how that happened.\n\nBefore SmartPRO Hub, her team was logging into the Ministry of Labour portal, formatting salary files by hand, chasing bank confirmations, and hoping nothing bounced — every single month.\n\nOne formatting error and the whole file got rejected. Start over.\n\nAfter connecting SmartPRO Hub's direct bank integration, payroll data moves straight from the HR module to WPS submission. No export. No reformatting. No portal login.\n\nThe bank confirms. The record updates. Done.\n\nEverything lives in one system — employee contracts, end-of-service gratuity calculations, SPF contributions. Nothing gets missed on payday.\n\nAt OMR 49/month on the Business plan, most teams cover that cost in the first hour they're not spending on a rejected WPS file.\n\nIf your WPS process still involves a spreadsheet and a prayer, fix it before next payday.\n\nBook a free 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=proof\nOr WhatsApp: https://wa.me/96879665522?text=Hi%2C%20I%20saw%20your%20LinkedIn%20post%20and%20want%20to%20learn%20more%20about%20SmartPRO%20Hub.\n\n#OmanBusiness\n#HRManagement\n#PayrollOman\n#WPS\n#SmartPROHub",
+  "char_count": 1303,
+  "generated_at": "2026-07-27T07:09:28.740845+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 2,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "has_variant": true
+}

@@ -1,0 +1,19 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "WhatsApp Business integration — how client requests flow into a tracked case instead of a group chat",
+  "format": "Lead with a quote or question from a customer, then explain the feature built in response",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "\"Who approved that request? I saw it in the group chat but now I can't find it.\"\n\nThat's a real message. Sent on a real Monday morning. Probably more than once.\n\nHere's what usually happens: a client or employee sends a request over WhatsApp, it sinks under 40 other messages, someone screenshots it, someone else assumes it's handled. Nobody tracks it. Nobody owns it.\n\nSmartPRO Hub fixes exactly that.\n\nWhen a request comes in through WhatsApp Business, it doesn't land in a group chat. It flows straight into a tracked case inside the platform — assigned to a team member, timestamped, tied to that employee or client record. Every follow-up, update, and resolution lives in one place.\n\nNo screenshots. No chasing. No \"I thought you handled it.\"\n\nPRO services teams and Sanad office managers in Oman tell us this one change cut their response time in half. Because when every request has an owner and a status, things actually get done.\n\nWhatsApp stays as the channel. SmartPRO Hub becomes the system behind it.\n\nIf your team is still running requests through group chats, that's where to start.\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#GCCBusiness\n#SMEOman",
+  "char_count": 1287,
+  "generated_at": "2026-07-29T07:28:31.494896+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "has_variant": true
+}

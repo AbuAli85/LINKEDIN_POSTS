@@ -551,6 +551,11 @@ def _validate(post: str, language: str = "en", require_link: bool = False) -> st
         for phrase in BANNED_PHRASES:
             if phrase in lower:
                 return f"contains banned phrase: {phrase!r}"
+    # Brand hashtag enforcement — the canonical #SmartPROHub form must be used
+    # whenever a SmartPro brand tag appears (safety net behind _sanitise_hashtags,
+    # which normalises variants at generation time but not on every code path).
+    if "#SmartPROHub" not in post and re.search(r"#smart_?pro", post, re.IGNORECASE):
+        return "contains non-canonical SmartPro hashtag variant — must be #SmartPROHub"
     return None
 
 
@@ -991,13 +996,7 @@ def generate_hook_variant(original: dict, pillar_config: dict) -> dict | None:
 
     except Exception as exc:
         print(f"hook_variant: SKIP — {exc}")
-        # Brand hashtag enforcement — must contain canonical form
-    if "#SmartPROHub" not in post:
-        import re
-        if re.search(r"#[Ss]mart[Pp]ro", post):
-            return "contains non-canonical SmartPro hashtag variant — must be #SmartPROHub"
-
-    return None
+        return None
 
 
 def save_post(post_data: dict) -> Path:

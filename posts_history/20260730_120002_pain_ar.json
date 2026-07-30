@@ -1,0 +1,19 @@
+{
+  "pillar": "pain_ar",
+  "language": "ar",
+  "segment": "A",
+  "publish_day": "Sunday",
+  "topic": "End-of-service calculation errors — how they happen and exactly what they cost",
+  "format": "State the uncomfortable truth about how most Oman businesses handle this problem — be specific and honest, not preachy",
+  "post": "موظف أمضى ثماني سنوات في الشركة. قدّم استقالته. المحاسب فتح ملف Excel وحسب مخصص نهاية الخدمة بطريقة واحدة على كامل المدة.\n\nالنتيجة: رقم خاطئ — والشركة لا تعلم.\n\nقانون العمل الجديد غيّر طريقة الحساب. الفترة قبل يوليو ٢٠٢٣ تُحسب بقاعدة، وما بعدها بقاعدة أخرى. من يحسب المدة كاملة بالطريقة القديمة يبخس الموظف حقه، ومن يطبق الطريقة الجديدة على كل السنوات يدفع أكثر من اللازم.\n\nفي الحالتين: إما نزاع عمالي أمام وزارة العمل، أو مبالغ تُدفع بلا داعٍ.\n\nوالأصعب؟ معظم الشركات لن تكتشف الخطأ اليوم. ستكتشفه بعد سنتين، عندما يغادر موظف قديم ويراجع الرقم مع مكتب استشاري — أو مع الوزارة.\n\nاسأل محاسبك سؤالاً واحداً هذا الأسبوع: كيف نحسب مخصص نهاية الخدمة لموظف عُيّن قبل ٢٠٢٣؟\n\nإن كان الجواب \"بطريقة واحدة على كل المدة\" — لديك التزامات مالية مسجلة بأرقام خاطئة الآن.\n\nاحجز عرضاً تجريبياً مجانياً: ⁦https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=pain-ar⁩\n\n#OmanBusiness\n#HRManagement\n#SmartPROHub\n#GCCBusiness",
+  "char_count": 939,
+  "generated_at": "2026-07-30T18:39:00.304523+00:00",
+  "model": "manual-cowork-session",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "source": "week1-pain-test (Cowork drafted, owner review required); moved to Sunday to avoid Wednesday collision with approved proof post"
+}

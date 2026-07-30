@@ -85,6 +85,27 @@ BANNED_PHRASES = [
     "hot take:",
 ]
 
+# Catches invented customer testimonials: a quoted/attributed claim ("told me",
+# "told us", "said", or a post opening on a direct quote), or an anonymous-but-
+# specific customer profile ("a 200-person company", "one HR manager") paired
+# with an absolute/superlative outcome (zero churn, grew from X to Y, N
+# consecutive months) that reads as a real result but can't be verified.
+# Empirically checked against every fabricated draft caught this session (all
+# match) and every already-validated clean post (no false positives) before
+# being wired in as a hard block rather than a soft warning.
+_NUM_WORD = r"(?:\d+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)"
+_FABRICATED_TESTIMONIAL_RE = re.compile(
+    r"\b(?:a|an|one)\s+[\w'-]*\s*(?:hr|finance|ops|operations)?\s*manager\b"
+    r"[\w\s,.'\"“”:;—-]{0,120}?\b(?:told (?:me|us)|said|from an? )\b"
+    r"|\btold (?:me|us)\b[\w\s,.'\"“”:;—-]{0,120}?[\"“]"
+    r"|\b(?:a|one|another)\s+(?:" + _NUM_WORD + r"[\-\s]person\s+)?[\w\s]{0,25}?"
+    r"\b(?:firm|company|business|office)\b[\w\s,.'\"“”:;—-]{0,150}?"
+    r"\b(?:zero (?:client )?churn|zero \w+ rejections?|grew from \d+ to \d+|"
+    + _NUM_WORD + r" (?:consecutive|straight) months?)\b"
+    r"|^[\"“][^\"”\n]{10,250}[\"”]",
+    re.IGNORECASE,
+)
+
 SYSTEM_PROMPT = """You are an elite LinkedIn ghostwriter behind several 100K+ follower accounts in tech and business.
 
 VOICE & STRUCTURE
@@ -551,6 +572,12 @@ def _validate(post: str, language: str = "en", require_link: bool = False) -> st
         for phrase in BANNED_PHRASES:
             if phrase in lower:
                 return f"contains banned phrase: {phrase!r}"
+        if _FABRICATED_TESTIMONIAL_RE.search(post):
+            return (
+                "contains an invented customer testimonial or unverifiable specific "
+                "outcome (a quoted/attributed claim, or a named persona with a "
+                "specific company size + result) — will retry"
+            )
     # Brand hashtag enforcement — the canonical #SmartPROHub form must be used
     # whenever a SmartPro brand tag appears (safety net behind _sanitise_hashtags,
     # which normalises variants at generation time but not on every code path).

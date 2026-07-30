@@ -5,14 +5,16 @@
   "language": "en",
   "segment": "A",
   "publish_day": "Wednesday",
-  "post": "\"Half my team reads Arabic. My system is English-only. Every policy update, I'm translating manually.\"\n\nThat's a real problem from an HR manager at a mid-size trading company in Muscat.\n\nIt's also why SmartPRO Hub ships as a fully bilingual platform — Arabic and English, switched at the user level, not the account level.\n\nHere's why that distinction matters.\n\nWhen language is account-wide, an Arabic-speaking operations clerk and an English-reading finance director can't use the same system comfortably. One of them is always working in a second language. Errors happen. Approvals slow down.\n\nSmartPRO Hub lets each user choose their own interface language. The data stays unified. The experience doesn't force anyone to squint through a system built for someone else.\n\nFor Oman businesses managing mixed-nationality workforces — with WPS payroll, Omanization targets, and Ministry of Labour filings all in one place — this isn't a cosmetic feature. It's operational.\n\nYour HR software Oman needs should reflect the workforce you actually have, not the one a foreign platform assumed you had.\n\nWhich language do most of your team's HR errors trace back to — system complexity, or genuine language friction?\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#Omanization\n#GCCBusiness",
-  "char_count": 1403,
+  "post": "Half my team reads Arabic. My system is English-only. Every policy update, I retype it twice.\n\nThat's the quiet tax most Oman HR systems charge without anyone naming it.\n\nIt's also why SmartPRO Hub ships as a fully bilingual platform — Arabic and English, switched at the user level, not the account level.\n\nHere's why that distinction matters.\n\nWhen language is account-wide, an Arabic-speaking operations clerk and an English-reading finance director can't use the same system comfortably. One of them is always working in a second language. Errors happen. Approvals slow down.\n\nSmartPRO Hub lets each user choose their own interface language. The data stays unified. The experience doesn't force anyone to squint through a system built for someone else.\n\nFor Oman businesses managing mixed-nationality workforces — with WPS payroll, Omanization targets, and Ministry of Labour filings all in one place — this isn't a cosmetic feature. It's operational.\n\nYour HR software Oman needs should reflect the workforce you actually have, not the one a foreign platform assumed you had.\n\nWhich language do most of your team's HR errors trace back to — system complexity, or genuine language friction?\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#Omanization\n#GCCBusiness",
+  "char_count": 1387,
   "generated_at": "2026-07-30T07:23:04.626765+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 1,
-  "status": "draft",
+  "status": "approved",
   "published": false,
-  "approved": false,
-  "approval_required": true,
-  "dry_run": true
+  "approved": true,
+  "approval_required": false,
+  "dry_run": false,
+  "edited_by": "manual-defabricate",
+  "approved_at": "2026-07-30T15:27:52.973118+00:00"
 }

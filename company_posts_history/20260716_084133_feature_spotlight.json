@@ -1,6 +1,6 @@
 {
   "pillar": "feature_spotlight",
-  "topic": "E-signature for employment contracts \u2014 three signatures across two countries, end-to-end in one platform",
+  "topic": "E-signature for employment contracts — three signatures across two countries, end-to-end in one platform",
   "format": "Compare 'how most Oman businesses do X today' with 'how SmartPRO Hub customers do X'",
   "language": "en",
   "segment": "A",
@@ -10,10 +10,13 @@
   "generated_at": "2026-07-16T08:41:33.078024+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 1,
-  "status": "draft",
+  "status": "deleted",
   "published": false,
   "approved": false,
-  "approval_required": true,
+  "approval_required": false,
   "dry_run": true,
-  "edited_by": "manual-trim"
+  "edited_by": "manual-trim",
+  "rejected": true,
+  "rejected_at": "2026-07-30T15:27:52.973118+00:00",
+  "rejected_reason": "triage 2026-07-30: stale draft / losing variant of an approved pair"
 }

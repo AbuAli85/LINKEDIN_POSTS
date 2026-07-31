@@ -255,6 +255,69 @@ and the launch post will be stronger for having the hold on record first.
 
 ---
 
+## The Omanisation Gate
+
+**Feature:** Omanisation ratio tracking. **Status:** partially live — the engine
+is real, the alerting is not, and two sector-target tables disagree.
+Verified 2026-07-31.
+
+**Publishable:**
+
+- That SmartPRO computes your Omanisation ratio from live employee data and
+  compares it to your sector target
+- That the dashboard flags you when you fall below target — a status badge
+  (`omanizationBadgeVariant` returns `destructive`), visible on the Workforce
+  Intelligence page
+- That snapshot history exists, so the ratio can be reviewed over time
+
+**Not publishable:**
+
+- **Any specific sector percentage.** See the discrepancy below.
+- **"Weekly"**, or any cadence. `captureOmanizationSnapshot` is a
+  `protectedProcedure` — on demand, when called. Nothing in `server/jobs/`
+  (35 scheduled jobs) touches omanization.
+- **"Alerts" or "notifications."** The automation trigger union is
+  `visa_expiry | work_permit_expiry | passport_expiry | completeness_below |
+  no_department | contract_expiry | booking_overdue | payment_overdue |
+  client_inactive`. There is no omanisation trigger, so nothing fires. A badge
+  you see when you visit a page is not an alert.
+
+**⚠️ The two sector tables contradict each other.** These are regulatory
+minimums, and the engine uses the first one:
+
+| Sector | `shared/omanization.ts` (drives the badge) | `omanCompliance.ts` (reference) |
+|---|---|---|
+| Retail | 35% | 50% |
+| Construction | **5%** | **30%** |
+| Technology / IT | 20% | 35% |
+| Healthcare | *absent* → defaults to 35% | 65% |
+| Tourism / hospitality | 45% | 45% |
+
+Construction differs by 25 points. Until an authoritative source settles which
+table is right, **no sector percentage is publishable**, and the compliance
+badge itself may be telling customers they are compliant when they are not.
+That is a correctness issue, not a copy issue — raise it before drafting.
+
+**What lifts the copy half of this gate** — either correct
+`client/src/data/blogPosts.ts:230` and `:337` (which currently claim real-time
+flagging and "alerts as you approach the limit") to describe passive display,
+**or** add an omanisation trigger to the automation engine. The rate, target and
+snapshot history already exist, so the trigger is the smaller change. That is a
+product decision; a drafter should not assume either outcome.
+
+**Precedent:** `af59c891a` — *"remove fabricated testimonials and vanity
+metrics"* — cleaned this same class in the same file.
+
+**Sources:** `shared/omanization.ts` (`computeOmanizationRate`,
+`SECTOR_OMANIZATION_TARGETS`, `DEFAULT_OMANIZATION_TARGET_PERCENT = 35`) ·
+`server/data/omanCompliance.ts:515` (`OMANISATION_RATES`) ·
+`server/routers/companies.ts:171` (snapshot capture) ·
+`server/routers/automation.ts:1174` (rate → health score) ·
+`WorkforceIntelligencePage.tsx:372` (KPI card) ·
+`client/src/data/blogPosts.ts:230,337` (the claims).
+
+---
+
 ## Worked Example 1 — LinkedIn Post (English)
 
 **Scenario:** the Article 61 gratuity calculator went live. Show the discipline

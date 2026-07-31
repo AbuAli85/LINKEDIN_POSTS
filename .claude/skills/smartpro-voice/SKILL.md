@@ -218,6 +218,33 @@ validation pass is not clearance.
 false about the product. "Live now" is a factual assertion and it fails if the
 feature is gated.
 
+### Verified by execution, 2026-07-31
+
+Not inferred from reading the source — `_validate()` was run directly, Python
+3.12.10, against `generator.py` at `99d9d6e` (*"block fabricated customer
+testimonials in `_validate()`"* — the commit that added the regex being tested).
+
+| Draft | Chars | Verdict |
+|---|---|---|
+| The fabricated original: invented client volume, invented rejection code, invented October rule change | 816 | **PASS** |
+| Three stacked product claims, padded past the floor so length could not mask the result | 866 | **PASS** |
+| Corrected draft: sourced, one idea, no product claims | 884 | **PASS** |
+| Same corrected draft under `require_link=True` | 884 | **FAIL** — CTA link dropped |
+
+`_FABRICATED_TESTIMONIAL_RE` matched nothing in any of the three.
+
+**The fabricated post passed.** It would have entered the queue with a green
+light. That is the demonstration, not an argument.
+
+**Scope, therefore:** `_validate()` enforces mechanical gates — length, link
+presence, hashtag shape, markdown, mojibake, banned phrases, and invented
+*testimonials*. It does not check sourcing, product state, or sales discipline.
+Those three are human, every time.
+
+*This is a claim about one version of `_validate()`. If a sourcing check lands
+later, the pinned SHA is what tells you this finding went stale rather than
+wrong — re-run before trusting it.*
+
 ---
 
 ## The Counsel Gate

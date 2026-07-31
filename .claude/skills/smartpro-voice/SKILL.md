@@ -263,7 +263,7 @@ distinguishing token — `26`, `52/2023`, the sector percentage, the feature nam
 that one asks whether a citation fits its subject, this one asks where else the
 claim already went.
 
-### The review sequence — run all six, in order
+### The review sequence — run all eight, in order
 
 Not principles to recall. A sequence to execute against **every** factual claim
 in a draft. The failure this prevents is running the guard the last defect
@@ -289,6 +289,36 @@ compliance. Both real, separately. `wpsValidation.ts` does not reference
 Omanisation; `crCategory` does not exist; `getSectorOmanizationTarget` keys off a
 free-text industry string. The post's load-bearing sentence spanned two
 subsystems and every earlier review passed it.
+
+**7. Does the system already prevent the thing you are describing?**
+
+Run this against the **argument**, not the claims. Steps 1–6 ask whether
+evidence *supports* a statement. This asks whether evidence *defeats* it. A post
+can be entirely sourced and still describe a failure that cannot occur, because
+the defence against it already exists in the code.
+
+A draft in this session built its central example on a mistyped IBAN producing a
+clean WPS file. Nothing in it was unsourced. It was **counter-sourced**:
+`wpsService.ts:116` rejects on `!isValidIbanChecksum(iban)` during row assembly,
+so that exact failure is already handled. The fix was to find the case that does
+survive — a valid IBAN pointing at the wrong account — which made the post truer
+and sharper than the version with the vivid wrong example.
+
+Ask it plainly: if this is such a problem, why has nobody solved it? Sometimes
+the answer is that somebody has.
+
+**8. Publish the sourcing line with the draft.**
+
+Not optional, and not only for the record. Without it a reviewer cannot separate
+a verified specific from a confident reconstruction — both read as authority —
+so every number costs them a lookup. In this session that put four already-sourced
+facts and three unsound ones in the same pile, and the reviewer had to treat them
+identically.
+
+Sourcing tells a reviewer **where not to look**, which is the scarcer thing.
+Cite file and line for each concrete claim, and name the claims that have nothing
+behind them. An unsourced line you have flagged is a decision. An unsourced line
+you have not is a trap.
 
 ### Verified by execution, 2026-07-31
 

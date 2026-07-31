@@ -615,5 +615,21 @@ Anyone with the repo gets the same voice — Usman, Ahmad, or any future hire.
 disagreement, the code wins: `generator.py` → `SYSTEM_PROMPT`, `_validate()`,
 `BANNED_PHRASES`; `content_strategy.py` → `PILLARS`, `HASHTAGS`, `CTA_*`.
 
-**Refresh** every 6–12 months, or when the business shifts — new partnerships,
-new products, new chapters.
+**Refresh.** Calendar review every 6–12 months, or when the business shifts — new
+partnerships, new products, new chapters. But the calendar is the weaker half.
+
+Reading this file finds **consistency** failures — it contradicting itself,
+visible end to end. Four were found that way in one pass, including a principle
+that asserted as doctrine the error its own table documents. Writing a draft
+against it finds **coverage** failures — territory it never addressed. Those no
+re-read can surface, because a spec silent on something reads exactly like a spec
+that does not need to be. Steps 7 and 8 came from a single draft written against
+this file, not from reading it.
+
+And the gaps are gated in sequence. Step 7 — is the argument defeated by the code
+— only became reachable because the draft was well sourced. A sloppy draft fails
+at step 1, and the validity of the argument never becomes the frontier while the
+claims still are. So the next gap sits behind a draft that clears all eight, and
+neither a weak test post nor another read-through can reach it.
+
+Write real posts against it. That is the refresh.

@@ -218,6 +218,31 @@ validation pass is not clearance.
 false about the product. "Live now" is a factual assertion and it fails if the
 feature is gated.
 
+### Transposition — the failure that survives a source check
+
+The dangerous errors in this domain are not invented. They are **real facts
+attached to the wrong subject**, lifted from an adjacent file. Asking "is this
+source real?" passes them every time. The check that catches them is:
+
+> **Does this citation govern *this* subject?**
+
+Three instances, all from one session:
+
+| Claimed | Actually | Real source |
+|---|---|---|
+| "RD 52/2023 governs Article 61 gratuity" | 52/2023 governs **SPF contributions**; gratuity is **53/2023** | `graphify-out/system-audit-report.md` |
+| "26-day divisor for post-decree gratuity" | `/26` is the **absence-deduction** rate | `payrollExecuteMonthly.ts:455`, `payroll.ts:641` |
+| "Retail 50%, healthcare 65% per `SECTOR_OMANIZATION_TARGETS`" | Those are `OMANISATION_RATES` — a different table, scoped to **loan applications** | `omanCompliance.ts:515` |
+
+Every one cites something real, in this codebase, correctly recorded where it
+lives. Each is wrong only about *what it governs*. Neighbouring subsystems —
+gratuity and SPF, payroll and absence, compliance and lending — use similar
+numbers for different purposes, so a number that looks right is weak evidence.
+
+Before citing a decree, a divisor, a rate, or a threshold: open the file it
+actually lives in and read what it says it is for. Not a search hit — the
+definition.
+
 ### Verified by execution, 2026-07-31
 
 Not inferred from reading the source — `_validate()` was run directly, Python

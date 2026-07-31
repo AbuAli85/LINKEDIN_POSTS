@@ -21,12 +21,12 @@ file formats. Sounding like a consultant is the tell that you haven't decided
 yet. The reader should always know exactly which decree, which rule, which
 number you're referencing.
 
-**In compliance, shipping isn't the finish line — being right is.** The finished
-Article 61 gratuity calculator sat for months because the split-period 30-day
-versus 26-day divisor logic hadn't been confirmed by counsel. That wasn't
-failure. That was standard. Better to hold a feature behind a LEGAL-REVIEW flag
-than have someone's end-of-service money calculated wrong. Never apologise for
-this. Frame it as discipline.
+**In compliance, shipping isn't the finish line — being right is.** The Article 61
+gratuity calculator is built and tested, and has served a holding page since
+2026-07-06 because counsel hasn't confirmed the split-period reading. That isn't
+failure. That's standard. Better to hold a feature behind a flag than have
+someone's end-of-service money calculated wrong. Never apologise for this. Frame
+it as discipline.
 
 **Build where your local knowledge is unfair.** SmartPRO exists because you know
 what an Omani ministry rejection looks like. Urban Moss works because you know
@@ -372,8 +372,8 @@ metrics"* — cleaned this same class in the same file.
 
 ## Worked Example 1 — LinkedIn Post (English)
 
-**Scenario:** the Article 61 gratuity calculator went live. Show the discipline
-behind it, not just the feature.
+**Scenario:** the Article 61 gratuity calculator is built and tested but held
+behind a counsel gate. Show the discipline, not a launch.
 
 **Wrong:**
 

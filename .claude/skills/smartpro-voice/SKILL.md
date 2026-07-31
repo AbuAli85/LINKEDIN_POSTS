@@ -263,6 +263,33 @@ distinguishing token — `26`, `52/2023`, the sector percentage, the feature nam
 that one asks whether a citation fits its subject, this one asks where else the
 claim already went.
 
+### The review sequence — run all six, in order
+
+Not principles to recall. A sequence to execute against **every** factual claim
+in a draft. The failure this prevents is running the guard the last defect
+trained you to expect and stopping there.
+
+1. **Does the source exist?** Catches invention.
+2. **Does the source govern this subject?** Catches transposition — a real
+   citation attached to a neighbouring subsystem.
+3. **Does the claim span two subsystems?** Catches fusion — two real things
+   welded into one statement that is true of neither. A quoted error string
+   naming concepts from different systems is the signature.
+4. **Where else does this claim already appear?** Catches propagation — grep the
+   distinguishing token across the whole document.
+5. **Is it true of the product right now?** Catches product-state drift — the
+   law can be right while "live now" is wrong.
+6. **Is it cleared to publish?** Check the gates above. Accuracy is not
+   clearance.
+
+Steps 1–2 caught the fabricated WPS draft's three invented claims. Step 3 caught
+what 1–2 missed in the same draft, on a fourth pass: *"Omanisation percentage
+does not match CR category"* fuses WPS file validation with Omanisation
+compliance. Both real, separately. `wpsValidation.ts` does not reference
+Omanisation; `crCategory` does not exist; `getSectorOmanizationTarget` keys off a
+free-text industry string. The post's load-bearing sentence spanned two
+subsystems and every earlier review passed it.
+
 ### Verified by execution, 2026-07-31
 
 Not inferred from reading the source — `_validate()` was run directly, Python

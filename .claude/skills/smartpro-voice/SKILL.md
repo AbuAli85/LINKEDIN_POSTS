@@ -243,6 +243,26 @@ Before citing a decree, a divisor, a rate, or a threshold: open the file it
 actually lives in and read what it says it is for. Not a search hit — the
 definition.
 
+### Propagation — fix every site of the claim, not the site of discovery
+
+A wrong fact rarely appears once. It gets found in one place, corrected there,
+and left standing everywhere it had already been generalized to.
+
+This file demonstrated it. The 26-day divisor was corrected in Worked Example 1
+and left intact in Core Voice Principles two hundred lines above, where it had
+been elevated into doctrine — so the document asserted the error as a principle
+and documented it as an error in the same breath, for four commits.
+
+**Position determines durability.** A table row looks like a claim and invites
+checking. A principle paragraph reads as philosophy and doesn't. The same wrong
+number survives longer in the second position, and it is read first.
+
+**The check:** after correcting any factual claim, grep the whole file for the
+distinguishing token — `26`, `52/2023`, the sector percentage, the feature name
+— and read every hit. It is the transposition check run in the other direction:
+that one asks whether a citation fits its subject, this one asks where else the
+claim already went.
+
 ### Verified by execution, 2026-07-31
 
 Not inferred from reading the source — `_validate()` was run directly, Python

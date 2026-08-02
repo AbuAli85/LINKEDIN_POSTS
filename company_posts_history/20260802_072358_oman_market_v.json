@@ -1,0 +1,20 @@
+{
+  "pillar": "oman_market",
+  "topic": "Why HR tech built outside the GCC consistently misses the Oman labour context",
+  "format": "Compare Oman's SME operations landscape today vs three years ago — what has changed, what is still broken",
+  "language": "en",
+  "segment": "B",
+  "publish_day": "Friday",
+  "post": "Two SPF violations. One lapsed work permit. Omanization targets missed. All from a single hiring cycle — and none of it caught until the damage was done.\n\nThat's what happens when HR software built for London or San Francisco gets sold into Muscat without modification.\n\nGlobal platforms are decent at headcount and leave management. What they don't touch: WPS payroll tied to Omani bank rails, SPF filing cycles, Ministry of Labour submission formats, Omanization ratios by department, Sanad office workflows. Companies treat these as edge cases until an audit proves otherwise. They're not edge cases. They're the compliance backbone of operating here.\n\nSince 2022, Oman's regulatory environment has moved quickly and with intent. Vision 2040 isn't aspirational wallpaper anymore — Omanization enforcement has real teeth, digital filings are expected as standard, and audit readiness has become something businesses actually get measured on.\n\nSmartPRO Hub was built for this specific context. WPS payroll, SPF compliance, work permit tracking, PRO services automation — one platform, bilingual, priced for SMEs from OMR 12/month.\n\nOur customers stopped duct-taping five systems together just to stay compliant. They run it from one place now.\n\nThe question is simple: is your HR software actually built for Oman, or just sold here?\n\nInvestor and partnership inquiries: https://thesmartpro.io/investors?utm_source=linkedin&utm_medium=social&utm_campaign=oman-market\n\n#SmartPROHub\n#OmanVision2040\n#HRTech\n#SMEOman\n#DigitalTransformation",
+  "char_count": 1536,
+  "generated_at": "2026-08-02T07:24:13.655327+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 2,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260802_072359_oman_market.json"
+}

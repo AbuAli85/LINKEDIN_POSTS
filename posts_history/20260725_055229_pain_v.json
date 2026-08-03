@@ -21,5 +21,8 @@
   "post_id": "urn:li:share:7487388243655659520",
   "published_at": "2026-07-27T06:07:47.372953+00:00",
   "cta_comment_posted": false,
-  "cta_comment_url": ""
+  "cta_comment_url": "",
+  "metrics": {
+    "hook_style": "story"
+  }
 }

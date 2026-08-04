@@ -1,0 +1,20 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "Direct bank integration for WPS submission — what disappears from the HR team's monthly checklist",
+  "format": "Compare 'how most Oman businesses do X today' with 'how SmartPRO Hub customers do X'",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "11 manual steps. 3–4 days. Every single month — just to move salaries from a spreadsheet to a bank account.\n\nChase department heads for final attendance. Cross-check leave balances. Rebuild the salary file in Excel. Log into the bank portal. Upload. Wait for confirmation. Fix the errors. Upload again.\n\nSmartPRO Hub customers skip most of that list.\n\nWhen payroll connects directly to the bank through WPS integration, the salary file doesn't get emailed, reformatted, or re-uploaded by hand. It moves. The bank confirmation comes back into the same system. The record is already there.\n\nHere's what disappears from the HR checklist:\n\nThe manual file export. The bank portal login. The back-and-forth with finance to confirm transfers went through. The spreadsheet HR kept \"just in case.\"\n\nWhat stays: oversight. Approvals still happen. The HR manager still reviews before anything moves. But one person can now close payroll in an afternoon — not across three days.\n\nWe built this because HR teams in Oman shouldn't be spending their best hours on work a system can handle.\n\nHow many steps does your team still do by hand before payday?\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#WPS\n#PayrollOman\n#OmanBusiness\n#HRTech",
+  "char_count": 1323,
+  "generated_at": "2026-08-04T07:25:58.259420+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260804_072548_feature_spotlight.json"
+}

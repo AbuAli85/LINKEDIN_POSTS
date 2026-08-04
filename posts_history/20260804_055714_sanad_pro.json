@@ -1,0 +1,19 @@
+{
+  "pillar": "sanad_pro",
+  "topic": "The service catalog that generates an invoice automatically when a case is closed — what that does for cash flow",
+  "format": "Build a sharp before/after: managing government services with WhatsApp and Excel versus SmartPRO Hub case tracking and a client portal — show the same week, completely different experience",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Thursday",
+  "post": "Monday, 8 AM. Your WhatsApp has 74 unread messages.\n\nThree clients asking for status updates on work permits. Two asking if their visa renewals are done. One upset because they didn't know an MOL filing was pending — and now there's a fine.\n\nYou open Excel. You scroll. You try to remember which tab has Al Zahrani Trading's files.\n\nNow picture the same Monday — different office.\n\nCases opened, tracked, and closed inside one system. Every client sees their own portal. No one calls to ask \"what's the status?\" because they already know.\n\nAnd when a work permit case closes? The invoice generates automatically. No chasing. No end-of-week invoicing pile. Cash hits your account faster because the billing is built into the workflow.\n\nThat's what a service catalog tied to your case management actually does for a Sanad office.\n\nIt's not a feature. It's the difference between collecting payment 30 days late and collecting it the same week the work is done.\n\nFor offices managing 20+ client companies — that gap in cash flow is real money sitting idle every month.\n\nHow many closed cases from last month are still waiting on an invoice?\n\nTry the Sanad AI Assistant free — instant answers on work permits, visas & government fees: https://thesmartpro.io/sanad/assistant?utm_source=linkedin&utm_medium=social&utm_campaign=sanad-pro\n\n#OmanBusiness\n#HRManagement\n#SmartPROHub\n#Omanization\n#GCCBusiness",
+  "char_count": 1398,
+  "generated_at": "2026-08-04T05:57:14.051331+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 2,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "has_variant": true
+}

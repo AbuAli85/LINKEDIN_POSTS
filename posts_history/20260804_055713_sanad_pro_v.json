@@ -1,0 +1,20 @@
+{
+  "pillar": "sanad_pro",
+  "topic": "The service catalog that generates an invoice automatically when a case is closed — what that does for cash flow",
+  "format": "Build a sharp before/after: managing government services with WhatsApp and Excel versus SmartPRO Hub case tracking and a client portal — show the same week, completely different experience",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Thursday",
+  "post": "Last month, a Sanad office lost 30 days of cash flow — not because the work wasn't done, but because no one sent the invoice.\n\nYou know exactly how Monday morning goes. Three clients asking about work permit status. Two wanting to know if their visa renewals came through. One furious because an MOL filing slipped through the cracks and now there's a fine attached to it.\n\nYou open Excel. You scroll. You're trying to remember which tab has Al Zahrani Trading's files.\n\nNow picture the same Monday in a different office.\n\nCases opened, tracked, and closed in one place. Every client has their own portal — they can see exactly where things stand without picking up the phone. No one calls to ask \"what's the status?\" because they already know.\n\nAnd when a work permit case closes, the invoice goes out automatically. No end-of-week pile. No chasing anyone down. The money hits your account the same week the work is done because billing is wired directly into the workflow.\n\nThat's what a service catalog tied to case management actually does for a Sanad office.\n\nThe difference isn't a feature. It's getting paid the week you close a case versus 30 days later when someone finally remembers to send the invoice.\n\nFor offices running 20+ client companies, that gap is real money sitting idle every single month.\n\nWorth asking yourself: how many closed cases from last month are still waiting on an invoice?\n\nTry the Sanad AI Assistant free — instant answers on work permits, visas & government fees: https://thesmartpro.io/sanad/assistant?utm_source=linkedin&utm_medium=social&utm_campaign=sanad-pro\n\n#OmanBusiness\n#HRManagement\n#SmartPROHub\n#Omanization\n#GCCBusiness",
+  "char_count": 1668,
+  "generated_at": "2026-08-04T05:57:25.515617+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 2,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260804_055714_sanad_pro.json"
+}

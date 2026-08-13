@@ -10,12 +10,16 @@
   "generated_at": "2026-08-04T05:57:25.515617+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 2,
-  "status": "approved",
-  "published": false,
+  "status": "published",
+  "published": true,
   "approved": true,
   "approval_required": false,
   "dry_run": false,
   "is_variant": true,
   "variant_of": "20260804_055714_sanad_pro.json",
-  "approved_at": "2026-08-09T13:09:06.209143+00:00"
+  "approved_at": "2026-08-13T06:09:05.763772+00:00",
+  "post_id": "urn:li:share:7493549175536615425",
+  "published_at": "2026-08-13T06:09:07.671243+00:00",
+  "cta_comment_posted": false,
+  "cta_comment_url": ""
 }

@@ -10,10 +10,13 @@
   "generated_at": "2026-07-30T18:39:00.304523+00:00",
   "model": "manual-cowork-session",
   "attempts": 1,
-  "status": "draft",
+  "status": "deleted",
   "published": false,
   "approved": false,
-  "approval_required": true,
+  "approval_required": false,
   "dry_run": true,
-  "source": "week1-pain-test (Cowork drafted, owner review required); moved to Sunday to avoid Wednesday collision with approved proof post"
+  "source": "week1-pain-test (Cowork drafted, owner review required); moved to Sunday to avoid Wednesday collision with approved proof post",
+  "rejected": true,
+  "rejected_at": "2026-08-14T06:06:55.408665+00:00",
+  "rejected_reason": "auto-expired: draft older than 14 days (14d)"
 }

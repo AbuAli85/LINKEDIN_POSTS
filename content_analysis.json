@@ -1,14 +1,7 @@
 {
-  "generated_at": "2026-08-10T08:08:54.490645+00:00",
-  "total_posts_analyzed": 65,
+  "generated_at": "2026-08-17T08:08:36.481125+00:00",
+  "total_posts_analyzed": 67,
   "pillar_performance": {
-    "proof": {
-      "posts": 13,
-      "total_reactions": 0,
-      "total_comments": 0,
-      "total_shares": 0,
-      "avg_engagement_rate": 0.0
-    },
     "pain": {
       "posts": 11,
       "total_reactions": 0,
@@ -16,8 +9,22 @@
       "total_shares": 0,
       "avg_engagement_rate": 0.0
     },
+    "proof": {
+      "posts": 14,
+      "total_reactions": 0,
+      "total_comments": 0,
+      "total_shares": 0,
+      "avg_engagement_rate": 0.0
+    },
     "sanad_pro": {
-      "posts": 12,
+      "posts": 13,
+      "total_reactions": 0,
+      "total_comments": 0,
+      "total_shares": 0,
+      "avg_engagement_rate": 0.0
+    },
+    "sanad_pro_ar": {
+      "posts": 4,
       "total_reactions": 0,
       "total_comments": 0,
       "total_shares": 0,
@@ -32,13 +39,6 @@
     },
     "feasibility": {
       "posts": 5,
-      "total_reactions": 0,
-      "total_comments": 0,
-      "total_shares": 0,
-      "avg_engagement_rate": 0.0
-    },
-    "sanad_pro_ar": {
-      "posts": 4,
       "total_reactions": 0,
       "total_comments": 0,
       "total_shares": 0,
@@ -74,35 +74,35 @@
     }
   },
   "hook_performance": {
-    "story": 0.0,
-    "numbered-list": 0.0,
+    "data-lead": 0.0,
     "bold-statement": 0.0,
     "contrast": 0.0,
-    "data-lead": 0.0,
-    "question": 0.0,
-    "observation": 0.0
+    "numbered-list": 0.0,
+    "observation": 0.0,
+    "story": 0.0,
+    "question": 0.0
   },
   "frequency_multipliers": {
-    "proof": 1.0,
     "pain": 1.0,
+    "proof": 1.0,
     "sanad_pro": 1.0,
+    "sanad_pro_ar": 1.0,
     "tech": 1.0,
     "feasibility": 1.0,
-    "sanad_pro_ar": 1.0,
     "vision": 1.0,
     "leadership": 1.0,
     "marketing": 1.0,
     "pain_ar": 1.0
   },
-  "best_pillar": "proof",
-  "best_hook_style": "story",
+  "best_pillar": "pain",
+  "best_hook_style": "data-lead",
   "recommended_emphasis": [
-    "proof",
     "pain",
+    "proof",
     "sanad_pro",
+    "sanad_pro_ar",
     "tech",
     "feasibility",
-    "sanad_pro_ar",
     "vision",
     "leadership",
     "marketing",

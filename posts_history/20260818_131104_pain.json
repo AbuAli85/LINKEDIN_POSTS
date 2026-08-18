@@ -10,15 +10,18 @@
   "generated_at": "2026-08-18T13:11:04.565231+00:00",
   "model": "manual-authored",
   "attempts": 1,
-  "status": "draft",
+  "status": "approved",
   "published": false,
-  "approved": false,
-  "approval_required": true,
-  "dry_run": true,
+  "approved": true,
+  "approval_required": false,
+  "dry_run": false,
   "edited_by": "manual-campaign",
   "campaign": "document-alerts-launch",
   "campaign_day": 2,
   "metrics": {
     "hook_style": "bold-statement"
-  }
+  },
+  "publish_date": "2026-08-20",
+  "approved_at": "2026-08-18T21:29:47.016007+00:00",
+  "approved_by": "panel.py approve — Claude Code session, at owner's request (bulk campaign approval)"
 }

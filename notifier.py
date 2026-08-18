@@ -403,6 +403,37 @@ def next_publish_slot(publish_day: str, now: datetime | None = None) -> datetime
     return slot + timedelta(days=days_ahead)
 
 
+def slot_for_post(post: dict[str, Any], now: datetime | None = None) -> datetime | None:
+    """The sweep this post will actually be picked up by.
+
+    Mirrors main.publish_approved(): an explicit publish_date pins the post to
+    one calendar day and wins over the recurring publish_day weekday. Kept in
+    lockstep so the approval email can never quote a date the sweep disagrees
+    with.
+    """
+    if raw := (post.get("publish_date") or "").strip():
+        try:
+            day = datetime.strptime(raw, "%Y-%m-%d")
+        except ValueError:
+            return None
+        return day.replace(
+            hour=SWEEP_HOUR_UTC, minute=SWEEP_MINUTE_UTC, tzinfo=timezone.utc
+        )
+    return next_publish_slot(post.get("publish_day", ""), now)
+
+
+def format_slot_for_post(post: dict[str, Any], now: datetime | None = None) -> str:
+    """Human-readable scheduled publish time for a post, UTC and Muscat local."""
+    slot = slot_for_post(post, now)
+    if slot is None:
+        return "next publish sweep (no publish date set on this draft)"
+    local = slot.astimezone(MUSCAT)
+    return (
+        f"{slot.strftime('%A %d %b %Y, %H:%M')} UTC "
+        f"({local.strftime('%H:%M')} Muscat)"
+    )
+
+
 def format_publish_slot(publish_day: str, now: datetime | None = None) -> str:
     """Human-readable scheduled publish time, in UTC and Muscat local."""
     slot = next_publish_slot(publish_day, now)
@@ -456,7 +487,7 @@ def send_draft_approved(draft_path: str, post: dict[str, Any]) -> None:
     pillar = post.get("pillar", "")
     display_path = _display_draft_path(draft_path)
     approved_by = post.get("approved_by") or approval_source()
-    scheduled = format_publish_slot(post.get("publish_day", ""))
+    scheduled = format_slot_for_post(post)
     repo = os.environ.get("GITHUB_REPOSITORY", "AbuAli85/LINKEDIN_POSTS")
     dashboard = _env_value("DASHBOARD_URL") or _default_dashboard_url(repo)
 

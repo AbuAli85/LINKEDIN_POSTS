@@ -22,5 +22,6 @@
   "approved_at": "2026-08-18T12:41:27.903673+00:00",
   "approved_by": "GitHub Actions — approve_draft workflow (commit fee662b)",
   "campaign": "document-alerts-launch",
-  "campaign_day": 1
+  "campaign_day": 1,
+  "publish_date": "2026-08-19"
 }

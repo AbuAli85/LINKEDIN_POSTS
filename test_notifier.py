@@ -226,3 +226,32 @@ def test_long_titles_are_truncated():
     title = notifier._post_title({"topic": "x" * 200})
     assert len(title) == 90
     assert title.endswith("...")
+
+
+# ── publish_date pinning (must mirror main.publish_approved) ────────────────
+
+def test_pinned_date_wins_over_the_recurring_weekday():
+    """A post meant for the second Friday must not quote the first one."""
+    post = {"publish_date": "2026-08-28", "publish_day": "Friday"}
+    text = notifier.format_slot_for_post(post, TUESDAY_NOON)
+    assert "28 Aug 2026" in text
+    assert "05:15 UTC" in text
+
+
+def test_weekday_is_still_used_when_no_date_is_pinned():
+    text = notifier.format_slot_for_post({"publish_day": "Friday"}, TUESDAY_NOON)
+    assert "21 Aug 2026" in text
+
+
+@pytest.mark.parametrize("bad", ["not-a-date", "2026-13-45", "28/08/2026"])
+def test_unparseable_pinned_date_does_not_invent_a_slot(bad):
+    assert notifier.slot_for_post({"publish_date": bad}, TUESDAY_NOON) is None
+
+
+def test_approved_notice_quotes_the_pinned_date(captured):
+    notifier.send_draft_approved(
+        "posts_history/x_sanad_pro.json",
+        {**DRAFT, "publish_day": "Friday", "publish_date": "2026-08-28"},
+    )
+    assert "28 Aug 2026" in captured[0]["context"]["scheduled_for"]
+    assert "28 Aug 2026" in captured[0]["text"]

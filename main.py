@@ -246,7 +246,10 @@ def generate_and_publish_now() -> int:
 
 
 def publish_approved_for_today() -> int:
-    """Publish sweep: find the oldest approved draft whose publish_day matches today.
+    """Publish sweep: find the oldest approved draft scheduled for today.
+
+    A draft carrying publish_date (ISO YYYY-MM-DD) matches only that calendar
+    day. Otherwise publish_day (a recurring weekday name) is used.
 
     Pillar-agnostic — publishes any approved post scheduled for today, regardless of
     which pillar generated it.  Legacy posts with no publish_day are included so they
@@ -254,7 +257,8 @@ def publish_approved_for_today() -> int:
     """
     dry_run    = os.environ.get("DRY_RUN", "false").lower() == "true"
     now        = datetime.now(timezone.utc)
-    today_name = now.strftime("%A")  # e.g. "Monday"
+    today_name = now.strftime("%A")       # e.g. "Monday"
+    today_iso  = now.strftime("%Y-%m-%d")  # e.g. "2026-08-28"
 
     # Auto-expire stale drafts BEFORE the sweep so a pre-fix/aged approved draft
     # can never publish weeks after it was written.
@@ -277,6 +281,16 @@ def publish_approved_for_today() -> int:
         # left approved=true on it (e.g. re-approving a stale notification email).
         if post.get("rejected") or post.get("status") in ("superseded", "deleted"):
             continue
+        # An explicit publish_date pins the post to one calendar day and wins
+        # over publish_day. publish_day is a recurring weekday name, so a post
+        # meant for the *second* Friday of a campaign would otherwise fire on
+        # the first one — seven days early and out of sequence.
+        post_publish_date = (post.get("publish_date") or "").strip()
+        if post_publish_date:
+            if post_publish_date != today_iso:
+                continue
+            candidates.append((f, post))
+            continue
         post_publish_day = post.get("publish_day", "")
         # Include posts whose publish_day matches today, or legacy posts with no publish_day
         if post_publish_day and post_publish_day != today_name:
@@ -288,7 +302,8 @@ def publish_approved_for_today() -> int:
         return 0
 
     path, post = candidates[0]
-    print(f"[publish_approved] Candidate: {path.name}  pillar={post.get('pillar')}  publish_day={post.get('publish_day', 'legacy')}")
+    when = post.get("publish_date") or post.get("publish_day", "legacy")
+    print(f"[publish_approved] Candidate: {path.name}  pillar={post.get('pillar')}  scheduled={when}")
 
     if dry_run:
         print(f"DRY_RUN=true — would publish {path.name}. Remaining candidates: {len(candidates) - 1}")

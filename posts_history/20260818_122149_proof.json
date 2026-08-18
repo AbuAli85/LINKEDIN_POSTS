@@ -10,13 +10,14 @@
   "generated_at": "2026-08-18T12:21:49.737355+00:00",
   "model": "manual-authored",
   "attempts": 1,
-  "status": "draft",
+  "status": "approved",
   "published": false,
-  "approved": false,
-  "approval_required": true,
-  "dry_run": true,
+  "approved": true,
+  "approval_required": false,
+  "dry_run": false,
   "edited_by": "manual-announcement",
   "metrics": {
     "hook_style": "bold-statement"
-  }
+  },
+  "approved_at": "2026-08-18T12:33:59.248594+00:00"
 }

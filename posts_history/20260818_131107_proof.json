@@ -1,0 +1,27 @@
+{
+  "pillar": "proof",
+  "topic": "Multi-branch F&B duplicates the entire compliance calendar per location",
+  "format": "Show how the failure shape differs from office compliance: many small staggered dates, not one big one",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "Three branches does not mean three documents. It means three of everything.\n\nA restaurant group in Oman carries a municipality licence per branch. A food safety licence per branch. And health certificates per employee — every person handling food, each with their own date.\n\nOpen a second location and you have not added one renewal to the calendar. You have duplicated the entire calendar and staggered it by whenever that branch opened.\n\nThis is why F&B compliance fails differently from office compliance. It is not one big document anyone would notice lapsing. It is thirty small ones with no shared date, half of them attached to staff who joined at different times and some of whom have already left.\n\nThe manual version is a wall planner and a good memory. It works until the day a health inspector asks for a certificate that expired in the branch you visit least.\n\nSmartPRO Hub holds every document against the branch or the employee it belongs to, and sends the reminder ahead of the date — document name, issuing authority, exact expiry — in Arabic and English.\n\nYou do not need a better spreadsheet. You need the thing that emails you without being asked.\n\nBook a free 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=proof\nOr WhatsApp: https://wa.me/96879665522?text=Hi%2C%20I%20saw%20your%20LinkedIn%20post%20and%20want%20to%20learn%20more%20about%20SmartPRO%20Hub.\n\n#OmanBusiness\n#HRManagement\n#SmartPROHub",
+  "char_count": 1477,
+  "generated_at": "2026-08-18T13:11:07.565231+00:00",
+  "model": "manual-authored",
+  "attempts": 1,
+  "status": "approved",
+  "published": false,
+  "approved": true,
+  "approval_required": false,
+  "dry_run": false,
+  "edited_by": "manual-campaign",
+  "campaign": "document-alerts-launch",
+  "campaign_day": 8,
+  "metrics": {
+    "hook_style": "bold-statement"
+  },
+  "publish_date": "2026-08-26",
+  "approved_at": "2026-08-18T21:29:47.020829+00:00",
+  "approved_by": "panel.py approve — Claude Code session, at owner's request (bulk campaign approval)"
+}

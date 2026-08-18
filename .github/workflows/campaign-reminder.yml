@@ -1,0 +1,48 @@
+# Fires dated campaign reminders from campaign_reminders.json.
+#
+# A reminder in a markdown file pages nobody. This runs daily, emails anything
+# whose due date has arrived through the same Resend + webhook path as every
+# other notification, and stamps fired_at so nothing sends twice.
+name: Campaign reminders
+
+on:
+  schedule:
+    # 04:30 UTC = 08:30 Muscat — ahead of the 05:15 publish sweep, so a reminder
+    # about a post still has the working day to be acted on.
+    - cron: "30 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Fire due reminders
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          NOTIFY_EMAIL: ${{ secrets.NOTIFY_EMAIL }}
+          NOTIFY_WEBHOOK_URL: ${{ secrets.NOTIFY_WEBHOOK_URL }}
+          NOTIFY_FROM: ${{ vars.NOTIFY_FROM }}
+          NOTIFY_ON_DRAFT: ${{ vars.NOTIFY_ON_DRAFT }}
+          DASHBOARD_URL: ${{ vars.DASHBOARD_URL }}
+        run: python campaign_reminder.py
+
+      - name: Commit fired_at stamps
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add campaign_reminders.json
+          git diff --cached --quiet || git commit -m "reminders: mark fired $(date -u '+%Y-%m-%d')"
+          git push origin HEAD:${GITHUB_REF_NAME} || true

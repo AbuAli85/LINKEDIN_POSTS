@@ -52,7 +52,11 @@ SEGMENT_COLOR = {"A": "#2e7de0", "B": "#818cf8", "C": "#06b6d4"}
 CRON_WEEKDAYS    = {5, 0, 1, 2, 3, 4, 6}  # every day — tech adds Thu generate + Sat publish
 CRON_HOUR_UTC    = 5
 PUBLISH_WEEKDAYS = {0, 1, 2, 3, 4, 5, 6}  # every day
-PUBLISH_HOUR_UTC = 6
+# The publish sweep is gated on the '15 5 * * *' cron in auto-post.yml; the
+# 06:00 run is a backup pass. Imported so the dashboard, panel.py and the
+# approval email all name the same time.
+from notifier import SWEEP_HOUR_UTC as PUBLISH_HOUR_UTC  # noqa: E402
+from notifier import SWEEP_MINUTE_UTC as PUBLISH_MINUTE_UTC  # noqa: E402
 MUSCAT_OFFSET    = 4
 
 
@@ -217,7 +221,7 @@ def next_runs(n: int = 3) -> list[datetime]:
 
 def next_publish_runs(n: int = 3) -> list[datetime]:
     now = datetime.now(timezone.utc)
-    dt  = now.replace(hour=PUBLISH_HOUR_UTC, minute=0, second=0, microsecond=0)
+    dt  = now.replace(hour=PUBLISH_HOUR_UTC, minute=PUBLISH_MINUTE_UTC, second=0, microsecond=0)
     if dt <= now:
         dt += timedelta(days=1)
     result = []

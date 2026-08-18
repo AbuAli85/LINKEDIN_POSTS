@@ -1,0 +1,27 @@
+{
+  "pillar": "proof",
+  "topic": "Two-week launch recap: what shipped, what broke, what is still open",
+  "format": "Recap in named sections including the unresolved gaps, with metrics left as fill-in placeholders",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "Two weeks ago we shipped document expiry alerts. Here is what actually happened, including the parts that did not go to plan.\n\nWhat shipped: bilingual expiry emails carrying the document name, the issuing authority and the exact expiry date. Arabic right-to-left and formal, English below it. One consistent day count across every surface that shows one.\n\nWhat we caught first: our own expired OCCI certificate. The system found its builders before it found a customer.\n\nWhat we fixed mid-launch: an alert that named the right document and then told the reader to renew a different one. Two weeks later that still reads as the most useful bug we shipped, because it was caught by checking two screens against each other, not by a test that proved the code ran.\n\nWhat is still open: the alert carries no document reference number, and parts of the documents screen render English in Arabic mode. Both are on the list. Neither has moved a date.\n\nThe numbers so far: [DEMOS_BOOKED] demos booked, [DOCS_TRACKED] documents under alerting, [ALERTS_SENT] alerts sent.\n\nLet me be direct about those numbers. They are small. Every one of them is a company that will not find out at a counter.\n\nBook a free 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=proof\nOr WhatsApp: https://wa.me/96879665522?text=Hi%2C%20I%20saw%20your%20LinkedIn%20post%20and%20want%20to%20learn%20more%20about%20SmartPRO%20Hub.\n\n#OmanBusiness\n#HRManagement\n#SmartPROHub",
+  "char_count": 1493,
+  "generated_at": "2026-08-18T13:11:09.565231+00:00",
+  "model": "manual-authored",
+  "attempts": 1,
+  "status": "deleted",
+  "published": false,
+  "approved": false,
+  "approval_required": false,
+  "dry_run": true,
+  "edited_by": "manual-campaign",
+  "campaign": "document-alerts-launch",
+  "campaign_day": 13,
+  "metrics": {
+    "hook_style": "bold-statement"
+  },
+  "rejected": true,
+  "rejected_at": "2026-08-18T13:26:47.140510+00:00",
+  "rejected_reason": "day-13 recap: regenerate 29 Aug with real numbers instead of placeholders; a recap written 13 days early defeats its purpose and sits 1.3d from the 14-day stale cap"
+}

@@ -21,8 +21,10 @@ so the result is identical to the GitHub Actions workflow.
 """
 from __future__ import annotations
 
+import getpass
 import json
 import os
+import socket
 import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -34,7 +36,10 @@ HISTORY_DIR = ROOT / "posts_history"
 
 # Muscat is UTC+4 (no DST).
 MUSCAT = timezone(timedelta(hours=4))
-PUBLISH_HOUR_UTC = 6
+# Publish times come from notifier so the panel and the approval email can
+# never disagree about when a draft goes out. The sweep job is gated on the
+# '15 5 * * *' cron; 06:00 is the backup pass, not the first attempt.
+from notifier import SWEEP_HOUR_UTC, SWEEP_MINUTE_UTC  # noqa: E402
 GENERATE_HOUR_UTC = 5
 
 # ---------------------------------------------------------------------------
@@ -123,9 +128,9 @@ def _muscat(dt_utc: datetime) -> str:
     return dt_utc.astimezone(MUSCAT).strftime("%a %d %b, %I:%M %p Muscat").replace(" 0", " ")
 
 
-def _next_cron(hour_utc: int) -> datetime:
+def _next_cron(hour_utc: int, minute_utc: int = 0) -> datetime:
     now = datetime.now(timezone.utc)
-    dt = now.replace(hour=hour_utc, minute=0, second=0, microsecond=0)
+    dt = now.replace(hour=hour_utc, minute=minute_utc, second=0, microsecond=0)
     if dt <= now:
         dt += timedelta(days=1)
     return dt
@@ -186,7 +191,7 @@ def cmd_status() -> int:
 
     _rule("Automation clock (UTC crons)")
     print(f"  Next draft generated : {_muscat(_next_cron(GENERATE_HOUR_UTC))}")
-    print(f"  Next auto-publish     : {_muscat(_next_cron(PUBLISH_HOUR_UTC))}")
+    print(f"  Next auto-publish     : {_muscat(_next_cron(SWEEP_HOUR_UTC, SWEEP_MINUTE_UTC))}")
     print(f"\n  Dashboard: docs/index.html   |   `python panel.py help` for all commands\n")
     return 0
 
@@ -243,6 +248,11 @@ def _call_main(mode: str, path: Path) -> int:
 def cmd_approve(selector: str) -> int:
     p = resolve(selector)
     print(f"\n  Approving: {p['_filename']}  ({p.get('pillar','?')} / {p.get('language','en')})")
+    # Name this surface so the approval notification says how it was approved,
+    # rather than reporting a bare shell login.
+    os.environ.setdefault(
+        "APPROVED_VIA", f"panel.py approve — {getpass.getuser()}@{socket.gethostname()}"
+    )
     rc = _call_main("approve_draft", p["_path"])
     if rc == 0:
         print("  Done. It will publish automatically on its next scheduled cron,")

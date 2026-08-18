@@ -1,0 +1,27 @@
+{
+  "pillar": "pain",
+  "topic": "Logistics fleets carry twenty-plus expiring documents beyond the company file",
+  "format": "Contrast the three documents owners can recite with the per-driver and per-vehicle set they cannot",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "Your CR is not the compliance problem. Your fleet is.\n\nEvery logistics company in Oman tracks the company file — commercial registration, OCCI certificate, municipality licence. Three documents, three dates, and most owners can recite them.\n\nThen there is the part that actually expires.\n\nDriver licences, one per driver. Vehicle mulkiya, one per vehicle. Operating cards. Vehicle inspection certificates. A twelve-driver fleet carries more than twenty separate expiring documents before you count the company's own three.\n\nNobody is tracking twenty-plus renewal dates in their head. So it gets tracked in a spreadsheet that one person maintains, and that person takes leave in August.\n\nThe failure is never dramatic. One inspection certificate lapses. That truck is off the road until it is renewed, and its load is now somebody's phone call.\n\nSmartPRO Hub tracks every document your fleet carries, per driver and per vehicle, and emails you the document, the issuing authority and the exact expiry date before it lapses. Not a folder you open. A message that arrives.\n\nIf your renewal calendar lives in one person's memory, that is not a system. That is a risk with a payroll number.\n\nBook a free 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=pain\nOr WhatsApp: https://wa.me/96879665522?text=Hi%2C%20I%20saw%20your%20LinkedIn%20post%20and%20want%20to%20learn%20more%20about%20SmartPRO%20Hub.\n\n#OmanBusiness\n#GCCBusiness\n#SmartPROHub",
+  "char_count": 1493,
+  "generated_at": "2026-08-18T13:11:06.565231+00:00",
+  "model": "manual-authored",
+  "attempts": 1,
+  "status": "approved",
+  "published": false,
+  "approved": true,
+  "approval_required": false,
+  "dry_run": false,
+  "edited_by": "manual-campaign",
+  "campaign": "document-alerts-launch",
+  "campaign_day": 6,
+  "metrics": {
+    "hook_style": "bold-statement"
+  },
+  "publish_date": "2026-08-24",
+  "approved_at": "2026-08-18T21:29:47.019982+00:00",
+  "approved_by": "panel.py approve — Claude Code session, at owner's request (bulk campaign approval)"
+}

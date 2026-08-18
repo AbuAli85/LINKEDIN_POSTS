@@ -1,0 +1,27 @@
+{
+  "pillar": "sanad_pro",
+  "topic": "Sanad offices track everyone else's documents, not their own",
+  "format": "Speak peer-to-peer about carrying several hundred dates belonging to other people",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Friday",
+  "post": "If you run a Sanad office, you are not tracking your own documents. You are tracking everyone else's.\n\nForty clients. Each one with a commercial registration, a municipality licence, an OCCI certificate. Some with work permits, some with fleets carrying driver licences and vehicle mulkiya, some with health certificates per employee.\n\nThat is not a calendar. That is several hundred dates belonging to people who assume you are watching them.\n\nAnd you are — until the week two clients renew late and both of them remember it as your fault. In this business the product is not the paperwork. It is that nothing lapsed on your watch.\n\nWe built document expiry alerting for exactly this shape: documents held per client, each with its issuing authority and exact expiry date, with the reminder emailed ahead of time in Arabic and English rather than sitting on a screen someone has to open.\n\nLet us be practical. You already know which clients will not renew until you chase them. The question is whether you find out ninety days early or the week it matters.\n\nTry the Sanad AI Assistant free — instant answers on work permits, visas & government fees: https://thesmartpro.io/sanad/assistant?utm_source=linkedin&utm_medium=social&utm_campaign=sanad-pro\n\n#OmanBusiness\n#SMEOman\n#SmartPROHub",
+  "char_count": 1287,
+  "generated_at": "2026-08-18T13:11:08.565231+00:00",
+  "model": "manual-authored",
+  "attempts": 1,
+  "status": "approved",
+  "published": false,
+  "approved": true,
+  "approval_required": false,
+  "dry_run": false,
+  "edited_by": "manual-campaign",
+  "campaign": "document-alerts-launch",
+  "campaign_day": 10,
+  "metrics": {
+    "hook_style": "bold-statement"
+  },
+  "publish_date": "2026-08-28",
+  "approved_at": "2026-08-18T21:29:47.021682+00:00",
+  "approved_by": "panel.py approve — Claude Code session, at owner's request (bulk campaign approval)"
+}

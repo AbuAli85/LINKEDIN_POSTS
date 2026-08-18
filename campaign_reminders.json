@@ -1,0 +1,9 @@
+[
+  {
+    "id": "day13-recap-regen",
+    "due": "2026-08-29",
+    "title": "Regenerate the day-13 launch recap with real numbers",
+    "body": "The placeholder version (20260818_131109_proof.json) was rejected on 2026-08-18 rather than published with [DEMOS_BOOKED]/[DOCS_TRACKED]/[ALERTS_SENT] in it.\n\nRegenerate it now, for Monday 31 Aug, with actuals pulled from the daily scan data:\n  - demos booked -> leads.csv, demo_requested column\n  - documents under alerting + alerts sent -> SmartPRO production\n\nStructure to reuse (all still true as of 18 Aug): what shipped (bilingual email, day-count parity), what we caught first (our own expired OCCI certificate), what we fixed mid-launch (the wrong-document CR clause), what is still open (no reference number, English strings in Arabic mode).\n\nGenerating it fresh also resets the queue-hygiene clock: the 18 Aug draft sat 12.7 days old against the 14-day expire_stale cap, with 1.3 days of slack.",
+    "campaign": "document-alerts-launch"
+  }
+]

@@ -180,6 +180,64 @@ def _load_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8-sig"))
 
 
+_SEG_B_TITLES = ("investor", "investment", "fund", "venture", "capital", "vc", "angel")
+_SEG_C_TITLES = ("cto", "tech", "developer", "engineer", "saas", "digital", "software")
+
+_PAIN_MAP = {
+    "sanad":             "Multi-client work permit tracking",
+    "pro":               "MOL submissions manual 15+ clients",
+    "hr manager":        "WPS payroll file 2+ days every month",
+    "hr director":       "Omanisation ratios no real-time data",
+    "hr specialist":     "HR and PRO hats too much manual admin",
+    "ceo":               "3+ hrs Monday HR admin",
+    "cfo":               "Payroll errors employee disputes",
+    "managing director": "HR PRO across multiple companies no unified view",
+    "owner":             "Single HR person single point of failure",
+    "founder":           "Client updates via WhatsApp, clients feel abandoned",
+    "investor":          "Oman HR tech market pitch Vision 2040",
+    "cto":               "Multi-tenant GCC compliance peer angle",
+    "default":           "Manual HR/payroll admin taking too long",
+}
+
+
+def detect_segment(title: str) -> str:
+    """Map a job title to an outreach segment. A is the default — buyers."""
+    t = (title or "").lower()
+    if any(k in t for k in _SEG_B_TITLES):
+        return "B"
+    if any(k in t for k in _SEG_C_TITLES):
+        return "C"
+    return "A"
+
+
+def detect_pain(title: str) -> str:
+    """The pain line the sequence templates open on, keyed off the title."""
+    t = (title or "").lower()
+    for k, v in _PAIN_MAP.items():
+        if k in t:
+            return v
+    return _PAIN_MAP["default"]
+
+
+def normalise_profile_url(url: str) -> str:
+    """Canonical form for dedupe: strip query, trailing slash, host variants.
+
+    Every writer of outreach_tracker.json dedupes on this, so a lead captured
+    manually and the same lead promoted from a comment cannot both land.
+    """
+    url = (url or "").strip().split("?")[0].rstrip("/")
+    if not url:
+        return ""
+    if "/in/" in url:
+        url = "https://www.linkedin.com" + url[url.index("/in/"):]
+    return url.lower()
+
+
+def tracker_urls(tracker: list[dict]) -> set[str]:
+    """Normalised profile URLs already in the tracker."""
+    return {normalise_profile_url(p.get("linkedin_url", "")) for p in tracker} - {""}
+
+
 def _all_comment_files() -> list[Path]:
     return sorted(OUTREACH_DIR.glob("*_comments.json"))
 
@@ -741,6 +799,7 @@ def cmd_run_all() -> None:
         ("Enrich leads",      cmd_enrich),
         ("Draft replies",     cmd_draft_replies),
         ("Export leads.csv",  cmd_export),
+        ("Promote hot leads", cmd_promote_leads),
         ("Send sequences",    cmd_send_sequences),
     ]
     for label, fn in steps:
@@ -749,6 +808,103 @@ def cmd_run_all() -> None:
             fn()
         except Exception as exc:
             print(f"  ERROR in {label}: {exc}", file=sys.stderr)
+
+
+# ---------------------------------------------------------------------------
+# Auto-promotion — qualified high-intent commenters → outreach_tracker.json
+#
+# Runs after export in the daily scan. Before this existed, cmd_qualify scored
+# a commenter "high" and the only thing that happened was a row in leads.csv;
+# entering the DM sequence needed someone to run manual-capture by hand. The
+# tracker is what send-sequences reads, so a lead that never reached it was
+# never contacted.
+#
+# Tracker-only by design: export already wrote these leads into leads.csv on
+# the step before, so appending them here would duplicate every row.
+# ---------------------------------------------------------------------------
+
+def cmd_promote_leads(dry_run: bool = False) -> None:
+    """Promote every high-intent qualified commenter into the outreach tracker.
+
+    Deduped on the normalised profile URL, so re-running the daily scan, or a
+    lead already captured manually, cannot produce a second tracker entry.
+    Promoted leads start at step 1 of the existing LinkedIn DM sequence.
+    """
+    from datetime import date
+
+    today   = date.today().isoformat()
+    tracker = load_json(TRACKER_FILE, []) or []
+    seen    = tracker_urls(tracker)
+
+    promoted: list[dict] = []
+    skipped_dupe = 0
+    skipped_nourl = 0
+
+    for f in _all_comment_files():
+        try:
+            data = _load_json(f)
+        except Exception:
+            continue
+
+        post_topic = data.get("post_topic", "")
+        for comment in data.get("comments", []):
+            qual = comment.get("qualification") or {}
+            if qual.get("intent") != "high":
+                continue
+
+            url = normalise_profile_url(comment.get("commenter_linkedin_url", ""))
+            if not url:
+                # No profile URL means no dedupe key and nothing to DM.
+                skipped_nourl += 1
+                continue
+            if url in seen:
+                skipped_dupe += 1
+                continue
+
+            title   = qual.get("title_guess", "") or ""
+            company = qual.get("company_guess", "") or "Unknown Company"
+            name    = comment.get("commenter_name", "") or "Unknown"
+            score   = qual.get("score", "")
+
+            entry = {
+                "id": next_oa_id(tracker),
+                "name": name,
+                "linkedin_url": comment.get("commenter_linkedin_url", "").split("?")[0].rstrip("/"),
+                "company": company,
+                "segment": detect_segment(title),
+                "started_at": today,
+                "status": "active",
+                "current_step": 1,
+                "notes": (
+                    f"Auto-promoted from comment | Title: {title or 'unknown'} | "
+                    f"Intent: high ({score}/10) | Post: {post_topic} | "
+                    f"Pain: {detect_pain(title)}"
+                ),
+                "tags": ["auto-promoted", "high-intent", f"seg-{detect_segment(title).lower()}"],
+                "converted_at": "",
+            }
+            tracker.append(entry)
+            seen.add(url)
+            promoted.append(entry)
+            print(f"  Promoted  {entry['id']}  {name}  ({company})  seg={entry['segment']}")
+
+    if not promoted:
+        print(
+            f"No new high-intent leads to promote. "
+            f"({skipped_dupe} already tracked, {skipped_nourl} without a profile URL)"
+        )
+        return
+
+    if dry_run:
+        print(f"\nDRY RUN — would promote {len(promoted)} lead(s); tracker not written.")
+        return
+
+    write_json(TRACKER_FILE, tracker)
+    print(
+        f"\nPromoted {len(promoted)} lead(s) into outreach_tracker.json "
+        f"({skipped_dupe} already tracked, {skipped_nourl} without a profile URL)."
+    )
+    print("  They enter the existing LinkedIn DM sequence at step 1 on the next send-sequences run.")
 
 
 # ---------------------------------------------------------------------------
@@ -774,55 +930,24 @@ def cmd_manual_capture(urls: list[str]) -> None:
     LEADS   = Path(__file__).parent / "leads.csv"
     TODAY   = date.today().isoformat()
 
-    SEG_B = ["investor","investment","fund","venture","capital","vc","angel"]
-    SEG_C = ["cto","tech","developer","engineer","saas","digital","software"]
-
-    PAIN_MAP = {
-        "sanad":             "Multi-client work permit tracking",
-        "pro":               "MOL submissions manual 15+ clients",
-        "hr manager":        "WPS payroll file 2+ days every month",
-        "hr director":       "Omanisation ratios no real-time data",
-        "hr specialist":     "HR and PRO hats too much manual admin",
-        "ceo":               "3+ hrs Monday HR admin",
-        "cfo":               "Payroll errors employee disputes",
-        "managing director": "HR PRO across multiple companies no unified view",
-        "owner":             "Single HR person single point of failure",
-        "founder":           "Client updates via WhatsApp, clients feel abandoned",
-        "investor":          "Oman HR tech market pitch Vision 2040",
-        "cto":               "Multi-tenant GCC compliance peer angle",
-        "default":           "Manual HR/payroll admin taking too long",
-    }
-
     def slug_to_name(url: str) -> str:
         slug = url.rstrip("/").split("/in/")[-1].split("?")[0]
         parts = re.sub(r"-\w{4,}$", "", slug).replace("-", " ").title()
         return parts
-
-    def detect_segment(title: str) -> str:
-        t = title.lower()
-        if any(k in t for k in SEG_B): return "B"
-        if any(k in t for k in SEG_C): return "C"
-        return "A"
-
-    def detect_pain(title: str) -> str:
-        t = title.lower()
-        for k, v in PAIN_MAP.items():
-            if k in t: return v
-        return PAIN_MAP["default"]
 
     TRACKER = Path(__file__).parent / "outreach_tracker.json"
     LEADS   = Path(__file__).parent / "leads.csv"
     TODAY   = date.today().isoformat()
 
     tracker = json.loads(TRACKER.read_text(encoding="utf-8-sig")) if TRACKER.exists() else []
-    existing_urls = {p.get("linkedin_url","").rstrip("/") for p in tracker}
+    existing_urls = tracker_urls(tracker)
 
     csv_urls: set = set()
     if LEADS.exists():
         with open(LEADS, encoding="utf-8", newline="") as f:
             for row in csv.DictReader(f):
-                u = row.get("linkedin_url","").rstrip("/")
-                if u: csv_urls.add(u)
+                if u := normalise_profile_url(row.get("linkedin_url", "")):
+                    csv_urls.add(u)
 
     added = []
     skipped = []
@@ -836,7 +961,7 @@ def cmd_manual_capture(urls: list[str]) -> None:
                 print(f"  WARNING: Skipping (not a /in/ profile URL): {url}")
                 continue
 
-        if url in existing_urls or url in csv_urls:
+        if (key := normalise_profile_url(url)) in existing_urls or key in csv_urls:
             print(f"  Duplicate, skipping: {url}")
             skipped.append(url)
             continue
@@ -864,7 +989,7 @@ def cmd_manual_capture(urls: list[str]) -> None:
             "converted_at": "",
         }
         tracker.append(entry)
-        existing_urls.add(url)
+        existing_urls.add(normalise_profile_url(url))
 
         csv_row = {
             "name": name, "linkedin_url": url, "company": company,
@@ -1192,6 +1317,10 @@ def _cli() -> None:
                            help="Send due sequence steps (LINKEDIN_DRY_RUN=true to preview)")
     p_seq.add_argument("--limit", type=int, default=None,
                        help="Max messages to send this run (overrides OUTREACH_DAILY_LIMIT env var, default 15)")
+    p_promote = sub.add_parser("promote-leads",
+        help="Promote high-intent qualified commenters into outreach_tracker.json")
+    p_promote.add_argument("--dry-run", action="store_true",
+                           help="Show what would be promoted without writing the tracker")
     sub.add_parser("run-all",         help="Run all pipeline steps in sequence")
     p_manual = sub.add_parser("manual-capture",
         help="Add leads by LinkedIn profile URL (no r_member_social needed)")
@@ -1216,6 +1345,8 @@ def _cli() -> None:
         if getattr(args, "limit", None) is not None:
             os.environ["OUTREACH_DAILY_LIMIT"] = str(args.limit)
         cmd_send_sequences()
+    elif args.cmd == "promote-leads":
+        cmd_promote_leads(dry_run=getattr(args, "dry_run", False))
     else:
         dispatch[args.cmd]()
 

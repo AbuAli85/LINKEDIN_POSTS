@@ -252,6 +252,13 @@ jobs:
       - name: Export leads.csv
         run: $RUNNER_TEMP/run_step.sh "outreach:export" python outreach.py export
 
+      - name: Promote high-intent leads into the outreach tracker
+        # Qualified "high" commenters enter outreach_tracker.json at step 1 of the
+        # existing LinkedIn DM sequence. Deduped on the normalised profile URL, so
+        # re-running the scan or a prior manual-capture cannot double-add a lead.
+        # Must run AFTER export: export owns leads.csv, this step writes the tracker only.
+        run: $RUNNER_TEMP/run_step.sh "outreach:promote" python outreach.py promote-leads
+
       - name: Send due sequence steps to tracker leads
         # Sends connection request (step 1) or DM (steps 2-5) to each lead that is due today.
         # Advances current_step and sets last_sent_at on success.

@@ -10,15 +10,18 @@
   "generated_at": "2026-08-18T13:11:09.565231+00:00",
   "model": "manual-authored",
   "attempts": 1,
-  "status": "draft",
+  "status": "deleted",
   "published": false,
   "approved": false,
-  "approval_required": true,
+  "approval_required": false,
   "dry_run": true,
   "edited_by": "manual-campaign",
   "campaign": "document-alerts-launch",
   "campaign_day": 13,
   "metrics": {
     "hook_style": "bold-statement"
-  }
+  },
+  "rejected": true,
+  "rejected_at": "2026-08-18T13:26:47.140510+00:00",
+  "rejected_reason": "day-13 recap: regenerate 29 Aug with real numbers instead of placeholders; a recap written 13 days early defeats its purpose and sits 1.3d from the 14-day stale cap"
 }

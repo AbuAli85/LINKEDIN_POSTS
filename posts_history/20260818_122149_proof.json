@@ -1,0 +1,22 @@
+{
+  "pillar": "proof",
+  "topic": "Document expiry alerts: bilingual email, one consistent day count, fires once",
+  "format": "Open on the defect that was caught in testing, then state exactly what was verified and what is still open",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "An expiry alert that names the wrong document is worse than no alert at all.\n\nOurs did that. A municipality licence 25 days from expiry, and the email closed by telling the reader to renew the commercial registration first. Correct sentence. Wrong document. Caught in our own test sweep.\n\nFixed. The alert is live.\n\nWhen a document nears expiry, SmartPRO Hub emails you the document name, the issuing authority, and the exact expiry date. Arabic and English in one message. Arabic right-to-left and formal, not a translation bolted on.\n\nThe number is the number on every surface: the document card, the alerts page, the email subject in both languages, the run history. 25 days, everywhere. A count that drifts between screens is a count nobody trusts.\n\nIt fires once. We ran the engine three times on the same document. No second email. No second row in the run history.\n\nNot done yet: the alert carries no document reference number, and parts of the documents screen still render in English in Arabic mode. Both are on the list. Neither moves the date.\n\nLet me be direct. A licence lapses on a Thursday, and the fine does not care that the reminder was in your inbox.\n\nBook a free 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=proof\nOr WhatsApp: https://wa.me/96879665522?text=Hi%2C%20I%20saw%20your%20LinkedIn%20post%20and%20want%20to%20learn%20more%20about%20SmartPRO%20Hub.\n\n#OmanBusiness\n#HRManagement\n#SmartPROHub",
+  "char_count": 1479,
+  "generated_at": "2026-08-18T12:21:49.737355+00:00",
+  "model": "manual-authored",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "edited_by": "manual-announcement",
+  "metrics": {
+    "hook_style": "bold-statement"
+  }
+}

@@ -66,6 +66,14 @@ published post already committed to — do not widen a live claim retroactively.
 
 # Campaign: `document-alerts-launch`
 
+**Spec status: satisfied as-built, 2026-08-18.** These seven were drafted from
+the six themes the owner listed plus the two sourcing rules recorded below, not
+from a written campaign document — none exists in this repo, and `grep` finds
+the tag nowhere else. The owner reviewed the drafts and accepted them as
+matching the original prompt's intent, so no reconciliation pass is outstanding.
+If a written spec surfaces later, this section is the record of what was
+actually built and why.
+
 Seven posts, tagged `campaign: "document-alerts-launch"` with `campaign_day` on
 each. Day 1 is the announcement above (already approved). Days 2–13 are drafts
 awaiting approval. All clear `generator._validate()`; `require_link=True` for

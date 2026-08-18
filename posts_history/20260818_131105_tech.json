@@ -1,0 +1,24 @@
+{
+  "pillar": "tech",
+  "topic": "The wrong-document alert we shipped, and the verification that caught it",
+  "format": "Walk the bug, the fix and the verification loop; end on the two gaps left open",
+  "language": "en",
+  "segment": "C",
+  "publish_day": "Saturday",
+  "post": "We shipped an expiry alert last week that gave the wrong instruction. Here is the loop, because the interesting part is not the bug.\n\nA municipality licence, 25 days out. The alert body was correct — right document, right issuer, right date. Then it appended a clause telling the reader to renew their commercial registration first, because the same tenant had an active work permit.\n\nTwo real rules, welded into one sentence that was true of neither. The classic shape: guidance lifted from a neighbouring subsystem and attached to the wrong subject. Every fact in that email checked out.\n\nThe fix was small. The verification was not.\n\nWe re-ran the engine and checked the day count on every surface it appears: the document card, the alerts page, the email subject in Arabic, the email subject in English, the run history. Five surfaces, one number, no drift. Then three engine runs against the same document to prove it fires once — no second email, no second row.\n\nThe lesson I keep relearning: a correctness bug in a compliance product is not caught by testing that the code runs. It is caught by testing that two screens agree.\n\nWe left two known gaps in the release notes rather than quietly closing the ticket. The alert carries no reference number yet, and parts of the documents screen still render English in Arabic mode.\n\nFollow for build-in-public updates from SmartPRO Hub. DM if you want to compare notes on multi-tenant architecture.\n\n#BuildInPublic\n#SaaS\n#OmanTech\n#SmartPROHub",
+  "char_count": 1494,
+  "generated_at": "2026-08-18T13:11:05.565231+00:00",
+  "model": "manual-authored",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "edited_by": "manual-campaign",
+  "campaign": "document-alerts-launch",
+  "campaign_day": 4,
+  "metrics": {
+    "hook_style": "bold-statement"
+  }
+}

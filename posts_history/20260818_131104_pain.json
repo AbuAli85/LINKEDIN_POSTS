@@ -1,0 +1,24 @@
+{
+  "pillar": "pain",
+  "topic": "What an expired licence actually costs, without inventing a fine figure",
+  "format": "Open on where the failure surfaces, name the cost qualitatively, then admit we caught ourselves first",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Thursday",
+  "post": "An expired licence does not announce itself. The counter does.\n\nYou find out when a transaction stops. Someone from your team is standing at a government counter with a file that cannot move, and the reason is a document that lapsed weeks ago.\n\nWhat that costs is not one number. It is the transaction that stops. The days your PRO spends chasing a renewal instead of doing the work you hired them for. The fine exposure. And the part nobody puts on a spreadsheet — being the company that turns up to a ministry with lapsed papers, twice.\n\nLet me be direct about our own record here. The first violation our system caught was ours. Our own OCCI certificate had expired. We built the alerting, pointed it at our own file, and it found us first.\n\nThat is the whole argument for automating it. We are not more organised than you. We are on a list that checks itself.\n\nThe version that works is boring: the document, the issuing authority, the exact expiry date, in your inbox 90 days out. Not a dashboard you remember to open. An email that arrives whether or not anyone was thinking about it.\n\nNinety days is enough to renew calmly. Ninety minutes is not.\n\nBook a free 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=pain\nOr WhatsApp: https://wa.me/96879665522?text=Hi%2C%20I%20saw%20your%20LinkedIn%20post%20and%20want%20to%20learn%20more%20about%20SmartPRO%20Hub.\n\n#OmanBusiness\n#HRManagement\n#SmartPROHub",
+  "char_count": 1462,
+  "generated_at": "2026-08-18T13:11:04.565231+00:00",
+  "model": "manual-authored",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "edited_by": "manual-campaign",
+  "campaign": "document-alerts-launch",
+  "campaign_day": 2,
+  "metrics": {
+    "hook_style": "bold-statement"
+  }
+}

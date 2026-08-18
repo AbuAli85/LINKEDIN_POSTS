@@ -332,15 +332,19 @@ def approve_draft_file() -> int:
             return 0
         raise SystemExit(f"Cannot approve {path.name}: {why}")
 
+    from notifier import approval_source
+
     post.update({
         "status":           "approved",
         "approved":         True,
         "approval_required": False,
         "approved_at":      datetime.now(timezone.utc).isoformat(),
+        "approved_by":      approval_source(),
         "dry_run":          False,
     })
     write_json(path, post)
     print(f"Approved: {path.name}  (will publish on next scheduled {post.get('pillar', '')} cron)")
+    _notify_draft_approved(path, post)
     return 0
 
 
@@ -386,14 +390,16 @@ def _publish_post_file(path: Path) -> int:
     try:
         result = publish_post(post["post"], pillar=post.get("pillar", ""))
         print(f"Published! Post ID: {result['post_id']}  image={result.get('image_path','')}")
-        _update_json(path, {
+        published_fields = {
             "status":              "published",
             "published":           True,
             "post_id":             result["post_id"],
             "published_at":        datetime.now(timezone.utc).isoformat(),
             "cta_comment_posted":  result.get("cta_comment_posted", False),
             "cta_comment_url":     result.get("cta_comment_url", ""),
-        })
+        }
+        _update_json(path, published_fields)
+        _notify_post_published(path, {**post, **published_fields})
         return 0
     except LinkedInError as e:
         print(f"ERROR: {e}", file=sys.stderr)
@@ -486,6 +492,26 @@ def _notify_draft_ready(path: Path, post: dict, pillar: str) -> None:
         )
     except Exception as exc:  # noqa: BLE001 - notifications must never abort drafting
         print(f"WARNING: draft notification failed unexpectedly: {exc}")
+
+
+def _notify_draft_approved(path: Path, post: dict) -> None:
+    """Confirm an approval to the owner without blocking the approval itself."""
+    try:
+        from notifier import send_draft_approved
+
+        send_draft_approved(draft_path=str(path), post=post)
+    except Exception as exc:  # noqa: BLE001 - a failed notice must not unapprove a draft
+        print(f"WARNING: approval notification failed unexpectedly: {exc}")
+
+
+def _notify_post_published(path: Path, post: dict) -> None:
+    """Announce a live post without risking the published status already written."""
+    try:
+        from notifier import send_post_published
+
+        send_post_published(draft_path=str(path), post=post)
+    except Exception as exc:  # noqa: BLE001 - the post is already live; never raise here
+        print(f"WARNING: published notification failed unexpectedly: {exc}")
 
 
 def _print_post(post: dict) -> None:

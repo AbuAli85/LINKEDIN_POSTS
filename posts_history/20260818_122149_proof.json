@@ -19,5 +19,6 @@
   "metrics": {
     "hook_style": "bold-statement"
   },
-  "approved_at": "2026-08-18T12:41:27.903673+00:00"
+  "approved_at": "2026-08-18T12:41:27.903673+00:00",
+  "approved_by": "GitHub Actions — approve_draft workflow (commit fee662b)"
 }

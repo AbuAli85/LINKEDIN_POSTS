@@ -1,0 +1,19 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "Automated invoicing per service for PRO firms — billing 30 clients in the time it used to take to bill three",
+  "format": "Walk through a feature in 4-5 steps: what triggers it, what it does, what it prevents, who saves time",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "A PRO firm in Muscat was billing 30 clients a month. It took one admin three full days to do it.\n\nNot because the work was complicated. Because every client had different services, different rates, and different billing cycles — all tracked in a spreadsheet.\n\nHere's how SmartPRO Hub's automated invoicing changes that:\n\nA completed service triggers the invoice automatically — no manual entry needed.\n\nEach client's rates, service types, and billing rules are stored per profile. The invoice reflects exactly what was delivered, nothing more.\n\nIt routes for internal approval before it goes out. No more \"we sent the wrong amount.\"\n\nThe client receives it directly through the white-label portal. They can view, approve, or query it without a single WhatsApp message.\n\nFinance sees real-time status: sent, viewed, paid, overdue.\n\nWe built this because PRO services automation in Oman was being handled with group chats and copy-paste invoices. One billing error with a government client can damage a relationship that took years to build.\n\nOur customers using automated invoicing report cutting billing time by over 80%. That's not efficiency — that's getting three days back every month.\n\nIf your team is still building invoices manually, what's the one part that eats the most time?\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#GCCBusiness\n#SMEOman",
+  "char_count": 1474,
+  "generated_at": "2026-08-19T07:21:17.667145+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "has_variant": true
+}

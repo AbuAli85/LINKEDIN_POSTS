@@ -10,8 +10,8 @@
   "generated_at": "2026-08-18T12:21:49.737355+00:00",
   "model": "manual-authored",
   "attempts": 1,
-  "status": "approved",
-  "published": false,
+  "status": "published",
+  "published": true,
   "approved": true,
   "approval_required": false,
   "dry_run": false,
@@ -19,9 +19,13 @@
   "metrics": {
     "hook_style": "bold-statement"
   },
-  "approved_at": "2026-08-18T12:41:27.903673+00:00",
+  "approved_at": "2026-08-19T05:47:11.126894+00:00",
   "approved_by": "GitHub Actions — approve_draft workflow (commit fee662b)",
   "campaign": "document-alerts-launch",
   "campaign_day": 1,
-  "publish_date": "2026-08-19"
+  "publish_date": "2026-08-19",
+  "post_id": "urn:li:share:7495717987837198336",
+  "published_at": "2026-08-19T05:47:12.906616+00:00",
+  "cta_comment_posted": false,
+  "cta_comment_url": ""
 }

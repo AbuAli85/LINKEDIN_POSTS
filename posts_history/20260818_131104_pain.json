@@ -10,8 +10,8 @@
   "generated_at": "2026-08-18T13:11:04.565231+00:00",
   "model": "manual-authored",
   "attempts": 1,
-  "status": "approved",
-  "published": false,
+  "status": "published",
+  "published": true,
   "approved": true,
   "approval_required": false,
   "dry_run": false,
@@ -22,6 +22,10 @@
     "hook_style": "bold-statement"
   },
   "publish_date": "2026-08-20",
-  "approved_at": "2026-08-18T21:29:47.016007+00:00",
-  "approved_by": "panel.py approve — Claude Code session, at owner's request (bulk campaign approval)"
+  "approved_at": "2026-08-20T05:47:36.453632+00:00",
+  "approved_by": "panel.py approve — Claude Code session, at owner's request (bulk campaign approval)",
+  "post_id": "urn:li:share:7496080482246295552",
+  "published_at": "2026-08-20T05:47:38.366996+00:00",
+  "cta_comment_posted": false,
+  "cta_comment_url": ""
 }

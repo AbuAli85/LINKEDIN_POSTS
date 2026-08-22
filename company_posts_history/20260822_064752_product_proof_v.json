@@ -1,0 +1,20 @@
+{
+  "pillar": "product_proof",
+  "topic": "What zero WPS rejections in twelve months actually means for a 200-person business",
+  "format": "Tight case study: company profile, problem, what changed, the one number that proves it worked",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "A 200-person company in Muscat just ran 12 consecutive WPS cycles without a single rejection — after years of treating payroll errors as just part of the job.\n\nPayroll was split across three systems. WPS files built manually every cycle. One transposed IBAN, one mismatched employee ID — rejection, delay, scramble. Finance was losing two full days each month cleaning up errors before salaries could go out.\n\nThey moved to SmartPRO Hub in Q1 last year. WPS payroll with direct bank integration, employee records tied to every filing, SPF and Omanization compliance in the same workflow — not bolted on as an afterthought.\n\nMonth one: clean submission. Month twelve: still clean. Salaries out on time, every cycle.\n\nThe ops director didn't frame it as a software win. She said it was the first time payroll stopped being a source of stress.\n\nThat's what actually changes when you go from disconnected systems to one connected workflow — not a better feature list, but a number you can point to. Twelve cycles. Zero rejections.\n\nIf your WPS process still runs on manual file builds or last-minute fixes, that number is worth paying attention to.\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#WPS\n#PayrollOman\n#OmanBusiness\n#HRTech",
+  "char_count": 1325,
+  "generated_at": "2026-08-22T06:48:03.326881+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260822_064753_product_proof.json"
+}

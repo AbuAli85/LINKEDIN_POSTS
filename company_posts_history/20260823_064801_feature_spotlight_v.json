@@ -1,0 +1,20 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "WhatsApp Business integration — how client requests flow into a tracked case instead of a group chat",
+  "format": "Walk through a feature in 4-5 steps: what triggers it, what it does, what it prevents, who saves time",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "Three work permits. One WhatsApp message at 9 p.m.\n\nBy morning, it's buried under 47 others. Nobody followed up. The deadline passed.\n\nThis isn't a hypothetical — it's what happens every week in firms running their document requests through WhatsApp threads.\n\nSmartPRO Hub's WhatsApp Business integration was built for exactly this situation.\n\nWhen a client message comes in through WhatsApp, SmartPRO Hub automatically converts it into a tracked case — assigned, timestamped, and visible to the right person. No copy-pasting. No forwarding. No \"I thought you were handling it.\"\n\nThe client gets a reference number. The team sees a status. The manager sees a dashboard.\n\nWhat that stops: requests disappearing into group chats, two people sending duplicate replies, and the always-painful \"we never received that\" conversation with a client who absolutely did send it.\n\nWho benefits most: PRO service firms, Sanad offices, and HR teams handling high-volume document requests across multiple clients or entities.\n\nCustomers using our PRO services automation in Oman tell us this single feature is what made them finally drop the spreadsheets. Not the whole platform — just this.\n\nBecause the problem was never effort. It was that nothing was trackable.\n\nWhat's the messiest request your team received over WhatsApp this month?\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#GCCBusiness\n#SMEOman",
+  "char_count": 1514,
+  "generated_at": "2026-08-23T06:48:13.712693+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260823_064802_feature_spotlight.json"
+}

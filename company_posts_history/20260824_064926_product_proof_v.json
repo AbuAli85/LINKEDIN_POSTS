@@ -1,0 +1,20 @@
+{
+  "pillar": "product_proof",
+  "topic": "The HR manager who finally stopped processing leave requests on WhatsApp — what changed in week one",
+  "format": "Before/after of a single workflow: same task, two completely different experiences",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "47 WhatsApp messages. Every Monday. Just to manage leave at a 90-person company.\n\nLeave requests, approvals, complaints about missing approvals, a screenshot of a request from three weeks ago that nobody had processed.\n\nThat was the HR manager's inbox at a trading company in Muscat. Every single Monday, without fail.\n\nWeek one on SmartPRO Hub looked different.\n\nEmployees submitted leave through the platform. The manager saw every request — balances auto-calculated — in one dashboard. Approvals took seconds. Nothing got buried in a chat thread.\n\nBy Friday: zero pending requests. First time in two years.\n\nNo training marathon. No spreadsheet imports or data migrations. The team was live the same day they signed up.\n\nSmartPRO Hub handles leave management, WPS payroll compliance, Omanization tracking, and Ministry of Labour filings in one connected system. Built specifically for Oman businesses. Not five separate tools. Not a WhatsApp group.\n\nHere's what people miss when they frame this as a convenience problem: running HR through a chat app isn't just slow, it's a liability. Compliance exposure when approvals aren't documented. Decisions made on balances nobody's actually verified. A paper trail that exists only until someone deletes a message thread.\n\nThe 47 messages weren't the real cost. The real cost was everything that could go wrong because of them.\n\nWhat's one workflow your team is still managing on WhatsApp that should have moved off it a year ago?\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#WPS\n#Omanization",
+  "char_count": 1658,
+  "generated_at": "2026-08-24T06:49:38.777611+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260824_064927_product_proof.json"
+}

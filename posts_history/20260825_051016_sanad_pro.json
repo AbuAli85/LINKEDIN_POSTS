@@ -1,0 +1,19 @@
+{
+  "pillar": "sanad_pro",
+  "topic": "How a Sanad office cut its client status-update calls by 80% in one month — exactly what changed",
+  "format": "Open with a question that forces the reader to calculate their own answer: how many work permits are you tracking right now, and where exactly is that information?",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Thursday",
+  "post": "How many work permits are you tracking right now — and where, exactly, is that information?\n\nIf your answer involves scrolling up a WhatsApp thread or opening a shared Excel file that three people have edited this week, you already know the problem.\n\nOne Sanad office manager I spoke with was handling 40 work permits, 15 visa renewals, and 8 MOL filings across 20 client companies. Status calls were eating 2-3 hours of her day. Not because clients were difficult. Because they had no other way to know what was happening.\n\nShe switched to SmartPRO Hub in month one.\n\nEvery client got a portal. Every case had a status. Every expiry triggered an automatic alert before anyone had to chase.\n\nStatus-update calls dropped 80% in 30 days.\n\nNot because she worked more. Because the information was finally visible — to her and to the client at the same time.\n\nWork permit tracking in Oman doesn't have to live in someone's head or a WhatsApp group. It can live in a system that updates itself.\n\nThe offices that figure this out first will be the ones clients stop leaving.\n\nWhat's your biggest time drain right now — chasing updates, or preventing them from being needed?\n\nTry the Sanad AI Assistant free — instant answers on work permits, visas & government fees: https://thesmartpro.io/sanad/assistant?utm_source=linkedin&utm_medium=social&utm_campaign=sanad-pro\n\n#OmanBusiness\n#HRManagement\n#SmartPROHub\n#Omanization\n#GCCBusiness",
+  "char_count": 1428,
+  "generated_at": "2026-08-25T05:10:16.397492+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "has_variant": true
+}

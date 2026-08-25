@@ -1,0 +1,20 @@
+{
+  "pillar": "sanad_pro",
+  "topic": "How a Sanad office cut its client status-update calls by 80% in one month — exactly what changed",
+  "format": "Open with a question that forces the reader to calculate their own answer: how many work permits are you tracking right now, and where exactly is that information?",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Thursday",
+  "post": "40 work permits. 15 visa renewals. 8 MOL filings. 20 clients. One WhatsApp group and a shared Excel file that three people have edited this week.\n\nIf that sounds familiar, you already know where this is going.\n\nI talked to a Sanad office manager running exactly that load. Status calls were eating 2-3 hours of her day — not because clients were demanding, but because there was genuinely no other way for them to find out what was happening. They'd call. She'd scroll. She'd update. Repeat.\n\nShe moved to SmartPRO Hub in month one.\n\nEvery client got a portal. Every case had a status. Every expiry triggered an alert before anyone had to chase it down.\n\nStatus calls dropped 80% in 30 days.\n\nShe didn't suddenly work harder. The information just became visible — to her and to the client, at the same time, without anyone having to ask.\n\nThat's the part that gets me. So much of what burns out Sanad offices isn't the actual compliance work. It's the communication overhead that builds up around it when there's no system holding the status. It lives in someone's head, or in a chat thread, or in cell B47 of a file that someone saved over yesterday.\n\nWork permit tracking in Oman doesn't have to run that way. It can live somewhere that updates itself.\n\nThe offices that sort this out first tend to be the ones clients actually stay with.\n\nWhat's eating more of your time right now — chasing updates, or stopping them from being needed in the first place?\n\nTry the Sanad AI Assistant free — instant answers on work permits, visas & government fees: https://thesmartpro.io/sanad/assistant?utm_source=linkedin&utm_medium=social&utm_campaign=sanad-pro\n\n#OmanBusiness\n#HRManagement\n#SmartPROHub\n#Omanization\n#GCCBusiness",
+  "char_count": 1718,
+  "generated_at": "2026-08-25T05:10:39.471298+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260825_051016_sanad_pro.json"
+}

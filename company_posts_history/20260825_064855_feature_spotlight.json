@@ -1,0 +1,18 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "Bilingual (Arabic/English) interface — why a single-language HR system fails Oman businesses",
+  "format": "Walk through a feature in 4-5 steps: what triggers it, what it does, what it prevents, who saves time",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "An HR manager in Muscat sends a contract to a new hire.\n\nThe employee speaks Arabic. The system is English-only. He misreads a field, signs the wrong section, and payroll is set up incorrectly from day one.\n\nThree weeks later, HR is untangling it manually.\n\nThis isn't rare. It happens quietly in companies across Oman every month.\n\nSmartPRO Hub was built bilingual from the ground up — not translated after the fact. That difference matters more than it sounds.\n\nWhen an employee switches the interface to Arabic, every field, label, and workflow renders correctly: right to left, fully localized. Contracts go out via e-signature in the employee's preferred language. Payroll inputs, WPS payroll Oman submissions, and leave requests all flow through without a language gap turning into a data gap.\n\nHR managers stop re-entering information that was misread. Employees stop guessing. Approvals stop stalling.\n\nOne language setting. The whole platform adjusts.\n\nFor Oman businesses managing mixed-nationality teams, a single-language system creates errors that compound quietly — until they show up in a Ministry of Labour filing or an SPF discrepancy. By then, the original mistake is weeks old and three people's problem.\n\nWhat language does your HR system speak — and does it match your team?\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#WPS\n#Omanization",
+  "char_count": 1480,
+  "generated_at": "2026-08-25T06:48:55.211350+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true
+}

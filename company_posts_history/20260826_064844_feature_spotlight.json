@@ -1,0 +1,19 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "Growth partner commission tracking — what gets logged automatically and what no longer needs a spreadsheet",
+  "format": "Open with the specific operational problem, then show how one SmartPRO Hub feature addresses it end-to-end",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "Every month, someone at your company opens a spreadsheet to calculate partner commissions.\n\nThey cross-check deal records. They message sales. They guess at close dates. Two hours later, the number still isn't right — and nobody agrees on which version of the file is even current.\n\nSmartPRO Hub removes that process entirely.\n\nWhen a deal closes in the CRM, the commission gets calculated and logged automatically — based on the partner tier, the deal value, and the terms already sitting in the system. No manual entry. No follow-up messages. No end-of-month reconciliation scramble.\n\nCustomers on our Growth Partner Program get every partner's pipeline, commission status, and payout history in one place. Finance sees it. Ops sees it. The partner sees it through their own portal.\n\nWe built this because GCC businesses running partner programs were buried in admin — not because the programs themselves were complicated, but because the tools they were using weren't talking to each other.\n\nOne platform, one source of truth. The spreadsheet stays closed.\n\nIf your team is still doing this manually, it's probably worth a conversation.\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#GCCBusiness\n#SMEOman",
+  "char_count": 1328,
+  "generated_at": "2026-08-26T06:48:44.446621+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "has_variant": true
+}

@@ -1,0 +1,20 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "Growth partner commission tracking — what gets logged automatically and what no longer needs a spreadsheet",
+  "format": "Open with the specific operational problem, then show how one SmartPRO Hub feature addresses it end-to-end",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "Most GCC partner programs don't have a commission problem. They have a spreadsheet problem.\n\nThe calculation itself isn't hard. But by the time someone has cross-checked the CRM, messaged sales about a close date, downloaded three versions of the same file, and argued about which one is correct — two hours are gone and nobody's actually confident in the number.\n\nSmartPRO Hub handles this automatically. When a deal closes in the CRM, the commission is calculated and logged instantly, based on the partner tier, deal value, and terms already in the system. Nothing to enter manually. No follow-up messages. No end-of-month panic.\n\nOn our Growth Partner Program, everything lives in one place — pipeline, commission status, payout history. Finance can see it. Ops can see it. The partner sees their own view through a dedicated portal. Everyone's looking at the same data, so there's nothing to dispute.\n\nWe built this after watching GCC businesses drown in admin for programs that weren't actually complicated. The programs were fine. The tools just weren't connected, so people filled the gaps manually.\n\nThat's the part we got rid of.\n\nIf your team is still doing this by hand, it's worth 30 minutes to see what it looks like when it runs on its own.\n\nBook a demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#GCCBusiness\n#SMEOman",
+  "char_count": 1434,
+  "generated_at": "2026-08-26T06:48:56.474796+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260826_064844_feature_spotlight.json"
+}

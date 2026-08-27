@@ -1,0 +1,20 @@
+{
+  "pillar": "product_proof",
+  "topic": "A PRO services firm scaled from 15 to 60 client companies without adding admin headcount",
+  "format": "Lead with a specific customer outcome — time saved, errors eliminated, hours recovered — then describe what changed",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "Four admin staff. Sixty client companies. Zero additional hires.\n\nA PRO services firm in Oman pulled that off after moving everything off spreadsheets and into SmartPRO Hub.\n\nEach client got its own white-label portal. Deadlines triggered automatically. Government filing checklists stopped living in someone's WhatsApp thread.\n\nFour people handling what used to take eight — not because anyone worked longer hours, but because nothing fell through the cracks anymore.\n\nSmartPRO Hub is built for PRO services firms and Sanad offices managing compliance across multiple clients in Oman and the GCC. One platform, one source of truth. No version confusion, no missed renewals, no manual chasing.\n\nIf your client list keeps growing but your back-office can't keep up, that gap is already costing you. It shows up in overtime, in errors, in the renewal someone almost missed.\n\nWhat's one compliance task your team still tracks manually that you know shouldn't be?\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#WPS\n#GCCBusiness",
+  "char_count": 1140,
+  "generated_at": "2026-08-27T09:42:29.636508+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 2,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260827_094220_product_proof.json"
+}

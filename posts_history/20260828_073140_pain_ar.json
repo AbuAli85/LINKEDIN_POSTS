@@ -10,11 +10,15 @@
   "generated_at": "2026-08-28T07:31:40.153742+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 1,
-  "status": "approved",
-  "published": false,
+  "status": "published",
+  "published": true,
   "approved": true,
   "approval_required": false,
   "dry_run": false,
-  "approved_at": "2026-08-28T20:37:59.039011+00:00",
-  "approved_by": "GitHub Actions — approve_draft dispatched by AbuAli85"
+  "approved_at": "2026-08-30T05:23:56.974672+00:00",
+  "approved_by": "GitHub Actions — approve_draft dispatched by AbuAli85",
+  "post_id": "urn:li:share:7499698406769127424",
+  "published_at": "2026-08-30T05:23:58.375161+00:00",
+  "cta_comment_posted": false,
+  "cta_comment_url": ""
 }

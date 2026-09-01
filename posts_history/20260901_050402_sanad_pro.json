@@ -1,0 +1,19 @@
+{
+  "pillar": "sanad_pro",
+  "topic": "Sanad offices are staffed entirely by Omani nationals — the only sector in Oman where 100% Omanisation is mandatory. Here is what that means for how they operate.",
+  "format": "Open with a question that forces the reader to calculate their own answer: how many work permits are you tracking right now, and where exactly is that information?",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Thursday",
+  "post": "How many work permits are you tracking right now — and where exactly is that information?\n\nTake 10 seconds. Count them up.\n\nNow tell me: if a client calls in 3 minutes asking about a visa renewal you submitted 6 days ago, can you pull the status without opening WhatsApp and scrolling back through 200 messages?\n\nMost Sanad managers cannot.\n\nAnd it makes sense why. Your office is the only sector in Oman where 100% Omanisation is legally mandated. You are the official gateway between every business in Oman and every government authority. That is real responsibility — MOL filings, Civil Status transactions, ROP clearances, Omanisation certificates, work permit tracking across 20+ client companies.\n\nThe pressure is not small. But the tools most offices use still are.\n\nWhatsApp threads. Shared Excel files. Handwritten registers. One staff member holds everything in their head — and when they are sick, the whole operation slows down.\n\nSmartPRO Hub was built specifically for how a Sanad office actually runs. Structured case intake. Expiry alerts. Client portal. Digital document vault. Automated invoicing per service.\n\nYour clients stop calling to ask \"what's the status?\" — because they already know.\n\nNot sure where to start? The Sanad AI Assistant answers work permit and visa questions instantly, in English and Arabic — free, no login needed.\n\nTry the Sanad AI Assistant free — instant answers on work permits, visas & government fees: https://thesmartpro.io/sanad/assistant?utm_source=linkedin&utm_medium=social&utm_campaign=sanad-pro\n\n#OmanBusiness\n#HRManagement\n#SmartPROHub\n#Omanization\n#GCCBusiness",
+  "char_count": 1617,
+  "generated_at": "2026-09-01T05:04:02.315866+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 2,
+  "validation_warning": "too long (1617 chars, need <= 1500)",
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true
+}

@@ -1,0 +1,19 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "Direct bank integration for WPS submission — what disappears from the HR team's monthly checklist",
+  "format": "Lead with a quote or question from a customer, then explain the feature built in response",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "\"Every month, I'm chasing four different people just to confirm payroll went through.\"\n\nThat's what an HR manager at a 90-person company in Muscat told us. She wasn't complaining about the work. She was describing her process.\n\nChase the PRO for the employee list. Chase finance for the transfer confirmation. Chase the bank for the WPS file status. Chase the MOL portal to verify submission.\n\nFour touchpoints. One task. Every single month.\n\nSmartPRO Hub built direct bank integration specifically to collapse that loop.\n\nWhen payroll is processed inside the platform, the WPS file is generated automatically — formatted to Central Bank of Oman standards — and submitted directly to the bank. Confirmation comes back into the same dashboard.\n\nNo file exports. No manual uploads. No follow-up messages.\n\nWhat disappears from the HR checklist: the entire coordination layer between payroll approval and WPS confirmation.\n\nFor HR managers running WPS payroll in Oman, that's usually 2–4 hours returned every cycle. Hours that were never about payroll — they were about chasing status updates.\n\nIf your monthly WPS process still involves more than two people, it's worth a closer look.\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#WPS\n#PayrollOman\n#HRTech\n#OmanBusiness",
+  "char_count": 1367,
+  "generated_at": "2026-09-02T11:37:15.783622+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 2,
+  "validation_warning": "contains an invented customer testimonial or unverifiable specific outcome (a quoted/attributed claim, or a named persona with a specific company size + result) — will retry",
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true
+}

@@ -1,7 +1,7 @@
 anthropic==0.117.0
 requests==2.34.2
 resend==2.34.0
-python-dotenv==1.2.2
+python-dotenv==1.2.3
 pillow==12.3.0
 arabic-reshaper==3.0.1
 # 0.6.x is a Rust-extension rewrite of python-bidi; verified importing and

@@ -1,0 +1,20 @@
+{
+  "pillar": "product_proof",
+  "topic": "How a multi-branch operation manages payroll for four locations from one screen",
+  "format": "Open with a SmartPRO Hub product capability, then show the real-world business outcome it enables",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "A retail group in Muscat cut payroll processing from four days to under two hours — across four branches, with zero spreadsheets.\n\nThey were running payroll through a mix of Excel files, WhatsApp messages, and a part-time accountant trying to keep it all from falling apart. Every month: three to four days of back-and-forth, regular errors, and WPS submissions that sometimes missed the deadline.\n\nSmartPRO Hub pulled all four branches into one payroll dashboard. Attendance, deductions, and allowances from each location land in a single screen. WPS files generate automatically and go straight to the bank.\n\nThey haven't missed a WPS deadline since.\n\nWe built this because four branches shouldn't require a dedicated finance team just to get payroll out the door. The complexity isn't something to manage around — it's the thing that needs to go.\n\nCustomers aren't paying for a sophisticated system. They're paying to stop doing this by hand.\n\nIf you're running more than one location and still reconciling payroll manually, that time has a real cost. It compounds every month.\n\nWhat's the one payroll bottleneck your team keeps working around?\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#WPS\n#PayrollOman\n#OmanBusiness\n#GCCBusiness",
+  "char_count": 1333,
+  "generated_at": "2026-09-06T11:16:27.966480+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260906_111609_product_proof.json"
+}

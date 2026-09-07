@@ -20,5 +20,8 @@
   "post_id": "urn:li:share:7500061536904867840",
   "published_at": "2026-08-31T05:26:55.735680+00:00",
   "cta_comment_posted": false,
-  "cta_comment_url": ""
+  "cta_comment_url": "",
+  "metrics": {
+    "hook_style": "question"
+  }
 }

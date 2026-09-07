@@ -1,0 +1,20 @@
+{
+  "pillar": "product_proof",
+  "topic": "End-of-service calculations that used to take a spreadsheet morning now run in seconds",
+  "format": "Tight case study: company profile, problem, what changed, the one number that proves it worked",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "An HR manager at a contracting firm in Muscat was spending 2.5 hours on every end-of-service calculation. Not because she was slow — because the data lived across three spreadsheets. Tenure records here, leave balances there, salary history somewhere else. One wrong cell and she'd start over.\n\nShe switched to SmartPRO Hub in Q1 this year.\n\nThe same calculation now takes under 40 seconds. Employee records, contract terms, Oman Labour Law logic — all of it runs automatically, in one place.\n\nHer words: \"I used to dread resignations. Now I process the final settlement before the meeting is over.\"\n\nThat's the actual problem here. End-of-service errors aren't just slow — they're a liability. Disputed settlements, Ministry of Labour complaints, ugly departures: most of them trace back to a wrong number in a spreadsheet nobody audited.\n\nSmartPRO Hub runs the full calculation, flags anything that needs review, and closes the workflow in one pass. No cross-referencing. No guessing.\n\nIf you're still doing this manually, you're carrying risk you won't see until something goes wrong.\n\nHow many hours did your last exit take?\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#PayrollOman\n#Omanization",
+  "char_count": 1317,
+  "generated_at": "2026-09-07T12:57:09.692623+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260907_125659_product_proof.json"
+}

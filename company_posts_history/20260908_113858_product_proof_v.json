@@ -1,0 +1,20 @@
+{
+  "pillar": "product_proof",
+  "topic": "The HR manager who finally stopped processing leave requests on WhatsApp — what changed in week one",
+  "format": "Before/after of a single workflow: same task, two completely different experiences",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "One HR manager in Muscat recovered a missed leave request, three buried approvals, and two hours of her Monday — in her first week on SmartPRO Hub.\n\nThat's not a rough estimate. That's what she reported.\n\nBefore SmartPRO Hub: leave requests lived in group chats. Approvals were informal. Records existed only if someone remembered to update a spreadsheet.\n\nBy Friday of the same week: every request logged, approved, and recorded before 9am.\n\nWeek one numbers — 100% of requests processed through a single workflow. Response time dropped from hours to minutes. No lost threads. No \"I thought you approved it.\"\n\nSmartPRO Hub was built for this because GCC businesses run on WhatsApp by default, and that default is costing operations teams real time every single day. Not occasionally. Daily.\n\nThe HR software Oman businesses actually stick with is the kind that replaces the habit, not just the tool. There's a difference. A new tool people work around doesn't fix anything.\n\nIf your HR team is still managing workforce requests through chat threads, their capacity is lower than it needs to be.\n\nWhat would your team do with two extra hours a week?\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#WPS\n#GCCBusiness",
+  "char_count": 1330,
+  "generated_at": "2026-09-08T11:39:09.040233+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 2,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260908_113859_product_proof.json"
+}

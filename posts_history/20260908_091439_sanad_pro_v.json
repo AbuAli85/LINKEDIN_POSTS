@@ -1,0 +1,20 @@
+{
+  "pillar": "sanad_pro",
+  "topic": "Why Oman's 924 Sanad offices represent the single biggest untapped B2B software market in the country",
+  "format": "Open with a specific Sanad or PRO failure moment — a visa that expired, a client who found out at the airport, a missed MOL filing — make it so specific the reader stops scrolling",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Thursday",
+  "post": "One missed renewal. One deportation flag. One phone call at 10 PM that ended a two-year client relationship.\n\nHis employee got stopped at Muscat airport. Overstayed visa. The renewal was on the Sanad manager's list — somewhere between a WhatsApp message from three weeks ago and a spreadsheet tab nobody had touched since Tuesday.\n\nIf you run a Sanad office, you already know how that happens. Not carelessness. Just volume. You're tracking 40 work permits, 15 visa renewals, 8 MOL filings across 20 client companies, and your entire system is a group chat and a color-coded Excel file that three people edit at different times.\n\nThat's not a workflow. That's a prayer.\n\nWhatsApp won't alert you 30 days before a visa expires. Excel won't flag an MOL filing that slipped because someone's message got buried under 47 others. And when the client calls at 10 PM, none of that matters — what matters is whose name is on the license.\n\n924 licensed Sanad offices in Oman. Every one of them is the legal front door for their clients' government paperwork. The exposure is real. The tools most offices are running on were built for something much smaller.\n\nSmartPRO Hub is built for exactly this workload. Expiry alerts before things go wrong. Client portals. PRO task assignment. A document vault that doesn't live in someone's personal Google Drive. Automated invoicing. One dashboard across every client you serve.\n\nThe airport call is avoidable. Most of them are.\n\nTry the Sanad AI Assistant free — instant answers on work permits, visas & government fees: https://thesmartpro.io/sanad/assistant?utm_source=linkedin&utm_medium=social&utm_campaign=sanad-pro\n\n#OmanBusiness\n#HRManagement\n#SmartPROHub\n#Omanization\n#GCCBusiness",
+  "char_count": 1721,
+  "generated_at": "2026-09-08T09:14:55.298562+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 2,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260908_091440_sanad_pro.json"
+}

@@ -1,0 +1,20 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "E-signature for employment contracts — three signatures across two countries, end-to-end in one platform",
+  "format": "Open with the specific operational problem, then show how one SmartPRO Hub feature addresses it end-to-end",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "Three signatures. Three cities. One dropped candidate.\n\nThat's the scenario most GCC hiring teams know well but rarely talk about — the contract that took too long, and the candidate who didn't wait.\n\nThe typical workaround is a PDF chain. You email it, they download it, print it, scan it, re-upload it, and somewhere in that mess someone forgets to follow up. Then comes the WhatsApp message. Then another one. By the time the third signature lands, the candidate has already signed somewhere else.\n\nSmartPRO Hub's e-signature module cuts that whole process out.\n\nYou send one contract from the platform. Each signatory gets a secure link — nothing to download, no account required. From your end, you can see exactly who opened it, who signed, and who hasn't moved yet. The whole thing runs in Arabic and English, so no one's squinting at a form in a language they're not comfortable with.\n\nNo \"which version did you sign?\" No contracts scattered across three inboxes. No waiting and hoping.\n\nTeams across Oman and the GCC use this for employment contracts, offer letters, and service agreements. Every document is tracked, stored, and auditable — all in one place.\n\nIf your current process still depends on PDF attachments and optimism, this is the fix.\n\nGenuine question: how many days does your contract process take from draft to final signature?\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#GCCBusiness\n#SMEOman",
+  "char_count": 1542,
+  "generated_at": "2026-09-09T11:45:10.352632+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260909_114456_feature_spotlight.json"
+}

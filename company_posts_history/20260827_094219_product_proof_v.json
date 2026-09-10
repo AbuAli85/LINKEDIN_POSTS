@@ -10,11 +10,14 @@
   "generated_at": "2026-08-27T09:42:29.636508+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 2,
-  "status": "draft",
+  "status": "deleted",
   "published": false,
   "approved": false,
-  "approval_required": true,
+  "approval_required": false,
   "dry_run": true,
   "is_variant": true,
-  "variant_of": "20260827_094220_product_proof.json"
+  "variant_of": "20260827_094220_product_proof.json",
+  "rejected": true,
+  "rejected_at": "2026-09-10T10:28:39.370597+00:00",
+  "rejected_reason": "auto-expired: draft older than 14 days (14d)"
 }

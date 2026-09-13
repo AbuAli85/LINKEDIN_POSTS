@@ -1,0 +1,20 @@
+{
+  "pillar": "product_proof",
+  "topic": "A Sanad office in Muscat moved 40 client work permits off WhatsApp — no missed renewals in six months",
+  "format": "Tight case study: company profile, problem, what changed, the one number that proves it worked",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "40 work permits managed through WhatsApp. No renewal dates in one place. Just scattered threads and the constant background anxiety that someone, somewhere, missed something.\n\nThat was one PRO office six months ago.\n\nThey moved to SmartPRO Hub. Since then: zero missed renewals. Not fewer — zero. Every permit has a live status. Every expiry triggers an alert before it becomes a problem. Clients log into their own white-label portal to check documents themselves, which means the \"any update?\" messages stopped coming.\n\nThat's what good compliance software actually does — it removes the chase entirely, not just some of it.\n\nSmartPRO Hub was built specifically for Oman and GCC businesses running PRO services, work permit tracking, and compliance workflows. Not a generic HR tool with GCC fields bolted on. Built for this from the ground up.\n\nThe Business plan runs OMR 49/month and covered everything this office needed. There's a 14-day free trial, no credit card required.\n\nIf your team is still running renewals through WhatsApp, the risk is real and boring in the worst way — not some dramatic failure, just one hectic week where a date slips and you're looking at a Ministry of Labour fine that was completely avoidable.\n\nHow many permits is your office tracking right now — and where does that list actually live?\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#WPS\n#GCCBusiness",
+  "char_count": 1505,
+  "generated_at": "2026-09-13T12:13:41.948378+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260913_121329_product_proof.json"
+}

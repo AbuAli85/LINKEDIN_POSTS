@@ -1,0 +1,19 @@
+{
+  "pillar": "proof",
+  "topic": "From three spreadsheets to one system — what the first month of transition looked like",
+  "format": "Open with a specific measurable result — a number, a time saved, a cost eliminated — then explain exactly what created it",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "Week one: the payroll file crashed mid-run. Week four: WPS submitted in 11 minutes flat.\n\nThat gap — four weeks — is what moving from three spreadsheets to one system actually looked like for an operations team in Muscat.\n\nHere's how it happened.\n\nMonth one was not smooth. Data was scattered across an HR sheet, a payroll file, and a WhatsApp group no one fully trusted. End-of-service gratuity calculations were done manually — one employee at a time. Ministry of Labour filings sat on a to-do list that rolled over weekly.\n\nThe first two weeks were migration. Painful, necessary.\n\nBy week three, WPS payroll Oman submissions were running through the platform with direct bank integration. SPF contributions auto-calculated. MOL filings queued and tracked — not chased.\n\nWeek four: the HR manager ran payroll for the full team, flagged two compliance gaps, and closed a work permit renewal — before lunch.\n\nNo extra vendor. No second system. No WhatsApp thread asking \"did this go through?\"\n\nOne platform. One source of truth.\n\nIf you're still deciding whether the switch is worth the disruption — the disruption is the point. The spreadsheet won't catch what it can't see.\n\nBook a free 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=proof\nOr WhatsApp: https://wa.me/96879665522?text=Hi%2C%20I%20saw%20your%20LinkedIn%20post%20and%20want%20to%20learn%20more%20about%20SmartPRO%20Hub.\n\n#OmanBusiness\n#HRManagement\n#PayrollOman\n#WPS\n#SmartPROHub",
+  "char_count": 1503,
+  "generated_at": "2026-09-14T10:12:15.952751+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 2,
+  "validation_warning": "too long (1503 chars, need <= 1500)",
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true
+}

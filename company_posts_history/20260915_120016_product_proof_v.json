@@ -1,0 +1,20 @@
+{
+  "pillar": "product_proof",
+  "topic": "The HR manager who finally stopped processing leave requests on WhatsApp — what changed in week one",
+  "format": "Tight case study: company profile, problem, what changed, the one number that proves it worked",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "11 contract renewals. Sitting in email threads. Nobody at a 23-person trading company in Muscat knew they existed until SmartPRO Hub surfaced them on day one.\n\nThat detail is hard to shake.\n\nTheir HR manager was handling leave requests over WhatsApp — 6 to 8 messages a day, nothing documented, no way to see who was off when. The system worked until it didn't. A key account manager took leave during a client delivery week and nobody found out until the damage was already done.\n\nThey went live on a Tuesday. By Friday, leave requests, approvals, and balances were all in one place. No more chasing messages. The HR manager recovered roughly 4 hours that week and used them to work through a contract renewal she'd been sitting on for weeks — one of the 11.\n\nSmartPRO Hub wasn't designed to replace good HR managers. It was designed for the reality most of them are actually working in: approvals over WhatsApp, contracts buried in email, leave tracked on a spreadsheet nobody updates.\n\nWhen your tools are scattered, the gaps are invisible — right up until something slips through.\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#WPS\n#GCCBusiness",
+  "char_count": 1265,
+  "generated_at": "2026-09-15T12:00:30.202439+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260915_120017_product_proof.json"
+}

@@ -11,9 +11,12 @@
   "model": "claude-sonnet-4-6",
   "attempts": 2,
   "validation_warning": "contains an invented customer testimonial or unverifiable specific outcome (a quoted/attributed claim, or a named persona with a specific company size + result) — will retry",
-  "status": "draft",
+  "status": "deleted",
   "published": false,
   "approved": false,
-  "approval_required": true,
-  "dry_run": true
+  "approval_required": false,
+  "dry_run": true,
+  "rejected": true,
+  "rejected_at": "2026-09-16T11:56:55.051334+00:00",
+  "rejected_reason": "auto-expired: draft older than 14 days (14d)"
 }

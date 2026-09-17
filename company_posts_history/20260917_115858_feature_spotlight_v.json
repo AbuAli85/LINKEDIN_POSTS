@@ -1,0 +1,20 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "Direct bank integration for WPS submission — what disappears from the HR team's monthly checklist",
+  "format": "Open with the specific operational problem, then show how one SmartPRO Hub feature addresses it end-to-end",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "Five hours. Every month. Just gone.\n\nThat's before an HR manager has touched anything that actually requires their judgment.\n\nThe time doesn't disappear into one big task — it gets eaten by a chain of small ones. Collecting payroll sign-offs. Cross-checking WPS files against employee records. Logging into the bank portal. Waiting for confirmation. Fixing rejections. Starting again from wherever things broke.\n\nNone of it is hard work. All of it is slow, and it all lands on the same person.\n\nSmartPRO Hub's direct bank integration for WPS cuts that loop short.\n\nPayroll runs inside the platform. The WPS file gets generated automatically, validated against Ministry of Labour requirements, and sent straight to the bank. No file downloads. No separate portal logins. No chasing approvals over WhatsApp.\n\nWhat actually disappears from the monthly checklist:\n— Manual WPS file formatting\n— Bank portal logins\n— Rejection follow-ups\n— Spreadsheet reconciliation after the fact\n\nCustomers running WPS payroll across Oman — from 15-person service firms to operations with 200+ employees — typically close payroll in one session now, instead of spreading it across two or three days.\n\nOne place to run it. One place to confirm it's done.\n\nIf payroll submission still means juggling multiple tools and steps, that's not a process problem you have to keep living with.\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#WPS\n#PayrollOman\n#OmanBusiness\n#HRTech",
+  "char_count": 1548,
+  "generated_at": "2026-09-17T11:59:14.513374+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20260917_115859_feature_spotlight.json"
+}

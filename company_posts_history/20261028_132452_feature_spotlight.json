@@ -1,0 +1,19 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "Auto-expiry alerts for work permits and visas — how the dashboard surfaces renewals 30/60/90 days out",
+  "format": "Compare 'how most Oman businesses do X today' with 'how SmartPRO Hub customers do X'",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "Most Oman businesses track work permit expiry dates in a spreadsheet that someone updates manually — if they remember.\n\nSmartPRO Hub customers get an automatic alert 90 days out. Then 60. Then 30.\n\nNo chasing. No spreadsheet. No surprise fines because a permit lapsed while everyone assumed someone else was on it.\n\nWhy does this actually matter?\n\nOne expired work permit can halt a project, trigger a Ministry of Labour violation, and cost more to fix than a full year's software subscription. Most businesses don't find out until the damage is already done.\n\nThe SmartPRO Hub dashboard shows every renewal deadline — work permits, visas, residency cards — across your entire workforce. Colour-coded, sorted by urgency, actionable in one click.\n\nWe built this because PRO services automation in Oman shouldn't depend on one person's memory or one spreadsheet that may or may not be current. Your PRO team sees what's coming. HR sees it too. Nothing slips through.\n\nHow many expiry dates are you tracking manually right now — and how confident are you that none are about to lapse?\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#GCCBusiness\n#SMEOman",
+  "char_count": 1270,
+  "generated_at": "2026-10-28T13:24:52.936997+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "has_variant": true
+}

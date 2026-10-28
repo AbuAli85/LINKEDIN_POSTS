@@ -1,0 +1,20 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "Auto-expiry alerts for work permits and visas — how the dashboard surfaces renewals 30/60/90 days out",
+  "format": "Compare 'how most Oman businesses do X today' with 'how SmartPRO Hub customers do X'",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "One expired work permit cost an Oman contractor 3x their annual software budget — because nobody noticed until the Ministry did.\n\nSmartPRO Hub customers get an automatic alert 90 days out. Then 60. Then 30.\n\nNo chasing. No spreadsheet. No surprise fines because a permit lapsed while everyone assumed someone else was on it.\n\nHere's why that matters more than it sounds.\n\nA single expired work permit can halt a project mid-execution, trigger a Ministry of Labour violation, and end up costing more to resolve than a full year's software subscription. Most businesses only find out when the damage is already done — and by then, the conversation shifts from \"how do we fix this\" to \"who missed it.\"\n\nThe SmartPRO Hub dashboard shows every renewal deadline across your workforce — work permits, visas, residency cards — colour-coded by urgency, with one-click action. Your PRO team sees what's coming. HR sees it too. There's no version of events where it slips through because one person was on leave or a spreadsheet wasn't updated.\n\nWe built this because tracking expiry dates shouldn't live in anyone's head, or in a shared Excel file that may or may not reflect reality today.\n\nSo — how many expiry dates are you tracking manually right now? And how confident are you that none are weeks away from lapsing?\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#GCCBusiness\n#SMEOman",
+  "char_count": 1499,
+  "generated_at": "2026-10-28T13:25:03.481053+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20261028_132452_feature_spotlight.json"
+}

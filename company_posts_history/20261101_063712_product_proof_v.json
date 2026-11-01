@@ -1,0 +1,20 @@
+{
+  "pillar": "product_proof",
+  "topic": "End-of-service calculations that used to take a spreadsheet morning now run in seconds",
+  "format": "Before/after of a single workflow: same task, two completely different experiences",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "Four hours. Every Monday. Before the week had even started.\n\nPull the contracts. Cross-reference start dates. Check gratuity tiers. Build the spreadsheet. Double-check the math. Four hours, minimum — for one batch of leavers.\n\nWith SmartPRO Hub, the same output takes seconds.\n\nFinance teams across Oman and the GCC are now processing end-of-service entitlements automatically — gratuity calculations, final settlement breakdowns, WPS payroll Oman compliance — without touching a single formula.\n\nWe built this because spreadsheet errors in final settlements aren't just a time sink. They cause disputes, stall offboarding, and put businesses on the wrong side of Ministry of Labour requirements. That's a bad combination.\n\nOne platform runs the calculation, flags discrepancies, and feeds directly into your payroll run. No manual cross-referencing. No Monday morning blocked out.\n\nWorth asking your team: how many hours a month are you still paying for work that should already be done automatically?\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#OmanBusiness\n#WPS\n#PayrollOman\n#Omanization",
+  "char_count": 1188,
+  "generated_at": "2026-11-01T06:37:21.723373+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20261101_063713_product_proof.json"
+}

@@ -1,0 +1,19 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "Growth partner commission tracking — what gets logged automatically and what no longer needs a spreadsheet",
+  "format": "Walk through a feature in 4-5 steps: what triggers it, what it does, what it prevents, who saves time",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "Someone at your company is probably doing this right now: opening a spreadsheet, pulling up closed deals, cross-referencing partner names, calculating who earned what, and hoping the numbers match.\n\nEvery month. By hand.\n\nHere's how the same thing works in SmartPRO Hub:\n\nA deal closes in the CRM. The system identifies the linked partner, pulls the commission rate from the tier you've already set up, logs the calculation, and adds it to that partner's payout summary — waiting for your review and approval.\n\nThat's it. No manual entry, no \"wait, did we include that deal?\", no last-minute scramble before payroll.\n\nWe built this after hearing the same thing from ops directors and business owners across Oman and the GCC: partner programs were growing, but the admin behind them was eating hours every month. Hours spent on work that should just... happen automatically.\n\nSmartPRO Hub connects your deal pipeline directly to your commission logic. What triggered, what calculated, what's pending approval — it's all in one place, not scattered across tabs and a WhatsApp thread.\n\nOne question worth sitting with: how many commission errors happened last quarter that nobody caught?\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#GCCBusiness\n#HRTech\n#SMEOman",
+  "char_count": 1373,
+  "generated_at": "2026-11-04T14:48:13.103785+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 2,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "has_variant": true
+}

@@ -1,0 +1,20 @@
+{
+  "pillar": "product_proof",
+  "topic": "How one Oman retail company cut payroll prep from three days to two hours after switching to WPS-integrated payroll",
+  "format": "Before/after of a single workflow: same task, two completely different experiences",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "72 hours to 2. That's what one Oman retail company actually recorded after switching to SmartPRO Hub's WPS-integrated payroll.\n\nSame team. Same payday. The work just looked completely different.\n\nBefore: their finance manager spent Monday through Wednesday pulling attendance data, calculating deductions, formatting WPS files, chasing approvals over WhatsApp. One wrong column meant starting over.\n\nAfter: payroll runs inside one platform. Attendance feeds in automatically, WPS files generate to Central Bank spec, and the submission goes out — no separate login, no export, no reformatting.\n\nThree days down to two hours.\n\nWPS compliance in Oman doesn't need to own half the workweek. It should be something you close before lunch.\n\nI want to be direct about what this actually means, because the efficiency framing can obscure it: that finance manager got three days back every month. Not to process more payroll — just to do the rest of their job. Time that was disappearing into copy-paste work and WhatsApp follow-ups is now just... available again.\n\nThat's the part that matters most to me. Manual payroll processes don't fail dramatically — they just quietly drain skilled people, month after month, in ways that never show up on a dashboard.\n\nWhat does your team actually do with the hours payroll takes every month?\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#OmanBusiness\n#PayrollOman\n#WPS\n#SMEOman",
+  "char_count": 1508,
+  "generated_at": "2026-11-07T06:36:22.108234+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20261107_063610_product_proof.json"
+}

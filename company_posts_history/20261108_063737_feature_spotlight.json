@@ -1,0 +1,18 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "WhatsApp Business integration — how client requests flow into a tracked case instead of a group chat",
+  "format": "Open with the specific operational problem, then show how one SmartPRO Hub feature addresses it end-to-end",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "A client sends a visa renewal request over WhatsApp at 7pm.\n\nIt lands in a group with 34 other messages. Someone screenshots it. Someone else says they'll handle it. By Thursday, nothing has moved — and the client is following up again.\n\nThis is how most PRO service firms and HR teams in Oman are still operating.\n\nSmartPRO Hub's WhatsApp Business integration was built for exactly this problem.\n\nWhen a client message comes in, it doesn't stay in a chat. It becomes a tracked case — assigned to a team member, timestamped, linked to that client's file, and visible in a central dashboard.\n\nEvery follow-up, every document, every status update lives in one place. Not scattered across personal phones. Not buried when someone goes on leave.\n\nYour team stops asking \"who's handling this?\" because the answer is already there.\n\nFor HR managers and ops directors juggling multiple client accounts or large workforces, that kind of visibility changes how the whole week runs. You're not chasing people for updates — you're just checking the dashboard.\n\nPRO services automation in Oman shouldn't mean adding more apps to the pile. It should mean fewer requests falling through the cracks.\n\nHow many open client requests do you think are sitting unread in your team's WhatsApp right now?\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#GCCBusiness\n#SMEOman",
+  "char_count": 1471,
+  "generated_at": "2026-11-08T06:37:37.638212+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true
+}

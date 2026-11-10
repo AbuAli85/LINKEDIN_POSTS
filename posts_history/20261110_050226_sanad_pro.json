@@ -1,0 +1,19 @@
+{
+  "pillar": "sanad_pro",
+  "topic": "What it means to hand a new PRO officer a structured case queue instead of a WhatsApp group and a spreadsheet",
+  "format": "Open with a question that forces the reader to calculate their own answer: how many work permits are you tracking right now, and where exactly is that information?",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Thursday",
+  "post": "How many work permits are you tracking right now — and where exactly is that information?\n\nIf your answer involves scrolling up a WhatsApp group or opening a shared Excel file, you already know the problem.\n\nA new PRO officer joins your Sanad office. Smart, motivated, Omani. You hand them a laptop and say: \"Client files are in the group. Renewals are in the sheet. Ask me if you lose track.\"\n\nWithin two weeks, they're the one losing track.\n\nNot because they're not capable. Because no one can manage 40 work permits, 15 visa renewals, and 8 MOL filings across 20 companies inside a chat thread and a spreadsheet. That's not a skills gap. That's a systems gap.\n\nSanad office management built on WhatsApp doesn't fail slowly. It fails suddenly — a missed work permit expiry, a Ministry filing that slipped, a client calling because no one updated them.\n\nWhat changes when you give that same officer a structured case queue per client, automatic expiry alerts, and a task list they own?\n\nThey stop chasing. They start closing.\n\nThat's the difference between a tool built for work permit tracking in Oman and a group chat with good intentions.\n\nTry the Sanad AI Assistant free — instant answers on work permits, visas & government fees: https://thesmartpro.io/sanad/assistant?utm_source=linkedin&utm_medium=social&utm_campaign=sanad-pro\n\n#OmanBusiness\n#HRManagement\n#SmartPROHub\n#Omanization\n#GCCBusiness",
+  "char_count": 1403,
+  "generated_at": "2026-11-10T05:02:26.367120+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "has_variant": true
+}

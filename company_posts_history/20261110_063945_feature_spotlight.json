@@ -1,0 +1,19 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "Bilingual (Arabic/English) interface — why a single-language HR system fails Oman businesses",
+  "format": "Lead with a quote or question from a customer, then explain the feature built in response",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "\"Half our staff can't use the system. They just ignore it and go back to WhatsApp.\"\n\nThat's what an HR manager in Muscat told us — after paying for HR software that only ran in English.\n\nIn Oman, most workforces are mixed. Arabic-speaking employees alongside English-speaking managers. When your HR system speaks one language, half your team is locked out.\n\nThe result isn't just inconvenience.\n\nLeave requests get missed. Policy acknowledgements go unsigned. Payroll queries pile up in someone's DMs instead of being resolved in the platform.\n\nSmartPRO Hub built a fully bilingual Arabic/English interface — not a translated help page, but every screen, every workflow, every notification — because a system your team won't use solves nothing.\n\nHR managers switch language in one click. Employees interact in whichever they're comfortable with. WPS payroll, Omanization tracking, Ministry of Labour filings — all accessible to the people who actually need them.\n\nHR software Oman businesses need has to work for the whole team. Not just the person who bought it.\n\nIf your current system has a language your staff quietly avoids — that's a gap worth fixing.\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#Omanization\n#GCCBusiness",
+  "char_count": 1350,
+  "generated_at": "2026-11-10T06:39:45.010947+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 2,
+  "validation_warning": "contains an invented customer testimonial or unverifiable specific outcome (a quoted/attributed claim, or a named persona with a specific company size + result) — will retry",
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true
+}

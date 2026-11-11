@@ -1,0 +1,19 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "E-signature for employment contracts — three signatures across two countries, end-to-end in one platform",
+  "format": "Lead with a quote or question from a customer, then explain the feature built in response",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "\"We had three people who needed to sign one contract — in two different countries. It took us eleven days.\"\n\nThat was the feedback from an HR manager at a mid-size company expanding across the GCC.\n\nEleven days. For signatures.\n\nWe built e-signature directly into SmartPRO Hub's HR and contracts module because that story wasn't unusual. It was routine.\n\nHere's what the workflow looks like now:\n\nAn employment contract is generated inside the platform. All three signatories — regardless of whether they're in Muscat, Dubai, or Riyadh — receive a secure signing link. Each signs on their device. The completed contract is timestamped, stored, and linked to the employee record.\n\nNo printing. No scanning. No \"did you get my email?\" No eleven days.\n\nFor HR managers and ops directors running cross-border teams, this matters. Hiring delays are rarely about decisions — they're about paperwork that moves slowly between people in different time zones.\n\nSmartPRO Hub connects e-signature with payroll, WPS, and HR records so a completed contract isn't just a document. It's the first step in a connected onboarding process.\n\nOne platform. Both countries. Done.\n\nWhat's the longest your team has waited on a single signature?\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#GCCBusiness\n#SMEOman",
+  "char_count": 1411,
+  "generated_at": "2026-11-11T06:40:26.565241+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 2,
+  "validation_warning": "contains an invented customer testimonial or unverifiable specific outcome (a quoted/attributed claim, or a named persona with a specific company size + result) — will retry",
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true
+}

@@ -10,11 +10,14 @@
   "generated_at": "2026-10-31T05:02:32.921814+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 2,
-  "status": "draft",
+  "status": "deleted",
   "published": false,
   "approved": false,
-  "approval_required": true,
+  "approval_required": false,
   "dry_run": true,
   "is_variant": true,
-  "variant_of": "20261031_050221_pain.json"
+  "variant_of": "20261031_050221_pain.json",
+  "rejected": true,
+  "rejected_at": "2026-11-14T05:19:40.015032+00:00",
+  "rejected_reason": "auto-expired: draft older than 14 days (14d)"
 }

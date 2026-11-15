@@ -1,0 +1,20 @@
+{
+  "pillar": "product_proof",
+  "topic": "From three disconnected systems to one platform — what the first 30 days of transition look like",
+  "format": "Tight case study: company profile, problem, what changed, the one number that proves it worked",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "4 days to close payroll. A trading company got that down to 6 hours — in their first month live on SmartPRO Hub.\n\nThey came in with three systems that didn't talk to each other. Here's how the first four weeks actually went:\n\nWeek 1: WPS payroll and employee records migrated. Bank integration live. The spreadsheet retired permanently.\n\nWeek 2: Work permit and visa deadlines pulled into one dashboard. No more digging through inboxes to find a renewal date someone may or may not have flagged.\n\nWeek 3: HR workflows, Ministry of Labour filings, and Omanization tracking on one screen — bilingual, audit-ready.\n\nWeek 4: First clean payroll cycle. No manual reconciliation. No last-minute scramble.\n\nThe number I keep coming back to: 0 compliance exceptions in their first government filing after go-live.\n\nThat's not a soft win. That's the kind of result that matters when you're operating under GCC compliance requirements and a missed deadline has real consequences.\n\nSmartPRO Hub is built specifically for Oman and GCC operations — WPS payroll, PRO services automation, Sanad office management, HR — connected from the start. Not a generic platform with regional settings bolted on afterward.\n\nIf you're still running three separate systems, here's the honest question: which one fails first when things get busy?\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#OmanBusiness\n#WPS\n#Omanization\n#GCCBusiness",
+  "char_count": 1503,
+  "generated_at": "2026-11-15T06:38:47.488523+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20261115_063836_product_proof.json"
+}

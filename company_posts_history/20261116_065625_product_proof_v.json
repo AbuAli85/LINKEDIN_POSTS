@@ -1,0 +1,20 @@
+{
+  "pillar": "product_proof",
+  "topic": "End-of-service calculations that used to take a spreadsheet morning now run in seconds",
+  "format": "Open with a SmartPRO Hub product capability, then show the real-world business outcome it enables",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "140 employees. One resignation. Hours of spreadsheet work just to calculate what that person was legally owed.\n\nHR managers in Oman know exactly what this looks like: pull the hire date, check the contract type, calculate the entitlement bands, cross-reference the Labour Law — then repeat for every employee on the list.\n\nA manufacturing company in Muscat was doing this manually every time someone left. With 140 staff, that added up fast. One formula error meant starting over.\n\nAfter switching to SmartPRO Hub, the same calculation — contract type, service duration, entitlement rate — runs in seconds. No spreadsheet. No morning lost.\n\nThat's a real time saving, but honestly it's not the main point. Manual end-of-service errors carry actual financial and compliance risk. These numbers feed directly into WPS payroll records and Ministry of Labour filings. A copy-paste mistake at that stage isn't just embarrassing — it's a liability.\n\nFaster is good. Right every time is better.\n\nIf your HR team is still building these in Excel, the tool is working against you.\n\nWhat's the most time-consuming manual HR calculation your team still runs every month?\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#PayrollOman\n#Omanization",
+  "char_count": 1348,
+  "generated_at": "2026-11-16T06:56:34.835964+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20261116_065626_product_proof.json"
+}

@@ -1,0 +1,19 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "The white-label client portal — what a Sanad office's clients see when they log in",
+  "format": "Lead with a quote or question from a customer, then explain the feature built in response",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "\"Can our clients see their own documents without calling us every time?\"\n\nThat question came from a Sanad office manager in Muscat. It's the same question SmartPRO Hub kept hearing from PRO service firms across Oman.\n\nSo we built the answer into the platform.\n\nEvery Sanad office on SmartPRO Hub can give their business clients a branded client portal — the client's logo, their colors, their name on the login screen.\n\nWhen a client logs in, they see exactly what they need:\n\nActive work permits and visa status in real time.\nUploaded documents and contracts — no chasing emails.\nInvoice history and payment records, all in one place.\n\nNo more calls asking \"where is my employee's visa?\"\nNo more WhatsApp threads with 40 attachments and zero context.\n\nThe portal is white-labeled — so your clients interact with your brand, not ours. SmartPRO Hub sits behind the scenes.\n\nFor HR managers and ops directors evaluating Sanad office management software, this is the difference between a vendor and a system that actually reduces their workload.\n\nYour clients become more self-sufficient. Your team stops answering the same status questions three times a day.\n\nWhat do your clients currently call or message you about most — and how much time does that actually take per week?\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#GCCBusiness\n#SMEOman",
+  "char_count": 1462,
+  "generated_at": "2026-11-17T06:41:59.640996+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 2,
+  "validation_warning": "contains an invented customer testimonial or unverifiable specific outcome (a quoted/attributed claim, or a named persona with a specific company size + result) — will retry",
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true
+}

@@ -1,0 +1,20 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "Auto-expiry alerts for work permits and visas — how the dashboard surfaces renewals 30/60/90 days out",
+  "format": "Lead with a quote or question from a customer, then explain the feature built in response",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "\"We found out a visa expired because the employee got stopped at a border checkpoint.\"\n\nThat message came from an HR manager at a Muscat trading company. By then, the damage was done — travel blocked, project delayed, emergency filing fees paid.\n\nThe permit had been sitting in a spreadsheet no one checked.\n\nSmartPRO Hub built auto-expiry alerts specifically for situations like this. The dashboard flags every work permit and visa at 90, 60, and 30 days before expiry — automatically, with no manual tracking required.\n\nHR managers see the full workforce status in one view. Who's expiring this month. Who's coming up next quarter. What's already in the renewal queue.\n\nNo spreadsheet. No WhatsApp reminder chains. No checkpoint surprises.\n\nFor companies managing 20, 50, or 200+ employees across Oman and the GCC, this is the difference between proactive compliance and reactive firefighting.\n\nWork permit tracking GCC teams actually use — built into the same platform handling WPS payroll, Omanization quotas, and Ministry of Labour filings.\n\nOne missed renewal can ground a project. The fix shouldn't require a full-time tracker.\n\nWhat's your current system for catching permit renewals before they lapse?\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#GCCBusiness\n#SMEOman",
+  "char_count": 1399,
+  "generated_at": "2026-11-18T06:41:24.022960+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 2,
+  "validation_warning": "contains an invented customer testimonial or unverifiable specific outcome (a quoted/attributed claim, or a named persona with a specific company size + result) — will retry",
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "has_variant": true
+}

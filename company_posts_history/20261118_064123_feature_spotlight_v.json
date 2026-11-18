@@ -1,0 +1,20 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "Auto-expiry alerts for work permits and visas — how the dashboard surfaces renewals 30/60/90 days out",
+  "format": "Lead with a quote or question from a customer, then explain the feature built in response",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "One expired visa. One border checkpoint. One project stopped cold.\n\nThat's the message an HR manager at a Muscat trading company sent us. By the time she reached out, the damage was already done — travel blocked, project delayed, emergency filing fees paid.\n\nThe permit had been sitting in a spreadsheet nobody opened.\n\nThis is exactly why SmartPRO Hub built auto-expiry alerts. The dashboard flags every work permit and visa at 90, 60, and 30 days before expiry — no manual tracking, no one has to remember to check.\n\nHR managers get the full workforce picture in one view: who's expiring this month, who's coming up next quarter, what's already moving through the renewal queue.\n\nNo spreadsheets. No WhatsApp reminder chains. No checkpoint surprises.\n\nFor companies managing 50 or 200+ employees across Oman and the GCC, this is the gap between catching a renewal in time and scrambling to fix it after. The cost difference between those two scenarios can be significant — in fees, delays, and the kind of stress nobody budgets for.\n\nThe tracking is built into the same platform handling WPS payroll, Omanization quotas, and Ministry of Labour filings. Not a separate tool. Not another login.\n\nOne missed renewal can ground a project. Staying on top of it shouldn't require a dedicated person doing nothing else.\n\nWhat are you using right now to catch permit renewals before they lapse?\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#GCCBusiness\n#SMEOman",
+  "char_count": 1577,
+  "generated_at": "2026-11-18T06:41:34.390428+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 2,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20261118_064124_feature_spotlight.json"
+}

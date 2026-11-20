@@ -10,11 +10,14 @@
   "generated_at": "2026-11-06T06:40:24.990914+00:00",
   "model": "claude-sonnet-4-6",
   "attempts": 1,
-  "status": "draft",
+  "status": "deleted",
   "published": false,
   "approved": false,
-  "approval_required": true,
+  "approval_required": false,
   "dry_run": true,
   "is_variant": true,
-  "variant_of": "20261106_064011_oman_market.json"
+  "variant_of": "20261106_064011_oman_market.json",
+  "rejected": true,
+  "rejected_at": "2026-11-20T06:41:39.215137+00:00",
+  "rejected_reason": "auto-expired: draft older than 14 days (14d)"
 }

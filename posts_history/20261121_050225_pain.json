@@ -1,0 +1,19 @@
+{
+  "pillar": "pain",
+  "topic": "Managing 15 client companies from a WhatsApp group — what breaks and when",
+  "format": "Walk through a day-in-the-life of an HR team managing this manually — show every broken step in sequence",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "8:15 AM. Your phone has 34 unread WhatsApp messages across 6 client groups.\n\nOne is asking about a work permit status.\nOne needs a salary certificate today.\nThree want to know if their WPS payroll Oman submission went through.\nAnd somewhere in that thread — a visa expiry nobody flagged.\n\nThis is the morning for most HR teams managing 10+ client companies manually.\n\nNo dashboard. No alerts. No audit trail.\nJust screenshots, forwarded PDFs, and a spreadsheet that's already three days behind.\n\nBy noon, something slips. It always does.\n\nA Ministry of Labour Oman compliance deadline gets missed. An employee's end-of-service gratuity is calculated wrong. A client calls angry — and you have no record of what was promised or when.\n\nThe problem isn't your team's effort.\nIt's that the system was never built for this volume.\n\nWhatsApp is a messaging app. It was never an operations platform.\n\nWhen you're managing 15 companies, you need every work permit, payroll run, SPF filing, and contract in one place — with timestamps, not thread searches.\n\nThat's what SmartPRO Hub was built for. One connected platform. Built for Oman.\n\nBook a free 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=pain\n\nOr WhatsApp: https://wa.me/96879665522?text=Hi%2C%20I%20saw%20your%20LinkedIn%20post%20and%20want%20to%20learn%20more%20about%20SmartPRO%20Hub.\n\nHow many tabs do you have open right now just to manage one client?\n\n#OmanBusiness\n#HRManagement\n#PayrollOman\n#WPS\n#SmartPROHub",
+  "char_count": 1525,
+  "generated_at": "2026-11-21T05:02:25.510248+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 2,
+  "validation_warning": "too long (1525 chars, need <= 1500)",
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true
+}

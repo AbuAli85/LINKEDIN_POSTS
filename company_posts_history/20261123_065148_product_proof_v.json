@@ -1,0 +1,20 @@
+{
+  "pillar": "product_proof",
+  "topic": "A Sanad office in Muscat moved 40 client work permits off WhatsApp — no missed renewals in six months",
+  "format": "Before/after of a single workflow: same task, two completely different experiences",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "40 permits. Three people. One shared notes doc — with the actual updates buried in a WhatsApp thread nobody could locate.\n\nAfter switching to SmartPRO Hub: one dashboard. Every permit, every expiry date, every renewal status, visible to the whole team in real time.\n\nSix months in: zero missed renewals.\n\nThat's a different operation.\n\nWork permit renewals aren't complicated on paper. The problem is that reminders living in someone's head, or three screens deep in a chat thread, eventually get missed. And a missed permit isn't just an inconvenience — it's a fine, a blocked employee, and a client who remembers it.\n\nSmartPRO Hub built Sanad office management software for exactly this. Not a workaround. Not a color-coded spreadsheet only one person understands. A purpose-built workflow that tracks every permit, sends reminders before deadlines hit, and gives clients visibility through a branded portal. No WhatsApp required.\n\nSanad didn't stop at 40 permits either. They scaled.\n\nThat's the quiet danger of managing renewals through chat: the risk doesn't warn you. Everything looks fine until something slips through, and by then you're already dealing with the fallout.\n\nHow many permits is your team tracking manually right now?\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#GCCBusiness\n#SMEOman",
+  "char_count": 1424,
+  "generated_at": "2026-11-23T06:51:58.420349+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20261123_065149_product_proof.json"
+}

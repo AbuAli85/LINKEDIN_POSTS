@@ -1,0 +1,20 @@
+{
+  "pillar": "product_proof",
+  "topic": "The HR manager who finally stopped processing leave requests on WhatsApp — what changed in week one",
+  "format": "Lead with a specific customer outcome — time saved, errors eliminated, hours recovered — then describe what changed",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Monday",
+  "post": "6 hours back in a single week. Not from a system overhaul — from stopping one habit: approving leave on WhatsApp.\n\nHer mornings used to start with 30+ messages. Scroll, piece together who requested what, reply individually, then update a spreadsheet that three other people were also editing at the same time.\n\nMistakes happened every week. Duplicate approvals. Requests buried under unrelated threads and never acted on.\n\nWeek one on SmartPRO Hub: every leave request submitted through the platform, routed automatically, logged with a full audit trail. No messages to track. No spreadsheet to reconcile.\n\nHer words: \"I didn't realize how much time I was spending just finding information.\"\n\nThat's what this was built for — not to add another tool to the pile, but to replace the patchwork that Oman businesses have been holding together with group chats and goodwill.\n\nHR and workforce management. WPS payroll with direct bank integration. SPF and Omanization compliance. Connected, bilingual, built for the GCC.\n\nIf your HR manager is still running leave approvals through WhatsApp — it's worth asking what else is falling through the gaps.\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=product-proof\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#PayrollOman\n#Omanization",
+  "char_count": 1333,
+  "generated_at": "2026-11-24T06:42:50.763495+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20261124_064241_product_proof.json"
+}

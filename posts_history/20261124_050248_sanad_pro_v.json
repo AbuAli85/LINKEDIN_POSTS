@@ -1,0 +1,20 @@
+{
+  "pillar": "sanad_pro",
+  "topic": "Tracking 80 residency visa expiry dates across 25 companies — what system are you actually using right now?",
+  "format": "Open with a specific Sanad or PRO failure moment — a visa that expired, a client who found out at the airport, a missed MOL filing — make it so specific the reader stops scrolling",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Thursday",
+  "post": "Row 94 of a shared Excel sheet. Four people with edit access. Zero alerts. One expired residency visa — and nobody caught it.\n\nThe file was sitting right there. The expiry date was in column G. But with four people touching the same sheet and nobody formally owning it, the visa slipped three days past deadline before anyone noticed.\n\nThat call cost the client a deportation fine, a flight rebooking, and two weeks of replacement paperwork.\n\nIt cost the Sanad office something harder to price: the client's trust.\n\nIf you're tracking work permits across 20+ companies in Oman, you already know exactly how this happens. Not as a hypothetical. You've been in that moment — scanning a WhatsApp thread trying to figure out who was supposed to send the reminder, who saw the date, who assumed someone else had it covered.\n\nThe Excel doesn't alert you. WhatsApp has no audit trail. And when something slips, everyone remembers whose queue it was in.\n\n80 expiry dates across 25 companies isn't a memory problem. It's a systems problem.\n\nSmartPRO Hub runs automatic expiry alerts per worker, per company, per service type — before the deadline, not after the airport call.\n\nTry the Sanad AI Assistant free — instant answers on work permits, visas & government fees: https://thesmartpro.io/sanad/assistant?utm_source=linkedin&utm_medium=social&utm_campaign=sanad-pro\n\nWhat are you using right now to track residency and work permit expiries — and how close has it come to failing you?\n\n#OmanBusiness\n#HRManagement\n#SmartPROHub\n#Omanization\n#GCCBusiness",
+  "char_count": 1545,
+  "generated_at": "2026-11-24T05:02:59.900063+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 1,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20261124_050249_sanad_pro.json"
+}

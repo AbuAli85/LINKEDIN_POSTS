@@ -1,0 +1,20 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "Bilingual (Arabic/English) interface — why a single-language HR system fails Oman businesses",
+  "format": "Lead with a quote or question from a customer, then explain the feature built in response",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "\"Our Arabic-speaking staff just stopped using the HR system. They said it was too confusing.\"\n\nThat's what an ops director at a trading company in Muscat told us during a demo call.\n\nIt's not an unusual story.\n\nA single-language HR platform forces bilingual teams to work in a language that isn't theirs. Forms get skipped. Data gets entered wrong. And HR ends up chasing corrections instead of doing actual work.\n\nOman's workforce is mixed by design — Omani nationals and expats, Arabic-first and English-first employees, often sitting in the same department.\n\nA system that only speaks one language creates two classes of users: those who can navigate it, and those who can't.\n\nSmartPRO Hub's interface runs fully in both Arabic and English — not a translated help file, not an FAQ page. Every screen, every workflow, every contract and payroll record.\n\nWhen an employee can read their leave balance in Arabic, they use the system. When HR doesn't have to re-enter data because someone guessed at a field — that's hours back every week.\n\nHR software Oman businesses actually adopt is software their whole team can use.\n\nIf part of your team is working around your HR platform instead of through it, that's worth fixing.\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#Omanization\n#GCCBusiness",
+  "char_count": 1414,
+  "generated_at": "2026-11-25T06:43:39.833276+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 2,
+  "validation_warning": "contains an invented customer testimonial or unverifiable specific outcome (a quoted/attributed claim, or a named persona with a specific company size + result) — will retry",
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "has_variant": true
+}

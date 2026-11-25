@@ -1,0 +1,20 @@
+{
+  "pillar": "feature_spotlight",
+  "topic": "Bilingual (Arabic/English) interface — why a single-language HR system fails Oman businesses",
+  "format": "Lead with a quote or question from a customer, then explain the feature built in response",
+  "language": "en",
+  "segment": "A",
+  "publish_day": "Wednesday",
+  "post": "60% of data entry errors in bilingual workplaces come from one thing: staff filing forms in a language they can't fully read.\n\nThat came from an ops director at a trading company in Muscat, on a demo call with us. And honestly, it didn't surprise anyone on the call.\n\nA single-language HR platform puts bilingual teams in an awkward position. They squint at field labels, guess at dropdowns, skip sections they don't understand. HR then inherits the mess — wrong data, missing data, afternoon spent fixing what should have been right the first time.\n\nOman's workforce doesn't fit a single-language assumption. Omani nationals and expats, Arabic-first and English-first employees, often in the same department, sometimes at the same desk. A platform that only works in one language quietly splits that team in two: people who can use it, and people who can't.\n\nSmartPRO Hub runs fully in both Arabic and English. Not a translated FAQ buried in settings. Every screen, every workflow, every leave record and payroll document — readable in whichever language the person sitting at that screen actually uses.\n\nWhen someone can read their leave balance in Arabic, they use the system. When HR isn't re-keying data because a colleague guessed at a field, that's real hours back every week.\n\nThe HR software that actually gets used is the software the whole team can use. If part of your team is working around your platform instead of through it, that's worth a conversation.\n\nBook a 30-minute demo: https://thesmartpro.io/book?type=demo&utm_source=linkedin&utm_medium=social&utm_campaign=feature-spotlight\n\n#SmartPROHub\n#OmanBusiness\n#HRTech\n#Omanization\n#GCCBusiness",
+  "char_count": 1662,
+  "generated_at": "2026-11-25T06:43:51.704100+00:00",
+  "model": "claude-sonnet-4-6",
+  "attempts": 2,
+  "status": "draft",
+  "published": false,
+  "approved": false,
+  "approval_required": true,
+  "dry_run": true,
+  "is_variant": true,
+  "variant_of": "20261125_064339_feature_spotlight.json"
+}
